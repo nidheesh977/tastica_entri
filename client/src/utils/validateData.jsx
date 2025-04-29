@@ -1,15 +1,15 @@
 export const validateData = (
-  name,
+  username,
   email,
-  mobile,
+  phonenumber,
   password,
   confirmPassword
 ) => {
-  const isNameValid = /^[0-9A-Za-z]{3,16}$/.test(name);
+  const isNameValid = /^[0-9A-Za-z]{3,16}$/.test(username);
   const emailValid = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(
     email
   );
-  const isMobileValid = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile);
+  const isMobileValid = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(phonenumber);
   const isPasswordValid =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
       password
