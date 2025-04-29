@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { ShopLayout } from "../layout/ShopLayout";
 import { ErrorPage } from "../pages/shared/ErrorPage/ErrorPage";
 import { ShopSignup } from "../pages/shop/ShopSignup/ShopSignup";
-import {AdminHome} from '../pages/admin/AdminHome/AdminHome'
+import { AdminHome } from "../pages/admin/AdminHome/AdminHome";
 import { ShopLogin } from "../pages/shop/ShopLogin/ShopLogin";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
@@ -26,9 +26,14 @@ export const router = createBrowserRouter([
         element: <ProtectedRouteShop />,
         children: [
           { path: "", element: <Home /> },
+
           {
-            path: "signup",
-            element: <ShopSignup action="Signup" />,
+            path: "login",
+            element: <Login role="Admin" action="Login" />,
+          },
+          {
+            path: "login",
+            element: <Login role="Staff" action="Login" />,
           },
         ],
       },
@@ -40,17 +45,19 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "login",
-        element: <Login role="Admin" action="Login" />,
-      },
-      {
-        path: "signup",
-        element: <Login role="Admin" action="Signup" />,
-      },
-      {
         path: "",
         element: <ProtectedRouteAdmin />,
-        children: [{ path: "", element: <AdminHome /> }],
+        children: [
+          { path: "", element: <AdminHome /> },
+          {
+            path: "signup",
+            element: <ShopSignup action="Signup" />,
+          },
+          {
+            path: "staff/signup",
+            element: <Login role="Staff" action="Signup" />,
+          },
+        ],
       },
     ],
   },
@@ -59,14 +66,6 @@ export const router = createBrowserRouter([
     element: <StaffLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "login",
-        element: <Login role="Staff" action="Login" />,
-      },
-      {
-        path: "signup",
-        element: <Login role="Staff" action="Signup" />,
-      },
       {
         path: "",
         element: <ProtectedRouteStaff />,
