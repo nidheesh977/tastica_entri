@@ -41,7 +41,7 @@ export const loginAdmin = async (req,res) => {
 
         const {password:pass,...adminData} = adminExist._doc;
 
-        res.cookie("adminToken",adminToken,{httpOnly:true,secure:true,sameSite:"none",maxAge:24 * 60 * 60}).status(200).json({
+        res.cookie("adminToken",adminToken,{httpOnly:true,secure:process.env.NODE_ENV === 'production',sameSite:"none",maxAge:86400}).status(200).json({
             success:true,
             message:"admin Login Successfully",
             adminData
@@ -95,4 +95,21 @@ export const CreateEmployee = async (req,res) => {
   } catch (err) {  
       return res.status(500).json({success:false,message:"Internal Server Error"})
   }
+}
+
+
+
+export const checkAdminLogin = async (req,res) => {
+    try {
+        const adminLogged = req.admin;
+
+        if(!adminLogged){
+            return res.status(401).json({success:false,message:"Unauthorized"});
+        }else{
+            res.status(200).json({success:true,message:"admin is logged in"});
+        }
+       
+    } catch (error) {
+        res.status(500).json({success:false,message:error.message});
+    }
 }

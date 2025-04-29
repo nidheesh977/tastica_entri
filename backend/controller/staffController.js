@@ -44,7 +44,7 @@ export const loginUser = async (req,res) => {
 
         const {password:pass,...userData} = userExist._doc;
 
-        res.cookie("token",token,{httpOnly:true,secure:true,sameSite:"none",maxAge:24 * 60 * 60}).status(200).json({
+        res.cookie("token",token,{httpOnly:true,secure:process.env.NODE_ENV === 'production',sameSite:"none",maxAge:24 * 60 * 60}).status(200).json({
             success:true,
             message:"Login Successfully",
             userData
@@ -52,5 +52,21 @@ export const loginUser = async (req,res) => {
 
     }catch(error){
          res.status(500).json({success:false,message:"Internal Server Error"})
+    }
+}
+
+
+export const checkStaffLogin = async (req,res) => {
+    try {
+        const staffLogged = req.user;
+
+        if(!staffLogged){
+            return res.status(401).json({success:false,message:"Unauthorized"});
+        }else{
+            res.status(200).json({success:true,message:"staff is logged in"});
+        }
+       
+    } catch (error) {
+        res.status(500).json({success:false,message:error.message});
     }
 }

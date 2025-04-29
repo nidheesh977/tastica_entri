@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import shopModel from '../model/shopModel.js';
 import { shopSignupValidtaion ,shopLoginValidation } from '../utils/joiValidation.js';
+import { generateToken } from '../utils/generateToken.js';
 
 
 
@@ -64,11 +65,33 @@ export const shopLogin = async (req,res) => {
 
         const {password:pass,...shopData} = shopExist._doc
 
-        res.status(200).json({success:true,message:"login successfully",shopData})
+        const shopToken = generateToken({id:shopExist._id,role:""});
+
+        res.cookie("shopToken",shopToken,{httpOnly:true,secure:process.env.NODE_ENV === 'production',sameSite:"none",maxAge:86400}).status(200).json({
+            success:true,
+            message:"Login Successfully",
+            shopData
+        })
+
     }catch(error){
-    
+      
         return res.status(500).json({success:false,message:"internal server error"});
       }  
 }
 
-354977
+
+export const checkShopLogin = async (req,res) => {
+    try {
+        const shopLogged = req.shop;
+
+        if(!shopLogged){
+            return res.status(401).json({success:false,message:"Unauthorized"});
+        }else{
+            res.status(200).json({success:true,message:"Shop is logged in"});
+        }
+       
+    } catch (error) {
+        res.status(500).json({success:false,message:error.message});
+    }
+}
+
