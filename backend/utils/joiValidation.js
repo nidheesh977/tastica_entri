@@ -151,3 +151,16 @@ export const newCategoryValidation = Joi.object({
     }),
     
 })
+
+export const updateCategoryValidation = Joi.object({
+    categoryname: Joi.string().min(3).max(30).messages({
+        'string.base': 'Category name must be a string',
+        'string.min': 'Category name must be at least 3 characters long',
+        'string.max': 'Category name must be at most 30 characters long',   
+    }),
+    description: Joi.string().min(3).max(100).messages({
+        'string.base': 'Description must be a string',
+        'string.min': 'Description must be at least 3 characters long',
+        'string.max': 'Description must be at most 100 characters long',   
+    })
+})

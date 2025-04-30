@@ -47,7 +47,7 @@ export const loginUser = async (req,res) => {
         res.cookie("token",token,{httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
             sameSite:"none",
-            maxAge:86400}).status(200).json({success:true,message:"Login Successfully",data:userData})
+            maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:userData})
 
     }catch(error){
          res.status(500).json({success:false,message:"Internal Server Error"})
