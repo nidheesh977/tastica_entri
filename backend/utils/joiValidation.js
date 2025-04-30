@@ -128,3 +128,26 @@ export const newProductValidation = Joi.object({
 
     
 })
+
+
+export const newCategoryValidation = Joi.object({
+    categoryname: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Category name is required',
+        'string.base': 'Category name must be a string',
+        'string.empty': 'Category name cannot be empty',
+        'string.min': 'Category name must be at least 3 characters long',
+        'string.max': 'Category name must be at most 30 characters long',   
+    }),
+    description: Joi.string().min(3).max(100).required().messages({
+        'string.required': 'Description is required',
+        'string.base': 'Description must be a string',
+        'string.empty': 'Description cannot be empty',
+        'string.min': 'Description must be at least 3 characters long',
+        'string.max': 'Description must be at most 100 characters long',   
+    }),
+    discountrate: Joi.number().integer().min(0).messages({
+        'number.base': 'Discount rate must be a number',
+        'number.empty': 'Discount rate cannot be empty',
+    }),
+    
+})
