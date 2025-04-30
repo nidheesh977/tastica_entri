@@ -1,6 +1,6 @@
 import { ShopLoginForm } from "../../../components/shop/ShopLoginForm/ShopLoginForm";
 
-export const ShopLogin = ({action ='login'}) => {
+export const ShopLogin = ({action ='Login'}) => {
   return (
     <div>
       <ShopLoginForm action={action} />

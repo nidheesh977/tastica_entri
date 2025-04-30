@@ -4,14 +4,14 @@ import { FaSignInAlt } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addAdminData } from "../../../redux/features/authSlice";
+import { addAdminData, addStaffData } from "../../../redux/features/authSlice";
 
 export const Login = ({ role, action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const username = useRef(null);
   const email = useRef(null);
@@ -50,22 +50,14 @@ export const Login = ({ role, action }) => {
           withCredentials: true,
           data,
         });
-        toast.success('Signup success')
-        
-        
-       
-        console.log(response);
-        
-      } catch (error) {
+        toast.success("Signup success");
 
-       toast.error(error)
-        
+        console.log(response);
+      } catch (error) {
+        toast.error(error);
+
         console.log(error);
       }
-
-
-
-
     } else {
       const data = {
         phonenumber: phonenumber?.current?.value,
@@ -80,16 +72,16 @@ export const Login = ({ role, action }) => {
           withCredentials: true,
           data,
         });
-        toast.success('Login success')
+        toast.success("Login success");
         console.log(response);
-        if(role === 'Admin') dispatch(addAdminData(response?.data?.data))
+        if (role === "Admin") dispatch(addAdminData(response?.data?.data));
+        if (role === "Staff") dispatch(addStaffData(response?.data?.data));
         phonenumber.current.value = null;
         password.current.value = null;
-        if(role === 'Admin') navigate('/admin')
-          if(role === 'Staff') navigate('/staff')
-        
+        if (role === "Admin") navigate("/admin");
+        if (role === "Staff") navigate("/staff");
       } catch (error) {
-        toast.error(error)
+        toast.error(error);
         console.log(error);
       }
     }

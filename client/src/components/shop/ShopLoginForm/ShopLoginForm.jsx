@@ -1,12 +1,15 @@
 import React, { useRef, useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { axiosInstance } from "../../../config/axiosInstance";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addShopData } from "../../../redux/features/authSlice";
 
 export const ShopLoginForm = ({ action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
-  let api = null;
+  const dispatch = useDispatch();
 
+  let api = null;
   if (action === "Signup") api = "/shop/create-shop";
   if (action === "Login") api = "/shop/login-shop";
 
@@ -30,10 +33,10 @@ export const ShopLoginForm = ({ action }) => {
           withCredentials: true,
           data,
         });
-        toast.success('Shop created')
+        toast.success("Shop created");
       } catch (error) {
-        toast.error(error)
-        log
+        toast.error(error);
+        log;
       }
     } else {
       const data = {
@@ -48,9 +51,10 @@ export const ShopLoginForm = ({ action }) => {
           withCredentials: true,
           data,
         });
-        toast.success('Login success')
+        dispatch(addShopData(response?.data?.data));
+        toast.success("Login success");
       } catch (error) {
-        toast.error(error)
+        toast.error(error);
       }
     }
   };
