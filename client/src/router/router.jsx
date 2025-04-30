@@ -53,8 +53,12 @@ export const router = createBrowserRouter([
         children: [
           { path: "", element: <AdminHome /> },
           {
+            path: "shop/signup",
+            element: <ShopSignup role="Admin" action="Signup" />,
+          },
+          {
             path: "signup",
-            element: <ShopSignup action="Signup" />,
+            element: <Login role="Admin" action="Signup" />,
           },
           {
             path: "staff/signup",
