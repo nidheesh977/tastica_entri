@@ -37,6 +37,6 @@ import mongoose from 'mongoose';
    
  },{timestamps:true})
 
- const AdminStaffModel = mongoose.model('user',userSchema);
+ const AdminStaffModel = mongoose.model('User',userSchema);
 
  export default AdminStaffModel;
