@@ -39,6 +39,11 @@ const productSchema = new mongoose.Schema({
         default:0,
     },
 
+    isActive:{
+        type:Boolean,
+        default:false
+    }
+
 },{timestamps:true});
 
  const productModel = mongoose.model('Product',productSchema);
