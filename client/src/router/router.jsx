@@ -14,6 +14,7 @@ import { Login } from "../components/shared/Login/Login";
 import { Cart } from "../pages/shared/Cart/Cart";
 
 export const router = createBrowserRouter([
+  // Shop rotes
   {
     path: "",
     element: <ShopLayout />,
@@ -28,17 +29,19 @@ export const router = createBrowserRouter([
           { path: "", element: <Home /> },
 
           {
-            path: "login",
+            path: "admin/login",
             element: <Login role="Admin" action="Login" />,
           },
           {
-            path: "login",
+            path: "staff/login",
             element: <Login role="Staff" action="Login" />,
           },
         ],
       },
     ],
   },
+
+  // Admin routes
   {
     path: "admin",
     element: <AdminLayout />,
@@ -61,6 +64,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
+  // Staff routes
   {
     path: "staff",
     element: <StaffLayout />,

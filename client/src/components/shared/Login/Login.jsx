@@ -3,6 +3,7 @@ import { validateData } from "../../../utils/validateData";
 import { FaSignInAlt } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
 import { axiosInstance } from "../../../config/axiosInstance";
+import toast from 'react-hot-toast'
 
 export const Login = ({ role, action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -14,7 +15,7 @@ export const Login = ({ role, action }) => {
   const confirmPassword = useRef(null);
 
   // Set api
-  let api = null;
+  let api;
   if (role === "Admin" && action === "Signup") api = "/admin/signup";
   if (role === "Admin" && action === "Login") api = "/admin/login";
   if (role === "Staff" && action === "Signup") api = "/admin/create-employee";
@@ -46,6 +47,7 @@ export const Login = ({ role, action }) => {
         console.log(error);
       }
     }
+  }
     return (
       <div className="flex justify-center">
         <form
@@ -114,5 +116,5 @@ export const Login = ({ role, action }) => {
         </form>
       </div>
     );
-  };
+  
 };
