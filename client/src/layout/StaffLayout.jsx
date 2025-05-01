@@ -2,8 +2,8 @@ import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "../components/shared/Header/Header";
 import { Footer } from "../components/shared/Footer/Footer";
 import { ShopHeader } from "../components/shop/ShopHeader/ShopHeader";
-import { useDispatch } from "react-redux";
-import { addStaffData, removeStaffData } from "../redux/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { removeStaffData } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
 
 export const StaffLayout = () => {
@@ -19,7 +19,6 @@ export const StaffLayout = () => {
         url: "/staff/check-logged",
       });
       console.log("check staff: ", response);
-      dispatch(addStaffData());
     } catch (error) {
       dispatch(removeStaffData());
     }

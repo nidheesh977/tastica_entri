@@ -13,9 +13,9 @@ export const Home = () => {
         </h1>
 <div className='w-full flex flex-col gap-2  px-10'>
 
-<Link to='/admin/login'><DashboardCard icon={<FaUserShield className='text-white text-2xl'/>} action='Admin Login'/></Link>
+<Link to='admin/login'><DashboardCard icon={<FaUserShield className='text-white text-2xl'/>} action='Admin Login'/></Link>
 
-<Link to='/staff/login'><DashboardCard icon={<FaUserTie className='text-white text-2xl'/>} action='Staff Login'/></Link>
+<Link to='staff/login'><DashboardCard icon={<FaUserTie className='text-white text-2xl'/>} action='Staff Login'/></Link>
 </div>
         </div>
 

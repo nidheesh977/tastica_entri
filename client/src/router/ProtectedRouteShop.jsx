@@ -7,9 +7,9 @@ export const ProtectedRouteShop = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isShop === null) return;
     if (!isShop) {
       navigate("/");
-      return;
     }
   }, [isShop, navigate]);
 
@@ -17,5 +17,5 @@ export const ProtectedRouteShop = () => {
     return null;
   }
 
-  return <Outlet />;
+  return isShop && <Outlet />;
 };
