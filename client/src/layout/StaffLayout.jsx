@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeStaffData } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
 import { StaffHeader } from "../components/staff/StaffHeader/StaffHeader";
+import { useEffect } from "react";
 
 export const StaffLayout = () => {
   const location = useLocation();

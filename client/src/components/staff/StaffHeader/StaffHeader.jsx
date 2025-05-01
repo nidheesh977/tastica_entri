@@ -6,10 +6,12 @@ import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { removeStaffData } from "../../../redux/features/authSlice";
+import {useNavigate} from 'react-router-dom'
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const staffName = useSelector((state) => state?.auth?.staffData?.username);
 
   return (
@@ -49,8 +51,10 @@ export const StaffHeader = () => {
             <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
               +
             </li>
-            <li>
-              {staffName && <p>{staffName}</p> && <FaUserTie /> && (
+            <li className="flex items-center gap-2">
+              {staffName && <p>{staffName}</p>}
+              {staffName && <FaUserTie />}
+              {staffName && (
                 <MdLogout
                   onClick={() => {
                     dispatch(removeStaffData());
@@ -59,6 +63,7 @@ export const StaffHeader = () => {
                   className="cursor-pointer"
                 />
               )}
+              
             </li>
           </ul>
         </div>

@@ -1,14 +1,12 @@
-import React from 'react'
-import { SideBar } from '../../../components/shared/SideBar/SideBar'
-import { Cart } from '../../shared/Cart/Cart'
-import { StaffHeader } from '../../../components/staff/StaffHeader/StaffHeader'
+import React from "react";
+import { Cart } from "../../shared/Cart/Cart";
+import { SideBar } from "../../../components/shared/SideBar/SideBar";
 
 export const StaffHome = () => {
   return (
     <div>
-        <StaffHeader/>
-        <SideBar/>
-        <Cart/>
+      <SideBar />
+      <Cart />
     </div>
-  )
-}
+  );
+};

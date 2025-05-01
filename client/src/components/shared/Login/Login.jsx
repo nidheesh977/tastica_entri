@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { validateData } from "../../../utils/validateData";
 import { FaSignInAlt } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
@@ -6,12 +6,22 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addAdminData, addStaffData } from "../../../redux/features/authSlice";
+import {
+  addAdminData,
+  addStaffData,
+  removeAdminData,
+  removeStaffData,
+} from "../../../redux/features/authSlice";
 
 export const Login = ({ role, action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(removeAdminData());
+  //   dispatch(removeStaffData());
+  // }, []);
 
   const username = useRef(null);
   const email = useRef(null);
@@ -40,7 +50,6 @@ export const Login = ({ role, action }) => {
         email: email?.current?.value,
         phonenumber: phonenumber?.current?.value,
         password: password?.current?.value,
-        
       };
 
       try {
@@ -52,7 +61,7 @@ export const Login = ({ role, action }) => {
           data,
         });
         toast.success("Signup success");
-        if(role === 'Staff') navigate('/staff/login')
+        if (role === "Staff") navigate("/shop/staff/login");
 
         console.log(response);
       } catch (error) {
