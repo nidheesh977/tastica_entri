@@ -93,3 +93,14 @@ export const checkShopLogin = async (req,res) => {
     }
 }
 
+export const logOutShop = async (req,res) => {
+  try{
+    res.clearCookie("shopToken")
+    res.clearCookie("adminToken")
+    res.clearCookie("staffToken")
+
+    res.status(200).json({success:true,message:"shop Logout successfully"})
+  }catch(error){
+     return res.status(500).json({success:false,message:"internal server error"})
+  }
+}

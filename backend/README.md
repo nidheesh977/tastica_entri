@@ -5,11 +5,13 @@
 
  staff-login &nbsp;&nbsp; method:POST&nbsp;&nbsp;/api/v1/staff/login \
  staff-logged &nbsp;&nbsp;method:GET &nbsp;&nbsp;/api/v1/staff/check-logged \
+ staff-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/staff/logout \
 
 
  routes for admin\
 
  admin-login&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/admin/login \
+ admin-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/admin/logout \
  create-employee&nbsp;&nbsp;  method:POST&nbsp;&nbsp;/api/v1/admin/create-employee \
  admin-logged&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/check-logged\
  shop-create&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/create-shop \
@@ -18,6 +20,7 @@
 
  shop-login&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/login-shop \
  shop-logged&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/shop/check-logged \
+ shop-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/logout \
 
 
  routes for category\

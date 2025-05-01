@@ -7,7 +7,7 @@ import { generateToken } from '../utils/generateToken.js';
 
 // login staff
 
-export const loginUser = async (req,res) => {
+export const loginStaff = async (req,res) => {
     try{
       const {error,value} = LoginValidation.validate(req.body);
 
@@ -44,7 +44,7 @@ export const loginUser = async (req,res) => {
 
         const {password:pass,...userData} = userExist._doc;
 
-        res.cookie("token",token,{httpOnly:true,
+        res.cookie("staffToken",token,{httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
             sameSite:"none",
             maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:userData})
@@ -68,4 +68,13 @@ export const checkStaffLogin = async (req,res) => {
     } catch (error) {
         res.status(500).json({success:false,message:error.message});
     }
+}
+
+export const logOutStaff = async (req,res) => {
+  try{
+    res.clearCookie("staffToken")
+    res.status(200).json({success:true,message:"staff logged out successfully"})
+  }catch(error){
+     return res.status(500).json({success:false,message:"internal server error"})
+  }
 }
