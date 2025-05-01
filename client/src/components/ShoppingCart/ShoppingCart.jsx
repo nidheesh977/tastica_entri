@@ -1,6 +1,8 @@
 import { MdMoreVert } from "react-icons/md";
 import { MdAdd } from "react-icons/md";
 import { MdRemove } from "react-icons/md";
+import { FaSave, FaMoneyCheckAlt } from 'react-icons/fa';
+
 
 export const ShoppingCart = ({products}) => {
   return (
@@ -48,11 +50,11 @@ export const ShoppingCart = ({products}) => {
         </div>
       </div>
       <div className="flex gap-2 mt-2 justify-between">
-        <button className="px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
-          Save
+        <button className=" flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
+          <FaSave/>  Save
         </button>
-        <button className="px-6 py-3 w-1/2 bg-[#155E95] hover:bg-opacity-90 text-white rounded-lg">
-          Pay
+        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#155E95] hover:bg-opacity-90 text-white rounded-lg">
+        <FaMoneyCheckAlt/>  Pay
         </button>
       </div>
     </div>
