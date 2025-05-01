@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 
 const categorySchema = new mongoose.Schema({
-    name: {
+    categoryname: {
         type: String,
         required: true,
         unique: true,
@@ -22,7 +22,7 @@ const categorySchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     }
-})
+},{timeStamps:true});
 
 const categoryModel = mongoose.model('Category', categorySchema);
 

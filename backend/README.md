@@ -2,26 +2,36 @@
 
 
  routes for staff\
- staff-login  /api/v1/staff/login\
 
- <!-- protected route -->
- staff-logged /api/v1/staff/check-logged
+ staff-login              method:POST         /api/v1/staff/login \
+ staff-logged             method:GET          /api/v1/staff/check-logged \
 
 
  routes for admin\
- admin-login /api/v1/admin/login\
 
-  <!-- protected route -->
- create-employee /api/v1/admin/create-employee\
- admin-logged /api/v1/admin/check-logged
+ admin-login              method:POST         /api/v1/admin/login \
+ create-employee          method:POST         /api/v1/admin/create-employee \
+ admin-logged             method:GET          /api/v1/admin/check-logged
+ shop-create              method:POST         /api/v1/shop/create-shop \
 
  routes for shop\
 
- shop-login /api/v1/shop/login-shop\
-  <!-- protected route -->
- shop-signup /api/v1/shop/create-shop\
- shop-logged /api/v1/shop/check-logged
+ shop-login               method:POST         /api/v1/shop/login-shop \
+ shop-logged              method:GET          /api/v1/shop/check-logged 
 
+
+ routes for category\
+
+ category-create           method:POST          /api/v1/category/create
+ category-delete           method:DELETE        /api/v1/category/delete/:id  
+ category-discount-add     method:PUT           /api/v1/category/discount-add/:id 
+ category-discount-remove  method:PUT           /api/v1/category/discount-remove/:id 
+ 
+ routes for product \
+ 
+ product-create            method:POST         /api/v1/product/create/:category
+ product-delete            method:DELETE       /api/v1/product/delete/:id
+ product-update            method:PUT          /api/v1/product/update/:id/category/:category
 
  tested \
  staff-signup test passed\
