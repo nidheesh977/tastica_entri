@@ -1,14 +1,14 @@
 import React from 'react'
-import { SideBar } from '../../../components/shared/SideBar/SideBar'
 import { Cart } from '../../shared/Cart/Cart'
-import { StaffHeader } from '../../../components/staff/StaffHeader/StaffHeader'
+import { StaffSideBar } from '../../../components/staff/StaffSideBar/StaffSideBar'
+
 
 export const StaffHome = () => {
   return (
     <div>
-        <StaffHeader/>
-        <SideBar/>
-        <Cart/>
+        
+       <StaffSideBar/>
+        <Cart />
     </div>
   )
 }

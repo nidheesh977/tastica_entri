@@ -6,11 +6,15 @@ import { FaBoxOpen } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const SideBar = () => {
+export const AdminSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
-  const admin = useSelector((state) => state.auth.adminData);
+  const navigate = useNavigate();
+
+  const sideBarHandler = (route) => {
+    navigate(route);
+  };
 
   return (
     <div
@@ -23,26 +27,29 @@ export const SideBar = () => {
     >
       <ul className="w-full flex flex-col gap-1 text-lg font-bold p-2">
         <li
+          onClick={() => sideBarHandler("/admin")}
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <FaHome />
           Home
         </li>
 
-       {admin && <li
+        <li
+          onClick={() => sideBarHandler()}
           className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <FaUsers />
           Staffs
-        </li>}
-       {admin && <li
+        </li>
+
+        <li
+          onClick={() => sideBarHandler("/admin/staff/signup")}
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
-          <Link to="staff/signup">
-            <MdPersonAdd />
-            Add Staff
-          </Link>
-        </li>}
+          <MdPersonAdd />
+          Add Staff
+        </li>
+
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
@@ -50,21 +57,18 @@ export const SideBar = () => {
           Products
         </li>
         <li
+          onClick={() => sideBarHandler("/admin/add/product")}
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
-          <Link className="flex items-center gap-2" to={admin ? 'admin/add/product' : 'staff/add/product'}>
-            <FaBox />
-            Add Product
-          </Link>
+          <FaBox />
+          Add Product
         </li>
         <li
+          onClick={() => sideBarHandler("/admin/cart")}
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
-          <Link to="/shopping/cart" className="flex items-center gap-2">
-          
           <FaShoppingCart />
           Shopping Cart
-          </Link>
         </li>
       </ul>
     </div>

@@ -14,6 +14,7 @@ import { Login } from "../components/shared/Login/Login";
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
+import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -22,8 +23,7 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      // { path: "", element: <ShopLogin action="Login" /> },
-      { path: "", element: <StaffHome/> },
+      { path: "", element: <ShopLogin action="Login" /> },
 
       {
         path: "shop",
@@ -65,11 +65,15 @@ export const router = createBrowserRouter([
           },
           {
             path: "add/product",
-            element: <AddProductCard/>,
+            element: <AddProductCard role='Admin' access="Admin" />,
           },
           {
             path: "staff/signup",
-            element: <Login role="Staff" action="Signup" />,
+            element: <SignupAndLogin role="Staff" action="Signup" access='Admin' />,
+          },
+          {
+            path: "cart",
+            element: <Cart role='Admin' />,
           },
         ],
       },
@@ -85,11 +89,11 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ProtectedRouteStaff />,
-        children: [{ path: "", element: <Cart /> }],
+        children: [{ path: "", element: <StaffHome/> }],
       },
       {
         path: "add/product",
-        element: <AddProductCard/>,
+        element: <AddProductCard role='Staff' access='Staff' />,
       },
     ],
   },

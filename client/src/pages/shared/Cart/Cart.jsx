@@ -2,8 +2,11 @@ import { ShoppingCart } from "../../../components/ShoppingCart/ShoppingCart";
 import { Category } from "../../../components/Category/Category";
 import { Quantity } from "../../../components/Quantity/Quantity";
 import { Product } from "../../../components/Product/Product";
+import {AdminSideBar} from '../../../components/admin/AdminSideBar/AdminSideBar'
+import { StaffSideBar } from "../../../components/staff/StaffSideBar/StaffSideBar";
 
-export const Cart = () => {
+
+export const Cart = ({role}) => {
   const products = [
     {
       title: "Biscuit",
@@ -51,6 +54,8 @@ export const Cart = () => {
   ];
 
   return (
+    <>
+    {role === 'Admin' ? <AdminSideBar/> : <StaffSideBar/>}
     <div className="grid grid-cols-12">
       <div className="col-span-12 md:col-span-4">
         <ShoppingCart products={products} />
@@ -68,5 +73,6 @@ export const Cart = () => {
         <div className="flex gap-2 m-2 flex-wrap"><Product products={products}/></div>
       </div>
     </div>
+    </>
   );
 };

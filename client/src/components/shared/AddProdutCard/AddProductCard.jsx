@@ -1,7 +1,9 @@
 import { useRef } from "react";
 import { FaBox } from "react-icons/fa";
+import {AdminSideBar} from '../../../components/admin/AdminSideBar/AdminSideBar'
+import { StaffSideBar } from "../../staff/StaffSideBar/StaffSideBar";
 
-export const AddProductCard = () => {
+export const AddProductCard = ({role}) => {
   const productName = useRef(null);
   const quantity = useRef(null);
   const costPrice = useRef(null);
@@ -12,6 +14,8 @@ export const AddProductCard = () => {
   const handleSubmit = () => {};
 
   return (
+    <>
+    {role === 'Admin' ?<AdminSideBar/> : <StaffSideBar/>}
     <div className="flex justify-center">
       <form
         onSubmit={(e) => e.preventDefault()}
@@ -73,5 +77,6 @@ export const AddProductCard = () => {
         </button>
       </form>
     </div>
+    </>
   );
 };

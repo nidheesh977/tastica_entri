@@ -1,15 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
+import { MdLogout } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield } from "react-icons/fa";
+import { removeAdminData } from "../../../redux/features/authSlice";
 
 export const AdminHeader = () => {
   const dispatch = useDispatch();
   const adminName = useSelector((state) => state?.auth?.adminData?.username);
+  
+  
 
   return (
     <nav className="w-full">
-      <div className="md:flex mx-auto py-4 px-5  justify-between items-center bg-[#155E95] text-white font-bold md:px-10 ">
+      <div className="flex mx-auto py-4 px-5  justify-between items-center bg-[#155E95] text-white font-bold md:px-10 ">
         <div className="flex justify-between items-center w-full md:w-1/2">
           <div
             onClick={() => dispatch(toggleSideBar())}
@@ -22,8 +26,17 @@ export const AdminHeader = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 font-thin">
-          <FaUserShield className="text-xl" />
-          {adminName && <h1>{adminName}</h1>}
+         {adminName && <FaUserShield className="text-xl" />}
+          {adminName && <h1>{adminName}</h1>} 
+          {adminName && (
+            <MdLogout
+              onClick={() => {
+                dispatch(removeAdminData());
+                navigate("admin/login");
+              }}
+              className="cursor-pointer"
+            />
+          )}
         </div>
       </div>
     </nav>
