@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import shopModel from '../model/shopModel.js';
 import { shopSignupValidtaion ,shopLoginValidation } from '../utils/joiValidation.js';
 import { generateToken } from '../utils/generateToken.js';
@@ -22,7 +22,7 @@ export const createShop = async (req,res) => {
             return res.status(400).json({message:"Shop already exists"});
         }
 
-        const hasedPassword = await bcrypt.hash(password,10);
+        const hasedPassword = await bcryptjs.hash(password,10);
 
         const newShop = new shopModel({
             shopname,

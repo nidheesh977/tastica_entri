@@ -3,7 +3,7 @@ import { comparePassword } from "../utils/comparePassword.js";
 import { LoginValidation,userSignupValidation } from "../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs';
 import { generateToken } from "../utils/generateToken.js";
-
+ 
  
 
 
@@ -28,7 +28,7 @@ export const loginAdmin = async (req,res) => {
 
         if(!isPasswordCorrect){
             return res.status(400).json({success:false,message:"Invalid credentials"})
-        }
+        } 
 
         //  await AdminStaffModel.findOneAndUpdate({phonenumber:phonenumber},{isLoggedIn:true},{new:true});
 
