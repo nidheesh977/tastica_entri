@@ -57,7 +57,7 @@ export const shopLogin = async (req,res) => {
             return res.status(400).json({success:false,message:"Shop not found"});
         }
 
-        const isPasswordMatch = await bcrypt.compare(password,shopExist.password);
+        const isPasswordMatch = await bcryptjs.compare(password,shopExist.password);
 
         if(!isPasswordMatch){
             return res.status(400).json({success:false,message:"Invalid credentials"});

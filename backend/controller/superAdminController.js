@@ -1,4 +1,5 @@
 import AdminStaffModel from "../model/adminAndStaffModel.js";
+import shopModel from "../model/shopModel.js"
 import { shopSignupValidtaion, userSignupValidation } from "../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
 
