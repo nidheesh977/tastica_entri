@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 export const SideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
+  const admin = useSelector((state) => state.auth.adminData);
 
   return (
     <div
@@ -28,21 +29,20 @@ export const SideBar = () => {
           Home
         </li>
 
-        <li
+       {admin && <li
           className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <FaUsers />
           Staffs
-        </li>
-        <li
+        </li>}
+       {admin && <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
-          <Link to='staff/signup'>
-          <MdPersonAdd />
-         
-          Add Staff
+          <Link to="staff/signup">
+            <MdPersonAdd />
+            Add Staff
           </Link>
-        </li>
+        </li>}
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
@@ -52,9 +52,9 @@ export const SideBar = () => {
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
-          <Link to='admin/add/product'>
-          <FaBox />
-          Add Product
+          <Link to={admin ? 'admin/add/product' : 'staff/add/product'}>
+            <FaBox />
+            Add Product
           </Link>
         </li>
         <li

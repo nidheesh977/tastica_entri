@@ -13,6 +13,7 @@ import { StaffLayout } from "../layout/StaffLayout";
 import { Login } from "../components/shared/Login/Login";
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
+import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -21,7 +22,8 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <ShopLogin action="Login" /> },
+      // { path: "", element: <ShopLogin action="Login" /> },
+      { path: "", element: <StaffHome/> },
 
       {
         path: "shop",
