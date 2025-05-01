@@ -12,6 +12,7 @@ import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
 import { Login } from "../components/shared/Login/Login";
 import { Cart } from "../pages/shared/Cart/Cart";
+import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
             element: <Login role="Admin" action="Signup" />,
           },
           {
+            path: "add/product",
+            element: <AddProductCard/>,
+          },
+          {
             path: "staff/signup",
             element: <Login role="Staff" action="Signup" />,
           },
@@ -79,6 +84,10 @@ export const router = createBrowserRouter([
         path: "",
         element: <ProtectedRouteStaff />,
         children: [{ path: "", element: <Cart /> }],
+      },
+      {
+        path: "add/product",
+        element: <AddProductCard/>,
       },
     ],
   },

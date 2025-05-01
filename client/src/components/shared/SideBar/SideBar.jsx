@@ -52,8 +52,10 @@ export const SideBar = () => {
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
+          <Link to='admin/add/product'>
           <FaBox />
           Add Product
+          </Link>
         </li>
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}

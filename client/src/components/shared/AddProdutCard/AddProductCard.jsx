@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FaBox } from 'react-icons/fa';
+import { FaBox } from "react-icons/fa";
 
 export const AddProductCard = () => {
   const productName = useRef(null);
@@ -8,8 +8,8 @@ export const AddProductCard = () => {
   const sellingPrice = useRef(null);
   const discount = useRef(null);
   const category = useRef(null);
-  
-  const handleSubmit = () => {}
+
+  const handleSubmit = () => {};
 
   return (
     <div className="flex justify-center">
@@ -18,7 +18,9 @@ export const AddProductCard = () => {
         className="mx-2
                 my-10  max-w-[500px] py-10 p-4  md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
       >
-        <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">Add Product</h1>
+        <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">
+          Add Product
+        </h1>
 
         <input
           type="text"
