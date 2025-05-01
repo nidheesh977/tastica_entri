@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { Header } from "../components/shared/Header/Header";
 import { Footer } from "../components/shared/Footer/Footer";
 import { ShopHeader } from "../components/shop/ShopHeader/ShopHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { removeStaffData } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
+import { StaffHeader } from "../components/staff/StaffHeader/StaffHeader";
 
 export const StaffLayout = () => {
   const location = useLocation();
@@ -30,7 +30,7 @@ export const StaffLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header>{isStaff ? <Header /> : <ShopHeader />}</header>
+      <header>{isStaff ? <StaffHeader /> : <ShopHeader />}</header>
 
       <main className="flex-grow">
         <Outlet />

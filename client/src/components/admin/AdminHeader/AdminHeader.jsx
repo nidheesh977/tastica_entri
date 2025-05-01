@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserShield } from 'react-icons/fa';       
+import { FaUserShield } from "react-icons/fa";
 
 export const AdminHeader = () => {
   const dispatch = useDispatch();
+  const adminName = useSelector((state) => state?.auth?.adminData?.username);
 
   return (
     <nav className="w-full">
@@ -20,10 +21,10 @@ export const AdminHeader = () => {
             <span className="text-xl font-thin">Tastica</span>
           </div>
         </div>
-          <div className="flex items-center gap-2 font-thin">
-            <FaUserShield className="text-xl"/>
-           <h1> ADMIN ZONE</h1>
-            </div>
+        <div className="flex items-center gap-2 font-thin">
+          <FaUserShield className="text-xl" />
+          {adminName && <h1>{adminName}</h1>}
+        </div>
       </div>
     </nav>
   );
