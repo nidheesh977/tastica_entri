@@ -3,7 +3,7 @@ import { ShopHeader } from "../components/shop/ShopHeader/ShopHeader";
 import { Footer } from "../components/shared/Footer/Footer";
 import { AdminHeader } from "../components/admin/AdminHeader/AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { addAdminData, removeAdminData } from "../redux/features/authSlice";
+import { removeAdminData } from "../redux/features/authSlice";
 import { useEffect } from "react";
 import { axiosInstance } from "../config/axiosInstance";
 
@@ -11,6 +11,7 @@ export const AdminLayout = () => {
   const location = useLocation();
 
   const isAdmin = useSelector((state) => state?.auth?.adminData);
+
   const dispatch = useDispatch();
 
   const checkAdmin = async () => {
@@ -19,8 +20,7 @@ export const AdminLayout = () => {
         method: "GET",
         url: "/admin/check-logged",
       });
-      console.log("check admin: ", response);
-      dispatch(addAdminData());
+      
     } catch (error) {
       dispatch(removeAdminData());
     }

@@ -38,8 +38,9 @@ export const Login = ({ role, action }) => {
       const data = {
         username: username?.current?.value,
         email: email?.current?.value,
+        phonenumber: phonenumber?.current?.value,
         password: password?.current?.value,
-        confirmPassword: confirmPassword?.current?.value,
+        
       };
 
       try {
@@ -51,10 +52,11 @@ export const Login = ({ role, action }) => {
           data,
         });
         toast.success("Signup success");
+        if(role === 'Staff') navigate('/staff/login')
 
         console.log(response);
       } catch (error) {
-        toast.error(error);
+        toast.error(error?.response?.data?.message);
 
         console.log(error);
       }
@@ -81,7 +83,7 @@ export const Login = ({ role, action }) => {
         if (role === "Admin") navigate("/admin");
         if (role === "Staff") navigate("/staff");
       } catch (error) {
-        toast.error(error);
+        toast.error(error?.response?.data?.message);
         console.log(error);
       }
     }

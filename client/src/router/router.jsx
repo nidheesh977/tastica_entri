@@ -78,7 +78,7 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ProtectedRouteStaff />,
-        children: [{ path: "cart", element: <Cart /> }],
+        children: [{ path: "", element: <Cart /> }],
       },
     ],
   },
