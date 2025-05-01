@@ -1,9 +1,9 @@
-import {AdminSideBar} from '../../../components/admin/AdminSideBar/AdminSideBar'
+import { SideBar } from "../../../components/shared/SideBar/SideBar";
 
 export const AdminHome = () => {
   return (
     <div>
-      <AdminSideBar />
+      <SideBar />
     </div>
   );
 };

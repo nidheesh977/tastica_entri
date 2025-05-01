@@ -2,11 +2,11 @@ import { ShoppingCart } from "../../../components/ShoppingCart/ShoppingCart";
 import { Category } from "../../../components/Category/Category";
 import { Quantity } from "../../../components/Quantity/Quantity";
 import { Product } from "../../../components/Product/Product";
-import {AdminSideBar} from '../../../components/admin/AdminSideBar/AdminSideBar'
-import { StaffSideBar } from "../../../components/staff/StaffSideBar/StaffSideBar";
+import { SideBar } from "../../../components/shared/SideBar/SideBar";
 
 
-export const Cart = ({role}) => {
+
+export const Cart = () => {
   const products = [
     {
       title: "Biscuit",
@@ -55,7 +55,7 @@ export const Cart = ({role}) => {
 
   return (
     <>
-    {role === 'Admin' ? <AdminSideBar/> : <StaffSideBar/>}
+    <SideBar/>
     <div className="grid grid-cols-12">
       <div className="col-span-12 md:col-span-4">
         <ShoppingCart products={products} />

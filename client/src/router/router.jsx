@@ -65,15 +65,15 @@ export const router = createBrowserRouter([
           },
           {
             path: "add/product",
-            element: <AddProductCard role='Admin' access="Admin" />,
+            element: <AddProductCard  />,
           },
           {
             path: "staff/signup",
-            element: <SignupAndLogin role="Staff" action="Signup" access='Admin' />,
+            element: <SignupAndLogin role="Staff" action="Signup" />,
           },
           {
             path: "cart",
-            element: <Cart role='Admin' />,
+            element: <Cart  />,
           },
         ],
       },
@@ -93,7 +93,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "add/product",
-        element: <AddProductCard role='Staff' access='Staff' />,
+        element: <AddProductCard />,
       },
     ],
   },

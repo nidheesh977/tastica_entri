@@ -1,7 +1,7 @@
 import { FaStore } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import { removeShopData } from "../../../redux/features/authSlice";
+import { removeAdminData, removeStaffData, removeShopData } from "../../../redux/features/authSlice";
 import { useNavigate } from "react-router-dom";
 
 export const ShopHeader = () => {
@@ -23,6 +23,8 @@ export const ShopHeader = () => {
             <MdLogout
               onClick={() => {dispatch(removeShopData())
                 navigate('/')
+                dispatch(removeAdminData())
+                dispatch(removeStaffData())
               }}
               className="cursor-pointer"
             />

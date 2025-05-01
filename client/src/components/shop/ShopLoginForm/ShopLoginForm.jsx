@@ -1,15 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { addShopData } from "../../../redux/features/authSlice";
+import { addShopData, removeShopData } from "../../../redux/features/authSlice";
 import { useNavigate } from "react-router-dom";
 
 export const ShopLoginForm = ({ action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(removeShopData());
+  }, []);
 
   let api = null;
   if (action === "Signup") api = "/shop/create-shop";
@@ -54,10 +58,10 @@ export const ShopLoginForm = ({ action }) => {
           data,
         });
         console.log(response?.data?.data);
-        
+
         dispatch(addShopData(response?.data?.data));
         toast.success("Login success");
-        navigate('/shop')
+        navigate("/shop");
       } catch (error) {
         toast.error(error?.response?.data?.message);
       }
@@ -96,7 +100,11 @@ export const ShopLoginForm = ({ action }) => {
           className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
         />
 
-        {errorMessage && <p className="text-[#BF3131] font-bold text-lg py-2">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="text-[#BF3131] font-bold text-lg py-2">
+            {errorMessage}
+          </p>
+        )}
         <button
           className="p-4  bg-[#155E95] my-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={handleSubmit}
