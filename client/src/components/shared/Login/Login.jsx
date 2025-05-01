@@ -61,7 +61,7 @@ export const Login = ({ role, action }) => {
           data,
         });
         toast.success("Signup success");
-        if (role === "Staff") navigate("/staff/login");
+        if (role === "Staff") navigate("/shop/staff/login");
 
         console.log(response);
       } catch (error) {

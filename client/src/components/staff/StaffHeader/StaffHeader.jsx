@@ -6,10 +6,12 @@ import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { removeStaffData } from "../../../redux/features/authSlice";
+import {useNavigate} from 'react-router-dom'
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const staffName = useSelector((state) => state?.auth?.staffData?.username);
 
   return (
