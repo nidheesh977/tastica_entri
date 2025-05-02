@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import {categoryMock} from '../mockdatas/categoryMock.js';
 
 
 const categorySchema = new mongoose.Schema({
@@ -26,4 +26,15 @@ const categorySchema = new mongoose.Schema({
 
 const categoryModel = mongoose.model('Category', categorySchema);
 
-export default categoryModel
+export default categoryModel;
+
+// categoryModel.insertMany(categoryMock)
+//  .then(() => {
+//     console.log("all data inserted")
+//     mongoose.disconnect()
+//  }) 
+//  .catch(err => {
+//     console.log("error inserting",err)
+//  })
+     
+  

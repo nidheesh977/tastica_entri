@@ -1,5 +1,5 @@
 import express from 'express';
-import { createProduct, deleteProduct, productListTest,productListTestforAdmin, updateProduct } from '../../../controller/productContollers/productController.js';
+import { createProduct, deleteProduct, getCategoryProducts, productListTest,productListTestforAdmin, updateProduct } from '../../../controller/productContollers/productController.js';
 import { verifyAuthStaffToken } from '../../../middleware/staff/authStaffVerifyToken.js';
 import { staffAuthorizeRole } from '../../../middleware/staff/staffAuthorizeRole.js';
 import { verifyAuthAdminToken } from '../../../middleware/admin/authAdminVerifyToken.js';
@@ -30,6 +30,8 @@ productRouter.put('/cost-price/:id/remove',verifyAuthAdminToken,adminAuthorizeRo
 
 productRouter.put('/selling-price/:id/add',verifyAuthAdminToken,adminAuthorizeRole('admin'),addSellingPrice);
 productRouter.put('/selling-price/:id/remove',verifyAuthAdminToken,adminAuthorizeRole('admin'),removeSellingPrice);
+
+
 
 
 // for test
