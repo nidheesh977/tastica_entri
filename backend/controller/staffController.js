@@ -39,6 +39,9 @@ export const loginStaff = async (req,res) => {
         // // to update staff logged in Status
         //  await AdminStaffModel.findOneAndUpdate({phonenumber:phonenumber},{isLoggedIn:true},{new:true});
         
+        if(userExist.role !== "staff"){
+            return res.status(400).json({success:false,message:"You are not a staff"})
+        }
                
         const token = generateToken({id:userExist._id,role:userExist.role});
 
