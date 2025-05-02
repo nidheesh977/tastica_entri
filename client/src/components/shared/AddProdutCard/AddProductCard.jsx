@@ -14,7 +14,7 @@ export const AddProductCard = () => {
 
   return (
     <>
-    <SideBar/>
+      <SideBar />
       <div className="flex justify-center">
         <form
           onSubmit={(e) => e.preventDefault()}
@@ -59,12 +59,16 @@ export const AddProductCard = () => {
             placeholder="Discount"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
-          <input
-            type="text"
+          <select
             ref={category}
-            placeholder="Category"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
-          />
+          >
+            <option value="">Select a category</option>
+            <option value="books">Books</option>
+            <option value="electronics">Electronics</option>
+            <option value="clothing">Clothing</option>
+            <option value="furniture">Furniture</option>
+          </select>
 
           <button
             className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
