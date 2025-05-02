@@ -11,16 +11,19 @@ export const ShoppingCart = ({ products }) => {
       <div className="flex justify-between items-center">
         <h1 className="font-semibold">Cart</h1>
 
-        <select
-          className="lg:w-52 h-10 rounded p-2 font-semibold border"
-          defaultValue=''
-         
-        >
-          <option value="" disabled hidden>Select a user</option>
-          <option value="arjun">Arjun</option>
-          <option value="ashay">Ashay</option>
-          <option value="john">John</option>
-        </select>
+        <div>
+          <select
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="lg:w-52 h-10 rounded p-2 font-semibold border"
+          >
+            <option value="">Select a user</option>
+            <option value="arjun">Arjun</option>
+            <option value="ashay">Ashay</option>
+            <option value="john">John</option>
+          </select>
+        </div>
+
         <MdMoreVert className="cursor-pointer " size={20} />
       </div>
       <ul className=" flex flex-col mt-4 w-full font-thin">
