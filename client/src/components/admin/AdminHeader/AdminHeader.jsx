@@ -4,12 +4,27 @@ import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield } from "react-icons/fa";
 import { removeAdminData } from "../../../redux/features/authSlice";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const AdminHeader = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const adminName = useSelector((state) => state?.auth?.adminData?.username);
-  
-  
+  const adminLogout = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/admin/logout",
+        withCredentials: true,
+      });
+      toast.success("Logout success");
+      console.log(response);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
 
   return (
     <nav className="w-full">
@@ -26,11 +41,12 @@ export const AdminHeader = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 font-thin">
-         {adminName && <FaUserShield className="text-xl" />}
-          {adminName && <h1>{adminName}</h1>} 
+          {adminName && <FaUserShield className="text-xl" />}
+          {adminName && <h1>{adminName}</h1>}
           {adminName && (
             <MdLogout
               onClick={() => {
+                adminLogout();
                 dispatch(removeAdminData());
                 navigate("admin/login");
               }}

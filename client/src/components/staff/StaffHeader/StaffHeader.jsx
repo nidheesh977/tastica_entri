@@ -6,13 +6,29 @@ import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { removeStaffData } from "../../../redux/features/authSlice";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const staffName = useSelector((state) => state?.auth?.staffData?.username);
+
+  const staffLogout = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/staff/logout",
+        withCredentials: true,
+      });
+      toast.success("Logout success");
+      console.log(response);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
 
   return (
     <nav className="w-full">
@@ -58,12 +74,12 @@ export const StaffHeader = () => {
                 <MdLogout
                   onClick={() => {
                     dispatch(removeStaffData());
+                    staffLogout();
                     navigate("/");
                   }}
                   className="cursor-pointer"
                 />
               )}
-              
             </li>
           </ul>
         </div>
