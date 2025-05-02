@@ -113,3 +113,13 @@ export const checkAdminLogin = async (req,res) => {
         res.status(500).json({success:false,message:error.message});
     }
 }
+
+
+export const logOutAdmin = async (req,res) => {
+  try{
+     res.clearCookie("adminToken")
+    res.status(200).json({success:true,message:"admin logged out successfully"})
+  }catch(error){
+     return res.status(500).json({success:false,message:"internal server error"})
+  }
+}
