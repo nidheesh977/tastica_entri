@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "add/product",
-            element: <AddProductCard  />,
+            element: <AddProductCard />,
           },
           {
             path: "staff/signup",
@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "cart",
-            element: <Cart  />,
+            element: <Cart />,
           },
         ],
       },
@@ -89,7 +89,7 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ProtectedRouteStaff />,
-        children: [{ path: "", element: <StaffHome/> }],
+        children: [{ path: "", element: <StaffHome /> }],
       },
       {
         path: "add/product",
