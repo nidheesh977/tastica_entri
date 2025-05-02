@@ -37,6 +37,7 @@ export const SideBar = () => {
 
         {admin && (
           <li
+          onClick={() => handleSideBar("/admin/staff/view")}
             className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
           >
             <MdGroups />
