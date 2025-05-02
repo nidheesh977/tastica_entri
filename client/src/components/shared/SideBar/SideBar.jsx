@@ -3,10 +3,11 @@ import { FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { primary, tertiary } from "../../../utils/constants";
 import { FaBoxOpen, FaUserTie } from "react-icons/fa";
-import { MdPersonAdd, MdGroups } from "react-icons/md";
+import { MdPersonAdd, MdGroups, MdCategory } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { BiCategory } from "react-icons/bi";
 
 export const SideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
@@ -80,6 +81,24 @@ export const SideBar = () => {
         >
           <FaBox />
           Add Product
+        </li>
+        <li
+          onClick={() =>
+            handleSideBar(admin ? "/admin/add/product" : "/staff/add/product")
+          }
+          className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
+        >
+          <MdCategory />
+          Categories
+        </li>
+        <li
+          onClick={() =>
+            handleSideBar(admin ? "/admin/add/category" : "/staff/add/category")
+          }
+          className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
+        >
+          <BiCategory />
+          Add Category
         </li>
         <li
           onClick={() => handleSideBar(admin ? "/admin/cart" : "/staff")}

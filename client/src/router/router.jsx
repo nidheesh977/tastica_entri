@@ -15,6 +15,8 @@ import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
+import { AddCategory } from "../components/AddCategory/AddCategory";
+import { AddNewCategory } from "../pages/shared/AddNewCategory/AddNewCategory";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -24,6 +26,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLogin action="Login" /> },
+      // { path: "", element: <AddCategory /> },
 
       {
         path: "shop",
@@ -68,6 +71,10 @@ export const router = createBrowserRouter([
             element: <AddProductCard />,
           },
           {
+            path: "add/category",
+            element: <AddNewCategory />,
+          },
+          {
             path: "staff/signup",
             element: <SignupAndLogin role="Staff" action="Signup" />,
           },
@@ -94,6 +101,10 @@ export const router = createBrowserRouter([
       {
         path: "add/product",
         element: <AddProductCard />,
+      },
+      {
+        path: "add/category",
+        element: <AddNewCategory />,
       },
     ],
   },
