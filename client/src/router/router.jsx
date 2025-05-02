@@ -15,6 +15,7 @@ import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
+import { DoughnutChart } from "../components/DoughnutCart/DoughnutChart";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -23,7 +24,8 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <ShopLogin action="Login" /> },
+      { path: "", element: <DoughnutChart  /> },
+      // { path: "", element: <ShopLogin action="Login" /> },
 
       {
         path: "shop",
