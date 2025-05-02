@@ -1,14 +1,26 @@
 import { MdMoreVert } from "react-icons/md";
 import { MdAdd } from "react-icons/md";
 import { MdRemove } from "react-icons/md";
-import { FaSave, FaMoneyCheckAlt } from 'react-icons/fa';
+import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
+import { useState } from "react";
 
-
-export const ShoppingCart = ({products}) => {
+export const ShoppingCart = ({ products }) => {
+  const [selectedUser, setSelectedUser] = useState("User");
   return (
     <div className=" p-5 border">
       <div className="flex justify-between items-center">
-        <h1 className="font-semibold">Shopping Cart</h1>
+        <h1 className="font-semibold">Cart</h1>
+
+        <select
+          className="lg:w-52 h-10 rounded p-2 font-semibold border"
+          defaultValue=''
+         
+        >
+          <option value="" disabled hidden>Select a user</option>
+          <option value="arjun">Arjun</option>
+          <option value="ashay">Ashay</option>
+          <option value="john">John</option>
+        </select>
         <MdMoreVert className="cursor-pointer " size={20} />
       </div>
       <ul className=" flex flex-col mt-4 w-full font-thin">
@@ -51,10 +63,10 @@ export const ShoppingCart = ({products}) => {
       </div>
       <div className="flex gap-2 mt-2 justify-between">
         <button className=" flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
-          <FaSave/>  Save
+          <FaSave /> Save
         </button>
         <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#155E95] hover:bg-opacity-90 text-white rounded-lg">
-        <FaMoneyCheckAlt/>  Pay
+          <FaMoneyCheckAlt /> Pay
         </button>
       </div>
     </div>
