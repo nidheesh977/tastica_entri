@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+// import {productMocks} from '../mockdatas/productMock.js'
 
 const productSchema = new mongoose.Schema({
    product_id:{
@@ -48,4 +48,15 @@ const productSchema = new mongoose.Schema({
 
  const productModel = mongoose.model('Product',productSchema);
 
- export default productModel;
+ 
+ 
+  export default productModel;
+
+//  productModel.insertMany(productMocks)
+//  .then(() => {
+//     console.log("all data inserted")
+//     mongoose.disconnect()
+//  }) 
+//  .catch(err => {
+//     console.log("error inserting",err)
+//  })
