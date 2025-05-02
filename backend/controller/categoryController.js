@@ -98,7 +98,7 @@ export const deleteCategory = async(req,res) => {
 
 // ------------------------------------- add discount to category -----------------------------------------------
 
-export const addDiscount = async (req, res) => {
+export const addCategoryDiscount = async (req, res) => {
     try {
         const {id} = req.params;
         const {discountrate} = req.body;
@@ -125,7 +125,7 @@ export const addDiscount = async (req, res) => {
 
 // --------------------------------- remove discount from category -----------------------------------------
 
-export const removeDiscount = async(req,res) => {
+export const removeCategoryDiscount = async(req,res) => {
     try{
         const {id} = req.params;
         
@@ -146,5 +146,19 @@ export const removeDiscount = async(req,res) => {
         res.status(200).json({success:true,message:"Discount removed successfully",data:updatedCategory});
     }catch(error){
         res.status(500).json({success:false,message:"internal server error"});
+    }
+}
+
+export const getCategories = async (req,res) => {
+    try{
+        const categories = await categoryModel.find({}).sort({createdAt:-1});
+
+        if(!categories){
+            return res.status(404).json({success:false,message:"No categories found"});
+        }
+
+        res.status(200).json({success:true,message:"Categories fetched successfully",data:categories});
+    }catch(error){
+        res.status(500).json({success:true,message:"internal server error"})
     }
 }

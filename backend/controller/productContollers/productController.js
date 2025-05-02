@@ -125,8 +125,25 @@ export const updateProduct = async (req,res) => {
     }
 }
 
+// ----------------------------------------- Get category product -------------------------------------------------
 
+export const getCategoryProducts = async (req,res) => {
+    try{
+       const {categoryId} = req.query;
 
+       const fetchProduct = await productModel.find({category:categoryId}).sort({createdAt:-1}).populate("category");
+
+       if(!fetchProduct){
+            return res.status(400).json({success:false,message:"Product not found"})
+        }
+ 
+         res.status(200).json({success:true,message:"Product fetched successfully",data:fetchProduct})
+       
+    }catch(error){
+        console.log(error)
+        res.status(500).json({success:false,message:"internal server error"})
+    }
+}
 
 // for testing purpose only
 export const productListTest = (req, res) => {
