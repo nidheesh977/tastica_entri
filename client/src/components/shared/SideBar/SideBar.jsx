@@ -2,8 +2,8 @@ import { FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { primary, tertiary } from "../../../utils/constants";
-import { FaBoxOpen } from "react-icons/fa";
-import { MdPersonAdd } from "react-icons/md";
+import { FaBoxOpen, FaUserTie } from "react-icons/fa";
+import { MdPersonAdd, MdGroups } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ export const SideBar = () => {
           <li
             className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
           >
-            <FaUsers />
+            <MdGroups />
             Staffs
           </li>
         )}
@@ -47,10 +47,25 @@ export const SideBar = () => {
             onClick={() => handleSideBar("/admin/staff/signup")}
             className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
           >
-            <MdPersonAdd />
+            <FaUserTie />
             Add Staff
           </li>
         )}
+
+        <li
+          className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
+        >
+          <FaUsers />
+          Users
+        </li>
+
+        <li
+          className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
+        >
+          <MdPersonAdd />
+          Add User
+        </li>
+
         <li
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >

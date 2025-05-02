@@ -40,11 +40,11 @@ export const AdminHeader = () => {
             <span className="text-xl font-thin">Tastica</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 font-thin">
-          {adminName && <FaUserShield className="text-xl" />}
-          {adminName && <h1>{adminName}</h1>}
+        <div className="flex items-center gap-5  font-thin">
+          {adminName && <FaUserShield size={20} />}
+          {adminName && <h1 className="text-xl">{adminName}</h1>}
           {adminName && (
-            <MdLogout
+            <MdLogout size={20}
               onClick={() => {
                 adminLogout();
                 dispatch(removeAdminData());
