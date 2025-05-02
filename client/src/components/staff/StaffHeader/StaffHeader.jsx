@@ -37,7 +37,7 @@ export const StaffHeader = () => {
             open ? "block" : "hidden"
           }`}
         >
-          <ul className="md:flex items-center  font-thin  gap-10 bg-[#155E95] p-5 md:p-0 w-full text-center">
+          <ul className="md:flex items-center justify-center  font-thin  gap-10 bg-[#155E95] p-5 md:p-0 w-full text-center">
             <li className=" mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
               <input
                 className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
@@ -51,7 +51,7 @@ export const StaffHeader = () => {
             <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
               +
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center mb-2 gap-2">
               {staffName && <p>{staffName}</p>}
               {staffName && <FaUserTie />}
               {staffName && (
