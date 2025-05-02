@@ -75,7 +75,7 @@ export const StaffHeader = () => {
                   onClick={() => {
                     dispatch(removeStaffData());
                     staffLogout();
-                    navigate("/");
+                    navigate("/shop/staff/login");
                   }}
                   className="cursor-pointer"
                 />

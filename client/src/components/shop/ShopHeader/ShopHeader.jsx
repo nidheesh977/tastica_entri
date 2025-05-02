@@ -1,4 +1,4 @@
-import { FaStore } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -37,7 +37,7 @@ export const ShopHeader = () => {
         </div>
         <div className="flex items-center font-thin gap-3">
           {shopname && (
-            <FaStore
+            <FaHome
               className="cursor-pointer"
               title="Home"
               onClick={() => navigate("/shop")}
