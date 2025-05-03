@@ -1,6 +1,46 @@
 import { MdDelete } from "react-icons/md";
+import { axiosInstance } from "../../../config/axiosInstance";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addCategory } from "../../../redux/features/categorySlice";
+import toast from "react-hot-toast";
+import { AlertBox } from "../AlertBox/AlertBox";
 
 export const ListCardCategory = () => {
+  const [categories, setCategories] = useState([]);
+  const [alertMessage, setAlertMessage] = useState(false);
+  const dispatch = useDispatch();
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/admin/products/categories",
+        withCredentials: true,
+      });
+
+      setCategories(response?.data?.data);
+      dispatch(addCategory(response?.data?.data));
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const deleteCategory = async (id) => {
+    try {
+      const response = await axiosInstance({
+        method: "DELETE",
+        url: `/category/delete/${id}`,
+      });
+      toast.success("Category deleted successfully!");
+      fetchCategories();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
+
   return (
     <>
       <div className="xl:w-1/2 text-center md:pt-5 pb-14 px-1 m-2 md:px-5 border border-primary shadow h-full">
@@ -21,31 +61,40 @@ export const ListCardCategory = () => {
               <tr className="border-b border-primary">
                 <th className="px-4 py-2">No</th>
                 <th className="px-4 py-2">Category</th>
+                <th className="px-4 py-2">Description</th>
                 <th className="px-4 py-2">Discount</th>
                 <th className="px-4 py-2">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-primary">
-                <td className="px-4 py-2">1</td>
-                <td className="px-4 py-2">Curry Powder</td>
-                <td className="px-4 py-2">5%</td>
-                <td className="px-4 py-2">
-                  <div className="flex justify-center cursor-pointer">
-                    <MdDelete className="hover:text-red-500 w-10 text-secondary" />
-                  </div>
-                </td>
-              </tr>
-              <tr className="border-b border-primary">
-                <td className="px-4 py-2">2</td>
-                <td className="px-4 py-2">Detergents</td>
-                <td className="px-4 py-2">10%</td>
-                <td className="px-4 py-2">
-                  <div className="flex justify-center cursor-pointer">
-                    <MdDelete className="hover:text-red-500 w-10 text-secondary" />
-                  </div>
-                </td>
-              </tr>
+              {categories?.map((category, index) => (
+                <tr className="border-b border-primary" key={category._id}>
+                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">{category?.categoryname}</td>
+                  <td className="px-4 py-2">{category?.description}</td>
+                  <td className="px-4 py-2">{category?.discountrate}%</td>
+                  <td>
+                    <div className="flex items-center justify-end cursor-pointer w-12 h-12">
+                      <MdDelete
+                        onClick={() => {
+                          setAlertMessage(true);
+                        }}
+                        title="Delete"
+                        className="hover:text-red-500  text-secondary"
+                      />
+                      {alertMessage && (
+                        <AlertBox
+                          message="Do you want to delete this category?"
+                          onClose={() => {
+                            setAlertMessage(false);
+                            deleteCategory(category._id);
+                          }}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

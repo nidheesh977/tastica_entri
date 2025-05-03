@@ -1,5 +1,5 @@
 import categoryModel from '../model/categoryModel.js'
-import { updateCategoryValidation } from '../utils/joiValidation.js';
+import { updateCategoryValidation, newCategoryValidation } from '../utils/joiValidation.js';
 
 // --------------------------------------- create category -----------------------------------------------------
 

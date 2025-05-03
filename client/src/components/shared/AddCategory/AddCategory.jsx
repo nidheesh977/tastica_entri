@@ -1,14 +1,36 @@
 import { useRef } from "react";
 import { BiCategory } from "react-icons/bi";
 import { SideBar } from "../../shared/SideBar/SideBar";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const AddCategory = () => {
   const categoryname = useRef(null);
   const description = useRef(null);
   const discountrate = useRef(null);
-  const isDiscount = useRef(null);
+  // const isDiscount = useRef(null);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    const data = {
+      categoryname: categoryname?.current?.value,
+      description: description?.current?.value,
+      discountrate: discountrate?.current?.value,
+    };
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/category/create",
+        withCredentials: true,
+        data,
+      });
+      toast.success("Category added successfully");
+      categoryname.current.value = "";
+      description.current.value = "";
+      discountrate.current.value = "";
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
 
   return (
     <>
@@ -40,17 +62,17 @@ export const AddCategory = () => {
           <input
             type="number"
             ref={discountrate}
-            placeholder="Cost Price"
+            placeholder="Discount Rate"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
-          <label className="flex mx-auto gap-2 " htmlFor="isDiscount">
+          {/* <label className="flex mx-auto gap-2 " htmlFor="isDiscount">
             Discount
             <input
               type="checkbox"
               ref={isDiscount}
               className="p-4 my-1  bg-white shadow-2xl outline-[#155E95]"
             />
-          </label>
+          </label> */}
 
           <button
             className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"

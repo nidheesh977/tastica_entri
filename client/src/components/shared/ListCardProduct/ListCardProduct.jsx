@@ -1,26 +1,21 @@
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { axiosInstance } from "../../../config/axiosInstance";
 
 export const ListCardProduct = () => {
-  const products = [
-    {
-      id: "PROD617",
-      title: "eastern chicken masala",
-      category: "masala",
-      quantity: 120,
-      cost: 70,
-      selling: 85,
-      discount: "5%",
-    },
-    {
-      id: "PROD618",
-      title: "eastern mutton masala",
-      category: "masala",
-      quantity: 80,
-      cost: 100,
-      selling: 125,
-      discount: "5%",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const fetchProducts = async() => {
+    try {
+
+      const response = await axiosInstance({
+        method: 'GET',
+        url: '/'
+      })
+      
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">

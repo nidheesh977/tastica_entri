@@ -19,7 +19,6 @@ export const StaffLayout = () => {
         method: "GET",
         url: "/staff/check-logged",
       });
-      console.log("check staff: ", response);
     } catch (error) {
       dispatch(removeStaffData());
     }
