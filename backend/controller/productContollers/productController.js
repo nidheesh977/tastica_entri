@@ -140,7 +140,16 @@ export const getCategoryProducts = async (req,res) => {
          res.status(200).json({success:true,message:"Product fetched successfully",data:fetchProduct})
        
     }catch(error){
-        console.log(error)
+        res.status(500).json({success:false,message:"internal server error"})
+    }
+}
+
+export const getAllProducts = async (req,res) => {
+    try{
+        const getProducts = await productModel.find({}).sort({createdAt:-1}).populate("category");
+
+        res.status(200).json({success:true,message:"Data fetched",data:getProducts})
+    }catch{
         res.status(500).json({success:false,message:"internal server error"})
     }
 }

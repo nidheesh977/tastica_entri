@@ -28,6 +28,7 @@ export const createShop = async (req,res) => {
             shopname,
             email,
             password:hasedPassword,
+            role:"shop"
         })
 
         await newShop.save();
