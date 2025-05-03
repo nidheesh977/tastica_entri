@@ -41,11 +41,11 @@ export const createProduct = async (req, res) => {
         generateProductId()
        }
        
-       
+       const lowerCaseProductName = productname.trim().toLowerCase()
 
         const product = await productModel.create({
             product_id: productId,
-            productname,
+            productname:lowerCaseProductName,
             quantity,
             costprice,
             sellingprice,

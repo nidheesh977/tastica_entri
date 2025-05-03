@@ -4,6 +4,7 @@ import { verifyAuthStaffToken } from "../../../middleware/staff/authStaffVerifyT
 import { staffAuthorizeRole } from "../../../middleware/staff/staffAuthorizeRole.js";
 import { getCategoryProducts } from "../../../controller/productContollers/productController.js";
 import { getCategories } from "../../../controller/categoryController.js";
+import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice, saveInvoice } from "../../../controller/invoiceController.js";
 
 const staffRouter = express.Router();
 
@@ -16,6 +17,12 @@ staffRouter.post('/logout',verifyAuthStaffToken,staffAuthorizeRole("staff"),logO
 
 staffRouter.get('/products/category-search',verifyAuthStaffToken,staffAuthorizeRole('staff'),getCategoryProducts);
 staffRouter.get('/products/categories',verifyAuthStaffToken,staffAuthorizeRole('staff'),getCategories);
+
+staffRouter.post('/invoice-create',verifyAuthStaffToken,staffAuthorizeRole('staff'),createNewInvoiceTab);
+staffRouter.put('/invoice-save/:invoiceId',verifyAuthStaffToken,staffAuthorizeRole('staff'),saveInvoice);
+staffRouter.put('/invoice/:invoiceId/add-products',verifyAuthStaffToken,staffAuthorizeRole('staff'),addProductToInvoice);
+staffRouter.put('/invoice/:invoiceId/product/:invoiceProductId/remove',verifyAuthStaffToken,staffAuthorizeRole('staff'),removeProductFromInvoice);
+
 
 
 export default staffRouter; 
