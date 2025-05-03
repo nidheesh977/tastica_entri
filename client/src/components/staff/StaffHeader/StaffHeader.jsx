@@ -67,11 +67,11 @@ export const StaffHeader = () => {
             <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
               +
             </li>
-            <li className="flex items-center mb-2 gap-2">
-              {staffName && <p>{staffName}</p>}
-              {staffName && <FaUserTie />}
+            <li className="flex items-center mb-2 gap-5">
+              {staffName && <p className="text-xl">{staffName}</p>}
+              {staffName && <FaUserTie size={20} />}
               {staffName && (
-                <MdLogout
+                <MdLogout size={20}
                   onClick={() => {
                     dispatch(removeStaffData());
                     staffLogout();

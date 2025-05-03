@@ -35,7 +35,7 @@ export const ShopHeader = () => {
             <span className="text-xl font-thin">Tastica</span>
           </div>
         </div>
-        <div className="flex items-center font-thin gap-3">
+        <div className="flex items-center font-thin gap-5">
           {shopname && (
             <FaHome
               className="cursor-pointer"
@@ -44,9 +44,10 @@ export const ShopHeader = () => {
               size={20}
             />
           )}
-          {shopname && <p>{shopname}</p>}
+          {shopname && <p className="text-xl">{shopname}</p>}
           {shopname && (
             <MdLogout
+            size={20}
               onClick={() => {
                 dispatch(removeShopData());
                 dispatch(removeAdminData());

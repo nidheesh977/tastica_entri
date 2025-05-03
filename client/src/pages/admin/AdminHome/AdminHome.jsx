@@ -11,7 +11,7 @@ export const AdminHome = () => {
   return (
     <>
       <SideBar />
-      <div className="p-3 lg:h-[710px]">
+      <div className="lg:h-[706px] p-2">
         <section className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-4">
             <DoughnutChart />
@@ -23,7 +23,7 @@ export const AdminHome = () => {
             <ExpenseProfitChart />
           </div>
         </section>
-        <section className="grid grid-cols-12 gap-2 my-2">
+        <section className="grid grid-cols-12 gap-2 mt-2">
           <div className="col-span-12 lg:col-span-4">
             <BarChart />
           </div>
