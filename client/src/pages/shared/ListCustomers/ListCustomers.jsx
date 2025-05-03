@@ -6,7 +6,7 @@ export const ListCustomers = () => {
   return (
     <>
       <SideBar />
-      <div className="flex  mt-10 justify-around ">
+      <div className="md:flex items-center justify-center mt-10">
         <ListCardCustomer />
       </div>
     </>

@@ -20,6 +20,7 @@ import { ListStaffs } from "../pages/admin/ListStaffs/ListStaffs";
 import { ListCustomers } from "../pages/shared/ListCustomers/ListCustomers";
 import { AddNewCustomer } from "../pages/shared/AddNewCustomer/AddNewCustomer";
 import { ListCategories } from "../pages/shared/ListCategories/ListCategories";
+import { ListProducts } from "../pages/shared/ListProducts/ListProducts";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
             element: <AddProductCard />,
           },
           {
+            path: "product/view",
+            element: <ListProducts />,
+          },
+          {
             path: "category/view",
             element: <ListCategories />,
           },
@@ -120,6 +125,10 @@ export const router = createBrowserRouter([
       {
         path: "add/product",
         element: <AddProductCard />,
+      },
+      {
+        path: "product/view",
+        element: <ListProducts />,
       },
       {
         path: "category/view",
