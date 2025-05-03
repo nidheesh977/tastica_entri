@@ -97,7 +97,7 @@ export const newProductValidation = Joi.object({
         'string.max': 'Product name must be at most 30 characters long',   
     }),
 
-    quantity: Joi.number().integer().min(1).required().messages({
+    quantity: Joi.number().integer().min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',
@@ -134,7 +134,7 @@ export const updateProductValidation = Joi.object({
         'string.min': 'Product name must be at least 3 characters long',
         'string.max': 'Product name must be at most 30 characters long',   
     }),
-    quantity: Joi.number().integer().min(1).required().messages({
+    quantity: Joi.number().integer().min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',

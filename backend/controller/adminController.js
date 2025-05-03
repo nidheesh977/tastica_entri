@@ -90,6 +90,7 @@ export const CreateEmployee = async (req,res) => {
           phonenumber,
           email,
           password:hashedPassword,
+          
 
       });
 

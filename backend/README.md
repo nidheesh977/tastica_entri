@@ -8,6 +8,7 @@
  staff-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/staff/logout \
  getproduct-withCategory&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/staff/products/category-search?categoryId=68122b2b884da7193328edbe \
  getCategories&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/user/products/categories\
+ getAllProducts&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/staff/products\
  
  routes for admin\
 
@@ -18,6 +19,7 @@
  shop-create&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/create-shop \
  getproduct-withCategory&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products/category-search?categoryId=68122b2b884da7193328edbe \
  getCategories&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products/categories\
+ getAllProducts&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products\
 
  routes for shop\
 

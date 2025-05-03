@@ -11,10 +11,52 @@ export const createProduct = async (req, res) => {
   try {
     const { error, value } = newProductValidation.validate(req.body);
 
-    if (error) {
-      return res
-        .status(400)
-        .json({ success: false, message: error.details[0].message });
+        if(error){
+            return res.status(400).json({success:false,message: error.details[0].message });
+        }
+
+        const { productname, quantity, costprice, sellingprice, discount, category } = value;
+        
+        
+       
+        if(sellingprice === 0 && costprice === 0){
+            return res.status(400).json({success:false,message:"Selling price and cost price cannot be 0"})
+        }
+
+        if(sellingprice > 0  && costprice > 0){
+            return res.status(400).json({success:false,message:"You can only add one price rate"})
+        }
+
+        
+        const productExist = await productModel.findOne({ productname:productname})
+
+        if(productExist){
+            return res.status(400).json({success:false,message:"Product already exists"})
+        }
+
+       const productId = generateProductId();
+
+       const existProductId = await productModel.findOne({product_id:productId});
+
+       if(existProductId){
+        generateProductId()
+       }
+       
+       const lowerCaseProductName = productname.trim().toLowerCase()
+
+        const product = await productModel.create({
+            product_id: productId,
+            productname:lowerCaseProductName,
+            quantity,
+            costprice,
+            sellingprice,
+            discount,
+            category
+        });
+        res.status(201).json({ success: true, message: "Product created successfully", data:product });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: error.message });
     }
 
     const {
@@ -192,10 +234,24 @@ export const getCategoryProducts = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("category");
 
-    if (!fetchProduct) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Product not found" });
+       if(!fetchProduct){
+            return res.status(400).json({success:false,message:"Product not found"})
+        }
+ 
+         res.status(200).json({success:true,message:"Product fetched successfully",data:fetchProduct})
+       
+    }catch(error){
+        res.status(500).json({success:false,message:"internal server error"})
+    }
+}
+
+export const getAllProducts = async (req,res) => {
+    try{
+        const getProducts = await productModel.find({}).sort({createdAt:-1}).populate("category");
+
+        res.status(200).json({success:true,message:"Data fetched",data:getProducts})
+    }catch{
+        res.status(500).json({success:false,message:"internal server error"})
     }
 
     res

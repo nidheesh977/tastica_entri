@@ -23,7 +23,8 @@ app.use(cors(corsOption))
 
 // connect to mongodb
 connectDB()
- 
+
+
 app.use('/api',apiRouter);
 
 
