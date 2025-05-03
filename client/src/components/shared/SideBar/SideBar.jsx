@@ -20,7 +20,7 @@ export const SideBar = () => {
   return (
     <div
       className={`
-      fixed top-15 md:top-[99px]  left-0 h-[81%] md:h-[77%] xl:h-[81%] w-60 bg-${tertiary} shadow-2xl text-white
+      fixed top-15 md:top-[99px]  left-0 h-[81%] md:h-[77%] xl:h-[81%] w-60 bg-${tertiary} backdrop-blur  shadow-2xl text-white
       transform ${sidebar ? "translate-x-0" : "-translate-x-full"}
       transition-transform duration-300 ease-in-out
       z-50
@@ -56,19 +56,21 @@ export const SideBar = () => {
 
         <li
           onClick={() =>
-            handleSideBar(admin ? "/admin/user/view" : "/staff/user/view")
+            handleSideBar(admin ? "/admin/customer/view" : "/staff/customer/view")
           }
           className={` bg-[${primary}]  rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <FaUsers />
-          Users
+          Customers
         </li>
 
-        <li
+        <li onClick={() =>
+          handleSideBar(admin ? "/admin/customer/add" : "/staff/customer/add")
+        }
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <MdPersonAdd />
-          Add User
+          Add Customer
         </li>
 
         <li
@@ -86,10 +88,9 @@ export const SideBar = () => {
           <FaBox />
           Add Product
         </li>
-        <li
-          onClick={() =>
-            handleSideBar(admin ? "/admin/add/product" : "/staff/add/product")
-          }
+        <li onClick={() =>
+          handleSideBar(admin ? "/admin/category/view" : "/staff/category/view")
+        }
           className={` bg-[${primary}] rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10`}
         >
           <MdCategory />

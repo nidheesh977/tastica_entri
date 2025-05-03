@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { BiCategory } from "react-icons/bi";
-import { SideBar } from "../shared/SideBar/SideBar";
+import { SideBar } from "../../shared/SideBar/SideBar";
 
 export const AddCategory = () => {
   const categoryname = useRef(null);

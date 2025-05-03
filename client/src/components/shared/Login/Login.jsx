@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { validateData } from "../../../utils/validateData";
 import { FaSignInAlt } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
@@ -6,23 +6,12 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  addAdminData,
-  addStaffData,
-  removeAdminData,
-  removeStaffData,
-} from "../../../redux/features/authSlice";
+import { addAdminData, addStaffData } from "../../../redux/features/authSlice";
 
 export const Login = ({ role, action }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(removeAdminData());
-  //   dispatch(removeStaffData());
-  // }, []);
-
   const username = useRef(null);
   const email = useRef(null);
   const phonenumber = useRef(null);
@@ -42,7 +31,7 @@ export const Login = ({ role, action }) => {
         username?.current?.value,
         email?.current?.value,
         password?.current?.value,
-        confirmPassword?.current?.value
+        confirmPassword?.current?.value,
       );
 
       const data = {
@@ -103,7 +92,7 @@ export const Login = ({ role, action }) => {
         onSubmit={(e) => e.preventDefault()}
         className={`mx-2 ${
           action === "Login" ? "my-20 md:my-28" : "my-10"
-        }  max-w-[500px] px-4 py-10 md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg `}
+        }  max-w-[500px] px-4 py-10 md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg `}
       >
         <h1 className="text-3xl py-4 font-thin text-center text-[#155E95] ">
           {action === "Login" ? `${role} Login In` : `${role} Sign Up`}
@@ -145,9 +134,9 @@ export const Login = ({ role, action }) => {
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
         )}
-        <p className="text-[#BF3131] font-bold text-lg py-2">{errorMessage}</p>
+        <p className="text-secondary font-bold text-lg py-2">{errorMessage}</p>
         <button
-          className="p-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
+          className="p-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
           onClick={handleSubmit}
         >
           {action === "Login" ? (

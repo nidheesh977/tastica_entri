@@ -1,13 +1,13 @@
 import React from "react";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
-import { ListCardStaff } from "../../../components/admin/ListCardStaff/ListCardStaff";
+import { ListCardCategory } from "../../../components/shared/ListCardCategory/ListCardCategory";
 
-export const ListStaffs = () => {
+export const ListCategories = () => {
   return (
     <>
       <SideBar />
       <div className="flex  mt-10 justify-around ">
-        <ListCardStaff/>
+        <ListCardCategory />
       </div>
     </>
   );

@@ -7,7 +7,7 @@ import { ShopLogin } from "../pages/shop/ShopLogin/ShopLogin";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
 import { ProtectedRouteShop } from "./ProtectedRouteShop";
-import { Home } from "../pages/shared/Home/Home";
+import { Home } from "../pages/shop/Home/Home";
 import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
 import { Login } from "../components/shared/Login/Login";
@@ -17,7 +17,9 @@ import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
 import { AddNewCategory } from "../pages/shared/AddNewCategory/AddNewCategory";
 import { ListStaffs } from "../pages/admin/ListStaffs/ListStaffs";
-import { ListUsers } from "../pages/shared/ListUsers/ListUsers";
+import { ListCustomers } from "../pages/shared/ListCustomers/ListCustomers";
+import { AddNewCustomer } from "../pages/shared/AddNewCustomer/AddNewCustomer";
+import { ListCategories } from "../pages/shared/ListCategories/ListCategories";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -27,7 +29,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLogin action="Login" /> },
-      // { path: "", element: <ListStaffs /> },
+      // { path: "", element: <AddCustomerCard /> },
 
       {
         path: "shop",
@@ -72,6 +74,10 @@ export const router = createBrowserRouter([
             element: <AddProductCard />,
           },
           {
+            path: "category/view",
+            element: <ListCategories />,
+          },
+          {
             path: "add/category",
             element: <AddNewCategory />,
           },
@@ -84,8 +90,12 @@ export const router = createBrowserRouter([
             element: <ListStaffs />,
           },
           {
-            path: "user/view",
-            element: <ListUsers />,
+            path: "customer/view",
+            element: <ListCustomers />,
+          },
+          {
+            path: "customer/add",
+            element: <AddNewCustomer />,
           },
           {
             path: "cart",
@@ -112,12 +122,20 @@ export const router = createBrowserRouter([
         element: <AddProductCard />,
       },
       {
+        path: "category/view",
+        element: <ListCategories />,
+      },
+      {
         path: "add/category",
         element: <AddNewCategory />,
       },
       {
-        path: "user/view",
-        element: <ListUsers />,
+        path: "customer/view",
+        element: <ListCustomers />,
+      },
+      {
+        path: "customer/add",
+        element: <AddNewCustomer />,
       },
     ],
   },

@@ -28,7 +28,7 @@ export const AdminHeader = () => {
 
   return (
     <nav className="w-full">
-      <div className="flex mx-auto py-4 px-5  justify-between items-center bg-[#155E95] text-white font-bold md:px-10 ">
+      <div className="flex mx-auto py-4 px-5  justify-between items-center bg-primary text-white font-bold md:px-10 ">
         <div className="flex justify-between items-center w-full md:w-1/2">
           <div
             onClick={() => dispatch(toggleSideBar())}

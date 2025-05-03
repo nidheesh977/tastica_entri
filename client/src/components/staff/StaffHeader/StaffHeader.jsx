@@ -32,13 +32,13 @@ export const StaffHeader = () => {
 
   return (
     <nav className="w-full">
-      <div className="md:flex mx-auto py-4 px-5  justify-between items-center bg-[#155E95] text-white font-bold md:px-10 ">
+      <div className="md:flex mx-auto py-4 px-5  justify-between items-center bg-primary text-white font-bold md:px-10 ">
         <div className="flex justify-between items-center w-full md:w-1/2">
           <div
             onClick={() => dispatch(toggleSideBar())}
             className="cursor-pointer flex items-center gap-4"
           >
-            <span className="border rounded p-2 bg-[#155E95] hover:opacity-70">
+            <span className="border rounded p-2 bg-primary hover:opacity-70">
               <CgMenuLeft size={20} />
             </span>
             <span className="text-xl font-thin">Tastica</span>
@@ -53,7 +53,7 @@ export const StaffHeader = () => {
             open ? "block" : "hidden"
           }`}
         >
-          <ul className="md:flex items-center justify-center  font-thin  gap-10 bg-[#155E95] p-5 md:p-0 w-full text-center">
+          <ul className="md:flex items-center justify-center  font-thin  gap-10 bg-primary p-5 md:p-0 w-full text-center">
             <li className=" mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
               <input
                 className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"

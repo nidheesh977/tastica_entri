@@ -1,11 +1,10 @@
-import { BarChart } from "../../../components/BarChart/BarChart";
-import { DoughnutChart } from "../../../components/DoughnutCart/DoughnutChart";
-import { ExpenseProfitChart } from "../../../components/ExpenseProfitChart/ExpenseProfitChart";
-import { MonthlySales } from "../../../components/MonthlySales/MonthlySales";
-import { SalesPerformance } from "../../../components/SalesPerformance/SalesPerformance";
+import { BarChart } from "../../../components/admin/BarChart/BarChart";
+import { DoughnutChart } from "../../../components/admin/DoughnutCart/DoughnutChart";
+import { ExpenseProfitChart } from "../../../components/admin/ExpenseProfitChart/ExpenseProfitChart";
+import { MonthlySales } from "../../../components/admin/MonthlySales/MonthlySales";
+import { SalesPerformance } from "../../../components/admin/SalesPerformance/SalesPerformance";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
-
-import { YearlySales } from "../../../components/YearlySales/YearlySales";
+import { YearlySales } from "../../../components/admin/YearlySales/YearlySales";
 
 export const AdminHome = () => {
   return (
