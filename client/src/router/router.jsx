@@ -17,6 +17,7 @@ import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
 import { AddNewCategory } from "../pages/shared/AddNewCategory/AddNewCategory";
 import { ListStaffs } from "../pages/admin/ListStaffs/ListStaffs";
+import { ListUsers } from "../pages/shared/ListUsers/ListUsers";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
             element: <ListStaffs />,
           },
           {
+            path: "user/view",
+            element: <ListUsers />,
+          },
+          {
             path: "cart",
             element: <Cart />,
           },
@@ -109,6 +114,10 @@ export const router = createBrowserRouter([
       {
         path: "add/category",
         element: <AddNewCategory />,
+      },
+      {
+        path: "user/view",
+        element: <ListUsers />,
       },
     ],
   },
