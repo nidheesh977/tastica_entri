@@ -14,7 +14,7 @@ export const ListCardCategory = () => {
   const [editId, setEditId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
-  const [discount, setDiscount] = useState(null);
+  // const [editDiscount, setEditDiscount] = useState(null);
   const dispatch = useDispatch();
   const fetchCategories = async () => {
     try {
@@ -34,8 +34,29 @@ export const ListCardCategory = () => {
     fetchCategories();
   }, []);
 
-  const updateCategoryData = (id) => {
-    setEditId(null);
+  const updateCategoryData = async (id) => {
+    const data = {
+      categoryname: editCategoryName,
+      description: editedDescription,
+      // discountrate: editDiscount,
+    };
+
+    try {
+      await axiosInstance({
+        method: "PUT",
+        url: `/category/update/${id}`,
+        withCredentials: true,
+        data,
+      });
+
+      toast.success("Category updated successfully!");
+      setEditId(null);
+      setEditCategoryName("");
+      setEditedDescription("");
+      fetchCategories();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
   };
 
   const deleteCategory = async (id) => {
@@ -45,7 +66,7 @@ export const ListCardCategory = () => {
         url: `/category/delete/${id}`,
       });
       toast.success("Category deleted successfully!");
-      console.log(response)
+      console.log(response);
       fetchCategories();
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
@@ -90,7 +111,6 @@ export const ListCardCategory = () => {
                           value={editCategoryName}
                           onChange={(e) => setEditCategoryName(e.target.value)}
                         />
-                       
                       </span>
                     ) : (
                       <span>{category?.categoryname}</span>
@@ -105,40 +125,37 @@ export const ListCardCategory = () => {
                           value={editedDescription}
                           onChange={(e) => setEditedDescription(e.target.value)}
                         />
-                        
                       </span>
                     ) : (
                       <span>{category?.description}</span>
                     )}
                   </td>
                   <td className="px-4 py-2">
-                    {editId === category._id ? (
+                    {/* {editId === category._id ? (
                       <span className="flex items-center gap-2">
                         <input
                           className="rounded p-1 shadow "
                           type="text"
-                          value={discount}
-                          onChange={(e) => setDiscount(e.target.value)}
+                          value={editDiscount}
+                          onChange={(e) => setEditDiscount(e.target.value)}
+                        />
+                      </span>
+                    ) : ( */}
+                    <span>{category?.discountrate}%</span>
+                    {/* )} */}
+                  </td>
+                  <td>
+                    {editId === category._id ? (
+                      <span className="flex items-center gap-2 ms-3 cursor-pointer w-16 h-12">
+                        <FaSave
+                          title="Save"
+                          onClick={() => updateCategoryData(category._id)}
+                          size={20}
+                          className="text-primary cursor-pointer hover:text-blue-800"
                         />
                       </span>
                     ) : (
-                      <span>{category?.discountrate}%</span>
-                    )}
-                  </td>
-                  <td>
-                    
-                    {editId === category._id ? (
-                      <span className="flex items-center gap-2 ms-3 cursor-pointer w-16 h-12">
-                      <FaSave
-                      title="Save"
-                        onClick={() => updateCategoryData(category._id)}
-                        size={20}
-                        className="text-primary cursor-pointer hover:text-blue-800"
-                      />
-                      </span>
-                    ) : (
                       <span className="flex items-center gap-2 justify-end cursor-pointer w-16 h-12">
-                        
                         <FiEdit
                           title="Edit"
                           className="text-primary hover:text-blue-800"
@@ -147,7 +164,7 @@ export const ListCardCategory = () => {
                             setEditId(category?._id);
                             setEditCategoryName(category.categoryname);
                             setEditedDescription(category.description);
-                            setDiscount(category.discountrate);
+                            // setEditDiscount(category.discountrate);
                           }}
                         />
                         <MdDelete
@@ -170,8 +187,6 @@ export const ListCardCategory = () => {
                         )}
                       </span>
                     )}
-
-                   
                   </td>
                 </tr>
               ))}
