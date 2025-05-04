@@ -1,21 +1,50 @@
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { axiosInstance } from "../../../config/axiosInstance";
+import { FiEdit } from "react-icons/fi";
+import { FaSave } from "react-icons/fa";
+import { AlertBox } from "../../shared/AlertBox/AlertBox"; // Adjust import as needed
 
 export const ListCardProduct = () => {
-  const [products, setProducts] = useState([]);
-  const fetchProducts = async() => {
-    try {
+  const [products, setProducts] = useState([
+    {
+      id: 1,
+      title: "Product A",
+      category: "Category 1",
+      quantity: 50,
+      cost: 10,
+      selling: 15,
+      discount: 5,
+    },
+    {
+      id: 2,
+      title: "Product B",
+      category: "Category 2",
+      quantity: 30,
+      cost: 20,
+      selling: 25,
+      discount: 0,
+    },
+  ]);
 
-      const response = await axiosInstance({
-        method: 'GET',
-        url: '/'
-      })
-      
-    } catch (error) {
-      
-    }
-  }
+  const [editId, setEditId] = useState(null);
+  const [editedProduct, setEditedProduct] = useState({});
+  const [alertMessage, setAlertMessage] = useState(null);
+
+  const handleEdit = (product) => {
+    setEditId(product.id);
+    setEditedProduct({ ...product });
+  };
+
+  const handleSave = (id) => {
+    setProducts((prev) =>
+      prev.map((prod) => (prod.id === id ? editedProduct : prod)),
+    );
+    setEditId(null);
+  };
+
+  const deleteProduct = (id) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  };
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -31,7 +60,7 @@ export const ListCardProduct = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[768px] w-full border border-primary text-left">
+        <table className="min-w-[768px] w-full border border-primary text-left text-sm sm:text-base">
           <thead className="bg-primary/10 font-semibold text-black">
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
@@ -51,23 +80,141 @@ export const ListCardProduct = () => {
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">{prod.id}</td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.title}
+                  {editId === prod.id ? (
+                    <input
+                      value={editedProduct.title}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          title: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.title
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.category}
+                  {editId === prod.id ? (
+                    <input
+                      value={editedProduct.category}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          category: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.category
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.quantity}
+                  {editId === prod.id ? (
+                    <input
+                      type="number"
+                      value={editedProduct.quantity}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          quantity: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.quantity
+                  )}
                 </td>
-                <td className="border border-primary px-4 py-2">{prod.cost}</td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.selling}
+                  {editId === prod.id ? (
+                    <input
+                      type="number"
+                      value={editedProduct.cost}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          cost: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.cost
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.discount}
+                  {editId === prod.id ? (
+                    <input
+                      type="number"
+                      value={editedProduct.selling}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          selling: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.selling
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === prod.id ? (
+                    <input
+                      type="number"
+                      value={editedProduct.discount}
+                      onChange={(e) =>
+                        setEditedProduct({
+                          ...editedProduct,
+                          discount: e.target.value,
+                        })
+                      }
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    prod.discount
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
-                  <MdDelete className="hover:text-red-500 text-secondary cursor-pointer inline-block" />
+                  <div className="flex justify-start items-center h-12 gap-2">
+                    {editId === prod.id ? (
+                      <FaSave
+                        title="Save"
+                        size={20}
+                        onClick={() => handleSave(prod.id)}
+                        className="text-primary hover:text-blue-800 cursor-pointer"
+                      />
+                    ) : (
+                      <>
+                        <FiEdit
+                          title="Edit"
+                          size={20}
+                          onClick={() => handleEdit(prod)}
+                          className="text-primary hover:text-blue-800 cursor-pointer"
+                        />
+                        <MdDelete
+                          title="Delete"
+                          size={22}
+                          onClick={() => setAlertMessage(prod.id)}
+                          className="hover:text-red-500 text-secondary cursor-pointer"
+                        />
+                      </>
+                    )}
+                    {alertMessage === prod.id && (
+                      <AlertBox
+                        message="Do you want to delete this product?"
+                        onConfirm={() => {
+                          setAlertMessage(null);
+                          deleteProduct(prod.id);
+                        }}
+                        onCancel={() => setAlertMessage(null)}
+                      />
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

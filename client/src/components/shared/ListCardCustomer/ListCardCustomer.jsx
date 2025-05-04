@@ -15,7 +15,6 @@ export const ListCardCustomer = () => {
   const [editedCustomer, setEditedCustomer] = useState("");
 
   const updateCustomerData = (id) => {
-
     setEditId(null);
   };
 
@@ -68,8 +67,7 @@ export const ListCardCustomer = () => {
                   )}
                 </td>
                 <td className="px-4 py-2">
-                    <span>{cust.points}</span>
-              
+                  <span>{cust.points}</span>
                 </td>
                 <td className="px-4 py-2">
                   {editId === cust._id ? (
