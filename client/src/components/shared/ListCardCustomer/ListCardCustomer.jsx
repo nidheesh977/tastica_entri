@@ -1,56 +1,121 @@
-import React from "react";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { FaSave } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
+import { AlertBox } from "../../shared/AlertBox/AlertBox";
 
 export const ListCardCustomer = () => {
-  return (
-    <>
-      <div className="md:w-1/2 text-center pt-5 pb-14 px-5 m-2 border border-primary shadow h-full">
-        <div className="grid grid-cols-12 items-center">
-          <h1 className="font-thin text-start col-span-8 text-3xl my-6 text-primary">
-            Customers
-          </h1>
-          <input
-            className="rounded-xl text-primary shadow col-span-4 outline-primary h-10 p-5"
-            type="text"
-            placeholder="Search"
-          />
-        </div>
+  const [customers, setCustomers] = useState([
+    { index: 0, _id: 1, name: "Arjun", points: 507 },
+    { index: 1, _id: 2, name: "Vishnu", points: 802 },
+  ]);
 
-        <div className="overflow-x-auto w-full">
-          <table className="min-w-full table-auto border border-primary text-left">
-            <thead className="bg-primary/10">
-              <tr className="border-b border-primary">
-                <th className="px-4 py-2">No</th>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Points</th>
-                <th className="px-4 py-2">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-primary">
-                <td className="px-4 py-2">1</td>
-                <td className="px-4 py-2">Arjun</td>
-                <td className="px-4 py-2">507</td>
-                <td className="px-4 py-2">
-                  <div className="flex justify-center w-10 cursor-pointer">
-                    <MdDelete className="hover:text-red-500 text-secondary" />
-                  </div>
-                </td>
-              </tr>
-              <tr className="border-b border-primary">
-                <td className="px-4 py-2">2</td>
-                <td className="px-4 py-2">Vishnu</td>
-                <td className="px-4 py-2">802</td>
-                <td className="px-4 py-2">
-                  <div className="flex justify-center w-10 cursor-pointer">
-                    <MdDelete className="hover:text-red-500 text-secondary" />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  const [alertMessage, setAlertMessage] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [editedCustomer, setEditedCustomer] = useState("");
+
+  const updateCustomerData = (id) => {
+
+    setEditId(null);
+  };
+
+  const deleteCustomer = (id) => {
+    setCustomers((prev) => prev.filter((cust) => cust._id !== id));
+  };
+
+  return (
+    <div className="text-center pt-5 pb-14 px-2 sm:px-5 m-2 border border-primary shadow h-full">
+      <div className="grid grid-cols-12 items-center">
+        <h1 className="font-thin text-start col-span-7 text-xs sm:text-3xl my-6 text-primary">
+          Customers
+        </h1>
+        <input
+          className="rounded-xl shadow col-span-5 outline-primary h-10 p-2 text-xs sm:text-base"
+          type="text"
+          placeholder="Search"
+        />
       </div>
-    </>
+
+      <div className="overflow-x-auto w-full">
+        <table className="min-w-full table-auto border border-primary text-left text-xs sm:text-base">
+          <thead className="bg-primary/10">
+            <tr className="border-b border-primary">
+              <th className="px-4 py-2">No</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Points</th>
+              <th className="px-4 py-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {customers.map((cust) => (
+              <tr key={cust._id} className="border-b border-primary">
+                <td className="px-4 py-2">{cust.index + 1}</td>
+                <td className="px-4 py-2">
+                  {editId === cust._id ? (
+                    <input
+                      className="rounded p-1 shadow w-full"
+                      type="text"
+                      value={editedCustomer.name}
+                      onChange={(e) =>
+                        setEditedCustomer((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
+                    />
+                  ) : (
+                    <span>{cust.name}</span>
+                  )}
+                </td>
+                <td className="px-4 py-2">
+                    <span>{cust.points}</span>
+              
+                </td>
+                <td className="px-4 py-2">
+                  {editId === cust._id ? (
+                    <div className="flex items-center justify-start gap-2 cursor-pointer w-16 h-12">
+                      <FaSave
+                        title="Save"
+                        onClick={() => updateCustomerData(cust._id)}
+                        size={20}
+                        className="text-primary hover:text-blue-800"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 justify-start cursor-pointer w-16 h-12">
+                      <FiEdit
+                        title="Edit"
+                        className="text-primary hover:text-blue-800"
+                        size={20}
+                        onClick={() => {
+                          setEditId(cust._id);
+                          setEditedCustomer(cust.name);
+                        }}
+                      />
+                      <MdDelete
+                        size={25}
+                        title="Delete"
+                        onClick={() => setAlertMessage(cust._id)}
+                        className="hover:text-red-500 text-secondary"
+                      />
+                      {alertMessage === cust._id && (
+                        <AlertBox
+                          message="Do you want to delete this customer?"
+                          onConfirm={() => {
+                            setAlertMessage(false);
+                            deleteCustomer(cust._id);
+                          }}
+                          onCancel={() => setAlertMessage(false)}
+                        />
+                      )}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
