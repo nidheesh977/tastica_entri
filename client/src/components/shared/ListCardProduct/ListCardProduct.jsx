@@ -1,50 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
-import { AlertBox } from "../../shared/AlertBox/AlertBox"; // Adjust import as needed
+import { AlertBox } from "../../shared/AlertBox/AlertBox";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const ListCardProduct = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      title: "Product A",
-      category: "Category 1",
-      quantity: 50,
-      cost: 10,
-      selling: 15,
-      discount: 5,
-    },
-    {
-      id: 2,
-      title: "Product B",
-      category: "Category 2",
-      quantity: 30,
-      cost: 20,
-      selling: 25,
-      discount: 0,
-    },
-  ]);
-
+  const [products, setProducts] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editedProduct, setEditedProduct] = useState({});
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedCategory, setEditedCategory] = useState("");
+  const [editedQuantity, setEditedQuantity] = useState(null);
+  const [editedCostPrice, setEditedCostPrice] = useState(null);
+  const [editedSellingPrice, setEditedSellingPrice] = useState(null);
+  const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
 
-  const handleEdit = (product) => {
-    setEditId(product.id);
-    setEditedProduct({ ...product });
+  const fetchProducts = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/admin/products",
+        withCredentials: true,
+      });
+      setProducts(response?.data?.data);
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   };
 
-  const handleSave = (id) => {
-    setProducts((prev) =>
-      prev.map((prod) => (prod.id === id ? editedProduct : prod)),
-    );
+  const updateProductData = (id) => {
     setEditId(null);
   };
 
-  const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-  };
+  const deleteProduct = (id) => {};
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  console.log(products);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -75,117 +70,91 @@ export const ListCardProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((prod, index) => (
-              <tr key={prod.id} className="border-t border-primary">
+            {products?.map((product, index) => (
+              <tr key={product?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
-                <td className="border border-primary px-4 py-2">{prod.id}</td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {product?.product_id}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
                     <input
-                      value={editedProduct.title}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          title: e.target.value,
-                        })
-                      }
+                      value={editedTitle}
+                      onChange={(e) => setEditedTitle(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.title
+                    product?.productname
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {editId === product._id ? (
                     <input
-                      value={editedProduct.category}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          category: e.target.value,
-                        })
-                      }
+                      value={editedCategory}
+                      onChange={(e) => setEditedCategory(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.category
+                    product?.category?.categoryname
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {editId === product._id ? (
                     <input
                       type="number"
-                      value={editedProduct.quantity}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          quantity: e.target.value,
-                        })
-                      }
+                      value={editedQuantity}
+                      onChange={(e) => {
+                        setEditedQuantity(e.target.value);
+                      }}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.quantity
+                    product?.quantity
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {editId === product._id ? (
                     <input
                       type="number"
-                      value={editedProduct.cost}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          cost: e.target.value,
-                        })
-                      }
+                      value={editedCostPrice}
+                      onChange={(e) => setEditedCostPrice(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.cost
+                    product?.costprice
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {editId === product._id ? (
                     <input
                       type="number"
-                      value={editedProduct.selling}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          selling: e.target.value,
-                        })
-                      }
+                      value={editedSellingPrice}
+                      onChange={(e) => setEditedSellingPrice(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.selling
+                    product.sellingprice
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === prod.id ? (
+                  {editId === product._id ? (
                     <input
                       type="number"
-                      value={editedProduct.discount}
-                      onChange={(e) =>
-                        setEditedProduct({
-                          ...editedProduct,
-                          discount: e.target.value,
-                        })
-                      }
+                      value={editedDiscount}
+                      onChange={(e) => setEditedDiscount(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    prod.discount
+                    product?.discount
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
-                    {editId === prod.id ? (
+                    {editId === product._id ? (
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => handleSave(prod.id)}
+                        onClick={() => updateProductData(product._id)}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
@@ -193,23 +162,31 @@ export const ListCardProduct = () => {
                         <FiEdit
                           title="Edit"
                           size={20}
-                          onClick={() => handleEdit(prod)}
+                          onClick={() => {
+                            setEditId(product?._id);
+                            setEditedTitle(product?.productname);
+                            setEditedCategory(product?.category?.categoryname);
+                            setEditedQuantity(product?.quantity);
+                            setEditedSellingPrice(product?.sellingprice);
+                            setEditedCostPrice(product?.costprice);
+                            setEditedDiscount(product?.discount);
+                          }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"
                           size={22}
-                          onClick={() => setAlertMessage(prod.id)}
+                          onClick={() => setAlertMessage(product._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
                       </>
                     )}
-                    {alertMessage === prod.id && (
+                    {alertMessage === product._id && (
                       <AlertBox
                         message="Do you want to delete this product?"
                         onConfirm={() => {
                           setAlertMessage(null);
-                          deleteProduct(prod.id);
+                          deleteProduct(product._id);
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />
