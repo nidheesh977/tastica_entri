@@ -93,7 +93,6 @@ describe("Test the admin route and protected route", () => {
           }
     })
  
-    console.log(adminToken)
  
     //  for admin login 
     it("POST /api/login-admin",async () => {

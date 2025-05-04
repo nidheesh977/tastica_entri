@@ -58,72 +58,7 @@ export const createProduct = async (req, res) => {
         console.log(error)
         res.status(500).json({ success: false, message: error.message });
     }
-
-    const {
-      productname,
-      quantity,
-      costprice,
-      sellingprice,
-      discount,
-      category,
-    } = value;
-
-    if (sellingprice === 0 && costprice === 0) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Selling price and cost price cannot be 0",
-        });
-    }
-
-    if (sellingprice > 0 && costprice > 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: "You can only add one price rate" });
-    }
-
-    const productExist = await productModel.findOne({
-      productname: productname,
-    });
-
-    if (productExist) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Product already exists" });
-    }
-
-    const productId = generateProductId();
-
-    const existProductId = await productModel.findOne({
-      product_id: productId,
-    });
-
-    if (existProductId) {
-      generateProductId();
-    }
-
-    const product = await productModel.create({
-      product_id: productId,
-      productname,
-      quantity,
-      costprice,
-      sellingprice,
-      discount,
-      category,
-    });
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Product created successfully",
-        data: product,
-      });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error.message });
   }
-};
 
 // ---------------------------------------- Delete product ---------------------------------------------------
 
@@ -249,23 +184,11 @@ export const getAllProducts = async (req,res) => {
     try{
         const getProducts = await productModel.find({}).sort({createdAt:-1}).populate("category");
 
-        res.status(200).json({success:true,message:"Data fetched",data:getProducts})
+        res.status(200).json({success:true,message:"Product fetched successfully",data:getProducts})
     }catch{
         res.status(500).json({success:false,message:"internal server error"})
     }
-
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Product fetched successfully",
-        data: fetchProduct,
-      });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "internal server error" });
-  }
-};
+}; 
 
 // for testing purpose only
 export const productListTest = (req, res) => {
