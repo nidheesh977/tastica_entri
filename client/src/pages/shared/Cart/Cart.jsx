@@ -60,7 +60,7 @@ export const Cart = () => {
         </div>
 
         <div className="col-span-12 md:col-span-2 border">
-          <Category categories={categories} />
+          <Category/>
         </div>
 
         <div className="col-span-12 md:col-span-5 lg:col-span-6">
