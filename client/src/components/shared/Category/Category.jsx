@@ -11,7 +11,7 @@ export const Category = ({ fetchCategoryProducts }) => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: "/admin/products/categories",
+        url: "/categories",
         withCredentials: true,
       });
 

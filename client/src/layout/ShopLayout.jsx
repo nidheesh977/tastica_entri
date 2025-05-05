@@ -13,26 +13,26 @@ export const ShopLayout = () => {
 
   const dispatch = useDispatch();
 
-  const checkShop = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/shop/check-logged",
-      });
-    } catch (error) {
-      dispatch(removeShopData());
+  // const checkShop = async () => {
+  //   try {
+  //     const response = await axiosInstance({
+  //       method: "GET",
+  //       url: "/shop/check-logged",
+  //     });
+  //   } catch (error) {
+  //     dispatch(removeShopData());
 
-      navigate("/");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     navigate("/");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    checkShop();
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   checkShop();
+  // }, [location.pathname]);
 
-  if (loading) <div className="text-black">Loading...</div>;
+  // if (loading) <div className="text-black">Loading...</div>;
 
   return (
     <div className="min-h-screen flex flex-col">

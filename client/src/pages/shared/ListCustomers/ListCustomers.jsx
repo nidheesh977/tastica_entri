@@ -6,7 +6,7 @@ export const ListCustomers = () => {
   return (
     <>
       <SideBar />
-      <div className="md:flex items-center justify-center mt-10">
+      <div className="m-2 my-10 md:flex items-center justify-center">
         <ListCardCustomer />
       </div>
     </>

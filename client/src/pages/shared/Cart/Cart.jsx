@@ -14,7 +14,7 @@ export const Cart = () => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: `/admin/products/category-search?categoryId=${id}`,
+        url: `/product/category-search?categoryId=${id}`,
         withCredentials: true,
       });
       setProducts(response?.data?.data);

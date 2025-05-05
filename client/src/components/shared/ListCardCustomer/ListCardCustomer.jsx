@@ -16,6 +16,7 @@ export const ListCardCustomer = () => {
 
   const updateCustomerData = (id) => {
     setEditId(null);
+   
   };
 
   const deleteCustomer = (id) => {
@@ -23,91 +24,85 @@ export const ListCardCustomer = () => {
   };
 
   return (
-    <div className="text-center pt-5 pb-14 px-2 sm:px-5 m-2 border border-primary shadow h-full">
-      <div className="grid grid-cols-12 items-center">
-        <h1 className="font-thin text-start col-span-7 text-xs sm:text-3xl my-6 text-primary">
+    <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
+      <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
+        <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Customers
         </h1>
         <input
-          className="rounded-xl shadow col-span-5 outline-primary h-10 p-2 text-xs sm:text-base"
+          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
         />
       </div>
 
-      <div className="overflow-x-auto w-full">
-        <table className="min-w-full table-auto border border-primary text-left text-xs sm:text-base">
-          <thead className="bg-primary/10">
-            <tr className="border-b border-primary">
-              <th className="px-4 py-2">No</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Points</th>
-              <th className="px-4 py-2">Action</th>
+      <div className="overflow-x-auto">
+        <table className="min-w-[768px] w-full border border-primary text-left text-sm sm:text-base">
+          <thead className="bg-primary/10 font-semibold text-black">
+            <tr>
+              <th className="border border-primary px-4 py-2">No</th>
+              <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">Points</th>
+              <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
           <tbody>
-            {customers.map((cust) => (
-              <tr key={cust._id} className="border-b border-primary">
-                <td className="px-4 py-2">{cust.index + 1}</td>
-                <td className="px-4 py-2">
+            {customers?.map((cust, index) => (
+              <tr key={cust._id} className="border-t border-primary">
+                <td className="border border-primary px-4 py-2">{index + 1}</td>
+                <td className="border border-primary px-4 py-2">
                   {editId === cust._id ? (
                     <input
-                      className="rounded p-1 shadow w-full"
-                      type="text"
                       value={editedName}
-                      onChange={(e) =>
-                        setEditedCustomer((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="w-full rounded border p-1"
                     />
                   ) : (
-                    <span>{cust.name}</span>
+                    cust.name
                   )}
                 </td>
-                <td className="px-4 py-2">
-                  <span>{cust.points}</span>
+                <td className="border border-primary px-4 py-2">
+                  {cust.points}
                 </td>
-                <td className="px-4 py-2">
-                  {editId === cust._id ? (
-                    <div className="flex items-center justify-start gap-2 cursor-pointer w-16 h-12">
+                <td className="border border-primary px-4 py-2 text-center">
+                  <div className="flex justify-start items-center h-12 gap-2">
+                    {editId === cust._id ? (
                       <FaSave
                         title="Save"
+                        size={20}
                         onClick={() => updateCustomerData(cust._id)}
-                        size={20}
-                        className="text-primary hover:text-blue-800"
+                        className="text-primary hover:text-blue-800 cursor-pointer"
                       />
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 justify-start cursor-pointer w-16 h-12">
-                      <FiEdit
-                        title="Edit"
-                        className="text-primary hover:text-blue-800"
-                        size={20}
-                        onClick={() => {
-                          setEditId(cust._id);
-                          setEditedName(cust.name);
-                        }}
-                      />
-                      <MdDelete
-                        size={25}
-                        title="Delete"
-                        onClick={() => setAlertMessage(cust._id)}
-                        className="hover:text-red-500 text-secondary"
-                      />
-                      {alertMessage === cust._id && (
-                        <AlertBox
-                          message="Do you want to delete this customer?"
-                          onConfirm={() => {
-                            setAlertMessage(false);
-                            deleteCustomer(cust._id);
+                    ) : (
+                      <>
+                        <FiEdit
+                          title="Edit"
+                          size={20}
+                          onClick={() => {
+                            setEditId(cust._id);
+                            setEditedName(cust.name);
                           }}
-                          onCancel={() => setAlertMessage(false)}
+                          className="text-primary hover:text-blue-800 cursor-pointer"
                         />
-                      )}
-                    </div>
-                  )}
+                        <MdDelete
+                          title="Delete"
+                          size={22}
+                          onClick={() => setAlertMessage(cust._id)}
+                          className="hover:text-red-500 text-secondary cursor-pointer"
+                        />
+                      </>
+                    )}
+                    {alertMessage === cust._id && (
+                      <AlertBox
+                        message="Do you want to delete this customer?"
+                        onConfirm={() => {
+                          setAlertMessage(false);
+                          deleteCustomer(cust._id);
+                        }}
+                        onCancel={() => setAlertMessage(false)}
+                      />
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
