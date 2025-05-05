@@ -12,7 +12,7 @@ export const ListCardCustomer = () => {
 
   const [alertMessage, setAlertMessage] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [editedCustomer, setEditedCustomer] = useState("");
+  const [editedName, setEditedName] = useState("");
 
   const updateCustomerData = (id) => {
     setEditId(null);
@@ -54,7 +54,7 @@ export const ListCardCustomer = () => {
                     <input
                       className="rounded p-1 shadow w-full"
                       type="text"
-                      value={editedCustomer.name}
+                      value={editedName}
                       onChange={(e) =>
                         setEditedCustomer((prev) => ({
                           ...prev,
@@ -87,7 +87,7 @@ export const ListCardCustomer = () => {
                         size={20}
                         onClick={() => {
                           setEditId(cust._id);
-                          setEditedCustomer(cust.name);
+                          setEditedName(cust.name);
                         }}
                       />
                       <MdDelete
