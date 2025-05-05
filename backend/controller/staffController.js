@@ -26,7 +26,7 @@ export const loginStaff = async (req,res) => {
       }
 
     // compare password
-        const isPasswordCorrect = comparePassword(password,userExist.password);
+        const isPasswordCorrect = await comparePassword(password,userExist.password);
 
         if(!isPasswordCorrect){
             return res.status(400).json({success:false,message:"Invalid credentials"})
@@ -60,9 +60,9 @@ export const loginStaff = async (req,res) => {
 
 export const checkStaffLogin = async (req,res) => {
     try {
-        const staffLogged = req.user;
+        const userLogged = req.user;
 
-        if(!staffLogged){
+        if(userLogged.role !== "staff"){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }else{
             res.status(200).json({success:true,message:"staff is logged in"});

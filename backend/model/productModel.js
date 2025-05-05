@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-// import {productMocks} from '../mockdatas/productMock.js'
+//  import {productMocks} from '../mockdatas/productMock.js'
 
 const productSchema = new mongoose.Schema({
    product_id:{

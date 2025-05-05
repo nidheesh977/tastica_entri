@@ -1,54 +1,105 @@
-                                                      PROJECT TASTICA
+                                           PROJECT TASTICA - BACKEND-API
+
+## Admin Routes
+
+- 🔐💼admin login<br>
+**method:**`POST`<br>
+**URL:**`/api/v1/admin/login`
+
+- 🚪💼admin logout<br>
+**method:**`POST`<br>
+**URL:**`/api/v1/admin/logout`
+
+- 👨‍⚕️💼admin create employee<br>
+**method:**`POST`<br>
+**URL**`/api/v1/admin/create-employee`
+
+- 🟢💼 check admin is logged<br>
+**method:**`GET`<br>
+**URL**`/api/v1/admin/check-logged`
+
+<!-- - 🏤💼 create shop<br>
+**method**`POST`<br>
+**URL**`/api/v1/shop/create-shop` -->
 
 
- routes for staff\
+## The routes for staff 
 
- staff-login &nbsp;&nbsp; method:POST&nbsp;&nbsp;/api/v1/staff/login \
- staff-logged &nbsp;&nbsp;method:GET &nbsp;&nbsp;/api/v1/staff/check-logged \
- staff-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/staff/logout \
- getproduct-withCategory&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/staff/products/category-search?categoryId=68122b2b884da7193328edbe \
- getCategories&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/user/products/categories\
- getAllProducts&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/staff/products\
- 
- routes for admin\
+- 🔐👨‍💼staff login <br>
+**method:**`POST`<br> 
+**URL:**`/api/v1/staff/login`
 
- admin-login&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/admin/login \
- admin-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/admin/logout \
- create-employee&nbsp;&nbsp;  method:POST&nbsp;&nbsp;/api/v1/admin/create-employee \
- admin-logged&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/check-logged\
- shop-create&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/create-shop \
- getproduct-withCategory&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products/category-search?categoryId=68122b2b884da7193328edbe \
- getCategories&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products/categories\
- getAllProducts&nbsp;&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/admin/products\
+- 🟢👨‍💼 check staff is logged<br> 
+**method:**`GET`<br>
+**URL:**`/api/v1/staff/check-logged`<br>
 
- routes for shop\
+- 🚪👨‍💼 staff-logout <br>
+**method:**`POST`<br> 
+**URL:**`/api/v1/staff/logout` 
 
- shop-login&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/login-shop \
- shop-logged&nbsp;&nbsp;method:GET&nbsp;&nbsp;/api/v1/shop/check-logged \
- shop-logout&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/shop/logout \
+## The route for product
+
+- 📦get product with category<br>
+  **method:**`GET`<br>
+  **URL:**`/api/v1/product/category-search?categoryId=68122b2b884da7193328edbe` 
+
+- 📦📦get all products<br>
+**method**`GET`<br>
+**URL**`/api/v1/product/`
+
+- 📦 create product<br>
+**method:**`POST`<br>
+**URL**`/api/v1/product/create`
+
+- 📦🗑 delete product<br>
+**method:**`DELETE`<br>
+**URL:**`/api/v1/product/delete/:id`
+
+- 📦🖋 update product<br>
+**method**`PUT`<br>
+**URL**`/api/v1/product/update/:id/category/:category`
+
+## The routes for categories
+
+- ➕📂 create a new category<br>
+**method:** `POST`<br>
+**URL:** `/api/v1/categories/`
+
+- 🖋📂 update a category  
+**method:** `PUT`<br>
+**URL:**`/api/v1/categories/:id`
+
+- 🗑📂delete a category<br> 
+**method:**`DELETE`<br> 
+**URL:**`/api/v1/category/delete/:id`
+
+- 📈📂add discount to category<br> 
+**method:**`PATCH`<br> 
+**URL:**`/api/v1/categories/:id/discount/add`
+
+- 🗑📈📂remove discount from category <br>
+**method:**`PATCH`<br>
+**URL:**`/api/v1/categories/:id/discount/remove`
+
+- 📂📂 get full categories<br>
+**method:**`GET`<br>
+**URL:**`/api/v1/categories`
 
 
- routes for category\
+## invoice routes
 
- category-create&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/category/create\
- category-delete&nbsp;&nbsp;method:DELET&nbsp;&nbsp;/api/v1/category/delete/:id  \
- category-discount-add&nbsp;method:PUT&nbsp;&nbsp;/api/v1/category/discount-add/:id \ 
- category-discount-remove&nbsp;method:PUT&nbsp;&nbsp;/api/v1/category/discount-remove/:id \
- 
- routes for product \
- 
- product-create&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/product/create\
- product-delete&nbsp;&nbsp;method:DELETE&nbsp;&nbsp;/api/v1/product/delete/:id\
- product-update&nbsp;&nbsp;method:PUT&nbsp;&nbsp;/api/v1/product/update/:id/category/:category\
+- 📃 create invoice<br>
+**method:**`POST`<br>
+**URL:**`/api/v1/invoice`
 
- routes for testing endpoints 
+- 📃📦 add products to invoice<br>
+**method:**`PUT`<br>
+**URL:**`/api/v1/invoice/:id/products`
 
- create-employee&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/super-admin/create-employee\
- create-shop&nbsp;&nbsp;&nbsp;method:POST&nbsp;&nbsp;/api/v1/super-admin/create-shop\
+- 📃📦🗑 remove product from invoice<br>
+**method:**`PATCH`<br>
+**URL:**`/api/v1/invoice/:id/products/:productId`
 
- tested \
- staff-signup test passed\
- staff login test passed\
-
-
-
+- 📃 invoice save <br>
+**method**`PATCH`<br>
+**URL**`/api/v1/invoice/:id`
