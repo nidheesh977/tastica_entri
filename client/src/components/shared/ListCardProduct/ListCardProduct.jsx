@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { FaSave } from "react-icons/fa";
+import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const ListCardProduct = () => {
   const [products, setProducts] = useState([]);
-  const fetchProducts = async() => {
-    try {
+  const [editId, setEditId] = useState(null);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedCategory, setEditedCategory] = useState("");
+  const [editedQuantity, setEditedQuantity] = useState(null);
+  const [editedCostPrice, setEditedCostPrice] = useState(null);
+  const [editedSellingPrice, setEditedSellingPrice] = useState(null);
+  const [editedDiscount, setEditedDiscount] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
+  const fetchProducts = async () => {
+    try {
       const response = await axiosInstance({
-        method: 'GET',
-        url: '/'
-      })
-      
+        method: "GET",
+        url: "/admin/products",
+        withCredentials: true,
+      });
+      setProducts(response?.data?.data);
     } catch (error) {
-      
+      toast.error("Something went wrong!");
     }
-  }
+  };
+
+  const updateProductData = (id) => {
+    setEditId(null);
+  };
+
+  const deleteProduct = (id) => {};
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  console.log(products);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -31,7 +55,7 @@ export const ListCardProduct = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[768px] w-full border border-primary text-left">
+        <table className="min-w-[768px] w-full border border-primary text-left text-sm sm:text-base">
           <thead className="bg-primary/10 font-semibold text-black">
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
@@ -46,28 +70,128 @@ export const ListCardProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((prod, index) => (
-              <tr key={prod.id} className="border-t border-primary">
+            {products?.map((product, index) => (
+              <tr key={product?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
-                <td className="border border-primary px-4 py-2">{prod.id}</td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.title}
+                  {product?.product_id}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.category}
+                  {editId === product._id ? (
+                    <input
+                      value={editedTitle}
+                      onChange={(e) => setEditedTitle(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.productname
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.quantity}
+                  {editId === product._id ? (
+                    <input
+                      value={editedCategory}
+                      onChange={(e) => setEditedCategory(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.category?.categoryname
+                  )}
                 </td>
-                <td className="border border-primary px-4 py-2">{prod.cost}</td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.selling}
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedQuantity}
+                      onChange={(e) => {
+                        setEditedQuantity(e.target.value);
+                      }}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.quantity
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {prod.discount}
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedCostPrice}
+                      onChange={(e) => setEditedCostPrice(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.costprice
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedSellingPrice}
+                      onChange={(e) => setEditedSellingPrice(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product.sellingprice
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedDiscount}
+                      onChange={(e) => setEditedDiscount(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.discount
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
-                  <MdDelete className="hover:text-red-500 text-secondary cursor-pointer inline-block" />
+                  <div className="flex justify-start items-center h-12 gap-2">
+                    {editId === product._id ? (
+                      <FaSave
+                        title="Save"
+                        size={20}
+                        onClick={() => updateProductData(product._id)}
+                        className="text-primary hover:text-blue-800 cursor-pointer"
+                      />
+                    ) : (
+                      <>
+                        <FiEdit
+                          title="Edit"
+                          size={20}
+                          onClick={() => {
+                            setEditId(product?._id);
+                            setEditedTitle(product?.productname);
+                            setEditedCategory(product?.category?.categoryname);
+                            setEditedQuantity(product?.quantity);
+                            setEditedSellingPrice(product?.sellingprice);
+                            setEditedCostPrice(product?.costprice);
+                            setEditedDiscount(product?.discount);
+                          }}
+                          className="text-primary hover:text-blue-800 cursor-pointer"
+                        />
+                        <MdDelete
+                          title="Delete"
+                          size={22}
+                          onClick={() => setAlertMessage(product._id)}
+                          className="hover:text-red-500 text-secondary cursor-pointer"
+                        />
+                      </>
+                    )}
+                    {alertMessage === product._id && (
+                      <AlertBox
+                        message="Do you want to delete this product?"
+                        onConfirm={() => {
+                          setAlertMessage(null);
+                          deleteProduct(product._id);
+                        }}
+                        onCancel={() => setAlertMessage(null)}
+                      />
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLogin action="Login" /> },
-      // { path: "", element: <AddCustomerCard /> },
+      // { path: "", element: <ListCategories /> },
 
       {
         path: "shop",
