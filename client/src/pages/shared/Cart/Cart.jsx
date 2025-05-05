@@ -3,64 +3,40 @@ import { Category } from "../../../components/shared/Category/Category";
 import { Quantity } from "../../../components/shared/Quantity/Quantity";
 import { Product } from "../../../components/shared/Product/Product";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
+import { axiosInstance } from "../../../config/axiosInstance";
+import { useState } from "react";
 
 export const Cart = () => {
-  const products = [
-    {
-      title: "Biscuit",
-      price: 35,
-      quantity: 1,
-    },
-    {
-      title: "Lux Soap",
-      price: 38,
-      quantity: 1,
-    },
-    {
-      title: "Vim Bar",
-      price: 70,
-      quantity: 1,
-    },
-    {
-      title: "Pepsi",
-      price: 40,
-      quantity: 1,
-    },
-    {
-      title: "Pen Blue Laxi",
-      price: 5,
-      quantity: 1,
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
 
-  const categories = [
-    {
-      title: "Vegetables",
-    },
-    {
-      title: "Snacks",
-    },
-    {
-      title: "Curry Powder",
-    },
-    {
-      title: "Detergents",
-    },
-    {
-      title: "Brush",
-    },
-  ];
+  const fetchCategoryProducts = async (id) => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/product/category-search?categoryId=${id}`,
+        withCredentials: true,
+      });
+      setProducts(response?.data?.data);
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  const addProductToCart = (product) => {
+    setCartProducts((prev) => [...prev, product]);
+  };
 
   return (
     <>
       <SideBar />
       <div className="grid grid-cols-12">
         <div className="col-span-12 md:col-span-5 lg:col-span-4">
-          <ShoppingCart products={products} />
+          <ShoppingCart cartProducts={cartProducts} />
         </div>
 
         <div className="col-span-12 md:col-span-2 border">
-          <Category categories={categories} />
+          <Category fetchCategoryProducts={fetchCategoryProducts} />
         </div>
 
         <div className="col-span-12 md:col-span-5 lg:col-span-6">
@@ -69,7 +45,7 @@ export const Cart = () => {
           </div>
 
           <div className="flex gap-2 m-2 flex-wrap">
-            <Product products={products} />
+            <Product products={products} addProductToCart={addProductToCart} />
           </div>
         </div>
       </div>

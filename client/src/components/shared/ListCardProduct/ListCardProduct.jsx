@@ -10,7 +10,6 @@ export const ListCardProduct = () => {
   const [products, setProducts] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
-  const [editedCategory, setEditedCategory] = useState("");
   const [editedQuantity, setEditedQuantity] = useState(null);
   const [editedCostPrice, setEditedCostPrice] = useState(null);
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
@@ -21,7 +20,7 @@ export const ListCardProduct = () => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: "/admin/products",
+        url: "/product",
         withCredentials: true,
       });
       setProducts(response?.data?.data);
@@ -30,11 +29,45 @@ export const ListCardProduct = () => {
     }
   };
 
-  const updateProductData = (id) => {
-    setEditId(null);
+  const updateProductData = async (productId, categoryId) => {
+    const data = {
+      productname: editedTitle,
+      category: `${categoryId._id}`,
+      quantity: editedQuantity,
+      costprice: editedCostPrice,
+      sellingprice: editedSellingPrice,
+      discount: editedDiscount,
+    };
+
+    try {
+      await axiosInstance({
+        method: "PUT",
+        url: `/product/update/${productId}/category/${categoryId._id}`,
+        withCredentials: true,
+        data,
+      });
+      toast.success("Product updated successfully");
+      setEditId(null);
+      fetchProducts();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
   };
 
-  const deleteProduct = (id) => {};
+  const deleteProduct = async (productId) => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/product/delete/${productId}`,
+        withCredentials: true,
+      });
+      toast.success("Product updated successfully");
+      setEditId(null);
+      fetchProducts();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -88,15 +121,7 @@ export const ListCardProduct = () => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === product._id ? (
-                    <input
-                      value={editedCategory}
-                      onChange={(e) => setEditedCategory(e.target.value)}
-                      className="w-full rounded border p-1"
-                    />
-                  ) : (
-                    product?.category?.categoryname
-                  )}
+                  {product?.category?.categoryname}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === product._id ? (
@@ -154,7 +179,9 @@ export const ListCardProduct = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateProductData(product._id)}
+                        onClick={() =>
+                          updateProductData(product._id, product?.category)
+                        }
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
@@ -165,7 +192,6 @@ export const ListCardProduct = () => {
                           onClick={() => {
                             setEditId(product?._id);
                             setEditedTitle(product?.productname);
-                            setEditedCategory(product?.category?.categoryname);
                             setEditedQuantity(product?.quantity);
                             setEditedSellingPrice(product?.sellingprice);
                             setEditedCostPrice(product?.costprice);

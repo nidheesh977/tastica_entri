@@ -19,7 +19,7 @@ export const AddCategory = () => {
     try {
       const response = await axiosInstance({
         method: "POST",
-        url: "/category/create",
+        url: "/categories",
         withCredentials: true,
         data,
       });

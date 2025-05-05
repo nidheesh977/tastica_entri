@@ -49,8 +49,12 @@ export const Login = ({ role, action }) => {
           withCredentials: true,
           data,
         });
+
+        username.current.value = "";
+        email.current.value = "";
+        phonenumber.current.value = "";
+        password.current.value = "";
         toast.success("Signup success");
-        if (role === "Staff") navigate("/shop/staff/login");
 
         console.log(response);
       } catch (error) {
