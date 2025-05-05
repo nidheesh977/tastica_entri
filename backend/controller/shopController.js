@@ -1,7 +1,8 @@
-import bcryptjs from 'bcryptjs';
 import shopModel from '../model/shopModel.js';
 import { shopSignupValidtaion ,shopLoginValidation } from '../utils/joiValidation.js';
 import { generateToken } from '../utils/generateToken.js';
+import { comparePassword } from '../utils/comparePassword.js';
+import bcryptjs from 'bcryptjs'
 
 
 
@@ -58,15 +59,16 @@ export const shopLogin = async (req,res) => {
             return res.status(400).json({success:false,message:"Shop not found"});
         }
 
-        const isPasswordMatch = await bcryptjs.compare(password,shopExist.password);
+          const isPasswordCorrect = await comparePassword(password,shopExist.password);
+        
+          if(!isPasswordCorrect){
+            return res.status(400).json({success:false,message:"Invalid credentials"})
+        }         
 
-        if(!isPasswordMatch){
-            return res.status(400).json({success:false,message:"Invalid credentials"});
-        }
 
         const {password:pass,...shopData} = shopExist._doc
 
-        const shopToken = generateToken({id:shopExist._id,role:""});
+        const shopToken = generateToken({id:shopExist._id,role:"shop"});
 
         res.cookie("shopToken",shopToken,{httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
@@ -83,7 +85,7 @@ export const checkShopLogin = async (req,res) => {
     try {
         const shopLogged = req.shop;
 
-        if(!shopLogged){
+        if(shopLogged.role !== "shop"){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }else{
             res.status(200).json({success:true,message:"Shop is logged in"});

@@ -24,7 +24,7 @@ export const loginAdmin = async (req,res) => {
         return res.status(400).json({success:false,message:"User not found"})
       }
 
-        const isPasswordCorrect = comparePassword(password,adminExist.password);
+        const isPasswordCorrect = await comparePassword(password,adminExist.password);
 
         if(!isPasswordCorrect){
             return res.status(400).json({success:false,message:"Invalid credentials"})
@@ -106,9 +106,9 @@ export const CreateEmployee = async (req,res) => {
 
 export const checkAdminLogin = async (req,res) => {
     try {
-        const adminLogged = req.admin;
+        const userLogged = req.user;
 
-        if(!adminLogged){
+        if(userLogged.role !== "admin" ){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }else{
             res.status(200).json({success:true,message:"admin is logged in"});

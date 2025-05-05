@@ -1,16 +1,73 @@
-import { MdMoreVert } from "react-icons/md";
-import { MdAdd } from "react-icons/md";
-import { MdRemove } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { MdMoreVert, MdAdd, MdRemove } from "react-icons/md";
 import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
-import { useState } from "react";
 
-export const ShoppingCart = ({ products }) => {
+export const ShoppingCart = ({ cartProducts: initialProducts }) => {
   const [selectedUser, setSelectedUser] = useState("User");
+  const [cartProducts, setCartProducts] = useState([]);
+  const [quantities, setQuantities] = useState({});
+  const [removedProductIds, setRemovedProductIds] = useState(new Set());
+
+  useEffect(() => {
+    const newProducts = initialProducts.filter(
+      (product) =>
+        !cartProducts.some((p) => p.product_id === product.product_id) &&
+        !removedProductIds.has(product.product_id)
+    );
+
+    if (newProducts.length > 0) {
+      const updatedCart = [...cartProducts, ...newProducts];
+      const updatedQuantities = { ...quantities };
+
+      newProducts.forEach((product) => {
+        updatedQuantities[product.product_id] = 1;
+      });
+
+      setCartProducts(updatedCart);
+      setQuantities(updatedQuantities);
+    }
+  }, [initialProducts]);
+
+  const increaseQuantity = (productId) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: prev[productId] + 1,
+    }));
+  };
+
+  const decreaseQuantity = (productId) => {
+    setQuantities((prev) => {
+      const newQty = prev[productId] - 1;
+      if (newQty <= 0) {
+        setCartProducts((prevProducts) =>
+          prevProducts.filter((p) => p.product_id !== productId)
+        );
+        const updated = { ...prev };
+        delete updated[productId];
+
+        // Add to removedProductIds
+        setRemovedProductIds((prevSet) => new Set(prevSet).add(productId));
+        return updated;
+      }
+      return {
+        ...prev,
+        [productId]: newQty,
+      };
+    });
+  };
+
+  const subtotal = cartProducts.reduce((sum, product) => {
+    const qty = quantities[product.product_id] || 1;
+    return sum + product.sellingprice * qty;
+  }, 0);
+
+  const tax = 5;
+  const total = subtotal + tax;
+
   return (
-    <div className=" p-5 border">
+    <div className="p-5 border">
       <div className="flex justify-between items-center">
         <h1 className="font-semibold">Cart</h1>
-
         <div>
           <select
             value={selectedUser}
@@ -23,49 +80,57 @@ export const ShoppingCart = ({ products }) => {
             <option value="john">John</option>
           </select>
         </div>
-
-        <MdMoreVert className="cursor-pointer " size={20} />
+        <MdMoreVert className="cursor-pointer" size={20} />
       </div>
-      <ul className=" flex flex-col mt-4 w-full font-thin">
-        {products.map((product) => (
-          <li className="border flex justify-between items-center gap-8 w-full px-2  py-2">
-            <div className="flex-1">
-              <p>{product.title}</p>
-            </div>
 
-            <div className="flex items-center  gap-2">
+      <ul className="flex flex-col mt-4 w-full">
+        {cartProducts.map((product) => (
+          <li
+            key={product.product_id}
+            className="border flex justify-between items-center gap-8 w-full px-2 py-2"
+          >
+            <div className="flex-1">
+              <p>{product.productname}</p>
+            </div>
+            <div className="flex items-center gap-2">
               <div
-                className="rounded flex cursor-pointer justify-center items-center  text-white w-5 h-5  font-bold 
-              bg-[#BF3131] hover:bg-opacity-90"
+                onClick={() => decreaseQuantity(product.product_id)}
+                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#BF3131] hover:bg-opacity-90"
               >
-                {" "}
                 <MdRemove />
               </div>
-              <div>{product.quantity}</div>
-              <div className="rounded flex cursor-pointer justify-center items-center text-center text-white w-5 h-5 font-bold bg-[#155E95] hover:bg-opacity-90">
+              <div>{quantities[product.product_id]}</div>
+              <div
+                onClick={() => increaseQuantity(product.product_id)}
+                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#155E95] hover:bg-opacity-90"
+              >
                 <MdAdd />
               </div>
             </div>
-            <div className="w-10 text-right">₹{product.price}</div>
+            <div className="w-10 text-right">
+              ₹{quantities[product.product_id] * product.sellingprice}
+            </div>
           </li>
         ))}
       </ul>
-      <div className="mt-2 w-full">
+
+      <div className="mt-2 w-full font-bold">
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Subtotal</div>
-          <div>₹145</div>
+          <div>₹{subtotal}</div>
         </div>
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Tax</div>
-          <div>₹5</div>
+          <div>₹{tax}</div>
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
-          <div>₹338</div>
+          <div>₹{total}</div>
         </div>
       </div>
+
       <div className="flex gap-2 mt-2 justify-between">
-        <button className=" flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
+        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
           <FaSave /> Save
         </button>
         <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#155E95] hover:bg-opacity-90 text-white rounded-lg">

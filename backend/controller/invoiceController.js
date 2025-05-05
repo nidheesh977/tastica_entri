@@ -6,13 +6,13 @@ import { generateInvoiceId } from '../utils/generateInvoiceId.js';
 
 export const createNewInvoiceTab = async (req,res) => {
     try{
-      const staffId= req.admin.id || req.user.id
+      const userId= req.user.id
             
-      if(!staffId){
+      if(!userId){
         return res.status(400).json({success:false,message:"Staff ID is required"})
       }
 
-      const staffExist = await AdminStaffModel.findById(staffId)
+      const staffExist = await AdminStaffModel.findById(userId)
 
       if(!staffExist){
         return res.status(400).json({success:false,message:"Staff does not exist"})
@@ -43,7 +43,7 @@ export const createNewInvoiceTab = async (req,res) => {
 
 export const addProductToInvoice = async (req,res) => {
     try{
-        const {invoiceId} = req.params;
+        const {id} = req.params;
         const {productId,quantity,productTotalPrice} = req.body;
 
         if( !quantity || !productTotalPrice){
@@ -53,23 +53,31 @@ export const addProductToInvoice = async (req,res) => {
         if(isNaN(quantity) || isNaN(productTotalPrice)){
             return res.status(400).json({success:false,message:"Quantity and product total price must be a number"})
         }
+
+        const invoiceExist = await invoiceModel.findById(id);
+
+        if(!invoiceExist){
+            return res.status(400).json({success:false,message:"Invoice not found"})
+        }
+
+   let invoiceProductExist =  invoiceExist.products.find((item) => item.productId.toString() === productId)
+      
+        if(invoiceProductExist){
+            return res.status(400).json({success:false,message:"product already exist"})
+        }
        
         const productExist = await productModel.findById(productId);
          
         if(!productExist){
             return res.status(400).json({success:false,message:"Product does not exist"})
 
-        } 
+        }  
 
         await productModel.findByIdAndUpdate(productId,{quantity: productExist.quantity - quantity},{new:true})
 
         const productName = productExist.productname;
 
-        const invoiceExist = await invoiceModel.findById(invoiceId);
-
-        if(!invoiceExist){
-            return res.status(400).json({success:false,message:"Invoice not found"})
-        }
+       
 
         const productObject = {
             productname: productName,
@@ -92,15 +100,15 @@ export const addProductToInvoice = async (req,res) => {
 
 export const removeProductFromInvoice = async(req,res) => {
     try{
-        const {invoiceId,invoiceProductId} = req.params;
+        const {id,productId} = req.params;
 
-        const invoiceExist = await invoiceModel.findById(invoiceId);
+        const invoiceExist = await invoiceModel.findById(id);
 
         if(!invoiceExist){
             return res.status(400).json({success:false,message:"Invoice not found"})
         }
 
-        const findProduct = invoiceExist.products.find((item) => item._id.toString() === invoiceProductId.toString())
+        const findProduct = invoiceExist.products.find((item) => item._id.toString() === productId.toString())
 
         if(!findProduct){
             return res.status(400).json({success:false,message:"Product not found in invoice"})
@@ -114,7 +122,7 @@ export const removeProductFromInvoice = async(req,res) => {
         invoiceExist.totalamount -= findProduct.productTotalPrice;
         await invoiceExist.save()
    
-         const productRemove = await invoiceModel.findByIdAndUpdate(invoiceId,{$pull:{products:{_id:invoiceProductId}}},{new:true})
+         const productRemove = await invoiceModel.findByIdAndUpdate(id,{$pull:{products:{_id:productId}}},{new:true})
     
         if(!productRemove){
             return res.status(400).json({success:false,message:"Product not found"})
@@ -123,6 +131,7 @@ export const removeProductFromInvoice = async(req,res) => {
         res.status(200).json({success:true,message:"Product removed successfully",})
         
     }catch(error){
+        console.log(error)
        return res.status(500).json({success:false,message:"internal server error"})
     }
 }
@@ -131,9 +140,9 @@ export const removeProductFromInvoice = async(req,res) => {
 export const saveInvoice = async (req,res) => {
     try{
 
-        const {invoiceId} = req.params;
+      const {id} = req.params;
 
-      const invoiceSave = await invoiceModel.findByIdAndUpdate(invoiceId,{status:"saved"},{new:true})
+      const invoiceSave = await invoiceModel.findByIdAndUpdate(id,{status:"saved"},{new:true})
 
       res.status(200).json({success:true,message:"Invoice saved",data:invoiceSave})
     }catch(error){
