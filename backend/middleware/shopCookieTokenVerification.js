@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 
-export const userVerifyToken = async (req,res,next) => {
+export const shopVerifyToken = async (req,res,next) => {
     try{
-        const token = req.cookies.staffToken || req.cookies.adminToken || req.cookies.shopToken
+        const token =  req.cookies.shopToken
         
         if(!token){
             return res.status(401).json({success:false,message:"Unauthorized"})
@@ -18,7 +18,7 @@ export const userVerifyToken = async (req,res,next) => {
                 return res.status(403).json({ success: false, message: "Forbidden" });
             }
 
-             req.user = decoded
+             req.shop = decoded
 
              
             next()

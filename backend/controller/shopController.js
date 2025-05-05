@@ -84,8 +84,7 @@ export const shopLogin = async (req,res) => {
 export const checkShopLogin = async (req,res) => {
     try {
         const shopLogged = req.shop;
-
-        if(shopLogged.role !== "shop"){
+        if(shopLogged.role !== "shop" ){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }else{
             res.status(200).json({success:true,message:"Shop is logged in"});
@@ -100,7 +99,7 @@ export const logOutShop = async (req,res) => {
   try{
     res.clearCookie("shopToken")
     res.clearCookie("adminToken")
-    res.clearCookie("staffToken")
+    res.clearCookie("staffToken") 
 
     res.status(200).json({success:true,message:"shop Logout successfully"})
   }catch(error){
