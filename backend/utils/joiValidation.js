@@ -195,3 +195,19 @@ export const updateCategoryValidation = Joi.object({
         'string.max': 'Description must be at most 200 characters long',   
     })
 })
+
+
+export const customerValidation = Joi.object({
+    customerName: Joi.string().min(3).max(30).messages({
+        'string.base': 'Category name must be a string',
+        'string.min': 'Category name must be at least 3 characters long',
+        'string.max': 'Category name must be at most 30 characters long',   
+    }),
+    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be 10 digits long',
+    }),
+})
+
