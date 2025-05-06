@@ -30,6 +30,12 @@ export const AdminHeader = () => {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
   };
+  
+  const handleOpenNewCartTab = () => {
+    const newTab = window.open('/admin/cart', '_blank');
+    // Optional: Pass state if needed
+  };
+
 
   return (
     <nav className="w-full">
@@ -68,7 +74,7 @@ export const AdminHeader = () => {
          <li className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none">
               ORDERS
             </li>
-            <li className="border md:border-none cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2">
+            <li onClick={handleOpenNewCartTab} className="border md:border-none cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2">
               +
             </li>
             </> 

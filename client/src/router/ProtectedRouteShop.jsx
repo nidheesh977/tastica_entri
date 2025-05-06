@@ -1,21 +1,30 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { axiosInstance } from "../config/axiosInstance";
+import { addShopData, removeShopData } from "../redux/features/authSlice";
 
 export const ProtectedRouteShop = () => {
   const isShop = useSelector((state) => state?.auth?.shopData);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isShop === null) return;
-    if (!isShop) {
+  const checkShop = async () => {
+    if (isShop) return;
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/shop/check-logged",
+      });
+      dispatch(addShopData(response?.data?.data));
+    } catch (error) {
+      dispatch(removeShopData());
       navigate("/");
     }
-  }, [isShop, navigate]);
+  };
 
-  if (!isShop) {
-    return null;
-  }
+  useEffect(() => {
+    checkShop();
+  });
 
-  return isShop && <Outlet />;
+  return <Outlet />;
 };

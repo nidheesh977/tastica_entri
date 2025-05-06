@@ -1,21 +1,30 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { addAdminData } from "../redux/features/authSlice";
 
 export const ProtectedRouteAdmin = () => {
   const isAdmin = useSelector((state) => state?.auth?.adminData);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const checkAdmin = async () => {
+    if (isAdmin) return;
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/admin/check-logged",
+      });
+      dispatch(addAdminData(response?.data?.data));
+    } catch (error) {
+      dispatch(removeAdminData());
+      navigate("/shop/admin/login");
+    }
+  };
 
   useEffect(() => {
-    if (!isAdmin) {
-      navigate("/shop/admin/login");
-      return;
-    }
-  }, [isAdmin, navigate]);
-
-  if (!isAdmin) {
-    return null;
-  }
+    checkAdmin();
+  }, []);
 
   return <Outlet />;
 };

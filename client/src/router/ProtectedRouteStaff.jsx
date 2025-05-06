@@ -1,21 +1,30 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { addStaffData } from "../redux/features/authSlice";
 
 export const ProtectedRouteStaff = () => {
   const isStaff = useSelector((state) => state?.auth?.staffData);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const checkStaff = async () => {
+    if (isStaff) return;
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/staff/check-logged",
+      });
+      dispatch(addStaffData(response?.data?.data));
+    } catch (error) {
+      dispatch(removeStaffData());
+      navigate("/shop/admin/login");
+    }
+  };
 
   useEffect(() => {
-    if (!isStaff) {
-      navigate("/shop/staff/login");
-      return;
-    }
-  }, [isStaff, navigate]);
-
-  if (!isStaff) {
-    return null;
-  }
+    checkStaff();
+  }, [location.pathname]);
 
   return <Outlet />;
 };

@@ -2,17 +2,26 @@ import { useEffect, useState } from "react";
 import { MdMoreVert, MdAdd, MdRemove } from "react-icons/md";
 import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
 
-export const ShoppingCart = ({ cartProducts: initialProducts }) => {
+export const ShoppingCart = ({
+  cartProducts: initialProducts,
+  addProductToCartRef,
+}) => {
   const [selectedUser, setSelectedUser] = useState("User");
   const [cartProducts, setCartProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [removedProductIds, setRemovedProductIds] = useState(new Set());
 
   useEffect(() => {
+    if (addProductToCartRef) {
+      addProductToCartRef.current = addProductToCart;
+    }
+  }, [cartProducts, quantities, removedProductIds]);
+
+  useEffect(() => {
     const newProducts = initialProducts.filter(
       (product) =>
         !cartProducts.some((p) => p.product_id === product.product_id) &&
-        !removedProductIds.has(product.product_id)
+        !removedProductIds.has(product.product_id),
     );
 
     if (newProducts.length > 0) {
@@ -28,6 +37,22 @@ export const ShoppingCart = ({ cartProducts: initialProducts }) => {
     }
   }, [initialProducts]);
 
+  const addProductToCart = (product) => {
+    const alreadyInCart = cartProducts.some(
+      (p) => p.product_id === product.product_id,
+    );
+    if (alreadyInCart) return;
+
+    setCartProducts((prev) => [...prev, product]);
+    setQuantities((prev) => ({ ...prev, [product.product_id]: 1 }));
+
+    setRemovedProductIds((prevSet) => {
+      const newSet = new Set(prevSet);
+      newSet.delete(product.product_id);
+      return newSet;
+    });
+  };
+
   const increaseQuantity = (productId) => {
     setQuantities((prev) => ({
       ...prev,
@@ -40,12 +65,11 @@ export const ShoppingCart = ({ cartProducts: initialProducts }) => {
       const newQty = prev[productId] - 1;
       if (newQty <= 0) {
         setCartProducts((prevProducts) =>
-          prevProducts.filter((p) => p.product_id !== productId)
+          prevProducts.filter((p) => p.product_id !== productId),
         );
         const updated = { ...prev };
         delete updated[productId];
 
-        // Add to removedProductIds
         setRemovedProductIds((prevSet) => new Set(prevSet).add(productId));
         return updated;
       }

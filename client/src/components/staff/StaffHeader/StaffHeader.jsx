@@ -14,10 +14,8 @@ export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const staffName = useSelector((state) => state?.auth?.staffData?.username);
-
-  
 
   const staffLogout = async () => {
     try {
@@ -57,27 +55,29 @@ export const StaffHeader = () => {
           }`}
         >
           <ul className="md:flex items-center justify-center  font-thin  gap-10 bg-primary p-5 md:p-0 w-full text-center">
-            {location.pathname === '/staff' && <>
-      
-            <li className=" mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
-              <input
-                className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
-                placeholder="Search Here"
-                type="text"
-              />
-            </li>
-            <li className="border cursor-pointer rounded-md py-2 md:py-0   mb-2 md:border-none">
-              ORDERS
-            </li>
-            <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
-              +
-            </li>
-            </>}
+            {location.pathname === "/staff" && (
+              <>
+                <li className=" mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
+                  <input
+                    className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
+                    placeholder="Search Here"
+                    type="text"
+                  />
+                </li>
+                <li className="border cursor-pointer rounded-md py-2 md:py-0   mb-2 md:border-none">
+                  ORDERS
+                </li>
+                <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
+                  +
+                </li>
+              </>
+            )}
             <li className="flex items-center mb-2 gap-5">
               {staffName && <p className="text-xl">{staffName}</p>}
               {staffName && <FaUserTie size={20} />}
               {staffName && (
-                <MdLogout size={20}
+                <MdLogout
+                  size={20}
                   onClick={() => {
                     dispatch(removeStaffData());
                     staffLogout();
