@@ -31,7 +31,7 @@ export const Login = ({ role, action }) => {
         username?.current?.value,
         email?.current?.value,
         password?.current?.value,
-        confirmPassword?.current?.value,
+        confirmPassword?.current?.value
       );
 
       const data = {
@@ -55,8 +55,6 @@ export const Login = ({ role, action }) => {
         phonenumber.current.value = "";
         password.current.value = "";
         toast.success("Signup success");
-
-        console.log(response);
       } catch (error) {
         toast.error(error?.response?.data?.message);
 
