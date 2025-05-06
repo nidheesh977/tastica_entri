@@ -103,3 +103,8 @@
 - 📃 invoice save <br>
 **method**`PATCH`<br>
 **URL**`/api/v1/invoice/:id`
+
+## customer routes
+
+- create customer👩
+**method**

@@ -84,11 +84,16 @@ export const shopLogin = async (req,res) => {
 export const checkShopLogin = async (req,res) => {
     try {
         const shopLogged = req.shop;
+
         if(shopLogged.role !== "shop" ){
             return res.status(401).json({success:false,message:"Unauthorized"});
-        }else{
-            res.status(200).json({success:true,message:"Shop is logged in"});
         }
+        const shopExist = await  shopModel.findById(shopLogged.id)
+        
+        const {password:pass,...shopData} = shopExist._doc;
+
+        res.status(200).json({success:true,message:"Shop is logged in",data:shopData});
+    
        
     } catch (error) {
         res.status(500).json({success:false,message:error.message});

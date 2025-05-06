@@ -64,9 +64,13 @@ export const checkStaffLogin = async (req,res) => {
 
         if(userLogged.role !== "staff"){
             return res.status(401).json({success:false,message:"Unauthorized"});
-        }else{
-            res.status(200).json({success:true,message:"staff is logged in"});
         }
+        const userExist = await  AdminStaffModel.findById(userLogged.id)
+        
+        const {password:pass,...userData} = userExist._doc;
+
+        res.status(200).json({success:true,message:"staff is logged in",data:userData});
+        
        
     } catch (error) {
         res.status(500).json({success:false,message:error.message});

@@ -72,7 +72,7 @@ export const CreateEmployee = async (req,res) => {
       const userAccountExists = await AdminStaffModel.findOne({email:email})
 
      if(userAccountExists){
-      return res.status(400).json({success:false,message:"User already exists"})
+      return res.status(400).json({success:false,message:"staff already exists"})
      }
 
       const userPhoneNumberExists = await AdminStaffModel.findOne({phonenumber:phonenumber})
@@ -95,7 +95,7 @@ export const CreateEmployee = async (req,res) => {
       });
 
       await newUser.save();
-      res.status(201).json({success:true,message:"User Created Successfully"});    
+      res.status(201).json({success:true,message:"staff created successfully"});    
 
   } catch (err) {  
       return res.status(500).json({success:false,message:"Internal Server Error"})
@@ -109,12 +109,17 @@ export const checkAdminLogin = async (req,res) => {
         const userLogged = req.user;
 
         if(userLogged.role !== "admin" ){
-            return res.status(401).json({success:false,message:"Unauthorized"});
-        }else{
-            res.status(200).json({success:true,message:"admin is logged in"});
+            return res.status(403).json({success:false,message:"Forbidden"});
         }
+             const adminExist = await  AdminStaffModel.findById(userLogged.id)
+            
+             const {password:pass,...adminData} = adminExist._doc;
+            
+             res.status(200).json({success:true,message:"admin logged successfully",data:adminData});
+        
        
     } catch (error) {
+      console.log(error)
         res.status(500).json({success:false,message:error.message});
     }
 }
