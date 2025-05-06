@@ -73,9 +73,14 @@ export const checkStaffLogin = async (req,res) => {
         
        
     } catch (error) {
-        res.status(500).json({success:false,message:error.message});
+      res.status(500).json({success:false,message:"Internal Server Error"})
     }
 }
+
+
+
+
+// Endpoint to log out a staff member by clearing the authentication token
 
 export const logOutStaff = async (req,res) => {
   try{

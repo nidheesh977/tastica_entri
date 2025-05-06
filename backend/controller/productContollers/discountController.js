@@ -18,7 +18,7 @@ export const addDiscount = async (req,res) => {
             return res.status(400).json({success:false,message:"Discount cannot be negative"})
         }
 
-        if(isNaN(discount)){
+        if(typeof discount === "string"){
             return res.status(400).json({success:false,message:"Discount must be a number"})
         }
 

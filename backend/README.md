@@ -18,6 +18,14 @@
 **method:**`GET`<br>
 **URL**`/api/v1/admin/check-logged`
 
+- 🧑‍💼 Retrieve staff list for admin<br>
+**method:** `GET`<br>
+**URL:** `/api/v1/admin/staff/list`
+
+- 🧑‍💼🗑 "Delete a staff member"
+**method:** `DELETE`<br>
+**URL:** `/api/v1/admin/staff/:id`
+
 <!-- - 🏤💼 create shop<br>
 **method**`POST`<br>
 **URL**`/api/v1/shop/create-shop` -->
@@ -106,5 +114,19 @@
 
 ## customer routes
 
-- create customer👩
-**method**
+- create new customer👩<br>
+**method**`POST`<br>
+**URL**`/api/v1/customer/create`
+
+- update customer<br>
+**method**`PUT`<br>
+**URL**`/api/v1/customer/:id`
+
+- delete customer<br>
+**method**`DELETE`<br>
+**URL**`/api/v1/customer/:id`
+
+- get customer<br>
+**method**`GET`<br>
+**URL**`/api/v1/customer`
+

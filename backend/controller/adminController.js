@@ -68,6 +68,7 @@ export const CreateEmployee = async (req,res) => {
       }
   
       const {username,phonenumber,email,password} = value;
+      const shopId = req.shop.id
 
       const userAccountExists = await AdminStaffModel.findOne({email:email})
 
@@ -90,7 +91,7 @@ export const CreateEmployee = async (req,res) => {
           phonenumber,
           email,
           password:hashedPassword,
-          
+          shopId
 
       });
 
@@ -106,24 +107,78 @@ export const CreateEmployee = async (req,res) => {
 
 export const checkAdminLogin = async (req,res) => {
     try {
-        const userLogged = req.user;
+      const userLogged = req.user;
 
-        if(userLogged.role !== "admin" ){
+      if(userLogged.role !== "admin" ){
             return res.status(403).json({success:false,message:"Forbidden"});
         }
-             const adminExist = await  AdminStaffModel.findById(userLogged.id)
+        const adminExist = await  AdminStaffModel.findById(userLogged.id)
             
-             const {password:pass,...adminData} = adminExist._doc;
+        const {password:pass,...adminData} = adminExist._doc;
             
-             res.status(200).json({success:true,message:"admin logged successfully",data:adminData});
-        
+         res.status(200).json({success:true,message:"admin logged successfully",data:adminData});      
        
     } catch (error) {
-      console.log(error)
+     
         res.status(500).json({success:false,message:error.message});
     }
 }
 
+// get staffs fetchData for admin panel 
+
+export const getStaffs = async (req,res) => {
+  try{
+     
+    const shopId = req.shop.id
+    
+    if(!shopId){
+        return res.status(400).json({success:false,message:"Shop ID is missing"})
+      }
+    
+    const fetchData = await AdminStaffModel.find({shopId:shopId}).select("-password")
+    
+    if(fetchData.length === 0 ){
+        return res.status(404).json({success:false,message:"No data found"})
+      }
+    
+      res.status(200).json({success:true,message:"Data fetch successfully",data:fetchData})
+
+  }catch(error){
+    res.status(500).json({success:false,message:"Internal Server Error"})
+  }
+}
+
+
+// delete staff for admin panel
+
+export const deleteStaff = async (req,res) => {
+  try{
+     const {id} = req.params;
+     
+     if(!id){
+      return res.status(400).json({success:false,message:"Id is missing"})
+     }
+
+    const userFound = await AdminStaffModel.findById(id)
+
+    if(!userFound){
+      return res.status(403).json({success:false,message:"User not found"})
+    }
+
+    if(userFound.role === "admin"){
+      return res.status(403).json({success:false,message:"Deleting an admin account is not allowed"});
+    }
+
+   
+    await AdminStaffModel.findByIdAndDelete(id)
+
+    res.status(200).json({success:true,message:"Staff deleted successfully"})
+  
+  }catch(error){
+    console.log(error)
+  res.status(500).json({success:false,message:"Internal Server Error"})
+  }
+}
 
 export const logOutAdmin = async (req,res) => {
   try{

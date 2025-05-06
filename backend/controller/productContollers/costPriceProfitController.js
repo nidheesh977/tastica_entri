@@ -60,7 +60,7 @@ export const updateCostPriceProfit = async (req,res) => {
             return res.status(400).json({success:false,message:"Product not found"})
         }
 
-        if(isNaN(costPriceProfit)){
+        if(typeof costPriceProfit === "string"){
             return res.status(400).json({success:false,message:"Cost price profit must be a number"})
         }
  

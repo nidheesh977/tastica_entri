@@ -15,6 +15,10 @@ import mongoose from 'mongoose';
         type:String,
         required:true
     },
+    shopId:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Shop", 
+    },
     phonenumber:{
         type:String,
         required:true,

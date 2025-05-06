@@ -16,7 +16,7 @@ export const addCostPrice = async (req,res) => {
             return res.status(400).json({success:false,message:"Cost price cannot be negative"})
         }
 
-        if(isNaN(costprice)){
+        if(typeof costPriceProfit === "string"){
             return res.status(400).json({success:false,message:"Cost price must be a number"})
         }
 
