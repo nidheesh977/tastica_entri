@@ -31,6 +31,11 @@ export const AdminHeader = () => {
     }
   };
 
+  const handleOpenNewCartTab = () => {
+    const newTab = window.open("/admin/cart", "_blank");
+    // Optional: Pass state if needed
+  };
+
   return (
     <nav className="w-full">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-primary text-white font-bold md:px-10">
@@ -56,23 +61,26 @@ export const AdminHeader = () => {
           }`}
         >
           <ul className="md:flex items-center justify-center font-thin gap-10 bg-primary p-5 md:p-0 w-full text-center">
-          {location.pathname === "/admin/cart" && <> 
-            
-            <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
-              <input
-                className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
-                placeholder="Search Here"
-                type="text"
-              />
-            </li>
-         <li className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none">
-              ORDERS
-            </li>
-            <li className="border md:border-none cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2">
-              +
-            </li>
-            </> 
-            }
+            {location.pathname === "/admin/cart" && (
+              <>
+                <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
+                  <input
+                    className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
+                    placeholder="Search Here"
+                    type="text"
+                  />
+                </li>
+                <li className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none">
+                  ORDERS
+                </li>
+                <li
+                  onClick={handleOpenNewCartTab}
+                  className="border md:border-none cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2"
+                >
+                  +
+                </li>
+              </>
+            )}
             <li className="flex items-center mb-2 gap-5">
               {adminName && <p className="text-xl">{adminName}</p>}
               {adminName && <FaUserShield size={20} />}
@@ -82,7 +90,7 @@ export const AdminHeader = () => {
                   onClick={() => {
                     dispatch(removeAdminData());
                     adminLogout();
-                    navigate("/admin/login");
+                    navigate("/shop/admin/login");
                   }}
                   className="cursor-pointer"
                 />

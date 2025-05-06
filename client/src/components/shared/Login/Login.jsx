@@ -31,7 +31,7 @@ export const Login = ({ role, action }) => {
         username?.current?.value,
         email?.current?.value,
         password?.current?.value,
-        confirmPassword?.current?.value,
+        confirmPassword?.current?.value
       );
 
       const data = {
@@ -55,10 +55,8 @@ export const Login = ({ role, action }) => {
         phonenumber.current.value = "";
         password.current.value = "";
         toast.success("Signup success");
-
-        console.log(response);
       } catch (error) {
-        toast.error(error?.response?.data?.message);
+        toast.error('Something went wrong!');
 
         console.log(error);
       }
@@ -77,7 +75,7 @@ export const Login = ({ role, action }) => {
           data,
         });
         toast.success("Login success");
-        console.log(response);
+
         if (role === "Admin") dispatch(addAdminData(response?.data?.data));
         if (role === "Staff") dispatch(addStaffData(response?.data?.data));
         phonenumber.current.value = null;
@@ -85,8 +83,8 @@ export const Login = ({ role, action }) => {
         if (role === "Admin") navigate("/admin");
         if (role === "Staff") navigate("/staff");
       } catch (error) {
-        toast.error(error?.response?.data?.message);
-        console.log(error);
+        toast.error('Invalid credentials!');
+        
       }
     }
   };
