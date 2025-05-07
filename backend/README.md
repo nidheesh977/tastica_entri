@@ -26,10 +26,33 @@
 **method:** `DELETE`<br>
 **URL:** `/api/v1/admin/staff/:id`
 
-<!-- - 🏤💼 create shop<br>
-**method**`POST`<br>
-**URL**`/api/v1/shop/create-shop` -->
 
+
+## The routes for shop
+
+ - 🏤💼 create shop<br>
+**method**`POST`<br>
+**URL**`/api/v1/shop/create` 
+
+- 🏤 shop login<br>
+**method**`POST`<br>
+**URL**`/api/v1/shop/login`
+
+- 🏤🚪 shop logout<br>
+**method**`POST`<br>
+**URL**`/api/v1/shop/logout`
+
+- 🏤🟢 check shop login<br>
+**method**`GET`<br>
+**URL**`/api/v1/shop/check-login`
+
+- 🏤🏙💼 update shop data<br>
+**method**`PUT`<br>
+**URL**`/api/v1/shop`
+
+- 🏤🗑 delete shop<br>
+**method**`DELETE`
+**URL**`/api/v1/shop`
 
 ## The routes for staff 
 

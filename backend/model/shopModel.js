@@ -2,17 +2,25 @@ import mongoose from 'mongoose';
 
 
  const shopSchema = new mongoose.Schema({
-    shopname:{
+    shopName:{
         type:String,
-        required:true,
+        required:true
     },
     email:{
         type:String,
-        required:true,
+        required:true
     },
     password:{
         type:String,
-        required:true,
+        required:true
+    },
+    countryName:{
+        type:String,
+        required:true
+    },
+    currencyCode:{
+        type:String,
+        required:true
     },
     role:{
         type:String,

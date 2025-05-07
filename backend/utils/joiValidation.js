@@ -51,19 +51,36 @@ export const LoginValidation = Joi.object({
 
 export const shopSignupValidtaion = Joi.object({
 
-    shopname: Joi.string().min(3).max(30).required().messages({
+    shopName: Joi.string().min(3).max(30).required().messages({
         'string.required': 'Shop name is required',
         'string.base': 'Shop name must be a string',
         'string.empty': 'Shop name cannot be empty',
         'string.min': 'Shop name must be at least 3 characters long',
         'string.max': 'Shop name must be at most 30 characters long',   
     }),
-
+ 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
         'string.required': 'Email is required',
         'string.base': 'Email must be a string',
         'string.empty': 'Email cannot be empty',
         'string.email': 'Email must be a valid email address',
+    }),
+
+    countryName:Joi.string().pattern(/^[a-zA-Z\s]+$/).min(3).max(20).required().messages({
+        'string.required': 'Country name is required',
+        'string.base': 'Country name must be a string',
+        'string.empty': 'Country name cannot be empty',
+        'string.min': 'Country name must be at least 3 characters long',
+        'string.max': 'Country name must be at most 20 characters long',
+        'string.pattern.base':'Country name must contain only letters and spaces'   
+    }),
+
+    currencyCode:Joi.string().length(3).pattern(/^[A-Z]{3}$/).required().messages({
+        'string.required': 'Currency name is required',
+        'string.base': 'Currency code must be a string',
+        'string.empty': 'Currency code cannot be empty',
+        'string.length': 'Currency code must be exactly 3 uppercase letters',
+        'string.pattern.base': 'Currency code must contain only uppercase letters(e.g.,INR, USD',   
     }),
 
     password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
@@ -74,6 +91,43 @@ export const shopSignupValidtaion = Joi.object({
         'string.pattern.base': 'Password must contain only letters, numbers or characters',
     }),
 })
+
+export const shopUpdateValidtaion = Joi.object({
+
+    shopName: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Shop name is required',
+        'string.base': 'Shop name must be a string',
+        'string.empty': 'Shop name cannot be empty',
+        'string.min': 'Shop name must be at least 3 characters long',
+        'string.max': 'Shop name must be at most 30 characters long',   
+    }),
+ 
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Email is required',
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Email must be a valid email address',
+    }),
+
+    countryName:Joi.string().pattern(/^[a-zA-Z\s]+$/).min(3).max(20).required().messages({
+        'string.required': 'Country name is required',
+        'string.base': 'Country name must be a string',
+        'string.empty': 'Country name cannot be empty',
+        'string.min': 'Country name must be at least 3 characters long',
+        'string.max': 'Country name must be at most 20 characters long',
+        'string.pattern.base':'Country name must contain only letters and spaces'   
+    }),
+
+    currencyCode:Joi.string().length(3).pattern(/^[A-Z]{3}$/).required().messages({
+        'string.required': 'Currency name is required',
+        'string.base': 'Currency code must be a string',
+        'string.empty': 'Currency code cannot be empty',
+        'string.length': 'Currency code must be exactly 3 uppercase letters',
+        'string.pattern.base': 'Currency code must contain only uppercase letters(e.g.,INR, USD',   
+    }),
+
+})
+
 
 export const shopLoginValidation = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({

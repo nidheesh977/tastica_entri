@@ -14,8 +14,8 @@ adminRouter.post('/login',loginAdmin);
 adminRouter.post('/create-employee',shopVerifyToken,userVerifyToken,checkUserRole("admin"),CreateEmployee)
 adminRouter.get('/staff/list',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getStaffs)
 adminRouter.delete('/staff/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),deleteStaff)
-adminRouter.post('/logout',userVerifyToken,checkUserRole("admin"),logOutAdmin)
-adminRouter.get('/check-logged',userVerifyToken,checkUserRole("admin"),checkAdminLogin)
+adminRouter.post('/logout',shopVerifyToken,userVerifyToken,checkUserRole("admin"),logOutAdmin)
+adminRouter.get('/check-logged',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkAdminLogin)
 
  
 export default adminRouter;

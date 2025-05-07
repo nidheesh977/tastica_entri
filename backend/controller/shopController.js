@@ -1,11 +1,12 @@
 import shopModel from '../model/shopModel.js';
-import { shopSignupValidtaion ,shopLoginValidation } from '../utils/joiValidation.js';
+import { shopSignupValidtaion ,shopLoginValidation, shopUpdateValidtaion } from '../utils/joiValidation.js';
 import { generateToken } from '../utils/generateToken.js';
 import { comparePassword } from '../utils/comparePassword.js';
 import bcryptjs from 'bcryptjs'
+import AdminStaffModel from '../model/adminAndStaffModel.js';
 
 
-
+// Endpoint to Create a new shop by an admin
 export const createShop = async (req,res) => {
     
     try {
@@ -15,7 +16,7 @@ export const createShop = async (req,res) => {
             return res.status(400).json({message:error.details[0].message});
         }
 
-        const {shopname,email,password} = value;
+        const {shopName,email,password,countryName,currencyCode} = value;
 
         const shopExist = await shopModel.findOne({email:email});
 
@@ -26,9 +27,11 @@ export const createShop = async (req,res) => {
         const hasedPassword = await bcryptjs.hash(password,10);
 
         const newShop = new shopModel({
-            shopname,
+            shopName,
             email,
             password:hasedPassword,
+            countryName,
+            currencyCode,
             role:"shop"
         })
 
@@ -41,7 +44,7 @@ export const createShop = async (req,res) => {
     }
 }
 
-
+// Endpoint to log in a shop 
 export const shopLogin = async (req,res) => {
     try {
 
@@ -50,7 +53,7 @@ export const shopLogin = async (req,res) => {
         if(error){
             return res.status(400).json({message:error.details[0].message});
         }
-
+ 
         const {email,password} = value;
 
         const shopExist = await shopModel.findOne({email:email});
@@ -65,26 +68,88 @@ export const shopLogin = async (req,res) => {
             return res.status(400).json({success:false,message:"Invalid credentials"})
         }         
 
-
         const {password:pass,...shopData} = shopExist._doc
 
-        const shopToken = generateToken({id:shopExist._id,role:"shop"});
+        const shopToken = generateToken({id:shopExist._id,role:"shop", countryName:shopExist.countryName, currencyCode:shopExist.currencyCode});
 
         res.cookie("shopToken",shopToken,{httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
             sameSite:"none",maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:shopData})
 
     }catch(error){
-      
         return res.status(500).json({success:false,message:"internal server error"});
       }  
 }
 
+// Endpoint to update shop 
+    export const shopUpdate = async (req,res) => {
+        try{
 
+        const {error,value} = shopUpdateValidtaion.validate(req.body);
+       
+        if(error){
+            return res.status(400).json({message:error.details[0].message});
+        }
+
+        const {id} = req.shop;
+        const {shopName,email,countryName,currencyCode} = value;
+
+        if(!id){
+            return res.status(400).json({success:false,message:"Shop ID is missing"});
+        }
+
+      const updatedData =   await shopModel.findByIdAndUpdate(id,{
+            shopName,
+            email,
+            countryName,
+            currencyCode,
+        },{new:true})
+
+        const {password:pass,...shopData} = updatedData._doc
+
+        res.status(200).json({success:true,message:"Shop updated successfully",data:shopData})
+
+    }catch(error){
+        return res.status(500).json({success:false,message:"internal server error"});
+    }
+}
+
+// Endpoint to delete shop
+
+export const deleteShop = async (req,res) => {
+    try{
+       const {id} = req.shop;
+
+       if(!id){
+        return res.status(400).json({success:false,message:"Shop ID is missing"});
+    }
+
+    const staffMembers = await AdminStaffModel.find({shopId:id})
+
+    if (staffMembers.some(staff => staff.role === "admin")) {
+        return res.status(403).json({ success: false, message: "Cannot delete shop with admin staff" });
+    }
+        
+     await AdminStaffModel.deleteMany({shopId:id});
+     await shopModel.findByIdAndDelete(id)
+
+     res.clearCookie("shopToken")
+     res.clearCookie("adminToken")
+     res.clearCookie("staffToken")
+  
+  res.status(200).json({success:true,message:"shop delete successfully"})
+    }catch(error){
+        console.log(error)
+  return res.status(500).json({success:false,message:"internal server error"});
+    }
+}
+
+
+// Endpoint to check if a shop is logged in
 export const checkShopLogin = async (req,res) => {
     try {
         const shopLogged = req.shop;
-
+    
         if(shopLogged.role !== "shop" ){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }
@@ -100,6 +165,7 @@ export const checkShopLogin = async (req,res) => {
     }
 }
 
+// Endpoint to log out a shop 
 export const logOutShop = async (req,res) => {
   try{
     res.clearCookie("shopToken")
