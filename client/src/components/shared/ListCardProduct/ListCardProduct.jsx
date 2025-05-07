@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
+import { useProducts } from "../../../hooks/useProducts";
 
 export const ListCardProduct = () => {
-  const [products, setProducts] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedQuantity, setEditedQuantity] = useState(null);
@@ -15,67 +13,10 @@ export const ListCardProduct = () => {
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/product",
-        withCredentials: true,
-      });
-      setProducts(response?.data?.data);
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  const updateProductData = async (productId, categoryId) => {
-    const data = {
-      productname: editedTitle,
-      category: `${categoryId._id}`,
-      quantity: editedQuantity,
-      costprice: editedCostPrice,
-      sellingprice: editedSellingPrice,
-      discount: editedDiscount,
-    };
-
-    try {
-      await axiosInstance({
-        method: "PUT",
-        url: `/product/update/${productId}/category/${categoryId._id}`,
-        withCredentials: true,
-        data,
-      });
-      toast.success("Product updated successfully");
-      setEditId(null);
-      fetchProducts();
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
-
-  const deleteProduct = async (productId) => {
-    try {
-      await axiosInstance({
-        method: "DELETE",
-        url: `/product/delete/${productId}`,
-        withCredentials: true,
-      });
-      toast.success("Product updated successfully");
-      setEditId(null);
-      fetchProducts();
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-  console.log(products);
+  const { products, deleteProduct, updateProduct } = useProducts();
 
   return (
-    <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
+    <div className="md:w-5/6 w-full md:max-h-[520px] text-center pt-5 pb-14 px-5 border border-primary  shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Products
@@ -87,7 +28,7 @@ export const ListCardProduct = () => {
         />
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-auto h-96 pb-10">
         <table className="min-w-[768px] w-full border border-primary text-left text-sm sm:text-base">
           <thead className="bg-primary/10 font-semibold text-black">
             <tr>
@@ -123,6 +64,7 @@ export const ListCardProduct = () => {
                 <td className="border border-primary px-4 py-2">
                   {product?.category?.categoryname}
                 </td>
+
                 <td className="border border-primary px-4 py-2">
                   {editId === product._id ? (
                     <input
@@ -179,9 +121,18 @@ export const ListCardProduct = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() =>
-                          updateProductData(product._id, product?.category)
-                        }
+                        onClick={() => {
+                          updateProduct(
+                            product._id,
+                            editedTitle,
+                            product?.category,
+                            editedQuantity,
+                            editedCostPrice,
+                            editedSellingPrice,
+                            editedDiscount
+                          );
+                          setEditId(null);
+                        }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (

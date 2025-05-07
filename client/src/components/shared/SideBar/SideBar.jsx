@@ -58,7 +58,7 @@ export const SideBar = () => {
         <li
           onClick={() =>
             handleSideBar(
-              admin ? "/admin/customer/view" : "/staff/customer/view",
+              admin ? "/admin/customer/view" : "/staff/customer/view"
             )
           }
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
@@ -98,7 +98,7 @@ export const SideBar = () => {
         <li
           onClick={() =>
             handleSideBar(
-              admin ? "/admin/category/view" : "/staff/category/view",
+              admin ? "/admin/category/view" : "/staff/category/view"
             )
           }
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"

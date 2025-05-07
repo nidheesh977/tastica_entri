@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import {axiosInstance} from '../../../config/axiosInstance'
+import { axiosInstance } from "../../../config/axiosInstance";
+
 
 export const ListCardStaff = () => {
   const [staffs, setStaffs] = useState([]);
@@ -12,34 +13,31 @@ export const ListCardStaff = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  
-  const fetchStaffData = async() => {
-    
-    try{
+
+  const fetchStaffData = async () => {
+    try {
       const response = await axiosInstance({
-        method: 'GET',
-        url: '/admin/staff/list'
-      })
+        method: "GET",
+        url: "/admin/staff/list",
+        withCredentials: true,
+      });
+      setStaffs(response?.data?.data);
+    } catch (error) {
+      console.log(error);
     }
-    
-    
-    
-  }
-  
-  
-  
-  
-  
+  };
 
   const updateStaffData = (id) => {
     setEditId(null);
-    
-  }
+  };
 
   const deleteStaff = (id) => {
     
-    setAlertMessage(null); 
   };
+
+  useEffect(() => {
+    fetchStaffData();
+  }, []);
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -60,22 +58,46 @@ export const ListCardStaff = () => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">Email</th>
+              <th className="border border-primary px-4 py-2">Mobile</th>
               <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
           <tbody>
             {staffs?.map((staff, index) => (
-              <tr key={staff._id} className="border-t border-primary">
+              <tr key={staff?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === staff._id ? (
+                  {editId === staff?._id ? (
                     <input
-                      value={editedStaffName}
-                      onChange={(e) => setEditedStaffName(e.target.value)}
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    staff?.name
+                    staff?.username
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === staff?._id ? (
+                    <input
+                      value={editedEmail}
+                      onChange={(e) => setEditedEmail(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    staff?.email
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === staff?._id ? (
+                    <input
+                      value={editedMobile}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    staff?.phonenumber
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
@@ -84,7 +106,7 @@ export const ListCardStaff = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateStaffData(staff._id)}
+                        onClick={() => updateStaffData(staff?._id)}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
@@ -93,15 +115,17 @@ export const ListCardStaff = () => {
                           title="Edit"
                           size={20}
                           onClick={() => {
-                            setEditId(staff._id);
-                            setEditedStaffName(staff.name);
+                            setEditId(staff?._id);
+                            setEditedName(staff?.username);
+                            setEditedEmail(staff?.email);
+                            setEditedMobile(staff?.mobile);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"
                           size={22}
-                          onClick={() => setAlertMessage(staff._id)}
+                          onClick={() => setAlertMessage(staff?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
                       </>

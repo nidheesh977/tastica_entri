@@ -3,6 +3,7 @@ import { FaBox } from "react-icons/fa";
 import { SideBar } from "../SideBar/SideBar";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../config/axiosInstance";
+import { useProducts } from "../../../hooks/useProducts";
 import toast from "react-hot-toast";
 
 export const AddProductCard = () => {
@@ -13,6 +14,7 @@ export const AddProductCard = () => {
   const discount = useRef(null);
   const category = useRef(null);
   const categories = useSelector((state) => state?.categories);
+  const { fetchProducts } = useProducts();
 
   const handleSubmit = async () => {
     const data = {
@@ -30,7 +32,7 @@ export const AddProductCard = () => {
         withCredentials: true,
         data,
       });
-      console.log(response);
+      fetchProducts();
 
       toast.success("Product added successfully");
       (productname.current.value = ""),

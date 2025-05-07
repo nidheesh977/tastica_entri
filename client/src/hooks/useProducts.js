@@ -1,0 +1,77 @@
+import toast from "react-hot-toast";
+import { useEffect, useCallback } from "react";
+import { axiosInstance } from "../config/axiosInstance";
+import { useSelector, useDispatch } from "react-redux";
+import { addProductData } from "../redux/features/productSlice";
+
+export const useProducts = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products);
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/product",
+        withCredentials: true,
+      });
+      dispatch(addProductData(response?.data?.data));
+      console.log(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!products || products.length === 0) {
+      fetchProducts();
+    }
+  }, [products, fetchProducts]);
+
+  const deleteProduct = async (id) => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/product/delete/${id}`,
+        withCredentials: true,
+      });
+      toast.success("Product deleted successfully");
+
+      fetchProducts();
+    } catch (error) {}
+  };
+
+  const updateProduct = async (
+    productId,
+    productname,
+    category,
+    quantity,
+    costprice,
+    sellingprice,
+    discount
+  ) => {
+    const data = {
+      productname,
+      quantity,
+      costprice,
+      sellingprice,
+      discount,
+      category: category?._id,
+    };
+
+    try {
+      await axiosInstance({
+        method: "PUT",
+        url: `/product/update/${productId}/category/${category._id}`,
+        withCredentials: true,
+        data,
+      });
+      toast.success("Product updated successfully");
+
+      fetchProducts();
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.log(error);
+    }
+  };
+  return { products, deleteProduct, updateProduct, fetchProducts };
+};

@@ -1,5 +1,6 @@
 import express from 'express';
-import { CreateEmployee, createShop } from '../../../controller/superAdminController.js';
+import { CreateEmployee } from '../../../controller/superAdminController.js';
+import { createShop } from '../../../controller/shopController.js';
 
 const superAdminRouter = express.Router();
 
