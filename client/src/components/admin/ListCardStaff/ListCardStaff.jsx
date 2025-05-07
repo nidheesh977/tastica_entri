@@ -3,28 +3,41 @@ import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
+import {axiosInstance} from '../../../config/axiosInstance'
 
 export const ListCardStaff = () => {
-  const [staffs, setStaffs] = useState([
-    { index: 0, _id: 1, name: "Arjun" },
-    { index: 1, _id: 2, name: "Ashai" },
-  ]);
+  const [staffs, setStaffs] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
-  const [editedStaffName, setEditedStaffName] = useState("");
+  const [editedName, setEditedName] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editedMobile, setEditedMobile] = useState("");
+  
+  const fetchStaffData = async() => {
+    
+    try{
+      const response = await axiosInstance({
+        method: 'GET',
+        url: '/admin/staff/list'
+      })
+    }
+    
+    
+    
+  }
+  
+  
+  
+  
+  
 
   const updateStaffData = (id) => {
     setEditId(null);
     
-    const updatedStaffs = staffs.map(staff =>
-      staff._id === id ? { ...staff, name: editedStaffName } : staff
-    );
-    setStaffs(updatedStaffs);
-  };
+  }
 
   const deleteStaff = (id) => {
-    const updatedStaffs = staffs.filter(staff => staff._id !== id);
-    setStaffs(updatedStaffs);
+    
     setAlertMessage(null); 
   };
 

@@ -1,12 +1,31 @@
 import { useRef } from "react";
 import { MdPersonAdd } from "react-icons/md";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const AddCustomerCard = () => {
-  const username = useRef(null);
-  const email = useRef(null);
-  const phonenumber = useRef(null);
+  const customerName = useRef(null);
+  const phoneNumber = useRef(null);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    const data = {
+      customerName: customerName.current.value,
+      phoneNumber: phoneNumber.current.value,
+    };
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/customer/create",
+        withCredentials: true,
+        data,
+      });
+      toast.success("Customer created successfully!");
+      customerName.current.value = '';
+      phoneNumber.current.value = '';
+    } catch(error) {
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <div className="flex justify-center my-2">
@@ -22,21 +41,14 @@ export const AddCustomerCard = () => {
 
         <input
           type="text"
-          ref={username}
+          ref={customerName}
           placeholder="Full Name"
           className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
         />
 
         <input
-          type="email"
-          ref={email}
-          placeholder="Email Address"
-          className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
-        />
-
-        <input
           type="text"
-          ref={phonenumber}
+          ref={phoneNumber}
           placeholder="Mobile"
           className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />

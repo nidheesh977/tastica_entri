@@ -16,12 +16,12 @@ export const AddProductCard = () => {
 
   const handleSubmit = async () => {
     const data = {
-      productname: productname.current.value,
-      quantity: quantity.current.value,
-      costprice: costprice.current.value,
-      sellingprice: sellingprice.current.value,
-      discount: discount.current.value,
-      category: category.current.value,
+      productname: productname?.current?.value,
+      quantity: quantity?.current?.value,
+      costprice: costprice?.current?.value,
+      sellingprice: sellingprice?.current?.value,
+      discount: discount?.current?.value,
+      category: category?.current?.value,
     };
     try {
       const response = await axiosInstance({
@@ -42,10 +42,6 @@ export const AddProductCard = () => {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
   };
-
-  const categoryList = Object.values(categories).filter(
-    (item) => typeof item === "object" && !item.hasOwnProperty("rehydrated")
-  );
 
   return (
     <>
@@ -99,7 +95,7 @@ export const AddProductCard = () => {
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           >
             <option value="">Select a category</option>
-            {categoryList?.map((category) => (
+            {categories?.map((category) => (
               <option key={category?._id} value={category?._id}>
                 {category?.categoryname}
               </option>

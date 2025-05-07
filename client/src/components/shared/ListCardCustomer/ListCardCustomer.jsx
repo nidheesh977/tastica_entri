@@ -1,27 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
 
 export const ListCardCustomer = () => {
-  const [customers, setCustomers] = useState([
-    { index: 0, _id: 1, name: "Arjun", points: 507 },
-    { index: 1, _id: 2, name: "Vishnu", points: 802 },
-  ]);
+  const [customers, setCustomers] = useState([]);
 
-  const [alertMessage, setAlertMessage] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
+  const [editedMobile, setEditedMobile] = useState("");
 
-  const updateCustomerData = (id) => {
+  const fetchCustomer = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/customer",
+        withCredentials: true,
+      });
+      setCustomers(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateCustomerData = async (id) => {
+    try {
+      await axiosInstance({
+        method: "PUT",
+        url: `/customer/${id}`,
+        withCredentials: true,
+      });
+      fetchCustomer();
+      toast.success("Customer details updated successfully");
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.log(error);
+    }
     setEditId(null);
-   
   };
 
-  const deleteCustomer = (id) => {
-    setCustomers((prev) => prev.filter((cust) => cust._id !== id));
+  const deleteCustomer = async(id) => {
+    try {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/customer/${id}`,
+        withCredentials: true,
+      });
+      fetchCustomer();
+      toast.success("Customer deleted successfully");
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.log(error);
+    }
+    setEditId(null);
   };
+
+  useEffect(() => {
+    fetchCustomer();
+  }, []);
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -42,35 +82,47 @@ export const ListCardCustomer = () => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">Mobile</th>
               <th className="border border-primary px-4 py-2">Points</th>
               <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
           <tbody>
-            {customers?.map((cust, index) => (
-              <tr key={cust._id} className="border-t border-primary">
+            {customers?.map((customer, index) => (
+              <tr key={customer?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === cust._id ? (
+                  {editId === customer?._id ? (
                     <input
                       value={editedName}
                       onChange={(e) => setEditedName(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    cust.name
+                    customer?.customerName
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {cust.points}
+                  {editId === customer?._id ? (
+                    <input
+                      value={editedMobile}
+                      onChange={(e) => setEditedMobile(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    customer?.phoneNumber
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {customer?.loyalityPoint}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
-                    {editId === cust._id ? (
+                    {editId === customer?._id ? (
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateCustomerData(cust._id)}
+                        onClick={() => updateCustomerData(customer?._id)}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
@@ -79,27 +131,28 @@ export const ListCardCustomer = () => {
                           title="Edit"
                           size={20}
                           onClick={() => {
-                            setEditId(cust._id);
-                            setEditedName(cust.name);
+                            setEditId(customer?._id);
+                            setEditedName(customer?.customerName);
+                            setEditedMobile(customer?.phoneNumber);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"
                           size={22}
-                          onClick={() => setAlertMessage(cust._id)}
+                          onClick={() => setAlertMessage(customer?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
                       </>
                     )}
-                    {alertMessage === cust._id && (
+                    {alertMessage === customer?._id && (
                       <AlertBox
                         message="Do you want to delete this customer?"
                         onConfirm={() => {
-                          setAlertMessage(false);
-                          deleteCustomer(cust._id);
+                          setAlertMessage(null);
+                          deleteCustomer(customer?._id);
                         }}
-                        onCancel={() => setAlertMessage(false)}
+                        onCancel={() => setAlertMessage(null)}
                       />
                     )}
                   </div>
