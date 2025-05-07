@@ -27,17 +27,19 @@ export const useProducts = () => {
     }
   }, [products, fetchProducts]);
 
-  const deleteProduct = async (id) => {
+  const deleteProduct = async (productId) => {
     try {
       await axiosInstance({
         method: "DELETE",
-        url: `/product/delete/${id}`,
+        url: `/product/delete/${productId}`,
         withCredentials: true,
       });
       toast.success("Product deleted successfully");
 
       fetchProducts();
-    } catch (error) {}
+    } catch (error) {
+      toast('Something went wrong!')
+    }
   };
 
   const updateProduct = async (

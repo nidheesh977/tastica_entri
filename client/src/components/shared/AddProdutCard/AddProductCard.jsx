@@ -4,6 +4,7 @@ import { SideBar } from "../SideBar/SideBar";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../config/axiosInstance";
 import { useProducts } from "../../../hooks/useProducts";
+import { useCategories } from "../../../hooks/useCategories";
 import toast from "react-hot-toast";
 
 export const AddProductCard = () => {
@@ -15,6 +16,9 @@ export const AddProductCard = () => {
   const category = useRef(null);
   const categories = useSelector((state) => state?.categories);
   const { fetchProducts } = useProducts();
+  const { fetchCategories } = useCategories();
+
+  !categories && fetchCategories();
 
   const handleSubmit = async () => {
     const data = {

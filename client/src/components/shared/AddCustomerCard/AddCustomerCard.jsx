@@ -1,11 +1,13 @@
 import { useRef } from "react";
+import toast from "react-hot-toast";
 import { MdPersonAdd } from "react-icons/md";
 import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
+import { useCustomers } from "../../../hooks/useCustomers";
 
 export const AddCustomerCard = () => {
   const customerName = useRef(null);
   const phoneNumber = useRef(null);
+  const { fetchCustomers } = useCustomers();
 
   const handleSubmit = async () => {
     const data = {
@@ -20,9 +22,10 @@ export const AddCustomerCard = () => {
         data,
       });
       toast.success("Customer created successfully!");
-      customerName.current.value = '';
-      phoneNumber.current.value = '';
-    } catch(error) {
+      fetchCustomers();
+      customerName.current.value = "";
+      phoneNumber.current.value = "";
+    } catch (error) {
       toast.error("Something went wrong!");
     }
   };

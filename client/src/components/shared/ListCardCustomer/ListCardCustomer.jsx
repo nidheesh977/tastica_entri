@@ -3,65 +3,14 @@ import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
+import { useCustomers } from "../../../hooks/useCustomers";
 
 export const ListCardCustomer = () => {
-  const [customers, setCustomers] = useState([]);
-
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-
-  const fetchCustomer = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/customer",
-        withCredentials: true,
-      });
-      setCustomers(response?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateCustomerData = async (id) => {
-    try {
-      await axiosInstance({
-        method: "PUT",
-        url: `/customer/${id}`,
-        withCredentials: true,
-      });
-      fetchCustomer();
-      toast.success("Customer details updated successfully");
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.log(error);
-    }
-    setEditId(null);
-  };
-
-  const deleteCustomer = async(id) => {
-    try {
-      await axiosInstance({
-        method: "DELETE",
-        url: `/customer/${id}`,
-        withCredentials: true,
-      });
-      fetchCustomer();
-      toast.success("Customer deleted successfully");
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.log(error);
-    }
-    setEditId(null);
-  };
-
-  useEffect(() => {
-    fetchCustomer();
-  }, []);
+  const { customers, deleteCustomer, updateCustomer } = useCustomers();
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -122,7 +71,15 @@ export const ListCardCustomer = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateCustomerData(customer?._id)}
+                        onClick={() => {
+                          updateCustomer(
+                            customer?._id,
+                            editedName,
+                            editedMobile
+                          );
+
+                          setEditId(null);
+                        }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (

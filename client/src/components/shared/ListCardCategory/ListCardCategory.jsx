@@ -1,79 +1,17 @@
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
-import { axiosInstance } from "../../../config/axiosInstance";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { addCategory } from "../../../redux/features/categorySlice";
-import toast from "react-hot-toast";
 import { AlertBox } from "../AlertBox/AlertBox";
+import { useCategories } from "../../../hooks/useCategories";
 
 export const ListCardCategory = () => {
-  const [categories, setCategories] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
   const [editedDiscount, setEditedDiscount] = useState(null);
-  const dispatch = useDispatch();
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/categories",
-        withCredentials: true,
-      });
-
-      setCategories(response?.data?.data);
-      dispatch(addCategory(response?.data?.data));
-    } catch (error) {
-      console.log(error?.response?.data?.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const updateCategoryData = async (categoryId) => {
-    const data = {
-      categoryname: editCategoryName,
-      description: editedDescription,
-      discount: editedDiscount,
-    };
-
-    try {
-      await axiosInstance({
-        method: "PUT",
-        url: `/categories/${categoryId}`,
-        withCredentials: true,
-        data,
-      });
-
-      toast.success("Category updated successfully!");
-      setEditId(null);
-      setEditCategoryName("");
-      setEditedDescription("");
-      setEditedDiscount(null);
-      fetchCategories();
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
-
-  const deleteCategory = async (categoryId) => {
-    try {
-      await axiosInstance({
-        method: "DELETE",
-        url: `/categories/${categoryId}`,
-      });
-      toast.success("Category deleted successfully!");
-      fetchCategories();
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
+  const { categories, updateCategory, deleteCategory } = useCategories();
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -126,16 +64,16 @@ export const ListCardCategory = () => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === category._id ? (
+                  {/* {editId === category._id ? (
                     <input
                       type="number"
                       value={editedDiscount}
                       onChange={(e) => setEditedDiscount(e.target.value)}
                       className="w-full rounded border p-1"
                     />
-                  ) : (
-                    category?.discountrate
-                  )}
+                  ) : ( */}
+                  {category?.discountrate}
+                  {/* )} */}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
@@ -143,7 +81,15 @@ export const ListCardCategory = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateCategoryData(category._id)}
+                        onClick={() => {
+                          updateCategory(
+                            category._id,
+                            editCategoryName,
+                            editedDescription,
+                            editedDiscount
+                          );
+                          setEditId(null);
+                        }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (

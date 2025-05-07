@@ -4,9 +4,9 @@ export const categorySlice = createSlice({
   name: "categories",
   initialState: null,
   reducers: {
-    addCategory: (_, action) => action.payload,
+    addCategoryData: (_, action) => action.payload,
   },
 });
 
-export const { addCategory } = categorySlice.actions;
+export const { addCategoryData } = categorySlice.actions;
 export default categorySlice.reducer;

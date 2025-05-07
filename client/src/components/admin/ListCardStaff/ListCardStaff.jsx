@@ -1,43 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { axiosInstance } from "../../../config/axiosInstance";
-
 
 export const ListCardStaff = () => {
-  const [staffs, setStaffs] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-
-  const fetchStaffData = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/admin/staff/list",
-        withCredentials: true,
-      });
-      setStaffs(response?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateStaffData = (id) => {
-    setEditId(null);
-  };
-
-  const deleteStaff = (id) => {
-    
-  };
-
-  useEffect(() => {
-    fetchStaffData();
-  }, []);
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
