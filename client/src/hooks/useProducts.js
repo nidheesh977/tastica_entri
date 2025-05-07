@@ -15,7 +15,7 @@ export const useProducts = () => {
         withCredentials: true,
       });
       dispatch(addProductData(response?.data?.data));
-      console.log(response?.data?.data);
+      
     } catch (error) {
       console.log(error);
     }

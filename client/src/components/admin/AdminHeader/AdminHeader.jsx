@@ -86,13 +86,14 @@ export const AdminHeader = () => {
               {adminName && <FaUserShield size={20} />}
               {adminName && (
                 <MdLogout
+                title="Logout"
                   size={20}
                   onClick={() => {
                     dispatch(removeAdminData());
                     adminLogout();
                     navigate("/shop/admin/login");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:text-secondary"
                 />
               )}
             </li>

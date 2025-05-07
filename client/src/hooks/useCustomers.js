@@ -7,6 +7,7 @@ import { addCustomerData } from "../redux/features/customerSlice";
 export const useCustomers = () => {
   const dispatch = useDispatch();
   const customers = useSelector((state) => state.customers);
+  const hasFetched = customers !== null;
   const fetchCustomers = useCallback(async () => {
     try {
       const response = await axiosInstance({
@@ -16,25 +17,29 @@ export const useCustomers = () => {
       });
       dispatch(addCustomerData(response?.data?.data));
     } catch (error) {
-      console.log(error);
+      if (error?.response?.status === 404) {
+        dispatch(addCustomerData([]));
+      } else {
+        console.error(error);
+        toast.error("Failed to fetch customers");
+      }
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (!customers || customers.length === 0) {
+    if (!hasFetched) {
       fetchCustomers();
     }
   }, [customers, fetchCustomers]);
 
   const deleteCustomer = async (customerId) => {
     try {
-      await axiosInstance({
+      const response = await axiosInstance({
         method: "DELETE",
         url: `/customer/${customerId}`,
         withCredentials: true,
       });
       toast.success("Customer deleted successfully");
-
       fetchCustomers();
     } catch (error) {
       toast.error("Something went wrong!");

@@ -7,6 +7,7 @@ import { addStaffData } from "../redux/features/authSlice";
 export const useStaffs = () => {
   const dispatch = useDispatch();
   const staffs = useSelector((state) => state.auth.staffData);
+  const hasFetched = staffs !== null;
   const fetchStaffs = useCallback(async () => {
     try {
       const response = await axiosInstance({
@@ -15,14 +16,18 @@ export const useStaffs = () => {
         withCredentials: true,
       });
       dispatch(addStaffData(response?.data?.data));
-      console.log(response?.data?.data);
     } catch (error) {
-      console.log(error);
+      if (error?.response?.status === 404) {
+        dispatch(addStaffData([]));
+      } else {
+        console.error(error);
+        
+      }
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (!staffs || staffs.length === 0) {
+    if (!hasFetched) {
       fetchStaffs();
     }
   }, [staffs, fetchStaffs]);
@@ -34,7 +39,7 @@ export const useStaffs = () => {
         url: `/admin/staff/${staffId}`,
         withCredentials: true,
       });
-      toast.success("Staff deleted successfully");
+      toast.success("Staff data deleted successfully");
 
       fetchStaffs();
     } catch (error) {
@@ -42,31 +47,27 @@ export const useStaffs = () => {
     }
   };
 
-  const updateCategory = async (
-    staffId,
-    categoryname,
-    description,
-    discount
-  ) => {
+  const updateStaff = async (staffId, username, email, phonenumber) => {
     const data = {
-      categoryname,
-      description,
+      username,
+      email,
+      phonenumber,
     };
 
     try {
       await axiosInstance({
         method: "PUT",
-        url: `/categories/${categoryId}`,
+        url: `/staff/${staffId}`,
         withCredentials: true,
         data,
       });
-      toast.success("Category updated successfully");
+      toast.success("Staff data updated successfully");
 
-      fetchCategories();
+      fetchStaffs();
     } catch (error) {
       toast.error("Something went wrong!");
       console.log(error);
     }
   };
-  return { categories, updateCategory, deleteCategory, fetchCategories };
+  return { staffs, updateStaff, deleteStaff, fetchStaffs };
 };

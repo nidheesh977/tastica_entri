@@ -77,13 +77,14 @@ export const StaffHeader = () => {
               {staffName && <FaUserTie size={20} />}
               {staffName && (
                 <MdLogout
+                title="Logout"
                   size={20}
                   onClick={() => {
                     dispatch(removeStaffData());
                     staffLogout();
                     navigate("/shop/staff/login");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer hover:text-secondary"
                 />
               )}
             </li>

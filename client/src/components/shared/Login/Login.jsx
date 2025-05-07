@@ -1,14 +1,16 @@
+import toast from "react-hot-toast";
 import { useRef, useState } from "react";
 import { validateData } from "../../../utils/validateData";
 import { FaSignInAlt } from "react-icons/fa";
 import { MdPersonAdd } from "react-icons/md";
 import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addAdminData, addStaffData } from "../../../redux/features/authSlice";
+import { useStaffs } from "../../../hooks/useStaffs";
 
 export const Login = ({ role, action }) => {
+  const { fetchStaffs } = useStaffs() 
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,7 +33,7 @@ export const Login = ({ role, action }) => {
         username?.current?.value,
         email?.current?.value,
         password?.current?.value,
-        confirmPassword?.current?.value
+        confirmPassword?.current?.value,
       );
 
       const data = {
@@ -55,8 +57,9 @@ export const Login = ({ role, action }) => {
         phonenumber.current.value = "";
         password.current.value = "";
         toast.success("Signup success");
+        fetchStaffs()
       } catch (error) {
-        toast.error('Something went wrong!');
+        toast.error("Something went wrong!");
 
         console.log(error);
       }
@@ -83,8 +86,7 @@ export const Login = ({ role, action }) => {
         if (role === "Admin") navigate("/admin");
         if (role === "Staff") navigate("/staff");
       } catch (error) {
-        toast.error('Invalid credentials!');
-        
+        toast.error("Invalid credentials!");
       }
     }
   };

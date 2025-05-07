@@ -38,7 +38,7 @@ export const ShopHeader = () => {
         <div className="flex items-center font-thin gap-5">
           {shopname && (
             <FaHome
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-blue-200"
               title="Home"
               onClick={() => navigate("/shop")}
               size={20}
@@ -48,6 +48,7 @@ export const ShopHeader = () => {
           {shopname && (
             <MdLogout
             size={20}
+            title="Logout"
               onClick={() => {
                 dispatch(removeShopData());
                 dispatch(removeAdminData());
@@ -55,7 +56,7 @@ export const ShopHeader = () => {
                 shopLogout();
                 navigate("/");
               }}
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-secondary"
             />
           )}
         </div>

@@ -41,7 +41,7 @@ export const ShopLoginForm = ({ action }) => {
         });
         toast.success("Shop created");
       } catch (error) {
-        toast.error('Something went wrong!');
+        toast.error("Something went wrong!");
         log;
       }
     } else {
@@ -57,13 +57,12 @@ export const ShopLoginForm = ({ action }) => {
           withCredentials: true,
           data,
         });
-        console.log(response?.data?.data);
 
         dispatch(addShopData(response?.data?.data));
         toast.success("Login success");
         navigate("/shop");
       } catch (error) {
-        toast.error('Invalid credentials!');
+        toast.error("Invalid credentials!");
       }
     }
   };
@@ -71,7 +70,7 @@ export const ShopLoginForm = ({ action }) => {
     <div className="flex justify-center">
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="mx-2 my-20 
+        className="mx-2 my-20
         }  max-w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
       >
         <h1 className="text-3xl py-10 font-thin text-center text-[#155E95] ">

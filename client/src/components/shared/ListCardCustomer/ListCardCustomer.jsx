@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";

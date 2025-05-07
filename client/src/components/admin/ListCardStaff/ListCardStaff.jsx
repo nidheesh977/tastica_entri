@@ -3,6 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
+import { useStaffs } from "../../../hooks/useStaffs";
 
 export const ListCardStaff = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -10,6 +11,7 @@ export const ListCardStaff = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
+  const {staffs, updateStaff, deleteStaff} = useStaffs()
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -78,7 +80,9 @@ export const ListCardStaff = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => updateStaffData(staff?._id)}
+                        onClick={() => {updateStaff(staff?._id)
+                          setEditId(null);
+                        }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
@@ -90,7 +94,7 @@ export const ListCardStaff = () => {
                             setEditId(staff?._id);
                             setEditedName(staff?.username);
                             setEditedEmail(staff?.email);
-                            setEditedMobile(staff?.mobile);
+                            setEditedMobile(staff?.phonenumber);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />
