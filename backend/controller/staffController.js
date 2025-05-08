@@ -1,5 +1,5 @@
 import AdminStaffModel from '../model/adminAndStaffModel.js';
-import {LoginValidation} from '../utils/joiValidation.js';
+import {userLoginValidation} from '../utils/joiValidation.js';
 import { comparePassword } from '../utils/comparePassword.js';
 import { generateToken } from '../utils/generateToken.js';
 
@@ -9,7 +9,7 @@ import { generateToken } from '../utils/generateToken.js';
 
 export const loginStaff = async (req,res) => {
     try{
-      const {error,value} = LoginValidation.validate(req.body);
+      const {error,value} = userLoginValidation.validate(req.body);
 
       // const tokenExist = req.cookies.token;
 
@@ -17,9 +17,9 @@ export const loginStaff = async (req,res) => {
         return res.status(400).json({ message: error.details[0].message });
       }
 
-      const {phonenumber,password} = value;
+      const {phoneNumber,password} = value; 
 
-      const userExist = await AdminStaffModel.findOne({phonenumber:phonenumber});
+      const userExist = await AdminStaffModel.findOne({phoneNumber:phoneNumber});
 
       if(!userExist){
         return res.status(400).json({success:false,message:"User not found"})
@@ -37,7 +37,7 @@ export const loginStaff = async (req,res) => {
         // }
       
         // // to update staff logged in Status
-        //  await AdminStaffModel.findOneAndUpdate({phonenumber:phonenumber},{isLoggedIn:true},{new:true});
+        //  await AdminStaffModel.findOneAndUpdate({phoneNumber:phoneNumber},{isLoggedIn:true},{new:true});
         
         if(userExist.role !== "staff"){
             return res.status(400).json({success:false,message:"You are not a staff"})

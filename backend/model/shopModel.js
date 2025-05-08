@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
     email:{
         type:String,
         required:true
-    },
+    }, 
     password:{
         type:String,
         required:true

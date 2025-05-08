@@ -1,6 +1,6 @@
 import AdminStaffModel from "../model/adminAndStaffModel.js";
 import shopModel from "../model/shopModel.js"
-import { shopSignupValidtaion, userSignupValidation } from "../utils/joiValidation.js";
+import { shopSignupValidtaion, userSignupValidation} from "../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
 
 
@@ -13,7 +13,7 @@ export const CreateEmployee = async (req,res) => {
           return res.status(400).json({ message: error.details[0].message });
       }
   
-      const {username,phonenumber,email,password} = value;
+      const {userName,phoneNumber,email,password} = value;
 
       const userAccountExists = await AdminStaffModel.findOne({email:email})
 
@@ -21,19 +21,19 @@ export const CreateEmployee = async (req,res) => {
       return res.status(400).json({success:false,message:"User already exists"})
      }
 
-      const userPhoneNumberExists = await AdminStaffModel.findOne({phonenumber:phonenumber})
+      const userphoneNumberExists = await AdminStaffModel.findOne({phoneNumber:phoneNumber})
       
-      if(userPhoneNumberExists){
+      if(userphoneNumberExists){
           return res.status(400).json({success:false,message:"Phone number already exists"})
       }
 
       const hashedPassword = await bcryptjs.hash(password, 10);
 
-      const usernameLowerCase = username.toLowerCase();
+      const userNameLowerCase = userName.toLowerCase();
 
       const newUser = new AdminStaffModel({
-          username:usernameLowerCase, 
-          phonenumber,
+          userName:userNameLowerCase, 
+          phoneNumber,
           email,
           password:hashedPassword,
 

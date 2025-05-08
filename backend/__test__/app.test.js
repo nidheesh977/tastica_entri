@@ -55,7 +55,7 @@ describe("Test the root path and endpoints of staff routes",() => {
 
     it('Test userExist', async () => {
       const response = await request(app).post('/api/v1/staff/login').send({
-       phonenumber:"9302748344",
+       phoneNumber:"9302748344",
        password:"akshai984",
       })
       .set('Accept', 'application/json')
@@ -69,7 +69,7 @@ describe("Test the root path and endpoints of staff routes",() => {
 
     it("POST staff login  /api/login", async () => {
         const response = await request(app).post('/api/v1/staff/login').send({
-            phonenumber:"9394857865",
+            phoneNumber:"9394857865",
             password:"akshai984",
         })
 
@@ -87,7 +87,7 @@ describe('POST /api/v1/login-admin', () => {
   it("log into a admin panal ",async () => {
 
     const response = await request(app).post('/api/v1/admin/login').send({
-      phonenumber:"9394857465",
+      phoneNumber:"9394857465",
       password:"akshai984"	
     })
 
@@ -104,9 +104,9 @@ describe('POST /api/v1/admin/-create-employee',() => {
     const response = await request(app)
     .post("/api/v1/admin/create-employee")
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({username: "newEmployee",
+    .send({userName: "newEmployee",
       email: "newEmployee@example.com",
-      phonenumber: "9876543210",
+      phoneNumber: "9876543210",
       password: "securePassword123",})
 
     expect(response.statusCode).toBe(400)
@@ -121,9 +121,9 @@ describe('POST /api/v1/admin/create-employee',() => {
       .post("/api/v1/admin/create-employee")
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-        username: "newEmployee2",
+        userName: "newEmployee2",
         email: "newEmployee2@example.com",
-        phonenumber: "9876543216",
+        phoneNumber: "9876543216",
         password: "securePassword123",
       });
   

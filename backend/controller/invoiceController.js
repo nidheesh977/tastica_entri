@@ -18,7 +18,7 @@ export const createNewInvoiceTab = async (req,res) => {
         return res.status(400).json({success:false,message:"Staff does not exist"})
       }
 
-      const staffName = `${staffExist.username} (${staffExist.role})`;
+      const staffName = `${staffExist.userName} (${staffExist.role})`;
         
        const invoiceId = generateInvoiceId();
 

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
  const userSchema = mongoose.Schema({
-    username:{
+    userName:{
         type:String,
         required:true
     }, 
@@ -19,7 +19,7 @@ import mongoose from 'mongoose';
     type:mongoose.Schema.Types.ObjectId,
     ref:"Shop", 
     },
-    phonenumber:{
+    phoneNumber:{
         type:String,
         required:true,
         unique:true

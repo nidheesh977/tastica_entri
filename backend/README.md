@@ -26,6 +26,13 @@
 **method:** `DELETE`<br>
 **URL:** `/api/v1/admin/staff/:id`
 
+- 🧑‍💼🗑 "Update a staff member"
+**method:** `PUT`<br>
+**URL:** `/api/v1/admin/staff/:id`
+
+- 🧑‍💼🗑 "Update staff password"
+**method:** `Patch`<br>
+**URL:** `/api/v1/admin/staff/:id/password`
 
 
 ## The routes for shop

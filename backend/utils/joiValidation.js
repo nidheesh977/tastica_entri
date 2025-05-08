@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 
 export const userSignupValidation = Joi.object({
-    username: Joi.string().min(3).max(30).required().messages({
+    userName: Joi.string().min(3).max(30).required().messages({
         'string.required': 'Username is required',
         'string.base': 'Username must be a string',
         'string.empty': 'Username cannot be empty',
@@ -10,7 +10,7 @@ export const userSignupValidation = Joi.object({
         'string.max': 'Username must be at most 30 characters long',   
     }),
 
-    phonenumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
         'string.required': 'Phone number is required',
         'string.base': 'Phone number must be a string',
         'string.empty': 'Phone number cannot be empty',
@@ -35,8 +35,34 @@ export const userSignupValidation = Joi.object({
     }),
 })
 
-export const LoginValidation = Joi.object({
-    phonenumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+export const userUpdateValidation = Joi.object({
+    userName: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Username is required',
+        'string.base': 'Username must be a string',
+        'string.empty': 'Username cannot be empty',
+        'string.min': 'Username must be at least 3 characters long',
+        'string.max': 'Username must be at most 30 characters long',   
+    }),
+
+    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be 10 digits long',
+    }),
+
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Email is required',
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Email must be a valid email address',
+
+    }),
+    
+})
+
+export const userLoginValidation = Joi.object({
+    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
         'string.required': 'Phone number is required',
         'string.base': 'Phone number must be a string',
         'string.empty': 'Phone number cannot be empty',
@@ -47,6 +73,18 @@ export const LoginValidation = Joi.object({
         'string.empty': 'Password cannot be empty',
     }),
 })
+
+export const userPasswordValidation = Joi.object({
+    password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+        'string.required': 'Password is required',
+        'string.base': 'Password must be a string',
+        'string.empty': 'Password cannot be empty',
+        'string.min': 'Password must be at least 8 characters long',
+        'string.max': 'Password must be at most 20 characters long',
+        'string.pattern.base': 'Password must contain only letters, numbers or characters',
+    }),
+})
+
 
 
 export const shopSignupValidtaion = Joi.object({
