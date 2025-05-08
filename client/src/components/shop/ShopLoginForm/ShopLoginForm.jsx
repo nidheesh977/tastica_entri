@@ -17,7 +17,7 @@ export const ShopLoginForm = ({ action }) => {
 
   let api = null;
   if (action === "Signup") api = "/shop/create-shop";
-  if (action === "Login") api = "/shop/login-shop";
+  if (action === "Login") api = "/shop/login";
 
   const shopname = useRef(null);
   const email = useRef(null);
