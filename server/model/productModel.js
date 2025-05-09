@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
         unique:true,
     },
     
-    productname:{
+    productName:{
         type:String,
         required:true,
         unique:true,
@@ -17,11 +17,11 @@ const productSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
-    costprice:{
+    costPrice:{
         type:Number,
         default:0,
     },
-    sellingprice:{
+    sellingPrice:{
         type:Number,
         default:0,
     },
@@ -29,11 +29,22 @@ const productSchema = new mongoose.Schema({
         type:Number,
         default:0,
     },
+    countryName:{
+        type:String,
+        required:true
+    },
+    currencyCode:{
+        type:String,
+        required:true
+    },
     category:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Category", 
- },
-
+    },
+    shop:{
+        type:String,
+        required:true
+    },
     costPriceProfit:{
         type:Number,
         default:0,
@@ -51,6 +62,13 @@ const productSchema = new mongoose.Schema({
  
  
   export default productModel;
+
+//   for (const item of productMocks){
+//     item["countryName"] = "Maldives"
+//     item["currencyCode"] = "MVR"
+//     item["shop"] = "681b7807a4c3f4efb132bbc1"
+   
+// }
 
 //  productModel.insertMany(productMocks)
 //  .then(() => {

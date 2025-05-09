@@ -6,14 +6,15 @@ import { addDiscount, removeDiscount } from '../../../controller/productContolle
 import { addCostPriceProfit, removeCostPriceProfit, updateCostPriceProfit } from '../../../controller/productContollers/costPriceProfitController.js';
 import { addCostPrice, removeCostPrice } from '../../../controller/productContollers/costPriceController.js';
 import { addSellingPrice, removeSellingPrice } from '../../../controller/productContollers/sellingPriceController.js';
+import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 ;
 
 const productRouter = express.Router();
  
 
-productRouter.post('/create',userVerifyToken,checkUserRole('admin'),createProduct);
-productRouter.delete('/delete/:id',userVerifyToken,checkUserRole('admin'),deleteProduct);
-productRouter.put('/update/:id/category/:category',userVerifyToken,checkUserRole('admin'),updateProduct);
+productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),createProduct);
+productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),deleteProduct);
+productRouter.put('/update/:id/category/:category',shopVerifyToken,userVerifyToken,checkUserRole('admin'),updateProduct);
 
 productRouter.put('/cost-price-profit/:id/add',userVerifyToken,checkUserRole('admin'),addCostPriceProfit);
 productRouter.put('/cost-price-profit/:id/update',userVerifyToken,checkUserRole('admin'),updateCostPriceProfit);
@@ -31,8 +32,8 @@ productRouter.put('/selling-price/:id/remove',userVerifyToken,checkUserRole('adm
 
 // get products for admin and staff
 
-productRouter.get('/category-search',userVerifyToken,checkUserRole('admin','staff'),getCategoryProducts);
-productRouter.get('/',userVerifyToken,checkUserRole('admin','staff'),getAllProducts);
+productRouter.get('/category-search',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getCategoryProducts);
+productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getAllProducts);
 
 // for test
 productRouter.get('/',userVerifyToken,checkUserRole("staff"),productListTest)

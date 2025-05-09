@@ -27,13 +27,13 @@ export const addCostPriceProfit = async (req,res) => {
             return res.status(400).json({success:false,message:"Cost price profit amount already exists"})
         }
 
-        if(productExist.costprice === 0){
+        if(productExist.costPrice === 0){
             return res.status(400).json({success:false,message:"Add amount to cost price first"})
         }
 
         
 
-        if(productExist.costprice > 0){
+        if(productExist.costPrice > 0){
           const updatedProduct  = await productModel.findByIdAndUpdate(id,{
                 costPriceProfit,
             },{new:true});

@@ -75,12 +75,12 @@ export const addProductToInvoice = async (req,res) => {
 
         await productModel.findByIdAndUpdate(productId,{quantity: productExist.quantity - quantity},{new:true})
 
-        const productName = productExist.productname;
+        const productName = productExist.productName;
 
        
 
         const productObject = {
-            productname: productName,
+            productName: productName,
             quantity,
             productTotalPrice,
             productId

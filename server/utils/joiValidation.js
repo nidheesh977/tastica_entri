@@ -104,13 +104,13 @@ export const shopSignupValidtaion = Joi.object({
         'string.email': 'Email must be a valid email address',
     }),
 
-    countryName:Joi.string().pattern(/^[a-zA-Z\s]+$/).min(3).max(20).required().messages({
+    countryName:Joi.string().pattern(/^[A-Z][a-zA-Z\s]+$/).min(3).max(20).required().messages({
         'string.required': 'Country name is required',
         'string.base': 'Country name must be a string',
         'string.empty': 'Country name cannot be empty',
         'string.min': 'Country name must be at least 3 characters long',
         'string.max': 'Country name must be at most 20 characters long',
-        'string.pattern.base':'Country name must contain only letters and spaces'   
+        'string.pattern.base': 'Country name must start with an uppercase letter and contain only letters and spaces',
     }),
 
     currencyCode:Joi.string().length(3).pattern(/^[A-Z]{3}$/).required().messages({
@@ -181,7 +181,7 @@ export const shopLoginValidation = Joi.object({
 }) 
 
 export const newProductValidation = Joi.object({
-    productname: Joi.string().min(3).max(30).required().messages({
+    productName: Joi.string().min(3).max(30).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
         'string.empty': 'Product name cannot be empty',
@@ -195,12 +195,12 @@ export const newProductValidation = Joi.object({
         'number.empty': 'Quanity cannot be empty',
     }),
     
-    costprice:Joi.number().integer().min(0).messages({
+    costPrice:Joi.number().integer().min(0).messages({
         'number.base': 'Cost price must be a number',
         'number.empty': 'Cost price cannot be empty',
     }),
 
-    sellingprice: Joi.number().integer().min(0).messages({
+    sellingPrice: Joi.number().integer().min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),
@@ -220,7 +220,7 @@ export const newProductValidation = Joi.object({
 })
 
 export const updateProductValidation = Joi.object({
-    productname: Joi.string().min(3).max(30).required().messages({
+    productName: Joi.string().min(3).max(30).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
         'string.min': 'Product name must be at least 3 characters long',
@@ -231,11 +231,11 @@ export const updateProductValidation = Joi.object({
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',
     }),
-    costprice:Joi.number().integer().min(0).messages({
+    costPrice:Joi.number().integer().min(0).messages({
         'number.base': 'Cost price must be a number',
         'number.empty': 'Cost price cannot be empty',
     }),
-    sellingprice: Joi.number().integer().min(0).messages({
+    sellingPrice: Joi.number().integer().min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),

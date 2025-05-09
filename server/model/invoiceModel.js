@@ -15,7 +15,7 @@ const invoiceSchema = new mongoose.Schema({
     products: {
         type:[
          {
-            productname: {
+            productName: {
                type:String,
                required:true
             },

@@ -160,3 +160,12 @@
 **method**`GET`<br>
 **URL**`/api/v1/customer`
 
+
+
+## Search Routes<br>
+
+- Search route dynamic route
+**method**`GET`<br>
+**URL**`/api/v1/search/product?productId=PROD`
+- or <br>
+**URL**`/api/v1/search/product?productName=eastern`
