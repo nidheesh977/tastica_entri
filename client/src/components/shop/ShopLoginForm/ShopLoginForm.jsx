@@ -42,7 +42,7 @@ export const ShopLoginForm = ({ action }) => {
         toast.success("Shop created");
       } catch (error) {
         toast.error("Something went wrong!");
-        log;
+     
       }
     } else {
       const data = {
@@ -63,6 +63,7 @@ export const ShopLoginForm = ({ action }) => {
         navigate("/shop");
       } catch (error) {
         toast.error("Invalid credentials!");
+        console.log(error)
       }
     }
   };

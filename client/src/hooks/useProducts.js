@@ -22,7 +22,7 @@ export const useProducts = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!products || products.length === 0) {
+    if (products === null) {
       fetchProducts();
     }
   }, [products, fetchProducts]);
@@ -44,18 +44,18 @@ export const useProducts = () => {
 
   const updateProduct = async (
     productId,
-    productname,
+    productName,
     category,
     quantity,
-    costprice,
-    sellingprice,
+    costPrice,
+    sellingPrice,
     discount
   ) => {
     const data = {
-      productname,
+      productName,
       quantity,
-      costprice,
-      sellingprice,
+      costPrice,
+      sellingPrice,
       discount,
       category: category?._id,
     };

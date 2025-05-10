@@ -1,26 +1,24 @@
 export const validateData = (
-  username,
+  userName,
   email,
-  phonenumber,
+  phoneNumber,
   password,
   confirmPassword
 ) => {
-  const isNameValid = /^[0-9A-Za-z]{3,16}$/.test(username);
+  const isNameValid = /^[0-9A-Za-z]{3,16}$/.test(userName);
   const emailValid = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(
     email
   );
-  const isMobileValid = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(phonenumber);
+  const isMobileValid = /^(\+\d{1,3}[- ]?)?\d{10}$/.test(phoneNumber);
   const isPasswordValid =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
-      password
-    );
+    /^(?=.*\d).{8,}$/.test(password);
   const isConfirmPasswordValid = password === confirmPassword;
 
-  if (!isNameValid) return "Name is not valid!";
-  if (!emailValid) return "Email id is not valid!";
-  if (!isMobileValid) return "Mobile number is not valid!";
+  if (!isNameValid) return "Invalid name!";
+  if (!emailValid) return "Invalid! email id!";
+  if (!isMobileValid) return "Invalid mobile number!";
   if (!isPasswordValid)
-    return "Password must be at least 8 characters long and include at least one special character and one uppercase letter.";
+    return "Password must be at least 8 characters long and include at least one number.";
   if (!isConfirmPasswordValid)
     return "Password and Confirm password do not match!";
 

@@ -15,7 +15,7 @@ export const StaffHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const staffName = useSelector((state) => state?.auth?.staffData?.username);
+  const staffName = useSelector((state) => state?.auth?.staffData?.userName);
 
   const staffLogout = async () => {
     try {
