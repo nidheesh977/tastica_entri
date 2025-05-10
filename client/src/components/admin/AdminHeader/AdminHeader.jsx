@@ -15,7 +15,7 @@ export const AdminHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const adminName = useSelector((state) => state?.auth?.adminData?.username);
+  const adminName = useSelector((state) => state?.auth?.adminData?.userName);
 
   const adminLogout = async () => {
     try {
@@ -33,7 +33,7 @@ export const AdminHeader = () => {
 
   const handleOpenNewCartTab = () => {
     const newTab = window.open("/admin/cart", "_blank");
-    // Optional: Pass state if needed
+    
   };
 
   return (

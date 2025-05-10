@@ -22,7 +22,7 @@ export const useCategories = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (categories === null) {
       fetchCategories();
     }
   }, [categories, fetchCategories]);

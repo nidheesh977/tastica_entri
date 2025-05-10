@@ -14,7 +14,7 @@ export const ProtectedRouteShop = () => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: "/shop/check-logged",
+        url: "/shop/check-login",
       });
       dispatch(addShopData(response?.data?.data));
     } catch (error) {

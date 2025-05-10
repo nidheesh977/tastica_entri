@@ -47,17 +47,17 @@ export const useStaffs = () => {
     }
   };
 
-  const updateStaff = async (staffId, username, email, phonenumber) => {
+  const updateStaff = async (staffId, userName, email, phoneNumber) => {
     const data = {
-      username,
+      userName,
       email,
-      phonenumber,
+      phoneNumber,
     };
 
     try {
       await axiosInstance({
         method: "PUT",
-        url: `/staff/${staffId}`,
+        url: `admin/staff/${staffId}`,
         withCredentials: true,
         data,
       });

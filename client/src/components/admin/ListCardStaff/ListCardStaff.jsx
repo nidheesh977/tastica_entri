@@ -49,7 +49,7 @@ export const ListCardStaff = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    staff?.username
+                    staff?.userName
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -67,11 +67,11 @@ export const ListCardStaff = () => {
                   {editId === staff?._id ? (
                     <input
                       value={editedMobile}
-                      onChange={(e) => setEditedName(e.target.value)}
+                      onChange={(e) => setEditedMobile(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    staff?.phonenumber
+                    staff?.phoneNumber
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
@@ -80,7 +80,7 @@ export const ListCardStaff = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => {updateStaff(staff?._id)
+                        onClick={() => {updateStaff(staff?._id, editedName, editedEmail, editedMobile)
                           setEditId(null);
                         }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
@@ -92,9 +92,9 @@ export const ListCardStaff = () => {
                           size={20}
                           onClick={() => {
                             setEditId(staff?._id);
-                            setEditedName(staff?.username);
+                            setEditedName(staff?.userName);
                             setEditedEmail(staff?.email);
-                            setEditedMobile(staff?.phonenumber);
+                            setEditedMobile(staff?.phoneNumber);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />

@@ -13,7 +13,9 @@ export const ListCardProduct = () => {
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('')
   const { products, deleteProduct, updateProduct } = useProducts();
+  console.log(searchQuery)
 
   return (
     <div className="md:w-5/6 w-full md:max-h-[520px] text-center pt-5 pb-14 px-5 border border-primary  shadow">
@@ -25,6 +27,8 @@ export const ListCardProduct = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          value={searchQuery}
+          onChange={(e)=> setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -58,7 +62,7 @@ export const ListCardProduct = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    product?.productname
+                    product?.productName
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -88,7 +92,7 @@ export const ListCardProduct = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    product?.costprice
+                    product?.costPrice
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -100,7 +104,7 @@ export const ListCardProduct = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    product.sellingprice
+                    product.sellingPrice
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -129,7 +133,7 @@ export const ListCardProduct = () => {
                             editedQuantity,
                             editedCostPrice,
                             editedSellingPrice,
-                            editedDiscount
+                            editedDiscount,
                           );
                           setEditId(null);
                         }}
@@ -142,10 +146,10 @@ export const ListCardProduct = () => {
                           size={20}
                           onClick={() => {
                             setEditId(product?._id);
-                            setEditedTitle(product?.productname);
+                            setEditedTitle(product?.productName);
                             setEditedQuantity(product?.quantity);
-                            setEditedSellingPrice(product?.sellingprice);
-                            setEditedCostPrice(product?.costprice);
+                            setEditedSellingPrice(product?.sellingPrice);
+                            setEditedCostPrice(product?.costPrice);
                             setEditedDiscount(product?.discount);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"

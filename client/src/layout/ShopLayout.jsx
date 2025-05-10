@@ -3,6 +3,7 @@ import { ShopHeader } from "../components/shop/ShopHeader/ShopHeader";
 import { Footer } from "../components/shared/Footer/Footer";
 
 export const ShopLayout = () => {
+  
   return (
     <div className="min-h-screen flex flex-col">
       <header>
