@@ -21,11 +21,11 @@ export const createCategory = async (req, res) => {
             return res.status(400).json({success:false,message:"Shop Data is missing"})
         }  
 
-        const categoryExist = await categoryModel.findOne({shop:id,categoryName:categoryName.trim().toLowerCase()});
+        const categoryExist = await categoryModel.findOne({categoryName:categoryName.trim().toLowerCase(),shop:id});
 
 
         if(categoryExist){
-            return res.status(400).json({success:false,message:"Category already exists"});
+            return res.status(400).json({success:false,message:"Category already exists for this shop"});
         }
 
         
@@ -47,7 +47,9 @@ export const createCategory = async (req, res) => {
         
         res.status(201).json({success:true,message:"category created successfully",data:newCategory});
     } catch (error) {
-        console.log(error)
+        if(error.code === 11000){
+         return res.status(400).json({success:false,message:"Category already exists for this shop"});
+        }
         res.status(500).json({ success:false,message:"internal server error"})
     }
 } 

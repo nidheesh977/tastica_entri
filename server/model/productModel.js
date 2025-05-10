@@ -5,13 +5,11 @@ const productSchema = new mongoose.Schema({
    product_id:{
         type:String,
         required:true,
-        unique:true,
     },
     
     productName:{
         type:String,
         required:true,
-        unique:true,
     },
     quantity:{
         type:Number,
@@ -57,7 +55,9 @@ const productSchema = new mongoose.Schema({
 
 },{timestamps:true});
 
- const productModel = mongoose.model('Product',productSchema);
+productSchema.index({product_id:1,productName:1},{unique:true})
+
+const productModel = mongoose.model('Product',productSchema);
 
  
  

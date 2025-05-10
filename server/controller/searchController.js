@@ -1,6 +1,7 @@
 import AdminStaffModel from "../model/adminAndStaffModel.js";
 import customerModel from "../model/customerModel.js";
 import productModel from "../model/productModel.js";
+ 
 
 export const searchProduct = async (req, res) => {
     try {
@@ -21,7 +22,7 @@ export const searchProduct = async (req, res) => {
         if (productName) { 
             query.productName = { $regex: `^${productName}`, $options: 'i' }; // Search by productName
         }
-
+ 
         const productData = await productModel.find(query);
 
         res.status(200).json({ success: true, message: 'Data fetched successfully', data: productData });
