@@ -164,8 +164,18 @@
 
 ## Search Routes<br>
 
-- Search route dynamic route
+- Search route dynamic route<br>
 **method**`GET`<br>
 **URL**`/api/v1/search/product?productId=PROD`
 - or <br>
 **URL**`/api/v1/search/product?productName=eastern`
+
+## Product filter for admin<br>
+
+- Get all product
+**method**`GET` <br>
+**URL**`http://localhost:5001/api/v1/search/product/filter`
+
+- Get Product Name<br>
+**method**`GET`<br>
+**URL**`http://localhost:5001/api/v1/search/product/filter?productName=colgate ma`

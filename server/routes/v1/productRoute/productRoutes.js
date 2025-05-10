@@ -33,7 +33,7 @@ productRouter.put('/selling-price/:id/remove',userVerifyToken,checkUserRole('adm
 // get products for admin and staff
 
 productRouter.get('/category-search',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getCategoryProducts);
-productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getAllProducts);
+productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),getAllProducts);
 
 // for test
 productRouter.get('/',userVerifyToken,checkUserRole("staff"),productListTest)

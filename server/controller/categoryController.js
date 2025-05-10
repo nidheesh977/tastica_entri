@@ -13,9 +13,15 @@ export const createCategory = async (req, res) => {
             return res.status(400).json({message:error.details[0].message});
         }
 
-        const {categoryname,description,discountrate} = value;
-            
-        const categoryExist = await categoryModel.findOne({categoryname:categoryname.trim().toLowerCase()});
+        const {categoryName,description,discountRate} = value;
+        const {id,currencyCode,countryName} = req.shop
+
+
+        if(!id || !currencyCode || !countryName){
+            return res.status(400).json({success:false,message:"Shop Data is missing"})
+        }  
+
+        const categoryExist = await categoryModel.findOne({shop:id,categoryName:categoryName.trim().toLowerCase()});
 
 
         if(categoryExist){
@@ -23,15 +29,18 @@ export const createCategory = async (req, res) => {
         }
 
         
-        const cateogryNameLowercase = categoryname.trim().toLowerCase();
+        const cateogryNameLowercase = categoryName.trim().toLowerCase();
 
-        const isDiscount = discountrate > 0 ? true : false;
+        const isDiscount = discountRate > 0 ? true : false;
 
         const newCategory = await categoryModel.create({
-            categoryname:cateogryNameLowercase,
+            categoryName:cateogryNameLowercase,
             description,
-            discountrate,
-            isDiscount
+            discountRate,
+            isDiscount,
+            shop:id,
+            currencyCode,
+            countryName
         });
 
         await newCategory.save();
@@ -41,7 +50,7 @@ export const createCategory = async (req, res) => {
         console.log(error)
         res.status(500).json({ success:false,message:"internal server error"})
     }
-}
+} 
 
 // ------------------------------------- update category ----------------------------------------------
 export const updateCategory = async (req,res) => {
@@ -53,8 +62,9 @@ export const updateCategory = async (req,res) => {
             return res.status(400).json({message:error.details[0].message});
         }
 
-        const {categoryname,description} = value;
+        const {categoryName,description} = value;
         const {id} = req.params
+ 
 
         const category = await categoryModel.findById(id);
 
@@ -63,13 +73,13 @@ export const updateCategory = async (req,res) => {
         }
         
 
-        if(categoryname.trim().toLowerCase() === "" && description === ""){
+        if(categoryName.trim().toLowerCase() === "" && description === ""){
             return res.status(400).json({success:false,message:"Category name and description cannot be empty"});
         }
 
         const cateogryNameLowercase = categoryname.trim().toLowerCase();
 
-        const updatedCategory = await categoryModel.findByIdAndUpdate(id,{categoryname:cateogryNameLowercase,description},{new:true})
+        const updatedCategory = await categoryModel.findByIdAndUpdate(id,{categoryName:cateogryNameLowercase,description},{new:true})
 
         res.status(200).json({success:true,message:"Category updated successfully",data:updatedCategory});
     }catch(error){
@@ -101,7 +111,7 @@ export const deleteCategory = async(req,res) => {
 export const addCategoryDiscount = async (req, res) => {
     try {
         const {id} = req.params;
-        const {discountrate} = req.body;
+        const {discountRate} = req.body;
 
         const category = await categoryModel.findById(id);
         if(!category){
@@ -113,7 +123,7 @@ export const addCategoryDiscount = async (req, res) => {
         }
 
        const updatedCategory = await categoryModel.findByIdAndUpdate(id,{
-            discountrate:discountrate,
+            discountRate:discountRate,
             isDiscount:true
         },{new:true});
 
@@ -151,7 +161,11 @@ export const removeCategoryDiscount = async(req,res) => {
 
 export const getCategories = async (req,res) => {
     try{
-        const categories = await categoryModel.find({}).sort({createdAt:-1});
+        const {id} = req.shop;
+        if(!id){
+            return res.status(400).json({success:false,meesage:"Shop ID is not get"})
+        }
+        const categories = await categoryModel.find({shop:id}).sort({createdAt:-1});
 
         if(!categories){
             return res.status(404).json({success:false,message:"No categories found"});
@@ -159,6 +173,7 @@ export const getCategories = async (req,res) => {
 
         res.status(200).json({success:true,message:"Categories fetched successfully",data:categories});
     }catch(error){
+        console.log(error)
         res.status(500).json({success:true,message:"internal server error"})
     }
 }

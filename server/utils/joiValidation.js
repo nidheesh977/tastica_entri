@@ -254,7 +254,7 @@ export const updateProductValidation = Joi.object({
 
 
 export const newCategoryValidation = Joi.object({
-    categoryname: Joi.string().min(3).max(30).required().messages({
+    categoryName: Joi.string().min(3).max(30).required().messages({
         'string.required': 'Category name is required',
         'string.base': 'Category name must be a string',
         'string.empty': 'Category name cannot be empty',
@@ -268,7 +268,7 @@ export const newCategoryValidation = Joi.object({
         'string.min': 'Description must be at least 3 characters long',
         'string.max': 'Description must be at most 200 characters long',   
     }),
-    discountrate: Joi.number().integer().min(0).messages({
+    discountRate: Joi.number().integer().min(0).messages({
         'number.base': 'Discount rate must be a number',
         'number.empty': 'Discount rate cannot be empty',
     }),
@@ -276,7 +276,7 @@ export const newCategoryValidation = Joi.object({
 })
 
 export const updateCategoryValidation = Joi.object({
-    categoryname: Joi.string().min(3).max(30).messages({
+    categoryName: Joi.string().min(3).max(30).messages({
         'string.base': 'Category name must be a string',
         'string.min': 'Category name must be at least 3 characters long',
         'string.max': 'Category name must be at most 30 characters long',   
