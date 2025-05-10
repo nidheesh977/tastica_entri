@@ -66,8 +66,7 @@ const productModel = mongoose.model('Product',productSchema);
 //   for (const item of productMocks){
 //     item["countryName"] = "Maldives"
 //     item["currencyCode"] = "MVR"
-//     item["shop"] = "681b7807a4c3f4efb132bbc1"
-   
+//     item["shop"] = "681b7807a4c3f4efb132bbc1"  
 // }
 
 //  productModel.insertMany(productMocks)

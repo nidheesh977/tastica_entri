@@ -25,7 +25,7 @@ export const productMocks = [
     discount: 5,
     category: '68122b2b884da7193327ebde',
     costPriceProfit: 0,
-    isActive: true,
+    isActive: true, 
     _id: '681455e79da628fb5092e34b',
     createdAt: '2025-05-02T05:20:01.000Z',
     updatedAt: '2025-05-02T05:20:01.000Z',
