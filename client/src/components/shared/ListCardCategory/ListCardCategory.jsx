@@ -38,7 +38,7 @@ export const ListCardCategory = () => {
         />
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-auto h-96 pb-10">
         <table className="min-w-[768px] w-full border border-primary text-left text-sm sm:text-base">
           <thead className="bg-primary/10 font-semibold text-black">
             <tr>

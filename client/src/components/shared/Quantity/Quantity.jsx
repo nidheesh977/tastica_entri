@@ -2,7 +2,7 @@ import React from 'react'
 
 export const Quantity = () => {
   return (
-    <div className='flex  items-center justify-between bg-[#E8F9FF] border cursor-pointer   rounded-lg p-5'>
+    <div className='flex  items-center justify-between bg-[#E8F9FF] border-2  cursor-pointer   rounded-lg p-5'>
         <div>QTY</div>
         <div className='hover:border border-primary xl:px-4 py-2 rounded '>1</div>
         <div className='hover:border border-primary xl:px-4 py-2 rounded'>2</div>

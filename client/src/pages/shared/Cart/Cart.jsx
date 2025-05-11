@@ -13,7 +13,7 @@ export const Cart = () => {
           <ShoppingCart />
         </div>
 
-        <div className="col-span-12 md:col-span-2 border">
+        <div className="col-span-12 md:col-span-2 border overflow-y-auto h-[670px]">
           <Category />
         </div>
 
@@ -22,7 +22,7 @@ export const Cart = () => {
             <Quantity />
           </div>
 
-          <div className="flex gap-2 m-2 flex-wrap">
+          <div className="flex gap-2 m-2 flex-wrap overflow-y-auto h-[590px] ">
             <Product />
           </div>
         </div>

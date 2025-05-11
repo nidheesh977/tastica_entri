@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
+import { saveSearchQuery } from "../../../redux/features/searchSlice";
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,7 @@ export const AdminHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
+  const searchQuery = useSelector((state) => state?.search);
 
   const adminLogout = async () => {
     try {
@@ -33,7 +35,6 @@ export const AdminHeader = () => {
 
   const handleOpenNewCartTab = () => {
     const newTab = window.open("/admin/cart", "_blank");
-    
   };
 
   return (
@@ -68,6 +69,8 @@ export const AdminHeader = () => {
                     className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
                     placeholder="Search Here"
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
                   />
                 </li>
                 <li className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none">
@@ -86,7 +89,7 @@ export const AdminHeader = () => {
               {adminName && <FaUserShield size={20} />}
               {adminName && (
                 <MdLogout
-                title="Logout"
+                  title="Logout"
                   size={20}
                   onClick={() => {
                     dispatch(removeAdminData());

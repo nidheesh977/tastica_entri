@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { MdMoreVert, MdAdd, MdRemove } from "react-icons/md";
+import { MdAdd, MdRemove } from "react-icons/md";
 import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
+import { useCustomers } from "../../../hooks/useCustomers";
+import { useState } from "react";
 
 export const ShoppingCart = () => {
-  const [selectedUser, setSelectedUser] = useState("User");
+  const { customers } = useCustomers();
+  const [name, setName] = useState("");
 
   return (
     <div className="p-5 border">
@@ -11,17 +13,24 @@ export const ShoppingCart = () => {
         <h1 className="font-semibold">Cart</h1>
         <div>
           <select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
             className="lg:w-52 h-10 rounded p-2 font-semibold border"
+            onChange={(e) => {
+              const selectedCustomer = customers?.find(
+                (c) => c._id === e.target.value,
+              );
+              setName(selectedCustomer?.customerName || "");
+            }}
           >
-            <option value="">Select a user</option>
-            <option value="arjun">Arjun</option>
-            <option value="ashay">Ashay</option>
-            <option value="john">John</option>
+            <option value="">Select a customer</option>
+            {customers?.map((customer) => (
+              <option key={customer?._id} value={customer?._id}>
+                {customer?.phoneNumber}
+              </option>
+            ))}
           </select>
         </div>
-        <MdMoreVert className="cursor-pointer" size={20} />
+
+        <div>{name}</div>
       </div>
 
       <ul className="flex flex-col mt-4 w-full">
