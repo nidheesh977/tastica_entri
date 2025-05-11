@@ -21,7 +21,7 @@ export const createCategory = async (req, res) => {
             return res.status(400).json({success:false,message:"Shop Data is missing"})
         }  
 
-        const categoryExist = await categoryModel.findOne({categoryName:categoryName.trim().toLowerCase(),shop:id});
+        const categoryExist = await categoryModel.findOne({shop:id,categoryName:categoryName.trim().toLowerCase()});
 
 
         if(categoryExist){
@@ -79,7 +79,7 @@ export const updateCategory = async (req,res) => {
             return res.status(400).json({success:false,message:"Category name and description cannot be empty"});
         }
 
-        const cateogryNameLowercase = categoryname.trim().toLowerCase();
+        const cateogryNameLowercase = categoryName.trim().toLowerCase();
 
         const updatedCategory = await categoryModel.findByIdAndUpdate(id,{categoryName:cateogryNameLowercase,description},{new:true})
 

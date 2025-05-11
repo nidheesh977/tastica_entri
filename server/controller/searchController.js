@@ -23,7 +23,7 @@ export const searchProduct = async (req, res) => {
             query.productName = { $regex: `^${productName}`, $options: 'i' }; // Search by productName
         }
  
-        const productData = await productModel.find(query);
+        const productData = await productModel.find(query); 
 
         res.status(200).json({ success: true, message: 'Data fetched successfully', data: productData });
     } catch (error) {
