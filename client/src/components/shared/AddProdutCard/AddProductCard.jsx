@@ -1,22 +1,18 @@
 import { useRef } from "react";
 import { FaBox } from "react-icons/fa";
 import { SideBar } from "../SideBar/SideBar";
-import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../config/axiosInstance";
-import { useCategories } from "../../../hooks/useCategories";
 import toast from "react-hot-toast";
+import { useCategories } from "../../../hooks/useCategories";
 
 export const AddProductCard = () => {
+  const { categories } = useCategories();
   const productName = useRef(null);
   const quantity = useRef(null);
   const costPrice = useRef(null);
   const sellingPrice = useRef(null);
   const discount = useRef(null);
   const category = useRef(null);
-  const categories = useSelector((state) => state?.categories);
-  const { fetchCategories } = useCategories();
-
-  !categories && fetchCategories();
 
   const handleSubmit = async () => {
     const data = {
