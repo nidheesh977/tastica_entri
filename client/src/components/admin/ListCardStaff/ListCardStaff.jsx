@@ -11,7 +11,18 @@ export const ListCardStaff = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const {staffs, updateStaff, deleteStaff} = useStaffs()
+  const [searchQuery, setSearchQuery] = useState("");
+  const { staffs, updateStaff, deleteStaff } = useStaffs();
+
+  const staffData = staffs?.filter((staff) => {
+    const query = searchQuery.toLowerCase();
+
+    return (
+      staff?.userName?.toLowerCase().includes(query) ||
+      staff?.email?.toLowerCase().includes(query) ||
+      staff?.phoneNumber.toString().toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -23,6 +34,7 @@ export const ListCardStaff = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -38,7 +50,7 @@ export const ListCardStaff = () => {
             </tr>
           </thead>
           <tbody>
-            {staffs?.map((staff, index) => (
+            {staffData?.map((staff, index) => (
               <tr key={staff?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
@@ -80,7 +92,13 @@ export const ListCardStaff = () => {
                       <FaSave
                         title="Save"
                         size={20}
-                        onClick={() => {updateStaff(staff?._id, editedName, editedEmail, editedMobile)
+                        onClick={() => {
+                          updateStaff({
+                            staffId: staff?._id,
+                            userName: editedName,
+                            email: editedEmail,
+                            phoneNumber: editedMobile,
+                          });
                           setEditId(null);
                         }}
                         className="text-primary hover:text-blue-800 cursor-pointer"

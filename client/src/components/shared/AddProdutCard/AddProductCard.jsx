@@ -1,24 +1,18 @@
 import { useRef } from "react";
 import { FaBox } from "react-icons/fa";
 import { SideBar } from "../SideBar/SideBar";
-import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../config/axiosInstance";
-import { useProducts } from "../../../hooks/useProducts";
-import { useCategories } from "../../../hooks/useCategories";
 import toast from "react-hot-toast";
+import { useCategories } from "../../../hooks/useCategories";
 
 export const AddProductCard = () => {
+  const { categories } = useCategories();
   const productName = useRef(null);
   const quantity = useRef(null);
   const costPrice = useRef(null);
   const sellingPrice = useRef(null);
   const discount = useRef(null);
   const category = useRef(null);
-  const categories = useSelector((state) => state?.categories);
-  const { fetchProducts } = useProducts();
-  const { fetchCategories } = useCategories();
-
-  !categories && fetchCategories();
 
   const handleSubmit = async () => {
     const data = {
@@ -30,13 +24,12 @@ export const AddProductCard = () => {
       category: category?.current?.value,
     };
     try {
-      const response = await axiosInstance({
+      await axiosInstance({
         method: "POST",
         url: "/product/create",
         withCredentials: true,
         data,
       });
-      fetchProducts();
 
       toast.success("Product added successfully");
       (productName.current.value = ""),
@@ -103,7 +96,7 @@ export const AddProductCard = () => {
             <option value="">Select a category</option>
             {categories?.map((category) => (
               <option key={category?._id} value={category?._id}>
-                {category?.categoryname}
+                {category?.categoryName}
               </option>
             ))}
           </select>

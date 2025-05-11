@@ -2,12 +2,10 @@ import { useRef } from "react";
 import toast from "react-hot-toast";
 import { MdPersonAdd } from "react-icons/md";
 import { axiosInstance } from "../../../config/axiosInstance";
-import { useCustomers } from "../../../hooks/useCustomers";
 
 export const AddCustomerCard = () => {
   const customerName = useRef(null);
   const phoneNumber = useRef(null);
-  const { fetchCustomers } = useCustomers();
 
   const handleSubmit = async () => {
     const data = {
@@ -15,14 +13,13 @@ export const AddCustomerCard = () => {
       phoneNumber: phoneNumber.current.value,
     };
     try {
-      const response = await axiosInstance({
+      await axiosInstance({
         method: "POST",
         url: "/customer/create",
         withCredentials: true,
         data,
       });
       toast.success("Customer created successfully!");
-      fetchCustomers();
       customerName.current.value = "";
       phoneNumber.current.value = "";
     } catch (error) {

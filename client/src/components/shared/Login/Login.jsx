@@ -7,10 +7,8 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addAdminData, addStaffData } from "../../../redux/features/authSlice";
-import { useStaffs } from "../../../hooks/useStaffs";
 
 export const Login = ({ role, action }) => {
-  const { fetchStaffs } = useStaffs();
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +32,7 @@ export const Login = ({ role, action }) => {
         email?.current?.value,
         phoneNumber?.current.value,
         password?.current?.value,
-        confirmPassword?.current?.value
+        confirmPassword?.current?.value,
       );
       if (message) {
         setErrorMessage(message);
@@ -49,7 +47,7 @@ export const Login = ({ role, action }) => {
 
       try {
         // Api call
-        const response = await axiosInstance({
+        await axiosInstance({
           method: "POST",
           url: api,
           withCredentials: true,
@@ -62,7 +60,6 @@ export const Login = ({ role, action }) => {
         password.current.value = "";
         confirmPassword.current.value = "";
         toast.success("Signup success");
-        fetchStaffs();
       } catch (error) {
         toast.error("Something went wrong!");
 

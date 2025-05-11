@@ -1,72 +1,57 @@
 import toast from "react-hot-toast";
-import { useEffect, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useSelector, useDispatch } from "react-redux";
-import { addCategoryData } from "../redux/features/categorySlice";
 
 export const useCategories = () => {
-  const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories);
-  const fetchCategories = useCallback(async () => {
-    try {
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
         url: "/categories",
         withCredentials: true,
       });
-      dispatch(addCategoryData(response?.data?.data));
-      console.log(response?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [dispatch]);
+      return response?.data?.data;
+    },
+  });
 
-  useEffect(() => {
-    if (categories === null) {
-      fetchCategories();
-    }
-  }, [categories, fetchCategories]);
-
-  const deleteCategory = async (categoryId) => {
-    try {
+  const { mutate: deleteCategory } = useMutation({
+    mutationFn: async (categoryId) => {
       await axiosInstance({
         method: "DELETE",
         url: `/categories/${categoryId}`,
         withCredentials: true,
       });
-      toast.success("Category deleted successfully");
+      toast.success("Category deleted successfully!");
+      queryClient.invalidateQueries(["categories"]);
+    },
+    onError: () => {
+      toast.error("Failed to delete category.");
+    },
+  });
 
-      fetchCategories();
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
+  const { mutate: updateCategory } = useMutation({
+    mutationFn: async ({ categoryId, categoryName, description }) => {
+      const data = {
+        categoryName,
+        description,
+      };
 
-  const updateCategory = async (
-    categoryId,
-    categoryname,
-    description,
-    discount
-  ) => {
-    const data = {
-      categoryname,
-      description,
-    };
-
-    try {
       await axiosInstance({
         method: "PUT",
         url: `/categories/${categoryId}`,
         withCredentials: true,
         data,
       });
-      toast.success("Category updated successfully");
+      toast.success("Category updated successfully!");
+      queryClient.invalidateQueries(["categories"]);
+    },
+    onError: () => {
+      toast.error("Failed to update category.");
+    },
+  });
 
-      fetchCategories();
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.log(error);
-    }
-  };
-  return { categories, updateCategory, deleteCategory, fetchCategories };
+  return { categories: data, updateCategory, deleteCategory };
 };

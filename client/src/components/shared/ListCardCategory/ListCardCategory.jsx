@@ -10,8 +10,19 @@ export const ListCardCategory = () => {
   const [editId, setEditId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [editedDiscount, setEditedDiscount] = useState(null);
   const { categories, updateCategory, deleteCategory } = useCategories();
+
+  const categoryData = categories?.filter((category) => {
+    const query = searchQuery.toLowerCase();
+
+    return (
+      category?.categoryName?.toLowerCase().includes(query) ||
+      category?.description?.toLowerCase().includes(query) ||
+      category?.discountRate.toString().toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -23,6 +34,7 @@ export const ListCardCategory = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -38,7 +50,7 @@ export const ListCardCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {categories?.map((category, index) => (
+            {categoryData?.map((category, index) => (
               <tr key={category._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
@@ -49,7 +61,7 @@ export const ListCardCategory = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    category?.categoryname
+                    category?.categoryName
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -72,7 +84,7 @@ export const ListCardCategory = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : ( */}
-                  {category?.discountrate}
+                  {category?.discountRate}
                   {/* )} */}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
@@ -82,12 +94,11 @@ export const ListCardCategory = () => {
                         title="Save"
                         size={20}
                         onClick={() => {
-                          updateCategory(
-                            category._id,
-                            editCategoryName,
-                            editedDescription,
-                            editedDiscount
-                          );
+                          updateCategory({
+                            categoryId: category._id,
+                            categoryName: editCategoryName,
+                            description: editedDescription,
+                          });
                           setEditId(null);
                         }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
@@ -99,9 +110,9 @@ export const ListCardCategory = () => {
                           size={20}
                           onClick={() => {
                             setEditId(category._id);
-                            setEditCategoryName(category.categoryname);
+                            setEditCategoryName(category.categoryName);
                             setEditedDescription(category.description);
-                            setEditedDiscount(category.discountrate);
+                            setEditedDiscount(category.discountRate);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />

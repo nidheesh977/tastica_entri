@@ -1,73 +1,57 @@
 import toast from "react-hot-toast";
-import { useEffect, useCallback } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useSelector, useDispatch } from "react-redux";
-import { addStaffData } from "../redux/features/authSlice";
 
 export const useStaffs = () => {
-  const dispatch = useDispatch();
-  const staffs = useSelector((state) => state.auth.staffData);
-  const hasFetched = staffs !== null;
-  const fetchStaffs = useCallback(async () => {
-    try {
+  const queryClient = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["staffs"],
+    queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
         url: "/admin/staff/list",
         withCredentials: true,
       });
-      dispatch(addStaffData(response?.data?.data));
-    } catch (error) {
-      if (error?.response?.status === 404) {
-        dispatch(addStaffData([]));
-      } else {
-        console.error(error);
-        
-      }
-    }
-  }, [dispatch]);
+      return response?.data?.data;
+    },
+  });
 
-  useEffect(() => {
-    if (!hasFetched) {
-      fetchStaffs();
-    }
-  }, [staffs, fetchStaffs]);
+  const { mutate: updateStaff } = useMutation({
+    mutationFn: async ({ staffId, userName, email, phoneNumber }) => {
+      const data = {
+        userName,
+        email,
+        phoneNumber,
+      };
 
-  const deleteStaff = async (staffId) => {
-    try {
-      await axiosInstance({
-        method: "DELETE",
-        url: `/admin/staff/${staffId}`,
-        withCredentials: true,
-      });
-      toast.success("Staff data deleted successfully");
-
-      fetchStaffs();
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  const updateStaff = async (staffId, userName, email, phoneNumber) => {
-    const data = {
-      userName,
-      email,
-      phoneNumber,
-    };
-
-    try {
       await axiosInstance({
         method: "PUT",
         url: `admin/staff/${staffId}`,
         withCredentials: true,
         data,
       });
-      toast.success("Staff data updated successfully");
+      toast.success("Staff updated successfully!");
+      queryClient.invalidateQueries(["staffs"]);
+    },
+    onError: () => {
+      toast.error("Failed to update staff.");
+    },
+  });
 
-      fetchStaffs();
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.log(error);
-    }
-  };
-  return { staffs, updateStaff, deleteStaff, fetchStaffs };
+  const { mutate: deleteStaff } = useMutation({
+    mutationFn: async (staffId) => {
+      axiosInstance({
+        method: "DELETE",
+        url: `/admin/staff/${staffId}`,
+        withCredentials: true,
+      });
+      toast.success("Staff deleted successfully!");
+      queryClient.invalidateQueries(["staffs"]);
+    },
+    onError: () => {
+      toast.error("Failed to delete staff.");
+    },
+  });
+
+  return { staffs: data, updateStaff, deleteStaff };
 };
