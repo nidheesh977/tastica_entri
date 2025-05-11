@@ -3,13 +3,11 @@ import { useRef } from "react";
 import { BiCategory } from "react-icons/bi";
 import { SideBar } from "../../shared/SideBar/SideBar";
 import { axiosInstance } from "../../../config/axiosInstance";
-import { useCategories } from "../../../hooks/useCategories";
 
 export const AddCategory = () => {
   const categoryName = useRef(null);
   const description = useRef(null);
   const discountRate = useRef(null);
-  const { fetchCategories } = useCategories();
 
   const handleSubmit = async () => {
     const data = {
@@ -25,7 +23,6 @@ export const AddCategory = () => {
         data,
       });
       toast.success("Category added successfully");
-      fetchCategories();
       categoryName.current.value = "";
       description.current.value = "";
       discountRate.current.value = "";
