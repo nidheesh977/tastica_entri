@@ -10,7 +10,18 @@ export const ListCardCustomer = () => {
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
+
+  const customerData = customers?.filter((customer) => {
+    const query = searchQuery.toLowerCase();
+
+    return (
+      customer?.customerName?.toLowerCase().includes(query) ||
+      customer?.email?.toLowerCase().includes(query) ||
+      customer?.phoneNumber.toString().toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -22,6 +33,7 @@ export const ListCardCustomer = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -37,7 +49,7 @@ export const ListCardCustomer = () => {
             </tr>
           </thead>
           <tbody>
-            {customers?.map((customer, index) => (
+            {customerData?.map((customer, index) => (
               <tr key={customer?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
@@ -72,11 +84,11 @@ export const ListCardCustomer = () => {
                         title="Save"
                         size={20}
                         onClick={() => {
-                          updateCustomer(
-                            customer?._id,
-                            editedName,
-                            editedMobile
-                          );
+                          updateCustomer({
+                            customerId: customer?._id,
+                            customerName: editedName,
+                            phoneNumber: editedMobile,
+                          });
 
                           setEditId(null);
                         }}

@@ -1,71 +1,55 @@
 import toast from "react-hot-toast";
-import { useEffect, useCallback } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useSelector, useDispatch } from "react-redux";
-import { addCustomerData } from "../redux/features/customerSlice";
 
 export const useCustomers = () => {
-  const dispatch = useDispatch();
-  const customers = useSelector((state) => state.customers);
-  const hasFetched = customers !== null;
-  const fetchCustomers = useCallback(async () => {
-    try {
+  const queryClient = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
         url: "/customer",
         withCredentials: true,
       });
-      dispatch(addCustomerData(response?.data?.data));
-    } catch (error) {
-      if (error?.response?.status === 404) {
-        dispatch(addCustomerData([]));
-      } else {
-        console.error(error);
-        toast.error("Failed to fetch customers");
-      }
-    }
-  }, [dispatch]);
+      return response?.data?.data;
+    },
+  });
 
-  useEffect(() => {
-    if (!hasFetched) {
-      fetchCustomers();
-    }
-  }, [customers, fetchCustomers]);
-
-  const deleteCustomer = async (customerId) => {
-    try {
-      const response = await axiosInstance({
+  const { mutate: deleteCustomer } = useMutation({
+    mutationFn: async (customerId) => {
+      await axiosInstance({
         method: "DELETE",
         url: `/customer/${customerId}`,
         withCredentials: true,
       });
-      toast.success("Customer deleted successfully");
-      fetchCustomers();
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
+      toast.success("Customer deleted successfully!");
+      queryClient.invalidateQueries(["customers"]);
+    },
+    onError: () => {
+      toast.error("Failed to delete customer.");
+    },
+  });
 
-  const updateCustomer = async (customerId, customerName, phoneNumber) => {
-    const data = {
-      customerName,
-      phoneNumber,
-    };
-
-    try {
+  const { mutate: updateCustomer } = useMutation({
+    mutationFn: async ({ customerId, customerName, phoneNumber }) => {
+      const data = {
+        customerName,
+        phoneNumber,
+      };
       await axiosInstance({
         method: "PUT",
         url: `/customer/${customerId}`,
         withCredentials: true,
         data,
       });
-      toast.success("Customer data updated successfully");
+      toast.success("Customer updated successfully!");
+      queryClient.invalidateQueries(["customers"]);
+    },
+    onError: () => {
+      toast.error("Failed to update customer.");
+    },
+  });
 
-      fetchCustomers();
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.log(error);
-    }
-  };
-  return { customers, updateCustomer, deleteCustomer, fetchCustomers };
+  return { customers: data, updateCustomer, deleteCustomer };
 };
