@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
@@ -19,14 +19,14 @@ export const ShopLoginForm = ({ action }) => {
   if (action === "Signup") api = "/shop/create-shop";
   if (action === "Login") api = "/shop/login";
 
-  const shopname = useRef(null);
+  const shopName = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
   const handleSubmit = async () => {
     if (action === "Signup") {
       const data = {
-        shopname: shopname.current.value,
+        shopName: shopName.current.value,
         email: email.current.value,
         password: password.current.value,
       };
@@ -81,7 +81,7 @@ export const ShopLoginForm = ({ action }) => {
         {action === "Signup" && (
           <input
             type="text"
-            ref={shopname}
+            ref={shopName}
             placeholder="Shop Name"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />

@@ -6,16 +6,16 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import { useCategories } from "../../../hooks/useCategories";
 
 export const AddCategory = () => {
-  const categoryname = useRef(null);
+  const categoryName = useRef(null);
   const description = useRef(null);
-  const discountrate = useRef(null);
+  const discountRate = useRef(null);
   const { fetchCategories } = useCategories();
 
   const handleSubmit = async () => {
     const data = {
-      categoryname: categoryname?.current?.value,
+      categoryName: categoryName?.current?.value,
       description: description?.current?.value,
-      discountrate: discountrate?.current?.value,
+      discountRate: discountRate?.current?.value,
     };
     try {
       const response = await axiosInstance({
@@ -26,9 +26,9 @@ export const AddCategory = () => {
       });
       toast.success("Category added successfully");
       fetchCategories();
-      categoryname.current.value = "";
+      categoryName.current.value = "";
       description.current.value = "";
-      discountrate.current.value = "";
+      discountRate.current.value = "";
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
@@ -49,7 +49,7 @@ export const AddCategory = () => {
 
           <input
             type="text"
-            ref={categoryname}
+            ref={categoryName}
             placeholder="Category"
             className="p-4 my-1  w-full  bg-white shadow-2xl outline-[#155E95]"
           />
@@ -63,7 +63,7 @@ export const AddCategory = () => {
 
           <input
             type="number"
-            ref={discountrate}
+            ref={discountRate}
             placeholder="Discount Rate"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />

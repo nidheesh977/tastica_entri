@@ -44,12 +44,12 @@ export const useCategories = () => {
 
   const updateCategory = async (
     categoryId,
-    categoryname,
+    categoryName,
     description,
     discount
   ) => {
     const data = {
-      categoryname,
+      categoryName,
       description,
     };
 
@@ -65,7 +65,7 @@ export const useCategories = () => {
       fetchCategories();
     } catch (error) {
       toast.error("Something went wrong!");
-      console.log(error);
+      
     }
   };
   return { categories, updateCategory, deleteCategory, fetchCategories };

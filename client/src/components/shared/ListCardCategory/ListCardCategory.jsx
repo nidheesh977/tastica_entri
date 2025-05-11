@@ -49,7 +49,7 @@ export const ListCardCategory = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    category?.categoryname
+                    category?.categoryName
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -72,7 +72,7 @@ export const ListCardCategory = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : ( */}
-                  {category?.discountrate}
+                  {category?.discountRate}
                   {/* )} */}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
@@ -99,9 +99,9 @@ export const ListCardCategory = () => {
                           size={20}
                           onClick={() => {
                             setEditId(category._id);
-                            setEditCategoryName(category.categoryname);
+                            setEditCategoryName(category.categoryName);
                             setEditedDescription(category.description);
-                            setEditedDiscount(category.discountrate);
+                            setEditedDiscount(category.discountRate);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />

@@ -1,13 +1,13 @@
 import toast from "react-hot-toast";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { axiosInstance } from "../config/axiosInstance";
-import { useSelector, useDispatch } from "react-redux";
-import { addStaffData } from "../redux/features/authSlice";
+// import { useSelector, useDispatch } from "react-redux";
+// import { addStaffData } from "../redux/features/authSlice";
 
 export const useStaffs = () => {
-  const dispatch = useDispatch();
-  const staffs = useSelector((state) => state.auth.staffData);
-  const hasFetched = staffs !== null;
+  // const dispatch = useDispatch();
+  // const staffs = useSelector((state) => state.auth.staffData);
+  const [staffs, setStaffs] = useState(null);
   const fetchStaffs = useCallback(async () => {
     try {
       const response = await axiosInstance({
@@ -15,19 +15,15 @@ export const useStaffs = () => {
         url: "/admin/staff/list",
         withCredentials: true,
       });
-      dispatch(addStaffData(response?.data?.data));
+      // dispatch(addStaffData(response?.data?.data));
+      setStaffs(response?.data?.data);
     } catch (error) {
-      if (error?.response?.status === 404) {
-        dispatch(addStaffData([]));
-      } else {
-        console.error(error);
-        
-      }
+      console.error(error);
     }
-  }, [dispatch]);
+  }, [staffs]);
 
   useEffect(() => {
-    if (!hasFetched) {
+    if (staffs === null) {
       fetchStaffs();
     }
   }, [staffs, fetchStaffs]);

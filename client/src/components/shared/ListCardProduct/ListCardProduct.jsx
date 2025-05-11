@@ -8,14 +8,28 @@ import { useProducts } from "../../../hooks/useProducts";
 export const ListCardProduct = () => {
   const [editId, setEditId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
+  const [editedCategory, setEditedCategory] = useState("");
   const [editedQuantity, setEditedQuantity] = useState(null);
   const [editedCostPrice, setEditedCostPrice] = useState(null);
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('')
-  const { products, deleteProduct, updateProduct } = useProducts();
-  console.log(searchQuery)
+  const [searchQuery, setSearchQuery] = useState("");
+  const { products, updateProduct, deleteProduct } = useProducts();
+
+  const productData = products?.filter((product) => {
+    const query = searchQuery.toLowerCase();
+
+    return (
+      product?.productName?.toLowerCase().includes(query) ||
+      product?.category?.categoryName.toLowerCase().includes(query) ||
+      product?.quantity.toString().toLowerCase().includes(query) ||
+      product?.product_id?.toLowerCase().includes(query) ||
+      product?.costPrice?.toString().includes(query) ||
+      product?.sellingPrice?.toString().includes(query) ||
+      product?.discount?.toString().includes(query)
+    );
+  });
 
   return (
     <div className="md:w-5/6 w-full md:max-h-[520px] text-center pt-5 pb-14 px-5 border border-primary  shadow">
@@ -28,7 +42,7 @@ export const ListCardProduct = () => {
           type="text"
           placeholder="Search"
           value={searchQuery}
-          onChange={(e)=> setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -48,7 +62,7 @@ export const ListCardProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products?.map((product, index) => (
+            {productData?.map((product, index) => (
               <tr key={product?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
@@ -66,7 +80,7 @@ export const ListCardProduct = () => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {product?.category?.categoryname}
+                  {product?.category?.categoryName}
                 </td>
 
                 <td className="border border-primary px-4 py-2">
@@ -126,15 +140,15 @@ export const ListCardProduct = () => {
                         title="Save"
                         size={20}
                         onClick={() => {
-                          updateProduct(
-                            product._id,
-                            editedTitle,
-                            product?.category,
-                            editedQuantity,
-                            editedCostPrice,
-                            editedSellingPrice,
-                            editedDiscount,
-                          );
+                          updateProduct({
+                            productId: editId,
+                            productName: editedTitle,
+                            quantity: editedQuantity,
+                            costPrice: editedCostPrice,
+                            sellingPrice: editedSellingPrice,
+                            discount: editedDiscount,
+                            category: editedCategory,
+                          });
                           setEditId(null);
                         }}
                         className="text-primary hover:text-blue-800 cursor-pointer"
@@ -148,6 +162,7 @@ export const ListCardProduct = () => {
                             setEditId(product?._id);
                             setEditedTitle(product?.productName);
                             setEditedQuantity(product?.quantity);
+                            setEditedCategory(product?.category?._id);
                             setEditedSellingPrice(product?.sellingPrice);
                             setEditedCostPrice(product?.costPrice);
                             setEditedDiscount(product?.discount);
