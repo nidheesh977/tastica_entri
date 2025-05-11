@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
+import { useState } from "react";
 
 export const useCategories = () => {
+  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
+  const [categoryId, setCategoryId] = useState("");
   const queryClient = useQueryClient();
-
-  const { data } = useQuery({
+  const { data: categoryData } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await axiosInstance({
@@ -15,6 +17,20 @@ export const useCategories = () => {
       });
       return response?.data?.data;
     },
+  });
+
+  const { data: categoryProductData } = useQuery({
+    queryKey: ["categoryProducts"],
+    queryFn: async () => {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/product/category-search?categoryId=${categoryId}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    enabled: isCategoryClicked,
   });
 
   const { mutate: deleteCategory } = useMutation({
@@ -53,5 +69,13 @@ export const useCategories = () => {
     },
   });
 
-  return { categories: data, updateCategory, deleteCategory };
+  return {
+    categories: categoryData,
+    categoryProducts: categoryProductData,
+    updateCategory,
+    deleteCategory,
+    setIsCategoryClicked,
+    setCategoryId,
+    isCategoryClicked,
+  };
 };
