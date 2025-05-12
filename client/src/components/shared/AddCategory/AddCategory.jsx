@@ -1,35 +1,13 @@
-import toast from "react-hot-toast";
-import { useRef } from "react";
+import { useState } from "react";
 import { BiCategory } from "react-icons/bi";
 import { SideBar } from "../../shared/SideBar/SideBar";
-import { axiosInstance } from "../../../config/axiosInstance";
+import { useCategories } from "../../../hooks/useCategories";
 
 export const AddCategory = () => {
-  const categoryName = useRef(null);
-  const description = useRef(null);
-  const discountRate = useRef(null);
-
-  const handleSubmit = async () => {
-    const data = {
-      categoryName: categoryName?.current?.value,
-      description: description?.current?.value,
-      discountRate: discountRate?.current?.value,
-    };
-    try {
-      const response = await axiosInstance({
-        method: "POST",
-        url: "/categories",
-        withCredentials: true,
-        data,
-      });
-      toast.success("Category added successfully");
-      categoryName.current.value = "";
-      description.current.value = "";
-      discountRate.current.value = "";
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
+  const [categoryName, setCategoryName] = useState("");
+  const [description, setDescription] = useState("");
+  const [discountRate, setDiscountRate] = useState("");
+  const { addCategory } = useCategories();
 
   return (
     <>
@@ -46,28 +24,36 @@ export const AddCategory = () => {
 
           <input
             type="text"
-            ref={categoryName}
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
             placeholder="Category"
             className="p-4 my-1  w-full  bg-white shadow-2xl outline-[#155E95]"
           />
 
           <textarea
             type="text"
-            ref={description}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
 
           <input
             type="number"
-            ref={discountRate}
+            value={discountRate}
+            onChange={(e) => setDiscountRate(e.target.value)}
             placeholder="Discount Rate"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
 
           <button
             className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
-            onClick={handleSubmit}
+            onClick={() => {
+              addCategory({ categoryName, description, discountRate });
+              setCategoryName("");
+              setDescription("");
+              setDiscountRate("");
+            }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
               Add Category <BiCategory />

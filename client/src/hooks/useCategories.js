@@ -16,19 +16,24 @@ export const useCategories = () => {
     },
   });
 
-  // const { data: categoryProductData } = useQuery({
-  //   queryKey: ["categoryProducts"],
-  //   queryFn: async () => {
-  //     const response = await axiosInstance({
-  //       method: "GET",
-  //       url: `/product/category-search?categoryId=${""}`,
-  //       withCredentials: true,
-  //     });
-
-  //     return response?.data?.data;
-  //   },
-  // });
-
+  const { mutate: addCategory } = useMutation({
+    mutationFn: async ({ categoryName, description, discountRate }) => {
+      const data = { categoryName, description, discountRate };
+      await axiosInstance({
+        method: "POST",
+        url: "/categories",
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Category added successfully!");
+      queryClient.invalidateQueries(["categories"]);
+    },
+    onError: () => {
+      toast.error("Failed to add category.");
+    },
+  });
   const { mutate: deleteCategory } = useMutation({
     mutationFn: async (categoryId) => {
       await axiosInstance({
@@ -71,7 +76,7 @@ export const useCategories = () => {
 
   return {
     categories: categoryData,
-    // categoryProducts: categoryProductData,
+    addCategory,
     updateCategory,
     deleteCategory,
   };

@@ -62,6 +62,19 @@ export const ShoppingCart = () => {
 
       {isNewCustomer && (
         <div className="flex flex-col gap-2 my-2">
+          <div className="flex items-center justify-between my-2">
+            <p className="font-bold">Add New Customer</p>
+            {isNewCustomer && (
+              <div className="flex justify-between items-center mt-2">
+                <MdArrowBack
+                  onClick={() => setIsNewCustomer(false)}
+                  size={20}
+                  title="Back"
+                  className="bg-secondary cursor-pointer text-white p-1 rounded hover:bg-opacity-90"
+                ></MdArrowBack>
+              </div>
+            )}
+          </div>
           <input
             type="text"
             value={customerName}
@@ -89,18 +102,6 @@ export const ShoppingCart = () => {
           >
             <MdPersonAdd /> Add
           </button>
-        </div>
-      )}
-
-      {isNewCustomer && (
-        <div className="flex justify-between items-center mt-2">
-          <p className=" text-green-600 mt-1">Add New Customer</p>
-          <MdArrowBack
-            onClick={() => setIsNewCustomer(false)}
-            size={20}
-            title="Back"
-            className="bg-secondary cursor-pointer text-white p-1 rounded hover:bg-opacity-90"
-          ></MdArrowBack>
         </div>
       )}
 
