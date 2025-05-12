@@ -34,6 +34,7 @@ export const ListCardCategory = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
@@ -130,6 +131,7 @@ export const ListCardCategory = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteCategory(category._id);
+                          setSearchQuery("");
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />

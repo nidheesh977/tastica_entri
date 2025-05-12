@@ -23,6 +23,8 @@ export const useCustomers = () => {
         url: `/customer/${customerId}`,
         withCredentials: true,
       });
+    },
+    onSuccess: () => {
       toast.success("Customer deleted successfully!");
       queryClient.invalidateQueries(["customers"]);
     },
@@ -43,6 +45,8 @@ export const useCustomers = () => {
         withCredentials: true,
         data,
       });
+    },
+    onSuccess: () => {
       toast.success("Customer updated successfully!");
       queryClient.invalidateQueries(["customers"]);
     },

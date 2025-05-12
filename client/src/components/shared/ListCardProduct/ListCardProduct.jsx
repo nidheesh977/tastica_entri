@@ -183,6 +183,7 @@ export const ListCardProduct = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteProduct(product._id);
+                          setSearchQuery("");
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />

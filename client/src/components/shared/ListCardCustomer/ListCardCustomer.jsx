@@ -33,6 +33,7 @@ export const ListCardCustomer = () => {
           className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
           type="text"
           placeholder="Search"
+          value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
@@ -120,6 +121,7 @@ export const ListCardCustomer = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteCustomer(customer?._id);
+                          setSearchQuery('')
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />

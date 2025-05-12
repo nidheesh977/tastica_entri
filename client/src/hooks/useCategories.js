@@ -40,6 +40,8 @@ export const useCategories = () => {
         url: `/categories/${categoryId}`,
         withCredentials: true,
       });
+    },
+    onSuccess: () => {
       toast.success("Category deleted successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
@@ -61,6 +63,8 @@ export const useCategories = () => {
         withCredentials: true,
         data,
       });
+    },
+    onSuccess: () => {
       toast.success("Category updated successfully!");
       queryClient.invalidateQueries(["categories"]);
     },

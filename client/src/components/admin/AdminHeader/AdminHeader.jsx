@@ -78,7 +78,7 @@ export const AdminHeader = () => {
                 </li>
                 <li
                   onClick={handleOpenNewCartTab}
-                  className="border md:border-none cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2"
+                  className="border md:border-none hover:text-blue-100 cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2"
                 >
                   +
                 </li>

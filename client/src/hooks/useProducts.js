@@ -23,6 +23,8 @@ export const useProducts = () => {
         url: `/product/delete/${productId}`,
         withCredentials: true,
       });
+    },
+    onSuccess: () => {
       toast.success("Product deleted successfully!");
       queryClient.invalidateQueries(["products"]);
     },
@@ -56,6 +58,8 @@ export const useProducts = () => {
         withCredentials: true,
         data,
       });
+    },
+    onSuccess: () => {
       toast.success("Product updated successfully!");
       queryClient.invalidateQueries(["products"]);
     },

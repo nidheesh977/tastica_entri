@@ -30,6 +30,8 @@ export const useStaffs = () => {
         withCredentials: true,
         data,
       });
+    },
+    onSuccess: () => {
       toast.success("Staff updated successfully!");
       queryClient.invalidateQueries(["staffs"]);
     },
@@ -45,6 +47,8 @@ export const useStaffs = () => {
         url: `/admin/staff/${staffId}`,
         withCredentials: true,
       });
+    },
+    onSuccess: () => {
       toast.success("Staff deleted successfully!");
       queryClient.invalidateQueries(["staffs"]);
     },
