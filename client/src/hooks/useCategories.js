@@ -1,11 +1,8 @@
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useState } from "react";
 
 export const useCategories = () => {
-  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
-  const [categoryId, setCategoryId] = useState("");
   const queryClient = useQueryClient();
   const { data: categoryData } = useQuery({
     queryKey: ["categories"],
@@ -24,13 +21,12 @@ export const useCategories = () => {
     queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
-        url: `/product/category-search?categoryId=${categoryId}`,
+        url: `/product/category-search?categoryId=${""}`,
         withCredentials: true,
       });
 
       return response?.data?.data;
     },
-    enabled: isCategoryClicked,
   });
 
   const { mutate: deleteCategory } = useMutation({
@@ -78,8 +74,5 @@ export const useCategories = () => {
     categoryProducts: categoryProductData,
     updateCategory,
     deleteCategory,
-    setIsCategoryClicked,
-    setCategoryId,
-    isCategoryClicked,
   };
 };

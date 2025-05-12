@@ -12,6 +12,7 @@ export const ShoppingCart = () => {
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
+  const { addCustomer } = useCustomers();
 
   useEffect(() => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
@@ -72,12 +73,20 @@ export const ShoppingCart = () => {
           <input
             type="text"
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onFocus={() => setPhoneNumber(searchQuery)}
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
           />
 
-          <button className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90">
+          <button
+            onClick={() => {
+              addCustomer({ customerName, phoneNumber });
+              setCustomerName("");
+              setPhoneNumber("");
+              setIsNewCustomer(false);
+            }}
+            className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90"
+          >
             <MdPersonAdd /> Add
           </button>
         </div>

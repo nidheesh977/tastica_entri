@@ -1,13 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useCategories } from "../../../hooks/useCategories";
 import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 
 export const Product = () => {
-  let { categoryProducts } = useCategories();
+  const categoryId = useSelector((state) => state.category);
+
   const { products } = useProducts();
+  let categoryProducts = products?.filter(
+    (product) => product?.category?._id === categoryId
+  );
+
   const searchQuery = useSelector((state) => state.search);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   if (searchQuery !== "") {
     categoryProducts = products?.filter((product) => {
       const query = searchQuery.toLowerCase();
@@ -29,7 +33,7 @@ export const Product = () => {
       {categoryProducts?.map((product) => (
         <div
           key={product?._id}
-          onClick={()=> dispatch(saveSearchQuery('')) }
+          onClick={() => dispatch(saveSearchQuery(""))}
           className="bg-[#E8F9FF] w-52 h-28 text-sm rounded border flex flex-col justify-between border-black  cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
         >
           <div className="h-10">
