@@ -1,8 +1,13 @@
 import mongoose from 'mongoose';
 
 
+export const convertStringToId = (id) => {
+    return new mongoose.Types.ObjectId(id)
+}
+
+
 const invoiceSchema = new mongoose.Schema({
-    invoicenumber: {
+    invoiceNumber: {
         type: String,
         required: true,
         unique: true
@@ -15,37 +20,36 @@ const invoiceSchema = new mongoose.Schema({
     products: {
         type:[
          {
-            productName: {
-               type:String,
-               required:true
-            },
-            quantity: {
-                type: Number,
-                default:0
-            },
-
-            productTotalPrice:{
-                type: Number,
-                default: 0,
-            },
-            productId:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"Product", 
-            }
+            productName: {type:String,required:true},
+            quantity: {type:Number,default:0},
+            price:{type:mongoose.Types.Decimal128},
+            total:{type:mongoose.Types.Decimal128,},
+            productId:{type:mongoose.Schema.Types.ObjectId,ref:"Product", },
+            productDiscount:{type:mongoose.Types.Decimal128},
+            discountFromCategory:{type:Number,default: 0},
+            discountFromProduct:{type:Number,default:0},
+            discountType:{type:String,enum:["percentage","flat"],default:"percentage"}
          }   
         ],
         default:[]
     },
 
-    status:{
+    totalDiscount:{type:mongoose.Types.Decimal128,
+        default: 0.00
+    },
+    subTotal:{ type:mongoose.Types.Decimal128,
+        default: 0.00
+    },
+
+   status:{
         type: String,
         enum: ["newtab", "saved", "paid", "unpaid"],
         default: "newtab"
     },
 
-    totalamount:{
-        type: Number,
-        default: 0
+    totalAmount:{
+       type:mongoose.Types.Decimal128,
+        default: 0.00
     }
 },{timestamps:true})
 
