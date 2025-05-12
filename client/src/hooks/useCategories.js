@@ -16,18 +16,18 @@ export const useCategories = () => {
     },
   });
 
-  const { data: categoryProductData } = useQuery({
-    queryKey: ["categoryProducts"],
-    queryFn: async () => {
-      const response = await axiosInstance({
-        method: "GET",
-        url: `/product/category-search?categoryId=${""}`,
-        withCredentials: true,
-      });
+  // const { data: categoryProductData } = useQuery({
+  //   queryKey: ["categoryProducts"],
+  //   queryFn: async () => {
+  //     const response = await axiosInstance({
+  //       method: "GET",
+  //       url: `/product/category-search?categoryId=${""}`,
+  //       withCredentials: true,
+  //     });
 
-      return response?.data?.data;
-    },
-  });
+  //     return response?.data?.data;
+  //   },
+  // });
 
   const { mutate: deleteCategory } = useMutation({
     mutationFn: async (categoryId) => {
@@ -71,7 +71,7 @@ export const useCategories = () => {
 
   return {
     categories: categoryData,
-    categoryProducts: categoryProductData,
+    // categoryProducts: categoryProductData,
     updateCategory,
     deleteCategory,
   };

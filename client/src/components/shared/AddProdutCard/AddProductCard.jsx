@@ -1,46 +1,18 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { FaBox } from "react-icons/fa";
 import { SideBar } from "../SideBar/SideBar";
-import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
 import { useCategories } from "../../../hooks/useCategories";
+import { useProducts } from "../../../hooks/useProducts";
 
 export const AddProductCard = () => {
   const { categories } = useCategories();
-  const productName = useRef(null);
-  const quantity = useRef(null);
-  const costPrice = useRef(null);
-  const sellingPrice = useRef(null);
-  const discount = useRef(null);
-  const category = useRef(null);
-
-  const handleSubmit = async () => {
-    const data = {
-      productName: productName?.current?.value,
-      quantity: quantity?.current?.value,
-      costPrice: costPrice?.current?.value,
-      sellingPrice: sellingPrice?.current?.value,
-      discount: discount?.current?.value,
-      category: category?.current?.value,
-    };
-    try {
-      await axiosInstance({
-        method: "POST",
-        url: "/product/create",
-        withCredentials: true,
-        data,
-      });
-
-      toast.success("Product added successfully");
-      (productName.current.value = ""),
-        (quantity.current.value = ""),
-        (costPrice.current.value = ""),
-        (sellingPrice.current.value = ""),
-        (discount.current.value = "");
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
+  const { addProduct } = useProducts();
+  const [productName, setProductName] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [costPrice, setCostPrice] = useState(0);
+  const [sellingPrice, setSellingPrice] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [category, setCategory] = useState("");
 
   return (
     <>
@@ -57,40 +29,46 @@ export const AddProductCard = () => {
 
           <input
             type="text"
-            ref={productName}
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
             placeholder="Product Name"
             className="p-4 my-1  w-full  bg-white shadow-2xl outline-[#155E95]"
           />
 
           <input
             type="number"
-            ref={quantity}
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
             placeholder="Quantity"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
 
           <input
             type="number"
-            ref={costPrice}
+            value={costPrice}
+            onChange={(e) => setCostPrice(e.target.value)}
             placeholder="Cost Price"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
 
           <input
             type="number"
-            ref={sellingPrice}
+            value={sellingPrice}
+            onChange={(e) => setSellingPrice(e.target.value)}
             placeholder="Selling Price"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
 
           <input
             type="number"
-            ref={discount}
+            value={discount}
+            onChange={(e) => setDiscount(e.target.value)}
             placeholder="Discount"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
           <select
-            ref={category}
+            value={category?._id}
+            onChange={(e) => setCategory(e.target.value)}
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           >
             <option value="">Select a category</option>
@@ -103,7 +81,22 @@ export const AddProductCard = () => {
 
           <button
             className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
-            onClick={handleSubmit}
+            onClick={() => {
+              addProduct({
+                productName,
+                quantity,
+                costPrice,
+                sellingPrice,
+                discount,
+                category,
+              });
+              setProductName("");
+              setQuantity(0);
+              setCostPrice(0);
+              setSellingPrice(0);
+              setDiscount(0);
+              setCategory("");
+            }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
               Add Product <FaBox />

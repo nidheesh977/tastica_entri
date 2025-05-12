@@ -16,6 +16,24 @@ export const useProducts = () => {
     },
   });
 
+  const { mutate: addProduct } = useMutation({
+    mutationFn: async ({productName, quantity, costPrice, sellingPrice, discount, category }) => {
+      const data ={productName, quantity, costPrice, sellingPrice, discount, category }
+      await axiosInstance({
+        method: "POST",
+        url: "/product/create",
+        withCredentials: true,
+        data
+      });
+    },
+    onSuccess: () => {
+      toast.success("Product added successfully!");
+      queryClient.invalidateQueries(["products"]);
+    },
+    onError: () => {
+      toast.error("Failed to add product.");
+    },
+  });
   const { mutate: deleteProduct } = useMutation({
     mutationFn: async (productId) => {
       await axiosInstance({
@@ -69,5 +87,5 @@ export const useProducts = () => {
     },
   });
 
-  return { products: data, updateProduct, deleteProduct };
+  return { products: data, addProduct, updateProduct, deleteProduct };
 };
