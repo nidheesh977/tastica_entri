@@ -16,6 +16,28 @@ export const useCustomers = () => {
     },
   });
 
+  const { mutate: addCustomer } = useMutation({
+    mutationFn: async ({ customerName, phoneNumber }) => {
+      const data = {
+        customerName,
+        phoneNumber,
+      };
+      await axiosInstance({
+        method: "POST",
+        url: "/customer/create",
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Customer added successfully!");
+      queryClient.invalidateQueries(["customers"]);
+    },
+    onError: () => {
+      toast.error("Failed to add customer.");
+    },
+  });
+
   const { mutate: deleteCustomer } = useMutation({
     mutationFn: async (customerId) => {
       await axiosInstance({
@@ -55,5 +77,5 @@ export const useCustomers = () => {
     },
   });
 
-  return { customers: data, updateCustomer, deleteCustomer };
+  return { customers: data, addCustomer, updateCustomer, deleteCustomer };
 };

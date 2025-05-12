@@ -1,31 +1,12 @@
-import { useRef } from "react";
-import toast from "react-hot-toast";
 import { MdPersonAdd } from "react-icons/md";
-import { axiosInstance } from "../../../config/axiosInstance";
+import { useState } from "react";
+import { useCustomers } from "../../../hooks/useCustomers";
 
 export const AddCustomerCard = () => {
-  const customerName = useRef(null);
-  const phoneNumber = useRef(null);
+  const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handleSubmit = async () => {
-    const data = {
-      customerName: customerName.current.value,
-      phoneNumber: phoneNumber.current.value,
-    };
-    try {
-      await axiosInstance({
-        method: "POST",
-        url: "/customer/create",
-        withCredentials: true,
-        data,
-      });
-      toast.success("Customer created successfully!");
-      customerName.current.value = "";
-      phoneNumber.current.value = "";
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
+  const { addCustomer } = useCustomers();
 
   return (
     <div className="flex justify-center my-2">
@@ -41,21 +22,27 @@ export const AddCustomerCard = () => {
 
         <input
           type="text"
-          ref={customerName}
+          value={customerName}
           placeholder="Full Name"
+          onChange={(e) => setCustomerName(e.target.value)}
           className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
         />
 
         <input
           type="text"
-          ref={phoneNumber}
           placeholder="Mobile"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
           className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
 
         <button
           className="p-4  bg-primary hover:opacity-90 my-2 w-full text-white rounded-lg"
-          onClick={handleSubmit}
+          onClick={() => {
+            addCustomer({ customerName, phoneNumber });
+            setCustomerName("");
+            setPhoneNumber("");
+          }}
         >
           <span className="flex items-center justify-center gap-2 font-semibold">
             Add <MdPersonAdd />

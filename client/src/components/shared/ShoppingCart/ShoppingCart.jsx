@@ -78,7 +78,7 @@ export const ShoppingCart = () => {
           />
 
           <button className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90">
-          <MdPersonAdd/>  Add 
+            <MdPersonAdd /> Add
           </button>
         </div>
       )}
