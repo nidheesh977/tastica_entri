@@ -10,7 +10,7 @@ const invoiceSchema = new mongoose.Schema({
     invoiceNumber: {
         type: String,
         required: true,
-        unique: true
+        
     },
     staff: {
         type:String,
@@ -50,8 +50,15 @@ const invoiceSchema = new mongoose.Schema({
     totalAmount:{
        type:mongoose.Types.Decimal128,
         default: 0.00
+    },
+
+    customer:{
+        type:mongoose.Schema.Types.ObjectId,
+            ref:"Customer", 
     }
 },{timestamps:true})
+
+invoiceSchema.index({invoiceNumber:1})
 
  const invoiceModel = mongoose.model('Invoice', invoiceSchema);
 

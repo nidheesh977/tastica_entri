@@ -11,8 +11,8 @@ const adminRouter = express.Router();
 adminRouter.post('/login',loginAdmin);
 
 // protected routes
-adminRouter.post('/create-employee',shopVerifyToken,userVerifyToken,checkUserRole("admin"),CreateEmployee);
-adminRouter.get('/staff/list',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getStaffs);
+adminRouter.post('/create-employee',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),CreateEmployee);
+adminRouter.get('/staff/list',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getStaffs);
 adminRouter.delete('/staff/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),deleteStaff);
 adminRouter.put('/staff/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),UpdateStaff);
 adminRouter.patch('/staff/:id/password',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateUserPassword);

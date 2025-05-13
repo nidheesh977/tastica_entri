@@ -128,7 +128,7 @@
 
 - 📃 create invoice<br>
 **method:**`POST`<br>
-**URL:**`/api/v1/invoice`
+**URL:**`/api/v1/invoice/:customerId`
 
 - 📃📦 add products to invoice<br>
 **method:**`PUT`<br>

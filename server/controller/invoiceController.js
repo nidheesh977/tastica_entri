@@ -1,5 +1,6 @@
 import AdminStaffModel from '../model/adminAndStaffModel.js';
 import categoryModel from '../model/categoryModel.js';
+import customerModel from '../model/customerModel.js';
 import invoiceModel from '../model/invoiceModel.js';
 import productModel from '../model/productModel.js';
 import { calculateDiscount, toDecimal } from '../utils/calculateInvoice.js';
@@ -9,9 +10,20 @@ import { generateInvoiceId } from '../utils/generateInvoiceId.js';
 export const createNewInvoiceTab = async (req,res) => {
     try{
       const userId= req.user.id
-            
+      const {customerId} = req.params;  
+
       if(!userId){
         return res.status(400).json({success:false,message:"Staff ID is required"})
+      }
+
+      if(!customerId){
+          return res.status(400).json({success:false,message:"customer ID is required"})
+      }
+
+      const findCustomer = await customerModel.findById(customerId)
+
+      if(!findCustomer){
+        return res.status(400).json({success:false,message:"Customer does not exist"})
       }
 
       const staffExist = await AdminStaffModel.findById(userId)
@@ -21,24 +33,26 @@ export const createNewInvoiceTab = async (req,res) => {
       }
 
       const staffName = `${staffExist.userName} (${staffExist.role})`;
-        
-       const invoiceId = generateInvoiceId();
+             
+      let invoiceId;
 
-       const invoiceIdExist = await invoiceModel.findOne({invoicenumber:invoiceId});
-
-       if(invoiceIdExist){
-        generateInvoiceId()
-       }
+      do {
+         invoiceId = generateInvoiceId()
+      } while (await invoiceModel.findOne({invoiceNumber:invoiceId}));
 
         const newInvoice =  invoiceModel({
             invoiceNumber:invoiceId,
             staff:staffName,
+            customer:customerId,
         });
 
-        await newInvoice.save()
+        await newInvoice.save();
 
-        res.status(201).json({success:true,message:"Invoice created successfully",data:newInvoice})
+        const findInvoice = await invoiceModel.findOne({_id:newInvoice._id}).populate('customer')
+
+        res.status(201).json({success:true,message:"Invoice created successfully",data:findInvoice})
     }catch(error){
+        console.log(error)
      return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
