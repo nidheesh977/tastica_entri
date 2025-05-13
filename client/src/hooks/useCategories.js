@@ -1,11 +1,8 @@
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useState } from "react";
 
 export const useCategories = () => {
-  const [isCategoryClicked, setIsCategoryClicked] = useState(false);
-  const [categoryId, setCategoryId] = useState("");
   const queryClient = useQueryClient();
   const { data: categoryData } = useQuery({
     queryKey: ["categories"],
@@ -19,20 +16,24 @@ export const useCategories = () => {
     },
   });
 
-  const { data: categoryProductData } = useQuery({
-    queryKey: ["categoryProducts"],
-    queryFn: async () => {
-      const response = await axiosInstance({
-        method: "GET",
-        url: `/product/category-search?categoryId=${categoryId}`,
+  const { mutate: addCategory } = useMutation({
+    mutationFn: async ({ categoryName, description, discountRate }) => {
+      const data = { categoryName, description, discountRate };
+      await axiosInstance({
+        method: "POST",
+        url: "/categories",
         withCredentials: true,
+        data,
       });
-
-      return response?.data?.data;
     },
-    enabled: isCategoryClicked,
+    onSuccess: () => {
+      toast.success("Category added successfully!");
+      queryClient.invalidateQueries(["categories"]);
+    },
+    onError: () => {
+      toast.error("Failed to add category.");
+    },
   });
-
   const { mutate: deleteCategory } = useMutation({
     mutationFn: async (categoryId) => {
       await axiosInstance({
@@ -40,6 +41,8 @@ export const useCategories = () => {
         url: `/categories/${categoryId}`,
         withCredentials: true,
       });
+    },
+    onSuccess: () => {
       toast.success("Category deleted successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
@@ -61,6 +64,8 @@ export const useCategories = () => {
         withCredentials: true,
         data,
       });
+    },
+    onSuccess: () => {
       toast.success("Category updated successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
@@ -71,11 +76,8 @@ export const useCategories = () => {
 
   return {
     categories: categoryData,
-    categoryProducts: categoryProductData,
+    addCategory,
     updateCategory,
     deleteCategory,
-    setIsCategoryClicked,
-    setCategoryId,
-    isCategoryClicked,
   };
 };

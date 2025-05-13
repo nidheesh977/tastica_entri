@@ -2,10 +2,10 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 
-export const useProducts = () => {
+export const useInvoices = () => {
   const queryClient = useQueryClient();
   const { data } = useQuery({
-    queryKey: ["products"],
+    queryKey: ["invoices"],
     queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
@@ -16,12 +16,12 @@ export const useProducts = () => {
     },
   });
 
-  const { mutate: addProduct } = useMutation({
+  const { mutate: addProductCart } = useMutation({
     mutationFn: async ({productName, quantity, costPrice, sellingPrice, discount, category }) => {
       const data ={productName, quantity, costPrice, sellingPrice, discount, category }
       await axiosInstance({
         method: "POST",
-        url: "/product/create",
+        url: `/invoice/:id/products`, 
         withCredentials: true,
         data
       });

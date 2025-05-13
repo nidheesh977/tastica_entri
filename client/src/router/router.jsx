@@ -1,26 +1,27 @@
 import { createBrowserRouter } from "react-router-dom";
 import { ShopLayout } from "../layout/ShopLayout";
 import { ErrorPage } from "../pages/shared/ErrorPage/ErrorPage";
-import { ShopSignup } from "../pages/shop/ShopSignup/ShopSignup";
 import { AdminHome } from "../pages/admin/AdminHome/AdminHome";
-import { ShopLogin } from "../pages/shop/ShopLogin/ShopLogin";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
 import { ProtectedRouteShop } from "./ProtectedRouteShop";
 import { Home } from "../pages/shop/Home/Home";
 import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
-import { Login } from "../components/shared/Login/Login";
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
-import { SignupAndLogin } from "../pages/shared/SignupAndLogin/SignupAndLogin";
 import { AddNewCategory } from "../pages/shared/AddNewCategory/AddNewCategory";
 import { ListStaffs } from "../pages/admin/ListStaffs/ListStaffs";
 import { ListCustomers } from "../pages/shared/ListCustomers/ListCustomers";
 import { AddNewCustomer } from "../pages/shared/AddNewCustomer/AddNewCustomer";
 import { ListCategories } from "../pages/shared/ListCategories/ListCategories";
 import { ListProducts } from "../pages/shared/ListProducts/ListProducts";
+import { AdminLoginPage } from "../pages/admin/AdminLoginPage/AdminLoginPage";
+import { StaffSignupPage } from "../pages/staff/StaffSignupPage/StaffSignupPage";
+import { StaffLoginPage } from "../pages/staff/StaffLoginPage/StaffLoginPage";
+import { ShopLoginPage } from "../pages/shop/ShopLoginPage/ShopLoginPage";
+import { ShopSignupPage } from "../pages/shop/ShopSignupPage/ShopSignupPage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -29,8 +30,7 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <ShopLogin action="Login" /> },
-      // { path: "", element: <ListCategories /> },
+      { path: "", element: <ShopLoginPage /> },
 
       {
         path: "shop",
@@ -40,11 +40,11 @@ export const router = createBrowserRouter([
 
           {
             path: "admin/login",
-            element: <Login role="Admin" action="Login" />,
+            element: <AdminLoginPage />,
           },
           {
             path: "staff/login",
-            element: <Login role="Staff" action="Login" />,
+            element: <StaffLoginPage />,
           },
         ],
       },
@@ -64,11 +64,11 @@ export const router = createBrowserRouter([
           { path: "", element: <AdminHome /> },
           {
             path: "shop/signup",
-            element: <ShopSignup role="Admin" action="Signup" />,
+            element: <ShopSignupPage />,
           },
           {
             path: "signup",
-            element: <Login role="Admin" action="Signup" />,
+            // element: <Login role="Admin" action="Signup" />,
           },
           {
             path: "add/product",
@@ -88,7 +88,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "staff/signup",
-            element: <SignupAndLogin role="Staff" action="Signup" />,
+            element: <StaffSignupPage />,
           },
           {
             path: "staff/view",

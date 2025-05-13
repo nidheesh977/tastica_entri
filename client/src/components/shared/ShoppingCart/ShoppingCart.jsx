@@ -1,36 +1,129 @@
-import { MdAdd, MdRemove } from "react-icons/md";
+import { MdAdd, MdRemove, MdPersonAdd } from "react-icons/md";
 import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { MdArrowBack } from "react-icons/md";
 
 export const ShoppingCart = () => {
   const { customers } = useCustomers();
+  const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
+  const [isNewCustomer, setIsNewCustomer] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [mobile, setMobile] = useState("");
+  const { addCustomer } = useCustomers();
+
+  useEffect(() => {
+    const isTenDigits = /^\d{10}$/.test(searchQuery);
+
+    if (!isTenDigits) {
+      setIsNewCustomer(false);
+      return;
+    }
+    const matchedCustomer = customers?.find(
+      (customer) =>
+        customer?.phoneNumber?.toString().toLowerCase() ===
+        searchQuery.toLowerCase()
+    );
+
+    if (matchedCustomer) {
+      setName(matchedCustomer.customerName);
+      setMobile(matchedCustomer.phoneNumber);
+      setIsNewCustomer(false);
+    } else {
+      setName("");
+      setIsNewCustomer(true);
+    }
+  }, [searchQuery, customers]);
 
   return (
     <div className="p-5 border">
-      <div className="flex justify-between items-center">
-        <h1 className="font-semibold">Cart</h1>
-        <div>
-          <select
-            className="lg:w-52 h-10 rounded p-2 font-semibold border"
-            onChange={(e) => {
-              const selectedCustomer = customers?.find(
-                (c) => c._id === e.target.value,
-              );
-              setName(selectedCustomer?.customerName || "");
-            }}
-          >
-            <option value="">Select a customer</option>
-            {customers?.map((customer) => (
-              <option key={customer?._id} value={customer?._id}>
-                {customer?.phoneNumber}
-              </option>
-            ))}
-          </select>
+      {!isNewCustomer && name === "" && (
+        <div className="flex items-center gap-4  justify-between">
+          {!isNewCustomer && <h1 className="font-semibold">Cart</h1>}
+          <input
+            className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
+            type="text"
+            placeholder="Enter customer mobile number"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {!isNewCustomer && (
+            <MdArrowBack
+              size={20}
+              onClick={() => setIsNewCustomer(true)}
+              title="Back"
+              className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
+            ></MdArrowBack>
+          )}
         </div>
+      )}
 
-        <div>{name}</div>
+      {isNewCustomer && (
+        <div className="flex flex-col gap-2 my-2">
+          <div className="flex items-center justify-between my-2">
+            <p className="font-bold">Add New Customer</p>
+            {isNewCustomer && (
+              <div className="flex justify-between items-center mt-2">
+                <MdArrowBack
+                  onClick={() => setIsNewCustomer(false)}
+                  size={20}
+                  title="Back"
+                  className="bg-secondary cursor-pointer text-white p-1 rounded hover:bg-opacity-90"
+                ></MdArrowBack>
+              </div>
+            )}
+          </div>
+          <input
+            type="text"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            placeholder="Full Name"
+            className="rounded shadow outline-primary h-10 p-5"
+          />
+
+          <input
+            type="text"
+            value={phoneNumber}
+            onFocus={() => setPhoneNumber(searchQuery)}
+            placeholder="Mobile"
+            className="rounded shadow outline-primary h-10 p-5"
+          />
+
+          <button
+            onClick={() => {
+              addCustomer({ customerName, phoneNumber });
+              setCustomerName("");
+              setPhoneNumber("");
+              setIsNewCustomer(false);
+            }}
+            className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90"
+          >
+            <MdPersonAdd /> Add
+          </button>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between w-full">
+        {!isNewCustomer && name && <h1 className="font-semibold">Cart</h1>}
+        {!isNewCustomer && <div className="font-bold ">{name}</div>}
+        {!isNewCustomer && name !== "" && (
+          <div>
+            <p className="text-sm font-bold ">{mobile}</p>
+          </div>
+        )}
+        {!isNewCustomer && name && (
+          <MdArrowBack
+            size={20}
+            onClick={() => {
+              setIsNewCustomer(true);
+              setName("");
+            }}
+            title="Back"
+            className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
+          ></MdArrowBack>
+        )}
       </div>
 
       <ul className="flex flex-col mt-4 w-full">
