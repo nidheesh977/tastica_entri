@@ -1,6 +1,8 @@
 import AdminStaffModel from '../model/adminAndStaffModel.js';
+import categoryModel from '../model/categoryModel.js';
 import invoiceModel from '../model/invoiceModel.js';
 import productModel from '../model/productModel.js';
+import { calculateDiscount, toDecimal } from '../utils/calculateInvoice.js';
 import { generateInvoiceId } from '../utils/generateInvoiceId.js';
 
 
@@ -29,7 +31,7 @@ export const createNewInvoiceTab = async (req,res) => {
        }
 
         const newInvoice =  invoiceModel({
-            invoicenumber:invoiceId,
+            invoiceNumber:invoiceId,
             staff:staffName,
         });
 
@@ -37,115 +39,93 @@ export const createNewInvoiceTab = async (req,res) => {
 
         res.status(201).json({success:true,message:"Invoice created successfully",data:newInvoice})
     }catch(error){
-
+     return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+
+
+// add product to invoice
+
 
 export const addProductToInvoice = async (req,res) => {
     try{
         const {id} = req.params;
-        const {productId,quantity,productTotalPrice} = req.body;
+        const {productId,quantity} = req.body;
 
-        if( !quantity || !productTotalPrice){
-            return res.status(400).json({success:false,message:"All fields are required"})
+
+
+        if(!id){
+            return res.status(400).json({success:false,message:"Invoice ID not get"})
         }
 
-        if(isNaN(quantity) || isNaN(productTotalPrice)){
-            return res.status(400).json({success:false,message:"Quantity and product total price must be a number"})
+
+
+        const existInvoice = await invoiceModel.findById(id);
+
+         if(!existInvoice){
+            return res.status(400).json({success:false,message:"No Invoice"})
         }
 
-        const invoiceExist = await invoiceModel.findById(id);
-
-        if(!invoiceExist){
-            return res.status(400).json({success:false,message:"Invoice not found"})
-        }
-
-   let invoiceProductExist =  invoiceExist.products.find((item) => item.productId.toString() === productId)
-      
-        if(invoiceProductExist){
-            return res.status(400).json({success:false,message:"product already exist"})
-        }
-       
-        const productExist = await productModel.findById(productId);
-         
-        if(!productExist){
-            return res.status(400).json({success:false,message:"Product does not exist"})
-
-        }  
-
-        await productModel.findByIdAndUpdate(productId,{quantity: productExist.quantity - quantity},{new:true})
-
-        const productName = productExist.productName;
+        const productExist = await productModel.findById(productId)
 
        
+        const findCategory = await categoryModel.findOne({_id:productExist.category})
+        const getDiscount = findCategory.discountRate;
 
-        const productObject = {
-            productName: productName,
+        let findProduct = existInvoice.products.find(item => item.productId.toString() === productId)
+        
+        if(findProduct){
+            return res.status(400).json({success:false,message:"Product Already exist"})
+        }
+
+        findProduct = []
+                // To check the values in it;
+        let productPrice; 
+
+        if(productExist.costPrice > 0 ){
+            productPrice = productExist.costPrice + productExist.costPriceProfit
+        }else if(productExist.sellingPrice > 0 ){
+            productPrice = productExist.sellingPrice 
+        }
+
+       let productTotalPrice;
+
+        if(productExist.costPrice > 0 ){
+            productTotalPrice = productPrice * quantity
+        }else if(productExist.sellingPrice > 0 ){
+            productTotalPrice = productExist.sellingPrice * quantity
+        }
+           
+ 
+        const addProduct = {
+            productName:productExist.productName,
+            price:productPrice,
+            total:toDecimal(productTotalPrice),
+            discountFromProduct:productExist.discount,
+            discountFromCategory:getDiscount,
             quantity,
-            productTotalPrice,
-            productId
-        }
+            discountType:"percentage",
+            productId:productId 
+        } 
+      
+         const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,addProduct.discountFromProduct,addProduct.discountFromCategory)
+         const finalDiscountValue = parseFloat(existInvoice.totalDiscount) + totalDiscountAmount;
+         const subTotal =   parseFloat(existInvoice.subTotal) +  productTotalPrice ;
+         const subTotalReduceDiscount = finalDiscountValue > 0 ? subTotal - finalDiscountValue : subTotal;
 
-        invoiceExist.products.push(productObject)
-        invoiceExist.totalamount += productObject.productTotalPrice
-        await invoiceExist.save()
-
-        res.status(200).json({success:true,message:"Product added successfully",data:invoiceExist})
+        const newObject = {...addProduct,productDiscount:toDecimal(totalDiscountAmount)}
+         existInvoice.products.push(newObject);
+         existInvoice.set("totalDiscount",toDecimal(finalDiscountValue))
+         existInvoice.set("subTotal",toDecimal(subTotalReduceDiscount))
+         existInvoice.set("totalAmount",toDecimal(subTotalReduceDiscount))
+         
+        
+         await existInvoice.save();
+ 
+  
+        res.status(200).json({success:true,message:"product Added successfully",data:existInvoice})
     }catch(error){
         console.log(error)
-        return res.status(500).json({success:false,message:"internal server error"})
-
-    }
+       return res.status(500).json({ success: false, message: 'Internal server error' });
+    } 
 }
-
-export const removeProductFromInvoice = async(req,res) => {
-    try{
-        const {id,productId} = req.params;
-
-        const invoiceExist = await invoiceModel.findById(id);
-
-        if(!invoiceExist){
-            return res.status(400).json({success:false,message:"Invoice not found"})
-        }
-
-        const findProduct = invoiceExist.products.find((item) => item._id.toString() === productId.toString())
-
-        if(!findProduct){
-            return res.status(400).json({success:false,message:"Product not found in invoice"})
-        }
-
-        const findProductForUpdate = await productModel.findById(findProduct.productId)
-        
-        findProductForUpdate.quantity += findProduct.quantity
-        findProductForUpdate.save()
-
-        invoiceExist.totalamount -= findProduct.productTotalPrice;
-        await invoiceExist.save()
-   
-         const productRemove = await invoiceModel.findByIdAndUpdate(id,{$pull:{products:{_id:productId}}},{new:true})
-    
-        if(!productRemove){
-            return res.status(400).json({success:false,message:"Product not found"})
-        }
-
-        res.status(200).json({success:true,message:"Product removed successfully",})
-        
-    }catch(error){
-        console.log(error)
-       return res.status(500).json({success:false,message:"internal server error"})
-    }
-}
-
-
-export const saveInvoice = async (req,res) => {
-    try{
-
-      const {id} = req.params;
-
-      const invoiceSave = await invoiceModel.findByIdAndUpdate(id,{status:"saved"},{new:true})
-
-      res.status(200).json({success:true,message:"Invoice saved",data:invoiceSave})
-    }catch(error){
-        return res.status(500).json({success:false,message:"internal server error"})
-    }
-} 

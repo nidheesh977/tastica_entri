@@ -37,7 +37,7 @@ const categorySchema = new mongoose.Schema({
 
 },{timeStamps:true});
 
- categorySchema.index({categoryNmae:1,shop:1},{unique:true})
+ categorySchema.index({categoryName:1,shop:1},{unique:true})
 
 const categoryModel = mongoose.model('Category', categorySchema);
 
