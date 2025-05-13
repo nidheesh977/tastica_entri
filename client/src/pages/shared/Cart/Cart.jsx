@@ -13,16 +13,16 @@ export const Cart = () => {
           <ShoppingCart />
         </div>
 
-        <div className="col-span-12 md:col-span-2 border overflow-y-auto h-[670px]">
+        <div className="col-span-12 md:col-span-3 lg:col-span-2 border overflow-y-auto h-[670px]">
           <Category />
         </div>
 
-        <div className="col-span-12 md:col-span-5 lg:col-span-6">
+        <div className="col-span-12 md:col-span-4 lg:col-span-6">
           <div>
-            <Quantity />
+            {/* <Quantity /> */}
           </div>
 
-          <div className="flex gap-2 m-2 flex-wrap overflow-y-auto h-[590px] ">
+          <div className="flex gap-2 m-2 flex-wrap overflow-y-auto h-[680px] ">
             <Product />
           </div>
         </div>

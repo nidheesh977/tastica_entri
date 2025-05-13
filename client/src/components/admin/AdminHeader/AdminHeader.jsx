@@ -2,39 +2,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdLogout } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserShield } from "react-icons/fa";
-import { removeAdminData } from "../../../redux/features/authSlice";
-import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
+  const { logout } = useAdmins();
 
-  const adminLogout = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "POST",
-        url: "/admin/logout",
-        withCredentials: true,
-      });
-      toast.success("Logout success");
-      console.log(response);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
-  };
-
-  const handleOpenNewCartTab = () => {
-    const newTab = window.open("/admin/cart", "_blank");
+  const openNewInvoice = () => {
+    window.open("/admin/cart", "_blank");
   };
 
   return (
@@ -73,14 +57,18 @@ export const AdminHeader = () => {
                     onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
                   />
                 </li>
-                <li className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none">
-                  ORDERS
+                <li
+                  className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none"
+                  title="Add Custom Product"
+                >
+                  <FaRegStickyNote className="hover:text-blue-100" size={20} />
                 </li>
                 <li
-                  onClick={handleOpenNewCartTab}
-                  className="border md:border-none hover:text-blue-100 cursor-pointer font-bold text-3xl rounded-md md:py-0 mb-2"
+                  onClick={openNewInvoice}
+                  title="Create New Invoice"
+                  className="border md:border-none hover:text-blue-100 cursor-pointer font-bold  rounded-md md:py-0 mb-2"
                 >
-                  +
+                  <FaPlus size={20} />
                 </li>
               </>
             )}
@@ -91,11 +79,7 @@ export const AdminHeader = () => {
                 <MdLogout
                   title="Logout"
                   size={20}
-                  onClick={() => {
-                    dispatch(removeAdminData());
-                    adminLogout();
-                    navigate("/shop/admin/login");
-                  }}
+                  onClick={() => logout()}
                   className="cursor-pointer hover:text-secondary"
                 />
               )}

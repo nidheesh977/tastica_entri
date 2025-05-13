@@ -3,32 +3,21 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserTie } from "react-icons/fa";
+import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-import { removeStaffData } from "../../../redux/features/authSlice";
-import { useNavigate, useLocation } from "react-router-dom";
-import { axiosInstance } from "../../../config/axiosInstance";
-import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+import { saveSearchQuery } from "../../../redux/features/searchSlice";
+import { useStaffs } from "../../../hooks/useStaffs";
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const staffName = useSelector((state) => state?.auth?.staffData?.userName);
-
-  const staffLogout = async () => {
-    try {
-      const response = await axiosInstance({
-        method: "POST",
-        url: "/staff/logout",
-        withCredentials: true,
-      });
-      toast.success("Logout success");
-      console.log(response);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
-    }
+  const searchQuery = useSelector((state) => state.search);
+  const { logout } = useStaffs();
+  const openNewInvoice = () => {
+    window.open("/staff", "_blank");
   };
 
   return (
@@ -62,13 +51,22 @@ export const StaffHeader = () => {
                     className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
                     placeholder="Search Here"
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
                   />
                 </li>
-                <li className="border cursor-pointer rounded-md py-2 md:py-0   mb-2 md:border-none">
-                  ORDERS
+                <li
+                  className="border cursor-pointer rounded-md py-2 md:py-0   mb-2 md:border-none"
+                  title="Add Custom Product"
+                >
+                  <FaRegStickyNote className="hover:text-blue-100" size={20} />
                 </li>
-                <li className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 ">
-                  +
+                <li
+                  onClick={openNewInvoice}
+                  className="border md:border-none  cursor-pointer font-bold text-3xl rounded-md  md:py-0   mb-2 "
+                  title="Create New Invoice"
+                >
+                  <FaPlus size={20} />
                 </li>
               </>
             )}
@@ -77,13 +75,9 @@ export const StaffHeader = () => {
               {staffName && <FaUserTie size={20} />}
               {staffName && (
                 <MdLogout
-                title="Logout"
+                  title="Logout"
                   size={20}
-                  onClick={() => {
-                    dispatch(removeStaffData());
-                    staffLogout();
-                    navigate("/shop/staff/login");
-                  }}
+                  onClick={() => logout()}
                   className="cursor-pointer hover:text-secondary"
                 />
               )}

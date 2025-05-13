@@ -37,7 +37,7 @@ export const useStaffs = () => {
         email,
         phoneNumber,
         password,
-        confirmPassword
+        confirmPassword,
       );
       setError(error);
       const data = {
@@ -62,6 +62,25 @@ export const useStaffs = () => {
       dispatch(removeStaffData());
     },
   });
+
+  const { mutate: logout } = useMutation({
+    mutationFn: async () => {
+      await axiosInstance({
+        method: "POST",
+        url: "/staff/logout",
+        withCredentials: true,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Logout successful");
+      dispatch(removeStaffData());
+      navigate("/shop/staff/login");
+    },
+    onError: () => {
+      toast.error("Failed to logout!");
+    },
+  });
+
   const { mutate: login } = useMutation({
     mutationFn: async ({ phoneNumber, password }) => {
       const data = {
@@ -128,5 +147,5 @@ export const useStaffs = () => {
     },
   });
 
-  return { staffs: data, signup, login, updateStaff, deleteStaff };
+  return { staffs: data, signup, login, logout, updateStaff, deleteStaff };
 };

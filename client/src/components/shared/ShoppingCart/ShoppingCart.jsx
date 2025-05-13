@@ -3,18 +3,22 @@ import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
+import { useInvoices } from "../../../hooks/useInvoices";
+import { MdShoppingCart } from 'react-icons/md';
 
 export const ShoppingCart = () => {
-  const { customers } = useCustomers();
+  const { customers, addCustomer } = useCustomers();
+  const { createInvoice } = useInvoices();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
-  const { addCustomer } = useCustomers();
+  const [customerId, setCustomerId] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
-  useEffect(() => {
+  const findCustomer = () => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
 
     if (!isTenDigits) {
@@ -24,24 +28,33 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
-    if (matchedCustomer) {
+    if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
+      setCustomerId(matchedCustomer._id);
       setIsNewCustomer(false);
     } else {
       setName("");
       setIsNewCustomer(true);
     }
+  };
+
+  useEffect(() => {
+    findCustomer();
   }, [searchQuery, customers]);
+
+  useEffect(() => {
+    createInvoice(customerId);
+  }, [customerId]);
 
   return (
     <div className="p-5 border">
       {!isNewCustomer && name === "" && (
-        <div className="flex items-center gap-4  justify-between">
-          {!isNewCustomer && <h1 className="font-semibold">Cart</h1>}
+        <div className="flex items-center justify-between gap-4">
+          {!isNewCustomer && <h1 className="font-bold flex gap-2 text-xl items-center"><MdShoppingCart className="text-primary"  size={35}/> Cart</h1>}
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
@@ -49,14 +62,16 @@ export const ShoppingCart = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {!isNewCustomer && (
+          {/* {!isNewCustomer && (
             <MdArrowBack
               size={20}
-              onClick={() => setIsNewCustomer(true)}
+              onClick={() => {
+                setIsNewCustomer(false);
+              }}
               title="Back"
               className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
             ></MdArrowBack>
-          )}
+          )} */}
         </div>
       )}
 
@@ -66,12 +81,12 @@ export const ShoppingCart = () => {
             <p className="font-bold">Add New Customer</p>
             {isNewCustomer && (
               <div className="flex justify-between items-center mt-2">
-                <MdArrowBack
+                {/* <MdArrowBack
                   onClick={() => setIsNewCustomer(false)}
                   size={20}
                   title="Back"
                   className="bg-secondary cursor-pointer text-white p-1 rounded hover:bg-opacity-90"
-                ></MdArrowBack>
+                ></MdArrowBack> */}
               </div>
             )}
           </div>
@@ -86,6 +101,7 @@ export const ShoppingCart = () => {
           <input
             type="text"
             value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             onFocus={() => setPhoneNumber(searchQuery)}
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
@@ -93,10 +109,13 @@ export const ShoppingCart = () => {
 
           <button
             onClick={() => {
-              addCustomer({ customerName, phoneNumber });
+              addCustomer({
+                customerName,
+                phoneNumber,
+              });
+
               setCustomerName("");
               setPhoneNumber("");
-              setIsNewCustomer(false);
             }}
             className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90"
           >
@@ -106,24 +125,23 @@ export const ShoppingCart = () => {
       )}
 
       <div className="flex items-center justify-between w-full">
-        {!isNewCustomer && name && <h1 className="font-semibold">Cart</h1>}
+        {!isNewCustomer && name && <h1 className="font-bold flex gap-2 text-xl items-center"><MdShoppingCart className="text-primary"  size={35}/> Cart</h1>}
         {!isNewCustomer && <div className="font-bold ">{name}</div>}
         {!isNewCustomer && name !== "" && (
           <div>
             <p className="text-sm font-bold ">{mobile}</p>
           </div>
         )}
-        {!isNewCustomer && name && (
+        {/* {!isNewCustomer && name && (
           <MdArrowBack
             size={20}
             onClick={() => {
               setIsNewCustomer(true);
-              setName("");
             }}
             title="Back"
             className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
           ></MdArrowBack>
-        )}
+        )} */}
       </div>
 
       <ul className="flex flex-col mt-4 w-full">
@@ -132,16 +150,34 @@ export const ShoppingCart = () => {
             <p>onion</p>
           </div>
           <div className="flex items-center gap-2">
-            <div
-              onClick={() => decreaseQuantity(product.product_id)}
-              className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#BF3131] hover:bg-opacity-90"
-            >
-              <MdRemove />
+            {Number.isInteger(quantity) && (
+              <div
+                onClick={() => setQuantity((p) => Math.max(0, parseInt(p) - 1))}
+                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#BF3131] hover:bg-opacity-90"
+              >
+                <MdRemove />
+              </div>
+            )}
+            <div className="mx-2 text-center">
+              <input
+                className="w-14 h-8 text-center rounded"
+                value={quantity}
+                type="number"
+                step="any"
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  setQuantity(Number.isNaN(value) ? 0 : value);
+                }}
+              />
             </div>
-            <div>1</div>
-            <div className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#155E95] hover:bg-opacity-90">
-              <MdAdd />
-            </div>
+            {Number.isInteger(quantity) && (
+              <div
+                onClick={() => setQuantity((p) => parseInt(p) + 1)}
+                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#155E95] hover:bg-opacity-90"
+              >
+                <MdAdd />
+              </div>
+            )}
           </div>
           <div className="w-10 text-right">₹100</div>
         </li>
