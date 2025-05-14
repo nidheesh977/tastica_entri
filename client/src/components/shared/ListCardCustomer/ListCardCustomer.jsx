@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEventNote } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
@@ -96,7 +96,7 @@ export const ListCardCustomer = () => {
                         className="text-primary hover:text-blue-800 cursor-pointer"
                       />
                     ) : (
-                      <>
+                      <div className="flex gap-2 items-center mx-auto">
                         <FiEdit
                           title="Edit"
                           size={20}
@@ -113,7 +113,13 @@ export const ListCardCustomer = () => {
                           onClick={() => setAlertMessage(customer?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
-                      </>
+                        <MdEventNote
+                          title="Invoices"
+                          size={22}
+                          className="text-primary hover:text-blue-800 cursor-pointer"
+                        />
+
+                      </div>
                     )}
                     {alertMessage === customer?._id && (
                       <AlertBox
