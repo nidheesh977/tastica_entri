@@ -8,11 +8,12 @@ export const AddProductCard = () => {
   const { categories } = useCategories();
   const { addProduct } = useProducts();
   const [productName, setProductName] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [costPrice, setCostPrice] = useState(0);
-  const [sellingPrice, setSellingPrice] = useState(0);
-  const [discount, setDiscount] = useState(0);
+  const [quantity, setQuantity] = useState(null);
+  const [costPrice, setCostPrice] = useState(null);
+  const [sellingPrice, setSellingPrice] = useState(null);
+  const [discount, setDiscount] = useState(null);
   const [category, setCategory] = useState("");
+  const [discountType, setDiscountType] = useState("");
 
   return (
     <>
@@ -66,6 +67,13 @@ export const AddProductCard = () => {
             placeholder="Discount"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
+          <input
+            type="text"
+            value={discountType}
+            onChange={(e) => setDiscountType(e.target.value)}
+            placeholder="Discount Type"
+            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+          />
           <select
             value={category?._id}
             onChange={(e) => setCategory(e.target.value)}
@@ -89,13 +97,13 @@ export const AddProductCard = () => {
                 sellingPrice,
                 discount,
                 category,
+                discountType,
               });
               setProductName("");
-              setQuantity(0);
-              setCostPrice(0);
-              setSellingPrice(0);
-              setDiscount(0);
-              setCategory("");
+              setQuantity(null);
+              setCostPrice(null);
+              setSellingPrice(null);
+              setDiscount(null);
             }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">

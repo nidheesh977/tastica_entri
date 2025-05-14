@@ -8,7 +8,7 @@ import { MdShoppingCart } from "react-icons/md";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
-  const { createInvoice, invoiceData } = useInvoices();
+  const { createInvoice, addProductToInvoice } = useInvoices();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -50,10 +50,7 @@ export const ShoppingCart = () => {
     createInvoice(customerId);
   }, [customerId]);
 
-  if(invoiceData){
-    console.log(invoiceData);
-    
-  }
+  
 
   return (
     <div className="p-5 border">

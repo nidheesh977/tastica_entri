@@ -69,7 +69,7 @@ export const ListCardProduct = () => {
                   {product?.product_id}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === product._id ? (
+                  {editId === product?._id ? (
                     <input
                       value={editedTitle}
                       onChange={(e) => setEditedTitle(e.target.value)}
@@ -94,7 +94,7 @@ export const ListCardProduct = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    product?.quantity
+                    product?.quantity.$numberDecimal
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
@@ -182,7 +182,7 @@ export const ListCardProduct = () => {
                         message="Do you want to delete this product?"
                         onConfirm={() => {
                           setAlertMessage(null);
-                          deleteProduct(product._id);
+                          deleteProduct(product?._id);
                           setSearchQuery("");
                         }}
                         onCancel={() => setAlertMessage(null)}

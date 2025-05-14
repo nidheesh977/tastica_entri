@@ -1,10 +1,12 @@
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { saveInvoiceData } from "../redux/features/invoiceSlice";
 
 export const useInvoices = () => {
-  const [invoiceData, setInvoiceData] = useState(null);
+  const invoice = useSelector((state)=> state.invoice)
+  const dispatch = useDispatch()
   // const queryClient = useQueryClient();
   // const { data } = useQuery({
   //   queryKey: ["invoices"],
@@ -28,9 +30,28 @@ export const useInvoices = () => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      setInvoiceData(data)
+      dispatch(saveInvoiceData(data))
     },
   });
 
-  return { createInvoice, invoiceData };
+  const { mutate: addProductToInvoice } = useMutation({
+    
+    
+    mutationFn: async ({ productId, quantity }) => {
+      const data = { productId, quantity };
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/invoice/${invoice?._id}/products`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data
+    },
+    onSuccess:(data)=> {
+      console.log(data);
+      
+    }
+  });
+
+  return { createInvoice, addProductToInvoice };
 };

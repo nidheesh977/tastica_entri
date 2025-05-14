@@ -8,6 +8,7 @@ import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useAdmins } from "../../../hooks/useAdmins";
+import { Link } from "react-router-dom";
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +25,7 @@ export const AdminHeader = () => {
   return (
     <nav className="w-full">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-primary text-white font-bold md:px-10">
-        <div className="flex justify-between items-center w-full md:w-1/2">
+        <div className="flex justify-between items-center">
           <div
             onClick={() => dispatch(toggleSideBar())}
             className="cursor-pointer flex items-center gap-4"
@@ -41,14 +42,19 @@ export const AdminHeader = () => {
         </div>
 
         <div
-          className={`flex w-full md:w-auto md:block mt-14 md:mt-0 justify-end ${
+          className={`flex w-full md:w-auto md:block mt-2 md:mt-0 justify-end ${
             open ? "block" : "hidden"
           }`}
         >
-          <ul className="md:flex items-center justify-center font-thin gap-10 bg-primary p-5 md:p-0 w-full text-center">
-            {location.pathname === "/admin/cart" && (
+          <ul className="md:flex items-center md:ms-6 justify-center font-thin gap-10 bg-primary  w-full text-center">
+            {[
+              "/admin/cart",
+              "/admin/cart/one",
+              "/admin/cart/two",
+              "/admin/cart/three",
+            ].includes(location.pathname) && (
               <>
-                <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0">
+                <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0 w-full">
                   <input
                     className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
                     placeholder="Search Here"
@@ -57,33 +63,48 @@ export const AdminHeader = () => {
                     onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
                   />
                 </li>
-                <li
-                  className="border cursor-pointer rounded-md py-2 md:py-0 mb-2 md:border-none"
-                  title="Add Custom Product"
-                >
-                  <FaRegStickyNote className="hover:text-blue-100" size={20} />
-                </li>
-                <li
-                  onClick={openNewInvoice}
-                  title="Create New Invoice"
-                  className="border md:border-none hover:text-blue-100 cursor-pointer font-bold  rounded-md md:py-0 mb-2"
-                >
-                  <FaPlus size={20} />
-                </li>
               </>
             )}
-            <li className="flex items-center mb-2 gap-5">
-              {adminName && <p className="text-xl">{adminName}</p>}
-              {adminName && <FaUserShield size={20} />}
-              {adminName && (
-                <MdLogout
-                  title="Logout"
-                  size={20}
-                  onClick={() => logout()}
-                  className="cursor-pointer hover:text-secondary"
-                />
+            <ul className="flex  items-center gap-3">
+              {[
+                "/admin/cart",
+                "/admin/cart/one",
+                "/admin/cart/two",
+                "/admin/cart/three",
+              ].includes(location.pathname) && (
+                <ul className="flex justify-between gap-3">
+                  <li
+                    className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
+                    title="Add Custom Product"
+                  >
+                    <FaRegStickyNote
+                      className="hover:text-blue-100"
+                      size={20}
+                    />
+                  </li>
+                  <li
+                    onClick={openNewInvoice}
+                    title="Create New Invoice"
+                    className=" hover:text-blue-100 cursor-pointer font-bold mt-2 md:mt-0  rounded-md md:py-0 "
+                  >
+                    <FaPlus size={20} />
+                  </li>
+                </ul>
               )}
-            </li>
+
+              <li className="flex items-center mb-2 gap-5">
+                {adminName && <p className="text-xl">{adminName}</p>}
+                {adminName && <FaUserShield size={20} />}
+                {adminName && (
+                  <MdLogout
+                    title="Logout"
+                    size={20}
+                    onClick={() => logout()}
+                    className="cursor-pointer hover:text-secondary"
+                  />
+                )}
+              </li>
+            </ul>
           </ul>
         </div>
       </div>
