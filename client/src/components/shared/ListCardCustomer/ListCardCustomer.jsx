@@ -4,6 +4,7 @@ import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
+import { Link } from "react-router-dom";
 
 export const ListCardCustomer = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -113,11 +114,13 @@ export const ListCardCustomer = () => {
                           onClick={() => setAlertMessage(customer?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
+                        <Link to='/admin/customer/view/invoice'>
                         <MdEventNote
                           title="Invoices"
                           size={22}
                           className="text-primary hover:text-blue-800 cursor-pointer"
                         />
+                        </Link>
 
                       </div>
                     )}

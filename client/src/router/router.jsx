@@ -22,6 +22,7 @@ import { StaffSignupPage } from "../pages/staff/StaffSignupPage/StaffSignupPage"
 import { StaffLoginPage } from "../pages/staff/StaffLoginPage/StaffLoginPage";
 import { ShopLoginPage } from "../pages/shop/ShopLoginPage/ShopLoginPage";
 import { ShopSignupPage } from "../pages/shop/ShopSignupPage/ShopSignupPage";
+import {ListInvoices} from '../pages/shared/ListInvoices/ListInvoices'
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -97,6 +98,10 @@ export const router = createBrowserRouter([
           {
             path: "customer/view",
             element: <ListCustomers />,
+          },
+          {
+            path: "customer/view/invoice",
+            element: <ListInvoices />,
           },
           {
             path: "customer/add",

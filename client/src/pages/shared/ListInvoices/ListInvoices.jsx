@@ -1,7 +1,7 @@
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
 import { ListCardInvoice } from "../../../components/shared/ListCardInvoice/ListCardInvoice";
 
-export const ListCustomers = () => {
+export const ListInvoices = () => {
   return (
     <>
       <SideBar />

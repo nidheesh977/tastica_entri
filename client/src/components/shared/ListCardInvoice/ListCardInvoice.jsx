@@ -173,7 +173,7 @@ export const ListCardInvoice = () => {
               <th className="border border-primary px-4 py-2">
                 Total Discount
               </th>
-              <th className="border border-primary px-4 py-2">TotalAmount</th>
+              <th className="border border-primary px-4 py-2">Total Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -191,10 +191,10 @@ export const ListCardInvoice = () => {
                 <td className="border border-primary px-4 py-2">
                   {invoice?.customer}
                 </td>
-                <td className="border border-primary px-4 py-2 text-center">
+                <td className="border border-primary px-4 py-2">
                   {invoice?.totalDiscount}
                 </td>
-                <td className="border border-primary px-4 py-2 text-center">
+                <td className="border border-primary px-4 py-2">
                   {invoice?.totalAmount}
                 </td>
               </tr>
