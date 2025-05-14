@@ -1,4 +1,5 @@
 import productModel from "../../model/productModel.js";
+import { toDecimal } from "../../utils/calculateInvoice.js";
 
 
 
@@ -15,7 +16,7 @@ export const addCostPriceProfit = async (req,res) => {
             return res.status(400).json({success:false,message:"Product not found"})
         }
         
-        if(isNaN(costPriceProfit)){
+        if(typeof costPriceProfit === "string"){
             return res.status(400).json({success:false,message:"Cost price profit must be a number"})
         }
 
@@ -23,23 +24,23 @@ export const addCostPriceProfit = async (req,res) => {
             return res.status(400).json({success:false,message:"Cost price profit cannot be negative"})
         }
 
-        if(productExist.costPriceProfit > 0){ 
-            return res.status(400).json({success:false,message:"Cost price profit amount already exists"})
-        }
 
         if(productExist.costPrice === 0){
             return res.status(400).json({success:false,message:"Add amount to cost price first"})
         }
 
-        
+          let costPriceSum = parseFloat(productExist.costPrice) * (parseFloat(costPriceProfit) / 100 )
 
-        if(productExist.costPrice > 0){
-          const updatedProduct  = await productModel.findByIdAndUpdate(id,{
-                costPriceProfit,
-            },{new:true});
+          console.log(costPriceProfit)
+          console.log(costPriceSum)
+        // if(productExist.costPrice > 0){
+        //   const updatedProduct  = await productModel.findByIdAndUpdate(id,{
+        //          costPrice:toDecimal(costPriceSum),
+        //         costPriceProfit:toDecimal(costPriceProfit),
+        //     },{new:true});
 
-            res.status(200).json({success:true,message:"Cost price profit updated successfully",data:updatedProduct})
-        }
+        //     res.status(200).json({success:true,message:"Cost price profit updated successfully",data:updatedProduct})
+        // }
     
     }catch(error){
         console.log(error)

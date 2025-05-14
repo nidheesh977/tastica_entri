@@ -22,10 +22,10 @@ const invoiceSchema = new mongoose.Schema({
          {
             productName: {type:String,required:true},
             quantity: {type:Number,default:0},
-            price:{type:mongoose.Types.Decimal128},
-            total:{type:mongoose.Types.Decimal128,},
+            price:{type:Number,default:0},
+            total:{type:Number,default:0},
             productId:{type:mongoose.Schema.Types.ObjectId,ref:"Product", },
-            productDiscount:{type:mongoose.Types.Decimal128},
+            productDiscount:{type:Number,default:0},
             discountFromCategory:{type:Number,default: 0},
             discountFromProduct:{type:Number,default:0},
             discountType:{type:String,enum:["percentage","flat"],default:"percentage"}
@@ -34,11 +34,13 @@ const invoiceSchema = new mongoose.Schema({
         default:[]
     },
 
-    totalDiscount:{type:mongoose.Types.Decimal128,
+    totalDiscount:{
+        type:Number,
         default: 0.00
     },
-    subTotal:{ type:mongoose.Types.Decimal128,
-        default: 0.00
+    subTotal:{
+         type:Number,
+         default: 0.00
     },
 
    status:{
@@ -48,7 +50,7 @@ const invoiceSchema = new mongoose.Schema({
     },
 
     totalAmount:{
-       type:mongoose.Types.Decimal128,
+       type:Number,
         default: 0.00
     },
 

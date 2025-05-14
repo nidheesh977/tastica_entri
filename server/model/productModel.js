@@ -12,11 +12,11 @@ const productSchema = new mongoose.Schema({
         required:true,
     },
     quantity:{
-        type:mongoose.Types.Decimal128,
+        type:Number,
         required:true
     },
     costPrice:{
-        type:Number,
+         type:Number,
         default:0,
     },
     sellingPrice:{
@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     costPriceProfit:{
-        type:Number,
+       type:Number,
         default:0,
     },
 

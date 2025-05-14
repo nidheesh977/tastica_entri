@@ -161,7 +161,6 @@ export const checkAdminLogin = async (req, res) => {
 export const getStaffs = async (req, res) => {
   try {
     const shopId = req.shop.id;
-
     if (!shopId) {
       return res
         .status(400)

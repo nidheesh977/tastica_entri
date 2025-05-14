@@ -66,7 +66,7 @@ export const addProductToInvoice = async (req,res) => {
         const {invoiceId} = req.params;
         const {productId,quantity} = req.body;
 
-
+    
         if(!invoiceId){
             return res.status(400).json({success:false,message:"Invoice ID not get"})
         }
@@ -106,24 +106,19 @@ export const addProductToInvoice = async (req,res) => {
             productTotalPrice = productExist.sellingPrice * quantity
         }
            
-         let quantityFloatOrInt;
+         
+         
 
-         if(findCategory.categoryName === "vegetable" || "fruits"){
-            quantityFloatOrInt = parseFloat(quantity) 
-         }else{
-            quantityFloatOrInt = parseInt(quantity) 
-         }
-
-          await productModel.findByIdAndUpdate(productId,{quantity:toDecimal(productExist.quantity - quantityFloatOrInt)},{new:true})
+          await productModel.findByIdAndUpdate(productId,{quantity:productExist.quantity - quantity},{new:true})
  
 
         const addProduct = {
             productName:productExist.productName,
             price:productPrice,
-            total:toDecimal(productTotalPrice),
+            total:productTotalPrice,
             discountFromProduct:productExist.discount,
             discountFromCategory:getDiscount,
-            quantity:toDecimal(quantityFloatOrInt),
+            quantity:quantity,
             discountType:"percentage",
             productId:productId 
         } 
@@ -132,15 +127,15 @@ export const addProductToInvoice = async (req,res) => {
 
       
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,addProduct.discountFromProduct,addProduct.discountFromCategory)
-         const finalDiscountValue = parseFloat(existInvoice.totalDiscount) + totalDiscountAmount;
-         const subTotal =   parseFloat(existInvoice.subTotal) +  productTotalPrice ;
+         const finalDiscountValue = existInvoice.totalDiscount + totalDiscountAmount;
+         const subTotal =  existInvoice.subTotal +  productTotalPrice ;
          const subTotalReduceDiscount = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
 
-        const newObject = {...addProduct,productDiscount:toDecimal(totalDiscountAmount)}
+        const newObject = {...addProduct,productDiscount:parseFloat(totalDiscountAmount).toFixed(2)}
          existInvoice.products.push(newObject);
-         existInvoice.set("totalDiscount",toDecimal(finalDiscountValue))
-         existInvoice.set("subTotal",toDecimal(subTotalReduceDiscount))
-         existInvoice.set("totalAmount",toDecimal(subTotalReduceDiscount))
+         existInvoice.set("totalDiscount",parseFloat(finalDiscountValue).toFixed(2))
+         existInvoice.set("subTotal", parseFloat(subTotalReduceDiscount).toFixed(2))
+         existInvoice.set("totalAmount", parseFloat(subTotalReduceDiscount).toFixed(2))
          
         
          await existInvoice.save();
@@ -181,23 +176,23 @@ export const removeProductFromInvoice = async (req,res) => {
 
          const findProductFromProductModel = await productModel.findById(getProduct.productId);
 
-         const increaseQuantiy = parseFloat(findProductFromProductModel.quantity) + parseFloat(getProduct.quantity);
+         const increaseQuantiy = findProductFromProductModel.quantity + getProduct.quantity;
 
-         await productModel.findByIdAndUpdate(findProductFromProductModel._id,{quantity:toDecimal(increaseQuantiy)},{new:true})
+         await productModel.findByIdAndUpdate(findProductFromProductModel._id,{quantity:increaseQuantiy},{new:true})
             
-         const productTotal = parseFloat(getProduct.total || 0);
+         const productTotal = getProduct.total || 0;
 
-         const productDiscount = parseFloat(getProduct.productDiscount || 0);
+         const productDiscount = getProduct.productDiscount || 0;
 
-         const newSubTotal = parseFloat(findInvoice.subTotal )  + productDiscount - productTotal;
-         const newTotalDiscount = parseFloat(findInvoice.totalDiscount ) - productDiscount;
-         const newTotalAmount = parseFloat(findInvoice.totalAmount || 0)  + productDiscount - productTotal;
+         const newSubTotal = findInvoice.subTotal  + productDiscount - productTotal;
+         const newTotalDiscount = findInvoice.totalDiscount  - productDiscount;
+         const newTotalAmount = findInvoice.totalAmount  + productDiscount - productTotal;
 
             const removeProduct = await invoiceModel.findByIdAndUpdate(invoiceId,{
                 $pull: { products: { _id: productsId } },
-                totalDiscount: toDecimal(newTotalDiscount),
-                subTotal: toDecimal(newSubTotal),
-                totalAmount: toDecimal(newTotalAmount)
+                totalDiscount: newTotalDiscount,
+                subTotal: newSubTotal,
+                totalAmount: newTotalAmount
                 },{new:true});
 
                 res.status(200).json({success:true,message:"Product removed successfully",data:removeProduct})

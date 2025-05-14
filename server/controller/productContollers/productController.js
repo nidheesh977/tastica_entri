@@ -1,4 +1,5 @@
 import productModel from "../../model/productModel.js";
+import { toDecimal } from "../../utils/calculateInvoice.js";
 import { generateProductId } from "../../utils/generateProductId.js";
 import {
   newProductValidation,
@@ -15,7 +16,7 @@ export const createProduct = async (req, res) => {
             return res.status(400).json({success:false,message: error.details[0].message });
         }
 
-        const { productName, quantity, costPrice, sellingPrice, discount, category ,discountType } = value;
+        const { productName, quantity, costPrice, sellingPrice,costPriceProfit, discount, category ,discountType } = value;
         const {id,countryName,currencyCode} = req.shop;
 
      
@@ -36,7 +37,14 @@ export const createProduct = async (req, res) => {
           return res.status(400).json({success:false,message:"You can only add one price rate"})
       }
       
+       let costProfitSum
 
+       if(costPrice > 0){
+          costProfitSum = costPrice * (costPriceProfit / 100)
+       }
+
+        const checkCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
+       
         //  generating unique ID for customers 
              let productId;
        
@@ -47,20 +55,24 @@ export const createProduct = async (req, res) => {
        
        
 
-        const product = await productModel.create({
+        const newProduct = new productModel({
             product_id: productId,
             productName:lowerCaseproductName,
             quantity,
-            costPrice,
-            sellingPrice,
+            costPrice:toDecimal(checkCostPrice),
+            sellingPrice:toDecimal(sellingPrice),
             discount,
             category,
             shop:id,
             countryName,
             currencyCode,
-            discountType
+            discountType,
+            costPriceProfit:toDecimal(costPriceProfit)
         });
-        res.status(201).json({ success: true, message: "Product created successfully", data:product });
+
+        await newProduct.save()
+
+         res.status(201).json({ success: true, message: "Product created successfully", data:newProduct });
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: error.message });

@@ -1,4 +1,5 @@
 import productModel from "../../model/productModel.js";
+import { toDecimal } from "../../utils/calculateInvoice.js";
 
 
 export const addCostPrice = async (req,res) => {
@@ -15,22 +16,19 @@ export const addCostPrice = async (req,res) => {
         if(costPrice < 0){
             return res.status(400).json({success:false,message:"Cost price cannot be negative"})
         }
-
-        if(typeof costPriceProfit === "string"){
-            return res.status(400).json({success:false,message:"Cost price must be a number"})
-        }
-
-        if(productExist.costPrice > 0){
-            return res.status(400).json({success:false,message:"Cost price already exists"})
+        if(costPrice === 0){
+            return res.status(400).json({success:false,message:"Cost price cannot be 0"})
         }
 
         if(productExist.sellingPrice > 0){
             return res.status(400).json({success:false,message:"selling price has already been set"})
         }
 
-        const updatedProduct = await productModel.findByIdAndUpdate(id,{costPrice},{new:true})
+        let costPriceProfitSum = costPrice * (parseFloat(productExist.costPriceProfit) / 100 )
 
-        res.status(200).json({success:true,message:"Cost price updated successfully",data:updatedProduct})
+         const updatedProduct = await productModel.findByIdAndUpdate(id,{costPrice:toDecimal(costPrice + costPriceProfitSum)},{new:true})
+
+         res.status(200).json({success:true,message:"Cost price updated successfully",data:updatedProduct})
     }catch(error){      
         return res.status(500).json({success:false,message:"internal server error"})
     }

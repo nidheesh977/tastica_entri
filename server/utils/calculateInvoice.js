@@ -18,29 +18,29 @@ let discountAmount;
         let addcategory = price * (categoryDiscount / 100)
           discountAmount += addcategory
         }else if(discountType === "flat"){
-          discountAmount = parseFloat(productDiscount) 
-        let addcategory = parseFloat(categoryDiscount)
+          discountAmount = productDiscount 
+        let addcategory = categoryDiscount
           discountAmount += addcategory
         }    
     }else if(productDiscount > 0){
          if(discountType === "percentage"){
          discountAmount = price * (productDiscount / 100)     
         }else if(discountType === "flat"){
-          discountAmount = parseFloat(productDiscount)      
+          discountAmount = productDiscount     
         }
     }else if(categoryDiscount > 0){
          if(discountType === "percentage"){     
          discountAmount = price * (categoryDiscount / 100)
         }else if(discountType === "flat"){
-        discountAmount = parseFloat(categoryDiscount)  
+        discountAmount = categoryDiscount 
         }
-    }else if(parseInt(productDiscount) === 0 && categoryDiscount === 0 ){
+    }else if(productDiscount === 0 && categoryDiscount === 0 ){
         if(discountType === "percentage"){
-          discountAmount  = parseFloat(productDiscount) 
-          discountAmount = parseFloat(categoryDiscount)
+          discountAmount  = productDiscount 
+          discountAmount = categoryDiscount
         }else if(discountType === "flat"){
-          discountAmount  = parseFloat(productDiscount) 
-          discountAmount = parseFloat(categoryDiscount)  
+          discountAmount  = productDiscount 
+          discountAmount = categoryDiscount  
         }  
     } 
 

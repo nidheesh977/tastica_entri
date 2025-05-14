@@ -181,7 +181,7 @@ export const shopLoginValidation = Joi.object({
 }) 
 
 export const newProductValidation = Joi.object({
-    productName: Joi.string().min(3).max(30).required().messages({
+    productName: Joi.string().min(3).max(100).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
         'string.empty': 'Product name cannot be empty',
@@ -220,6 +220,10 @@ export const newProductValidation = Joi.object({
         'string.empty': 'Discount type cannot be empty',
         'string.min': 'Discount type must be at least 3 characters long',
         'string.max': 'Discount type must be at most 20 characters long',   
+    }),
+    costPriceProfit:Joi.number().integer().min(0).message({
+         'number.base': 'Cost price must be a number',
+         'number.empty': 'Cost price cannot be empty',
     })
 
     
