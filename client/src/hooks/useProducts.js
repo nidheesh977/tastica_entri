@@ -17,13 +17,27 @@ export const useProducts = () => {
   });
 
   const { mutate: addProduct } = useMutation({
-    mutationFn: async ({productName, quantity, costPrice, sellingPrice, discount, category }) => {
-      const data ={productName, quantity, costPrice, sellingPrice, discount, category }
+    mutationFn: async ({
+      productName,
+      quantity,
+      costPrice,
+      sellingPrice,
+      discount,
+      category,
+    }) => {
+      const data = {
+        productName,
+        quantity,
+        costPrice,
+        sellingPrice,
+        discount,
+        category,
+      };
       await axiosInstance({
         method: "POST",
         url: "/product/create",
         withCredentials: true,
-        data
+        data,
       });
     },
     onSuccess: () => {

@@ -33,5 +33,23 @@ export const useAdmins = () => {
     },
   });
 
-  return { login };
+  const { mutate: logout } = useMutation({
+    mutationFn: async () => {
+      await axiosInstance({
+        method: "POST",
+        url: "/admin/logout",
+        withCredentials: true,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Logout success.");
+      dispatch(removeAdminData());
+      navigate("/shop/admin/login");
+    },
+    onError: () => {
+      toast.error("Failed to logout!");
+    },
+  });
+
+  return { login, logout };
 };

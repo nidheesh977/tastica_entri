@@ -77,15 +77,19 @@ export const SideBar = () => {
           Add Customer
         </li>
 
-        <li
-          onClick={() =>
-            handleSideBar(admin ? "/admin/product/view" : "/staff/product/view")
-          }
-          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
-        >
-          <FaBoxOpen />
-          Products
-        </li>
+        {admin && (
+          <li
+            onClick={() =>
+              handleSideBar(
+                admin ? "/admin/product/view" : "/staff/product/view"
+              )
+            }
+            className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+          >
+            <FaBoxOpen />
+            Products
+          </li>
+        )}
         <li
           onClick={() =>
             handleSideBar(admin ? "/admin/add/product" : "/staff/add/product")
