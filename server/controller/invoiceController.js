@@ -63,15 +63,15 @@ export const createNewInvoiceTab = async (req,res) => {
 
 export const addProductToInvoice = async (req,res) => {
     try{
-        const {id} = req.params;
+        const {invoiceId} = req.params;
         const {productId,quantity} = req.body;
 
 
-        if(!id){
+        if(!invoiceId){
             return res.status(400).json({success:false,message:"Invoice ID not get"})
         }
 
-        const existInvoice = await invoiceModel.findById(id);
+        const existInvoice = await invoiceModel.findById(invoiceId);
 
          if(!existInvoice){
             return res.status(400).json({success:false,message:"No Invoice"})
@@ -216,7 +216,7 @@ export const removeProductFromInvoice = async (req,res) => {
                 return res.status(400).json({success:false,message:"Invoice ID not get"})
               }
 
-                const findInvoice = await invoiceModel.findById(invoiceId).populate('customer').populate('products.productId');
+                const findInvoice = await invoiceModel.findById(invoiceId).populate('customer');
 
                 if(!findInvoice){
                     return res.status(400).json({success:false,message:"No Invoice"})

@@ -131,12 +131,17 @@
 **URL:**`/api/v1/invoice/:customerId`
 
 - 📃📦 add products to invoice<br>
-**method:**`PUT`<br>
-**URL:**`/api/v1/invoice/:id/products`
+**method:**`POST`<br>
+**URL:**`/api/v1/invoice/:invoiceId/products`
 
 - 📃📦🗑 remove product from invoice<br>
-**method:**`PATCH`<br>
-**URL:**`/api/v1/invoice/:id/products/:productId`
+**method:**`PUT`<br>
+**URL:**`/api/v1/invoice/:invoiceId/product/:productsId`
+
+- 📃📦🗑 get  invoice<br>
+**method:**`GET`<br>
+**URL:**`/api/v1/invoice/:invoiceId`
+
 
 - 📃 invoice save <br>
 **method**`PATCH`<br>
