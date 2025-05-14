@@ -8,10 +8,10 @@ export const AddProductCard = () => {
   const { categories } = useCategories();
   const { addProduct } = useProducts();
   const [productName, setProductName] = useState("");
-  const [quantity, setQuantity] = useState(null);
-  const [costPrice, setCostPrice] = useState(null);
-  const [sellingPrice, setSellingPrice] = useState(null);
-  const [discount, setDiscount] = useState(null);
+  const [quantity, setQuantity] = useState("");
+  const [costPrice, setCostPrice] = useState("");
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [discountType, setDiscountType] = useState("");
 
@@ -92,18 +92,18 @@ export const AddProductCard = () => {
             onClick={() => {
               addProduct({
                 productName,
-                quantity,
-                costPrice,
-                sellingPrice,
-                discount,
+                quantity: Number(quantity),
+                costPrice: Number(costPrice),
+                sellingPrice: Number(sellingPrice),
+                discount: Number(discount),
                 category,
                 discountType,
               });
               setProductName("");
-              setQuantity(null);
-              setCostPrice(null);
-              setSellingPrice(null);
-              setDiscount(null);
+              setQuantity("");
+              setCostPrice("");
+              setSellingPrice("");
+              setDiscount("");
             }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
