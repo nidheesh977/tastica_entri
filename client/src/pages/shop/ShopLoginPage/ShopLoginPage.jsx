@@ -1,6 +1,6 @@
 import { ShopLogin } from "../../../components/shop/ShopLogin/ShopLogin";
 
-export const ShopLoginPage = ({ action = "Login" }) => {
+export const ShopLoginPage = () => {
   return (
     <div>
       <ShopLogin />

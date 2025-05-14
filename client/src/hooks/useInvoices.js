@@ -1,8 +1,10 @@
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
+import { useState } from "react";
 
 export const useInvoices = () => {
+  const [invoiceData, setInvoiceData] = useState(null);
   // const queryClient = useQueryClient();
   // const { data } = useQuery({
   //   queryKey: ["invoices"],
@@ -25,10 +27,10 @@ export const useInvoices = () => {
       });
       return response?.data?.data;
     },
+    onSuccess: (data) => {
+      setInvoiceData(data)
+    },
   });
-  
-  
-  
 
-  return { createInvoice };
+  return { createInvoice, invoiceData };
 };

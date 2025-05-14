@@ -4,11 +4,11 @@ import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart } from 'react-icons/md';
+import { MdShoppingCart } from "react-icons/md";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
-  const { createInvoice } = useInvoices();
+  const { createInvoice, invoiceData } = useInvoices();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -28,7 +28,7 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -50,11 +50,20 @@ export const ShoppingCart = () => {
     createInvoice(customerId);
   }, [customerId]);
 
+  if(invoiceData){
+    console.log(invoiceData);
+    
+  }
+
   return (
     <div className="p-5 border">
       {!isNewCustomer && name === "" && (
         <div className="flex items-center justify-between gap-4">
-          {!isNewCustomer && <h1 className="font-bold flex gap-2 text-xl items-center"><MdShoppingCart className="text-primary"  size={35}/> Cart</h1>}
+          {!isNewCustomer && (
+            <h1 className="font-bold flex gap-2 text-xl items-center">
+              <MdShoppingCart className="text-primary" size={35} /> Cart
+            </h1>
+          )}
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
@@ -125,7 +134,11 @@ export const ShoppingCart = () => {
       )}
 
       <div className="flex items-center justify-between w-full">
-        {!isNewCustomer && name && <h1 className="font-bold flex gap-2 text-xl items-center"><MdShoppingCart className="text-primary"  size={35}/> Cart</h1>}
+        {!isNewCustomer && name && (
+          <h1 className="font-bold flex gap-2 text-xl items-center">
+            <MdShoppingCart className="text-primary" size={35} /> Cart
+          </h1>
+        )}
         {!isNewCustomer && <div className="font-bold ">{name}</div>}
         {!isNewCustomer && name !== "" && (
           <div>
