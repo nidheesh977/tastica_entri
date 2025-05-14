@@ -94,7 +94,7 @@ export const ListCardProduct = () => {
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    product?.quantity.$numberDecimal
+                    product?.quantity
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
