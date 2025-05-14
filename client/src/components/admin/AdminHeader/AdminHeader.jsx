@@ -47,12 +47,7 @@ export const AdminHeader = () => {
           }`}
         >
           <ul className="md:flex items-center md:ms-6 justify-center font-thin gap-10 bg-primary  w-full text-center">
-            {[
-              "/admin/cart",
-              "/admin/cart/one",
-              "/admin/cart/two",
-              "/admin/cart/three",
-            ].includes(location.pathname) && (
+            {location.pathname === "/admin/cart" && (
               <>
                 <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0 w-full">
                   <input
@@ -66,12 +61,7 @@ export const AdminHeader = () => {
               </>
             )}
             <ul className="flex  items-center gap-3">
-              {[
-                "/admin/cart",
-                "/admin/cart/one",
-                "/admin/cart/two",
-                "/admin/cart/three",
-              ].includes(location.pathname) && (
+              {location.pathname === "/admin/cart" && (
                 <ul className="flex justify-between gap-3">
                   <li
                     className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
