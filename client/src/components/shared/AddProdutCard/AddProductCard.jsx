@@ -14,6 +14,8 @@ export const AddProductCard = () => {
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [discountType, setDiscountType] = useState("");
+  
+  console.log(discountType)
 
   return (
     <>
@@ -22,7 +24,7 @@ export const AddProductCard = () => {
         <form
           onSubmit={(e) => e.preventDefault()}
           className="mx-2
-                my-10  max-w-[500px] py-10 p-4  md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
+                my-10  max-w-[500px] p-4  md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
         >
           <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">
             Add Product
@@ -67,13 +69,31 @@ export const AddProductCard = () => {
             placeholder="Discount"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
           />
-          <input
-            type="text"
-            value={discountType}
-            onChange={(e) => setDiscountType(e.target.value)}
-            placeholder="Discount Type"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
-          />
+          <div className="flex justify-between p-4 my-1 w-full bg-white shadow-2xl">
+            <span className="text-gray-400">Discount Type</span>
+            <span className="flex gap-5">
+            <span className="flex gap-1">
+               %
+              <input
+                type="radio"
+                value="percentage"
+                name="discountType"
+                className="accent-primary"
+                onChange={(e)=> setDiscountType(e.target.value)}
+              />
+            </span>
+            <span className="flex gap-1">
+            MVR
+              <input
+                type="radio"
+                value="flat"
+                name="discountType"
+                className="accent-primary"
+                onChange={(e)=> setDiscountType(e.target.value)}
+              />
+            </span>
+            </span>
+          </div>
           <select
             value={category?._id}
             onChange={(e) => setCategory(e.target.value)}

@@ -10,7 +10,7 @@ export const Product = () => {
 
   const { products } = useProducts();
   let categoryProducts = products?.filter(
-    (product) => product?.category?._id === categoryId
+    (product) => product?.category?._id === categoryId,
   );
 
   const searchQuery = useSelector((state) => state.search);
@@ -41,7 +41,7 @@ export const Product = () => {
 
             addProductToInvoice({
               productId: product?._id,
-              quantity: product?.quantity.$numberDecimal,
+              quantity: product?.quantity,
             });
           }}
           className="bg-[#E8F9FF] w-full md:w-56 h-20 text-sm rounded border flex flex-col justify-between border-black  cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
