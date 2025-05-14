@@ -59,15 +59,15 @@ export const createProduct = async (req, res) => {
             product_id: productId,
             productName:lowerCaseproductName,
             quantity,
-            costPrice:toDecimal(checkCostPrice),
-            sellingPrice:toDecimal(sellingPrice),
+            costPrice:checkCostPrice,
+            sellingPrice:sellingPrice,
             discount,
             category,
             shop:id,
             countryName,
             currencyCode,
             discountType,
-            costPriceProfit:toDecimal(costPriceProfit)
+            costPriceProfit:costPriceProfit
         });
 
         await newProduct.save()
