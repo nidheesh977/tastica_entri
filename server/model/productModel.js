@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
         required:true,
     },
     quantity:{
-        type:Number,
+        type:mongoose.Types.Decimal128,
         required:true
     },
     costPrice:{
@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema({
     sellingPrice:{
         type:Number,
         default:0,
+    },
+    discountType:{
+        type:String,
+        default:"percentage"
     },
     discount:{
         type:Number,

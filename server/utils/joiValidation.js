@@ -214,6 +214,12 @@ export const newProductValidation = Joi.object({
         'string.base': 'Category must be a string',
         'string.empty': 'Category cannot be empty',
         'string.min': 'Category must be at least 24 characters long',  
+    }),
+    discountType:Joi.string().min(3).max(20).messages({
+        'string.base': 'Discount type must be a string',
+        'string.empty': 'Discount type cannot be empty',
+        'string.min': 'Discount type must be at least 3 characters long',
+        'string.max': 'Discount type must be at most 20 characters long',   
     })
 
     
@@ -249,6 +255,12 @@ export const updateProductValidation = Joi.object({
         'string.base': 'Category must be a string',
         'string.empty': 'Category cannot be empty',
         'string.min': 'Category must be at least 24 characters long',  
+    }),
+     discountType:Joi.string().min(3).max(20).messages({
+        'string.base': 'Discount type must be a string',
+        'string.empty': 'Discount type cannot be empty',
+        'string.min': 'Discount type must be at least 3 characters long',
+        'string.max': 'Discount type must be at most 20 characters long',   
     })
 })
 

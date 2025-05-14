@@ -15,7 +15,7 @@ export const createProduct = async (req, res) => {
             return res.status(400).json({success:false,message: error.details[0].message });
         }
 
-        const { productName, quantity, costPrice, sellingPrice, discount, category } = value;
+        const { productName, quantity, costPrice, sellingPrice, discount, category ,discountType } = value;
         const {id,countryName,currencyCode} = req.shop;
 
      
@@ -57,7 +57,8 @@ export const createProduct = async (req, res) => {
             category,
             shop:id,
             countryName,
-            currencyCode
+            currencyCode,
+            discountType
         });
         res.status(201).json({ success: true, message: "Product created successfully", data:product });
     } catch (error) {
@@ -112,6 +113,7 @@ export const updateProduct = async (req, res) => {
       sellingPrice,
       discount,
       category,
+      discountType
     } = value;
 
     if (sellingPrice === 0 && costPrice === 0) {
@@ -146,6 +148,7 @@ export const updateProduct = async (req, res) => {
         sellingPrice,
         discount,
         category,
+        discountType
       },
       { new: true }
     );
