@@ -3,7 +3,7 @@ import categoryModel from '../model/categoryModel.js';
 import customerModel from '../model/customerModel.js';
 import invoiceModel from '../model/invoiceModel.js';
 import productModel from '../model/productModel.js';
-import { calculateDiscount, toDecimal } from '../utils/calculateInvoice.js';
+import { calculateDiscount} from '../utils/calculateInvoice.js';
 import { generateInvoiceId } from '../utils/generateInvoiceId.js';
 
 
@@ -71,14 +71,24 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Invoice ID not get"})
         }
 
+        
+        if(!productId){
+            return res.status(400).json({success:false,message:"Product ID not get"})
+        }
+
         const existInvoice = await invoiceModel.findById(invoiceId);
 
          if(!existInvoice){
             return res.status(400).json({success:false,message:"No Invoice"})
-        }
+        } 
 
         const productExist = await productModel.findById(productId)
+
+        if(!productExist){
+            return res.status(400).json({success:false,message:"Product not exist"})
+        }
      
+        // for get gategory discount
         const findCategory = await categoryModel.findOne({_id:productExist.category})
         const getDiscount = findCategory.discountRate;
 
