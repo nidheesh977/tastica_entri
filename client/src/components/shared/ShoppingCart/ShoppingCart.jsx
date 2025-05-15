@@ -6,6 +6,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { AlertBox } from "../AlertBox/AlertBox";
+import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
@@ -20,8 +21,12 @@ export const ShoppingCart = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
-  const [quantities, setQuantities] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
+  const [receivedAmount, setReceivedAmount] = useState("");
+  const [payMode, setPayMode] = useState(null);
+  const [showPayDialog, setShowPayDialog] = useState(false);
 
   const findCustomer = () => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
@@ -45,6 +50,20 @@ export const ShoppingCart = () => {
       setName("");
       setIsNewCustomer(true);
     }
+  };
+
+  const handlePayNow = () => {
+    setPayMode("cash");
+    setShowPayDialog(false);
+  };
+
+  const handleOnlinePay = () => {
+    setPayMode("online");
+    setShowPayDialog(false);
+  };
+
+  const handleCancel = () => {
+    setShowPayDialog(false);
   };
 
   useEffect(() => {
@@ -129,7 +148,7 @@ export const ShoppingCart = () => {
         )}
       </div>
 
-      <ul className="flex flex-col mt-4 h-[387px] overflow-y-auto w-full">
+      <ul className="flex flex-col mt-4 h-[382px] overflow-y-auto w-full">
         {products?.map((product, index) => (
           <li
             key={product?._id}
@@ -152,19 +171,26 @@ export const ShoppingCart = () => {
             </span>
             <div className="flex items-center gap-2 col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <input
-                value={quantities[product?._id] || 1}
-                className="w-14 h-8 text-center rounded bg-tertiary "
+                value={selectedProductId === product._id ? quantity : 1}
                 type="number"
+                className="w-14 h-8 text-center rounded bg-tertiary"
+                onFocus={() => {
+                  setSelectedProductId(product._id);
+                  setQuantity(1);
+                }}
                 onChange={(e) => {
-                  const newQty = Number(e.target.value);
-                  setQuantities((prev) => ({
-                    ...prev,
-                    [product._id]: newQty,
-                  }));
-                  addProductToInvoice({
-                    productId: product._id,
-                    quantity: newQty,
-                  });
+                  const value = e.target.value;
+                  const newQty = value === "" ? "" : Number(value);
+
+                  if (selectedProductId === product._id) {
+                    setQuantity(newQty);
+                    if (newQty !== "") {
+                      addProductToInvoice({
+                        productId: product._id,
+                        quantity: newQty,
+                      });
+                    }
+                  }
                 }}
               />
 
@@ -183,7 +209,7 @@ export const ShoppingCart = () => {
       <div className="mt-2 w-full font-bold">
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Subtotal</div>
-          <div>MVR{invoice?.subTotal}</div>
+          <div>MVR{Math.round(invoice?.subTotal) || 0}</div>
         </div>
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Tax</div>
@@ -191,18 +217,34 @@ export const ShoppingCart = () => {
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
-          <div>MVR{invoice?.totalAmount}</div>
+          <div>MVR{Math.round(invoice?.totalAmount) || 0}</div>
         </div>
       </div>
 
       <div className="flex gap-2 mt-2 justify-between">
-        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#BF3131] hover:bg-opacity-90 text-white rounded-lg">
+        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg">
           <FaSave /> Save
         </button>
-        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-[#155E95] hover:bg-opacity-90 text-white rounded-lg">
+
+        <button
+          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-primary hover:bg-opacity-90 text-white rounded-lg"
+          onClick={() => setShowPayDialog(true)}
+        >
           <FaMoneyCheckAlt /> Pay
         </button>
       </div>
+
+      {showPayDialog && (
+        <PayDialogueBox
+          message={`Total payable amount: MVR${
+            Math.round(invoice?.totalAmount) || 0
+          }`}
+          onPayNow={handlePayNow}
+          onOnlinePay={handleOnlinePay}
+          onCancel={handleCancel}
+          invoice={invoice}
+        />
+      )}
     </div>
   );
 };
