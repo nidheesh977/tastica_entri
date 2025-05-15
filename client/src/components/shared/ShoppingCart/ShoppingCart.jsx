@@ -9,7 +9,8 @@ import { AlertBox } from "../AlertBox/AlertBox";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
-  const { createInvoice, removeProductFromInvoice } = useInvoices();
+  const { createInvoice, removeProductFromInvoice, addProductToInvoice } =
+    useInvoices();
   const products = useSelector((state) => state?.invoice?.products);
   const invoice = useSelector((state) => state?.invoice);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,12 +52,13 @@ export const ShoppingCart = () => {
   }, [searchQuery, customers]);
 
   useEffect(() => {
-    createInvoice(customerId);
+    if (customerId) {
+      createInvoice(customerId);
+    }
   }, [customerId]);
 
   return (
     <div className="p-5 border">
-      
       {!isNewCustomer && name === "" && (
         <div className="flex items-center justify-between gap-4">
           {!isNewCustomer && (
@@ -128,25 +130,22 @@ export const ShoppingCart = () => {
       </div>
 
       <ul className="flex flex-col mt-4 h-[387px] overflow-y-auto w-full">
-
         {products?.map((product, index) => (
-          
           <li
             key={product?._id}
             className="grid grid-cols-12 border my-1 p-2 items-center"
           >
             {alertMessage === product._id && (
-                <AlertBox
-               
-                  message="Do you want to remove this product from the cart?"
-                  onConfirm={() => {
-                    setAlertMessage(null);
+              <AlertBox
+                message="Do you want to remove this product from the cart?"
+                onConfirm={() => {
+                  setAlertMessage(null);
 
-                    removeProductFromInvoice(product?._id);
-                  }}
-                  onCancel={() => setAlertMessage(null)}
-                />
-              )}
+                  removeProductFromInvoice(product?._id);
+                }}
+                onCancel={() => setAlertMessage(null)}
+              />
+            )}
             <span className=" col-span-12 xl:col-span-6 my-1 xl:my-0 text-center xl:text-start">
               <span className="me-2 font-semibold">{index + 1}.</span>
               {product?.productName}
@@ -157,18 +156,22 @@ export const ShoppingCart = () => {
                 className="w-14 h-8 text-center rounded bg-tertiary "
                 type="number"
                 onChange={(e) => {
+                  const newQty = Number(e.target.value);
                   setQuantities((prev) => ({
                     ...prev,
-                    [product._id]: e.target.value,
+                    [product._id]: newQty,
                   }));
+                  addProductToInvoice({
+                    productId: product._id,
+                    quantity: newQty,
+                  });
                 }}
               />
-              
+
               <FaTrash
                 className="text-secondary hover:text-red-600 cursor-pointer"
                 onClick={() => setAlertMessage(product._id)}
               />
-              
             </div>
             <span className=" col-span-12 xl:col-span-2 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
               MVR{product?.price}
