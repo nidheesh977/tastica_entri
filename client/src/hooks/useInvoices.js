@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveInvoiceData } from "../redux/features/invoiceSlice";
 
 export const useInvoices = () => {
-  const invoice = useSelector((state)=> state.invoice)
-  const dispatch = useDispatch()
+  const invoice = useSelector((state) => state.invoice);
+  const dispatch = useDispatch();
   // const queryClient = useQueryClient();
   // const { data } = useQuery({
   //   queryKey: ["invoices"],
@@ -30,13 +30,11 @@ export const useInvoices = () => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      dispatch(saveInvoiceData(data))
+      dispatch(saveInvoiceData(data));
     },
   });
 
   const { mutate: addProductToInvoice } = useMutation({
-    
-    
     mutationFn: async ({ productId, quantity }) => {
       const data = { productId, quantity };
       const response = await axiosInstance({
@@ -45,12 +43,11 @@ export const useInvoices = () => {
         withCredentials: true,
         data,
       });
-      return response?.data?.data
+      return response?.data?.data;
     },
-    onSuccess:(data)=> {
-      console.log(data);
-      
-    }
+    onSuccess: (data) => {
+      dispatch(saveInvoiceData(data));
+    },
   });
 
   return { createInvoice, addProductToInvoice };

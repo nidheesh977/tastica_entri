@@ -5,6 +5,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { useState } from "react";
 
 export const Product = () => {
+  const [quantity, setQuantity] = useState(1)
   const categoryId = useSelector((state) => state.category);
   const { addProductToInvoice } = useInvoices();
 
@@ -41,7 +42,7 @@ export const Product = () => {
 
             addProductToInvoice({
               productId: product?._id,
-              quantity: 1,
+              quantity
             });
           }}
           className="bg-[#E8F9FF] w-full md:w-56 h-20 text-sm rounded border flex flex-col justify-between border-black  cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
