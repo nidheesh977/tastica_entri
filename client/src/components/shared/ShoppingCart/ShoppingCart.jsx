@@ -1,14 +1,18 @@
-import { MdAdd, MdRemove, MdPersonAdd } from "react-icons/md";
-import { FaSave, FaMoneyCheckAlt } from "react-icons/fa";
+import { MdPersonAdd } from "react-icons/md";
+import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
-import { MdArrowBack } from "react-icons/md";
 import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { AlertBox } from "../AlertBox/AlertBox";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
-  const { createInvoice, addProductToInvoice } = useInvoices();
+  const { createInvoice, removeProductFromInvoice, addProductToInvoice } =
+    useInvoices();
+  const products = useSelector((state) => state?.invoice?.products);
+  const invoice = useSelector((state) => state?.invoice);
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -16,7 +20,8 @@ export const ShoppingCart = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [quantities, setQuantities] = useState({});
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const findCustomer = () => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
@@ -47,10 +52,10 @@ export const ShoppingCart = () => {
   }, [searchQuery, customers]);
 
   useEffect(() => {
-    createInvoice(customerId);
+    if (customerId) {
+      createInvoice(customerId);
+    }
   }, [customerId]);
-
-  
 
   return (
     <div className="p-5 border">
@@ -68,16 +73,6 @@ export const ShoppingCart = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* {!isNewCustomer && (
-            <MdArrowBack
-              size={20}
-              onClick={() => {
-                setIsNewCustomer(false);
-              }}
-              title="Back"
-              className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
-            ></MdArrowBack>
-          )} */}
         </div>
       )}
 
@@ -85,16 +80,6 @@ export const ShoppingCart = () => {
         <div className="flex flex-col gap-2 my-2">
           <div className="flex items-center justify-between my-2">
             <p className="font-bold">Add New Customer</p>
-            {isNewCustomer && (
-              <div className="flex justify-between items-center mt-2">
-                {/* <MdArrowBack
-                  onClick={() => setIsNewCustomer(false)}
-                  size={20}
-                  title="Back"
-                  className="bg-secondary cursor-pointer text-white p-1 rounded hover:bg-opacity-90"
-                ></MdArrowBack> */}
-              </div>
-            )}
           </div>
           <input
             type="text"
@@ -142,69 +127,71 @@ export const ShoppingCart = () => {
             <p className="text-sm font-bold ">{mobile}</p>
           </div>
         )}
-        {/* {!isNewCustomer && name && (
-          <MdArrowBack
-            size={20}
-            onClick={() => {
-              setIsNewCustomer(true);
-            }}
-            title="Back"
-            className="bg-secondary text-white  p-1 cursor-pointer rounded hover:bg-opacity-90"
-          ></MdArrowBack>
-        )} */}
       </div>
 
-      <ul className="flex flex-col mt-4 w-full">
-        <li className="border flex justify-between items-center gap-8 w-full px-2 py-2">
-          <div className="flex-1">
-            <p>onion</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {Number.isInteger(quantity) && (
-              <div
-                onClick={() => setQuantity((p) => Math.max(0, parseInt(p) - 1))}
-                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#BF3131] hover:bg-opacity-90"
-              >
-                <MdRemove />
-              </div>
+      <ul className="flex flex-col mt-4 h-[387px] overflow-y-auto w-full">
+        {products?.map((product, index) => (
+          <li
+            key={product?._id}
+            className="grid grid-cols-12 border my-1 p-2 items-center"
+          >
+            {alertMessage === product._id && (
+              <AlertBox
+                message="Do you want to remove this product from the cart?"
+                onConfirm={() => {
+                  setAlertMessage(null);
+
+                  removeProductFromInvoice(product?._id);
+                }}
+                onCancel={() => setAlertMessage(null)}
+              />
             )}
-            <div className="mx-2 text-center">
+            <span className=" col-span-12 xl:col-span-6 my-1 xl:my-0 text-center xl:text-start">
+              <span className="me-2 font-semibold">{index + 1}.</span>
+              {product?.productName}
+            </span>
+            <div className="flex items-center gap-2 col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <input
-                className="w-14 h-8 text-center rounded"
-                value={quantity}
+                value={quantities[product?._id] || 1}
+                className="w-14 h-8 text-center rounded bg-tertiary "
                 type="number"
-                step="any"
                 onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  setQuantity(Number.isNaN(value) ? 0 : value);
+                  const newQty = Number(e.target.value);
+                  setQuantities((prev) => ({
+                    ...prev,
+                    [product._id]: newQty,
+                  }));
+                  addProductToInvoice({
+                    productId: product._id,
+                    quantity: newQty,
+                  });
                 }}
               />
+
+              <FaTrash
+                className="text-secondary hover:text-red-600 cursor-pointer"
+                onClick={() => setAlertMessage(product._id)}
+              />
             </div>
-            {Number.isInteger(quantity) && (
-              <div
-                onClick={() => setQuantity((p) => parseInt(p) + 1)}
-                className="rounded flex cursor-pointer justify-center items-center text-white w-5 h-5 font-bold bg-[#155E95] hover:bg-opacity-90"
-              >
-                <MdAdd />
-              </div>
-            )}
-          </div>
-          <div className="w-10 text-right">₹100</div>
-        </li>
+            <span className=" col-span-12 xl:col-span-2 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
+              MVR{product?.price}
+            </span>
+          </li>
+        ))}
       </ul>
 
       <div className="mt-2 w-full font-bold">
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Subtotal</div>
-          <div>₹subtotal</div>
+          <div>MVR{invoice?.subTotal}</div>
         </div>
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Tax</div>
-          <div>₹tax</div>
+          <div>0</div>
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
-          <div>₹total</div>
+          <div>MVR{invoice?.totalAmount}</div>
         </div>
       </div>
 

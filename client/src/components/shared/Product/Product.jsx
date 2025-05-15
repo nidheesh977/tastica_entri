@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { useState } from "react";
 
 export const Product = () => {
   const categoryId = useSelector((state) => state.category);
@@ -10,7 +9,7 @@ export const Product = () => {
 
   const { products } = useProducts();
   let categoryProducts = products?.filter(
-    (product) => product?.category?._id === categoryId,
+    (product) => product?.category?._id === categoryId
   );
 
   const searchQuery = useSelector((state) => state.search);
