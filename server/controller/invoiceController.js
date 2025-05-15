@@ -76,6 +76,10 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Product ID not get"})
         }
 
+        if(!quantity){
+            return res.status(400).json({success:false,message:"Quantity not get"})
+        }
+
         const existInvoice = await invoiceModel.findById(invoiceId);
 
          if(!existInvoice){
@@ -94,12 +98,9 @@ export const addProductToInvoice = async (req,res) => {
 
         let findInvoiceProduct = existInvoice.products.find(item => item.productId.toString() === productId)
         
-        // if(findProduct){
-        //     return res.status(400).json({success:false,message:"Product Already exist"})
-        // }
-
-        // findProduct = []
-                // To check the values in it;
+        if(!findInvoiceProduct){
+            return res.status(400).json({success:false,message:"Product not exist in invoice"});
+        }
         let productPrice; 
 
         if(productExist.costPrice > 0 ){
@@ -184,7 +185,39 @@ export const addProductToInvoice = async (req,res) => {
               },{new:true})
 
          res.status(200).json({success:true,message:"Quantity Updated"})
-        }else if(quantity === findInvoiceProduct.quantity){
+        }else if(quantity < findInvoiceProduct.quantity){
+
+               const substractQuantity = productExist.quantity + findInvoiceProduct.quantity - quantity;
+             await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
+
+             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
+
+             const finalDiscountValue = existInvoice.totalDiscount - calculateDiscountAmount;
+
+             const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount - productTotalPrice;
+             const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount -  productTotalPrice;
+
+             const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
+             const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
+
+             
+
+              await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
+                $set:{
+                    "products.$.quantity":quantity,
+                    "products.$.total":productTotalPrice,
+                    "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
+                    totalDiscount:parseFloat(finalDiscountValue).toFixed(2),
+                    subTotal:parseFloat(finalSubTotalReduceDiscount).toFixed(2),
+                    totalAmount:parseFloat(finalTotalAmountReduceDiscount).toFixed(2)
+                }
+              },{new:true})
+
+
+                 return res.status(200).json({success:true,message:"quantity updated"})
+        }
+        
+        else if(quantity === findInvoiceProduct.quantity){
             return res.status(400).json({success:false,message:"This quantity already exist"})
         }
       
