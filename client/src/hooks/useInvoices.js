@@ -50,5 +50,18 @@ export const useInvoices = () => {
     },
   });
 
-  return { createInvoice, addProductToInvoice };
+  const { mutate: removeProductFromInvoice } = useMutation({
+    mutationFn: async (productId) => {
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${invoice?._id}/product/${productId}`,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      dispatch(saveInvoiceData(data));
+    },
+  });
+
+  return { createInvoice, addProductToInvoice, removeProductFromInvoice };
 };
