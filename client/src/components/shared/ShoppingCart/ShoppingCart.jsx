@@ -21,8 +21,7 @@ export const ShoppingCart = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [receivedAmount, setReceivedAmount] = useState("");
   const [payMode, setPayMode] = useState(null);
@@ -169,27 +168,27 @@ export const ShoppingCart = () => {
               <span className="me-2 font-semibold">{index + 1}.</span>
               {product?.productName}
             </span>
-            <div className="flex items-center gap-2 col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
+            <div className="flex items-center gap-10 col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <input
-                value={selectedProductId === product._id ? quantity : 1}
                 type="number"
-                className="w-14 h-8 text-center rounded bg-tertiary"
-                onFocus={() => {
-                  setSelectedProductId(product._id);
-                  setQuantity(1);
-                }}
+                className="w-14 bg-tertiary text-center"
+                value={quantities[product._id] ?? 1}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  const newQty = value === "" ? "" : Number(value);
-
-                  if (selectedProductId === product._id) {
-                    setQuantity(newQty);
-                    if (newQty !== "") {
-                      addProductToInvoice({
-                        productId: product._id,
-                        quantity: newQty,
-                      });
-                    }
+                  const val = e.target.value;
+                  if (val === "" || /^[0-9]*\.?[0-9]*$/.test(val)) {
+                    setQuantities((prev) => ({
+                      ...prev,
+                      [product._id]: val,
+                    }));
+                  }
+                }}
+                onBlur={() => {
+                  const qty = parseFloat(quantities[product._id]);
+                  if (!isNaN(qty) && qty > 0) {
+                    addProductToInvoice({
+                      productId: product._id,
+                      quantity: qty,
+                    });
                   }
                 }}
               />
