@@ -7,22 +7,23 @@ import { saveInvoiceData } from "../redux/features/invoiceSlice";
 export const useInvoices = () => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
   const dispatch = useDispatch();
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-  // const { data: invoice } = useQuery({
-  //   queryKey: ["invoice", invoiceId],
-  //   enabled: !!invoiceId,
-  //   queryFn: async () => {
-  //     const response = await axiosInstance.get(`/invoice/${invoiceId}`, {
-  //       withCredentials: true,
-  //     });
-  //     return response?.data?.data;
-  //   },
-  //   onError: (error) => {
-  //     toast.error("Failed to fetch invoice");
-  //     console.error(error);
-  //   },
-  // });
+  const { data } = useQuery({
+    queryKey: ["invoice", invoiceId],
+    enabled: !!invoiceId,
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/invoice/${invoiceId}`, {
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+    
+    onError: (error) => {
+      toast.error("Failed to fetch invoice");
+      console.error(error);
+    },
+  });
 
   const { mutate: createInvoice } = useMutation({
     mutationFn: async (customerId) => {
@@ -31,7 +32,7 @@ export const useInvoices = () => {
         null,
         {
           withCredentials: true,
-        },
+        }
       );
       return response?.data?.data;
     },
@@ -41,7 +42,6 @@ export const useInvoices = () => {
     },
     onError: (error) => {
       toast.error("Failed to create invoice");
-      console.error(error);
     },
   });
 
@@ -50,17 +50,17 @@ export const useInvoices = () => {
       const response = await axiosInstance.post(
         `/invoice/${invoiceId}/products`,
         { productId, quantity },
-        { withCredentials: true },
+        { withCredentials: true }
       );
       return response?.data?.data;
     },
     onSuccess: (data) => {
       toast.success("Product added to invoice");
-      dispatch(saveInvoiceData(data))
+      dispatch(saveInvoiceData(data));
     },
     onError: (error) => {
       toast.error("Failed to add product to invoice");
-      console.error(error);
+      console.error(error?.response?.data?.message);
     },
   });
 
@@ -69,7 +69,7 @@ export const useInvoices = () => {
       const response = await axiosInstance.put(
         `/invoice/${invoiceId}/product/${productId}`,
         null,
-        { withCredentials: true },
+        { withCredentials: true }
       );
       return response?.data?.data;
     },
@@ -87,5 +87,6 @@ export const useInvoices = () => {
     createInvoice,
     addProductToInvoice,
     removeProductFromInvoice,
+    invoice:data
   };
 };

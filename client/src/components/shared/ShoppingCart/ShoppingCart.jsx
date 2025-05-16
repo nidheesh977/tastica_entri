@@ -6,13 +6,16 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { useSelector } from "react-redux";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
-  const { createInvoice, removeProductFromInvoice, addProductToInvoice } =
-    useInvoices();
-  const invoice = useSelector((state) => state?.invoice);
+  const {
+    createInvoice,
+    removeProductFromInvoice,
+    addProductToInvoice,
+    invoice,
+  } = useInvoices();
+
   const products = invoice?.products;
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,13 +43,14 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
       setCustomerId(matchedCustomer._id);
+      createInvoice(matchedCustomer._id); 
       setIsNewCustomer(false);
     } else {
       setName("");
@@ -73,10 +77,12 @@ export const ShoppingCart = () => {
   }, [searchQuery, customers]);
 
   useEffect(() => {
-    if (customerId) {
-      createInvoice(customerId);
+    if (invoice?.customer) {
+      setName(invoice.customer.customerName || "");
+      setMobile(invoice.customer.phoneNumber || "");
+      setCustomerId(invoice.customer._id || "");
     }
-  }, [customerId]);
+  }, [invoice]);
 
   return (
     <div className="p-5 border">

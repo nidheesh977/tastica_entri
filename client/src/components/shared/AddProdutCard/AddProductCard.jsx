@@ -14,8 +14,9 @@ export const AddProductCard = () => {
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [discountType, setDiscountType] = useState("");
-  
-  console.log(discountType)
+  const [unit, setUnit] = useState("");
+
+  console.log(discountType);
 
   return (
     <>
@@ -35,23 +36,57 @@ export const AddProductCard = () => {
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             placeholder="Product Name"
-            className="p-4 my-1  w-full  bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1  w-full  bg-white shadow outline-[#155E95]"
           />
+          <div className="flex items-center justify-between bg-white w-full shadow my-1">
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Quantity"
+              className="p-4 w-4/12 bg-white outline-[#155E95]"
+            />
 
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            placeholder="Quantity"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
-          />
+            <span className="flex gap-4 px-4">
+              <span className="flex gap-1">
+                kg
+                <input
+                  type="radio"
+                  value="kg"
+                  name="unit"
+                  className="accent-primary"
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </span>
+              <span className="flex gap-1">
+                lt
+                <input
+                  type="radio"
+                  value="lt"
+                  name="unit"
+                  className="accent-primary"
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </span>
+              <span className="flex gap-1">
+                m
+                <input
+                  type="radio"
+                  value="m"
+                  name="unit"
+                  className="accent-primary"
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </span>
+            </span>
+          </div>
 
           <input
             type="number"
             value={costPrice}
             onChange={(e) => setCostPrice(e.target.value)}
             placeholder="Cost Price"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1 w-full bg-white shadow outline-[#155E95]"
           />
 
           <input
@@ -59,41 +94,40 @@ export const AddProductCard = () => {
             value={sellingPrice}
             onChange={(e) => setSellingPrice(e.target.value)}
             placeholder="Selling Price"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1 w-full bg-white shadow outline-[#155E95]"
           />
-
-          <input
-            type="number"
-            value={discount}
-            onChange={(e) => setDiscount(e.target.value)}
-            placeholder="Discount"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
-          />
-          <div className="flex justify-between p-4 my-1 w-full bg-white shadow-2xl">
-            <span className="text-gray-400">Discount Type</span>
-            <span className="flex gap-5">
-            <span className="flex gap-1">
-               %
-              <input
-                type="radio"
-                value="percentage"
-                name="discountType"
-                className="accent-primary"
-                onChange={(e)=> setDiscountType(e.target.value)}
-              />
-            </span>
-            <span className="flex gap-1">
-            MVR
-              <input
-                type="radio"
-                value="flat"
-                name="discountType"
-                className="accent-primary"
-                onChange={(e)=> setDiscountType(e.target.value)}
-              />
-            </span>
+          <div className="flex items-center justify-between bg-white w-full shadow my-1">
+            <input
+              type="number"
+              value={discount}
+              onChange={(e) => setDiscount(e.target.value)}
+              placeholder="Discount"
+              className="p-4  w-1/2 bg-white   outline-[#155E95]"
+            />
+            <span className="flex gap-4 px-4">
+              <span className="flex gap-1">
+                %
+                <input
+                  type="radio"
+                  value="percentage"
+                  name="discountType"
+                  className="accent-primary"
+                  onChange={(e) => setDiscountType(e.target.value)}
+                />
+              </span>
+              <span className="flex gap-1">
+                MVR
+                <input
+                  type="radio"
+                  value="flat"
+                  name="discountType"
+                  className="accent-primary"
+                  onChange={(e) => setDiscountType(e.target.value)}
+                />
+              </span>
             </span>
           </div>
+
           <select
             value={category?._id}
             onChange={(e) => setCategory(e.target.value)}
@@ -118,6 +152,7 @@ export const AddProductCard = () => {
                 discount: Number(discount),
                 category,
                 discountType,
+                unit,
               });
               setProductName("");
               setQuantity("");
