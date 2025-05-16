@@ -4,6 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useStaffs } from "../../../hooks/useStaffs";
+import { useSelector } from "react-redux";
 
 export const ListCardStaff = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -11,8 +12,8 @@ export const ListCardStaff = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const { staffs, updateStaff, deleteStaff } = useStaffs();
+  const searchQuery = useSelector((state)=> state?.search)
 
   const staffData = staffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
@@ -30,13 +31,6 @@ export const ListCardStaff = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Staffs
         </h1>
-        <input
-          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
       </div>
 
       <div className="overflow-auto h-96 pb-10">
@@ -131,7 +125,6 @@ export const ListCardStaff = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteStaff(staff._id);
-                          setSearchQuery('')
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />

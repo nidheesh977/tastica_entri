@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdReceipt, MdShoppingCart } from "react-icons/md";
+import { MdReceipt, MdShoppingCart, MdClose } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
@@ -46,14 +46,20 @@ export const StaffHeader = () => {
           }`}
         >
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-primary w-full text-center md:gap-5">
-            <li className="md:border-none cursor-pointer rounded-md">
+            <li className="md:border-none cursor-pointer rounded-md relative">
               <input
                 className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-[275px] md:w-44 lg:w-96"
-                placeholder="Search Here"
+                placeholder="Smart Search"
                 type="text"
                 value={searchQuery}
                 onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
               />
+              {searchQuery && (
+                <MdClose
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-red-800 hover:text-red-500 cursor-pointer font-thin"
+                  onClick={() => dispatch(saveSearchQuery(""))}
+                />
+              )}
             </li>
 
             <li

@@ -4,13 +4,14 @@ import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { useCategories } from "../../../hooks/useCategories";
+import { useSelector } from "react-redux";
 
 export const ListCardCategory = () => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchQuery = useSelector((state) => state?.search);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const { categories, updateCategory, deleteCategory } = useCategories();
 
@@ -30,13 +31,6 @@ export const ListCardCategory = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Categories
         </h1>
-        <input
-          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
       </div>
 
       <div className="overflow-auto h-96 pb-10">
@@ -131,7 +125,6 @@ export const ListCardCategory = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteCategory(category._id);
-                          setSearchQuery("");
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />
