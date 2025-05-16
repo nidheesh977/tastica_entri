@@ -180,13 +180,15 @@ export const shopLoginValidation = Joi.object({
     })
 }) 
 
+
+
 export const newProductValidation = Joi.object({
     productName: Joi.string().min(3).max(100).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
         'string.empty': 'Product name cannot be empty',
         'string.min': 'Product name must be at least 3 characters long',
-        'string.max': 'Product name must be at most 30 characters long',   
+        'string.max': 'Product name must be at most 100 characters long',   
     }),
 
     quantity: Joi.number().integer().min(0).required().messages({
@@ -225,17 +227,17 @@ export const newProductValidation = Joi.object({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
-    units:Joi.string().valid('count','kg','li','m').messages({
+    units:Joi.string().valid('number','kg','li','m').messages({
         'string.base': 'Units must be a string',
         'string.empty': 'Units cannot be empty',
-        'any.only': 'Units must be one of the following values: count, kg, li, m',
+        'any.only': 'Units must be one of the following values: number, kg, li, m',
     }),
 
     
 })
 
 export const updateProductValidation = Joi.object({
-    productName: Joi.string().min(3).max(30).required().messages({
+    productName: Joi.string().min(3).max(100).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
         'string.min': 'Product name must be at least 3 characters long',
@@ -272,6 +274,8 @@ export const updateProductValidation = Joi.object({
         'string.max': 'Discount type must be at most 20 characters long',   
     })
 })
+
+
 
 
 export const newCategoryValidation = Joi.object({
@@ -324,3 +328,33 @@ export const customerValidation = Joi.object({
     }),
 })
 
+
+export const newCustomProductValidation = Joi.object({
+    productName: Joi.string().min(3).max(100).required().messages({
+        'string.required': 'Product name is required',
+        'string.base': 'Product name must be a string',
+        'string.empty': 'Product name cannot be empty',
+        'string.min': 'Product name must be at least 3 characters long',
+        'string.max': 'Product name must be at most 100 characters long',   
+    }),
+
+    quantity: Joi.number().integer().min(0).required().messages({
+        'number.required': 'Quanity is required',
+        'number.base': 'Quanity must be a number',
+        'number.empty': 'Quanity cannot be empty',
+    }),
+    
+
+    sellingPrice: Joi.number().integer().min(0).messages({
+        'number.base': 'Selling price must be a number',
+        'number.empty': 'Selling price cannot be empty',
+    }),
+
+    
+    units:Joi.string().valid('number','kg','li','m').messages({
+        'string.base': 'Units must be a string',
+        'string.empty': 'Units cannot be empty',
+        'any.only': 'Units must be one of the following values: number, kg, li, m',
+    }),
+
+});

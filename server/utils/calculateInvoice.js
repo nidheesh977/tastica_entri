@@ -9,7 +9,7 @@ export const toDecimal = (value) => {
 
 
 export const calculateDiscount = ( price,discountType,productDiscount,categoryDiscount) => {
-  
+
    
 let discountAmount;
     if(productDiscount > 0 && categoryDiscount > 0 ){

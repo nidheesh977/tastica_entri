@@ -29,7 +29,9 @@ export const productsFileUploader = async (req, res) => {
                     category: row.category,
                     countryName: row.countryName,
                     currencyCode: row.currencyCode,
-                    shop: row.shop,
+                    shop:row.shop,
+                    discountType:row.discountType,
+                    units:row.units
                 });
             })
             .on('end', async () => {
