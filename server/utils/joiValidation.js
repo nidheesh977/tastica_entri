@@ -224,7 +224,12 @@ export const newProductValidation = Joi.object({
     costPriceProfit:Joi.number().integer().min(0).message({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
-    })
+    }),
+    units:Joi.string().valid('count','kg','li','m').messages({
+        'string.base': 'Units must be a string',
+        'string.empty': 'Units cannot be empty',
+        'any.only': 'Units must be one of the following values: count, kg, li, m',
+    }),
 
     
 })

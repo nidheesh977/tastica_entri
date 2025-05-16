@@ -40,8 +40,8 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     category:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Category", 
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Category", 
     },
     shop:{
         type:String,
@@ -50,6 +50,11 @@ const productSchema = new mongoose.Schema({
     costPriceProfit:{
        type:Number,
         default:0,
+    },
+    units:{
+        type:String,
+        enum:['count','kg','li','m'],
+        default:'count'
     },
 
     isActive:{
