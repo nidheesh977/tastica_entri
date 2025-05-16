@@ -4,16 +4,17 @@ import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
-import { useSelector } from "react-redux";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
+import { useSelector } from "react-redux";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
   const { createInvoice, removeProductFromInvoice, addProductToInvoice } =
     useInvoices();
-  const products = useSelector((state) => state?.invoice?.products);
   const invoice = useSelector((state) => state?.invoice);
+  const products = invoice?.products;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -22,6 +23,8 @@ export const ShoppingCart = () => {
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [quantities, setQuantities] = useState({});
+
+  const [editingQuantities, setEditingQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [receivedAmount, setReceivedAmount] = useState("");
   const [payMode, setPayMode] = useState(null);
@@ -37,7 +40,7 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -150,7 +153,7 @@ export const ShoppingCart = () => {
       <ul className="flex flex-col mt-4 h-[382px] overflow-y-auto w-full">
         {products?.map((product, index) => (
           <li
-            key={product?._id}
+            key={product?.productId}
             className="grid grid-cols-12 border my-1 p-2 items-center"
           >
             {alertMessage === product._id && (
@@ -172,31 +175,28 @@ export const ShoppingCart = () => {
               <input
                 type="number"
                 className="w-14 bg-tertiary text-center"
-                value={quantities[product._id] ?? 1}
+                value={quantities[product?.productId] ?? 1}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === "" || /^[0-9]*\.?[0-9]*$/.test(val)) {
-                    setQuantities((prev) => ({
-                      ...prev,
-                      [product._id]: val,
-                    }));
-                  }
+                  const newQty = e.target.value;
+                  setQuantities((prev) => ({
+                    ...prev,
+                    [product.productId]: newQty,
+                  }));
                 }}
-                onBlur={() => {
-                  const qty = parseFloat(quantities[product._id]);
-                  if (!isNaN(qty) && qty > 0) {
-                    addProductToInvoice({
-                      productId: product._id,
-                      quantity: qty,
-                    });
-                  }
-                }}
+                onBlur={() =>
+                  addProductToInvoice({
+                    productId: product?.productId,
+                    quantity: quantities[product.productId] ?? "1",
+                  })
+                }
               />
 
-              <FaTrash
-                className="text-secondary hover:text-red-600 cursor-pointer"
-                onClick={() => setAlertMessage(product._id)}
-              />
+              <span>
+                <FaTrash
+                  className="text-secondary hover:text-red-600 cursor-pointer"
+                  onClick={() => setAlertMessage(product._id)}
+                />
+              </span>
             </div>
             <span className=" col-span-12 xl:col-span-2 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
               MVR{product?.price}
