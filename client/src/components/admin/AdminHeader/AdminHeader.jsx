@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdReceipt } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
@@ -73,7 +73,19 @@ export const AdminHeader = () => {
                       className="hover:text-blue-100"
                       size={20}
                     />
+                    
                   </li>
+                  <li
+                    className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
+                    title="Open Orders"
+                  >
+                    <MdReceipt
+                      className="hover:text-blue-100"
+                      size={20}
+                    />
+                    
+                  </li>
+                  
                   <li
                     onClick={openNewInvoice}
                     title="Create New Invoice"

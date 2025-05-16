@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdReceipt } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useStaffs } from "../../../hooks/useStaffs";
@@ -60,6 +60,16 @@ export const StaffHeader = () => {
                   title="Add Custom Product"
                 >
                   <FaRegStickyNote className="hover:text-blue-100" size={20} />
+                </li>
+                <li
+                  className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
+                  title="Open Orders"
+                >
+                  <MdReceipt
+                    className="hover:text-blue-100"
+                    size={20}
+                  />
+                  
                 </li>
                 <li
                   onClick={openNewInvoice}
