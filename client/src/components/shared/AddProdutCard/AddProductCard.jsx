@@ -49,6 +49,16 @@ export const AddProductCard = () => {
 
             <span className="flex gap-4 px-4">
               <span className="flex gap-1">
+                no
+                <input
+                  type="radio"
+                  value="no"
+                  name="unit"
+                  className="accent-primary"
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </span>
+              <span className="flex gap-1">
                 kg
                 <input
                   type="radio"
