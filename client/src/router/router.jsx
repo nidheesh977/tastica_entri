@@ -23,6 +23,7 @@ import { StaffLoginPage } from "../pages/staff/StaffLoginPage/StaffLoginPage";
 import { ShopLoginPage } from "../pages/shop/ShopLoginPage/ShopLoginPage";
 import { ShopSignupPage } from "../pages/shop/ShopSignupPage/ShopSignupPage";
 import { ListInvoices } from "../pages/shared/ListInvoices/ListInvoices";
+import { OpenOrders } from "../pages/shared/OpenOrders/OpenOrders";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -110,6 +111,10 @@ export const router = createBrowserRouter([
           {
             path: "cart",
             element: <Cart />,
+          },
+          {
+            path: "open/orders",
+            element: <OpenOrders />,
           },
         ],
       },

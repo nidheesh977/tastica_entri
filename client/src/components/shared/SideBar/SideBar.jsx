@@ -127,7 +127,7 @@ export const SideBar = () => {
           Shopping Cart
         </li>
         <li
-          onClick={() => handleSideBar(admin ? "/admin/cart" : "/staff")}
+          onClick={() => handleSideBar(admin ? "/admin/open/orders" : "/staff")}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdReceipt />
