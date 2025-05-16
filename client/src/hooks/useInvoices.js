@@ -57,6 +57,7 @@ export const useInvoices = () => {
     onSuccess: (data) => {
       toast.success("Product added to invoice");
       dispatch(saveInvoiceData(data));
+       queryClient.invalidateQueries(["invoice"]);
     },
     onError: (error) => {
       toast.error("Failed to add product to invoice");
@@ -75,6 +76,7 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       dispatch(saveInvoiceData(data));
+       queryClient.invalidateQueries(["invoice"]);
       toast.success("Product removed from invoice");
     },
     onError: (error) => {

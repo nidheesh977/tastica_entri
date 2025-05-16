@@ -43,14 +43,14 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
     if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
       setCustomerId(matchedCustomer._id);
-      createInvoice(matchedCustomer._id); 
+      createInvoice(matchedCustomer._id);
       setIsNewCustomer(false);
     } else {
       setName("");
@@ -83,6 +83,16 @@ export const ShoppingCart = () => {
       setCustomerId(invoice.customer._id || "");
     }
   }, [invoice]);
+  useEffect(() => {
+    if (invoice?.products) {
+      const initialQuantities = {};
+      invoice.products.forEach((product) => {
+        initialQuantities[product.productId] = product.quantity;
+      });
+      setQuantities(initialQuantities);
+    }
+  }, [invoice]);
+
 
   return (
     <div className="p-5 border">
@@ -192,7 +202,7 @@ export const ShoppingCart = () => {
                 onBlur={() =>
                   addProductToInvoice({
                     productId: product?.productId,
-                    quantity: quantities[product.productId] ?? "1",
+                    quantity: quantities[product.productId] ?? "",
                   })
                 }
               />
