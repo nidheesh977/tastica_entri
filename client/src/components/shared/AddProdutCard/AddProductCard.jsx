@@ -16,8 +16,7 @@ export const AddProductCard = () => {
   const [discountType, setDiscountType] = useState("");
   const [unit, setUnit] = useState("");
 
-  console.log(discountType);
-
+  
   return (
     <>
       <SideBar />

@@ -81,6 +81,7 @@ export const AdminHeader = () => {
               <FaRegStickyNote
                 className="hover:text-blue-100 mx-auto"
                 size={20}
+                onClick={() => navigate("/admin/add/custom/product")}
               />
             </li>
             <li

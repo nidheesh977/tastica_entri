@@ -80,6 +80,7 @@ export const StaffHeader = () => {
               <FaRegStickyNote
                 className="hover:text-blue-100 mx-auto"
                 size={20}
+                onClick={() => navigate("/staff/add/custom/product")}
               />
             </li>
 

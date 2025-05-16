@@ -10,7 +10,7 @@ export const AdminHome = () => {
   return (
     <>
       <SideBar />
-      <div className="lg:h-[706px] p-2">
+      <div className="lg:h-[700px] p-1">
         <section className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-4">
             <DoughnutChart />
