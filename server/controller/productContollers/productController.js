@@ -13,7 +13,7 @@ export const createProduct = async (req, res) => {
             return res.status(400).json({success:false,message: error.details[0].message });
         }
        
-        const { productName, quantity, costPrice, sellingPrice,costPriceProfit, discount, category ,discountType } = value;
+        const { productName, quantity, costPrice,units, sellingPrice,costPriceProfit, discount, category ,discountType } = value;
         const {id,countryName,currencyCode} = req.shop;
 
      
@@ -60,6 +60,7 @@ export const createProduct = async (req, res) => {
             countryName,
             currencyCode,
             discountType,
+            units,
             costPriceProfit:costPriceProfit
         });
 
