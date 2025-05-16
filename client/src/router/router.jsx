@@ -133,6 +133,10 @@ export const router = createBrowserRouter([
         children: [{ path: "", element: <StaffHome /> }],
       },
       {
+        path: "open/orders",
+        element: <OpenOrders />,
+      },
+      {
         path: "add/product",
         element: <AddProductCard />,
       },

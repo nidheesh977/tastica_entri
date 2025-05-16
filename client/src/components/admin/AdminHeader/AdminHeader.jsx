@@ -1,20 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import { MdLogout, MdReceipt } from "react-icons/md";
+import { MdReceipt, MdShoppingCart } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useAdmins } from "../../../hooks/useAdmins";
 
-
-
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const location = useLocation();
+  const navigate = useNavigate();
+
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { logout } = useAdmins();
@@ -47,68 +46,69 @@ export const AdminHeader = () => {
             open ? "block" : "hidden"
           }`}
         >
-          <ul className="md:flex items-center md:ms-6 justify-center font-thin gap-10 bg-primary  w-full text-center">
-            {location.pathname === "/admin/cart" && (
-              <>
-                <li className="mb-2 md:border-none cursor-pointer rounded-md py-2 md:py-0 w-full">
-                  <input
-                    className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-full"
-                    placeholder="Search Here"
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
-                  />
-                </li>
-               
-              </>
-            )}
-            <ul className="flex  items-center gap-3">
-              {location.pathname === "/admin/cart" && (
-                <ul className="flex justify-between gap-3">
-                  <li
-                    className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
-                    title="Add Custom Product"
-                  >
-                    <FaRegStickyNote
-                      className="hover:text-blue-100"
-                      size={20}
-                    />
-                    
-                  </li>
-                  <li
-                    className="cursor-pointer rounded-md py-2 md:py-0 mb-2 "
-                    title="Open Orders"
-                  >
-                    <MdReceipt
-                      className="hover:text-blue-100"
-                      size={20}
-                    />
-                    
-                  </li>
-                  
-                  <li
-                    onClick={openNewInvoice}
-                    title="Create New Invoice"
-                    className=" hover:text-blue-100 cursor-pointer font-bold mt-2 md:mt-0  rounded-md md:py-0 "
-                  >
-                    <FaPlus size={20} />
-                  </li>
-                </ul>
-              )}
+          <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-primary  w-full  text-center md:gap-5">
+            <li className=" md:border-none cursor-pointer rounded-md">
+              <input
+                className="bg-[#E8F9FF] px-8 py-2 outline-[#155E95] rounded text-black w-[275px]  md:w-44 lg:w-96"
+                placeholder="Search Here"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => dispatch(saveSearchQuery(e.target.value))}
+              />
+            </li>
 
-              <li className="flex items-center mb-2 gap-5">
-                {adminName && <p className="text-xl">{adminName}</p>}
-                {adminName && <FaUserShield size={20} />}
-                {adminName && (
-                  <MdLogout
-                    title="Logout"
-                    size={20}
-                    onClick={() => logout()}
-                    className="cursor-pointer hover:text-secondary"
-                  />
-                )}
-              </li>
-            </ul>
+            <li
+              className="cursor-pointer rounded shadow-xl w-full   p-2"
+              title="Shopping Cart"
+            >
+              <MdShoppingCart
+                className="hover:text-blue-100 mx-auto"
+                size={20}
+                onClick={() => navigate("/admin/cart")}
+              />
+            </li>
+
+            <li
+              className="cursor-pointer rounded-md shadow-xl w-full  p-2 "
+              title="Add Custom Product"
+            >
+              <FaRegStickyNote
+                className="hover:text-blue-100 mx-auto"
+                size={20}
+              />
+            </li>
+            <li
+              className="cursor-pointer rounded-md shadow-xl  p-2 w-full  "
+              title="Open Orders"
+            >
+              <MdReceipt
+                className="hover:text-blue-100 mx-auto"
+                size={20}
+                onClick={() => navigate("/admin/open/orders")}
+              />
+            </li>
+
+            <li
+              onClick={openNewInvoice}
+              title="Create New Invoice"
+              className=" hover:text-blue-100 cursor-pointer font-bold w-full  rounded-md  shadow-xl  p-2  "
+            >
+              <FaPlus size={20} className="mx-auto cursor-pointer" />
+            </li>
+
+            <li className="flex items-center w-full rounded-md  shadow-xl p-2">
+              {adminName && <p className="text-xl mx-auto">{adminName}</p>}
+            </li>
+            <li className="w-full rounded-md shadow-xl p-2">
+              {adminName && (
+                <FaUserShield
+                  size={20}
+                  className="hover:text-secondary cursor-pointer mx-auto"
+                  onClick={() => logout()}
+                  title="Logout"
+                />
+              )}
+            </li>
           </ul>
         </div>
       </div>

@@ -21,12 +21,7 @@ export const OpenOrders = () => {
             <OpenOrderCard />
             <OpenOrderCard />
             <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
+            
           </div>
         </div>
       </div>
