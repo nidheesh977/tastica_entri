@@ -43,7 +43,7 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -92,7 +92,6 @@ export const ShoppingCart = () => {
       setQuantities(initialQuantities);
     }
   }, [invoice]);
-
 
   return (
     <div className="p-5 border">

@@ -23,6 +23,9 @@ import { StaffLoginPage } from "../pages/staff/StaffLoginPage/StaffLoginPage";
 import { ShopLoginPage } from "../pages/shop/ShopLoginPage/ShopLoginPage";
 import { ShopSignupPage } from "../pages/shop/ShopSignupPage/ShopSignupPage";
 import { ListInvoices } from "../pages/shared/ListInvoices/ListInvoices";
+import { OpenOrders } from "../pages/shared/OpenOrders/OpenOrders";
+import { AddNewCustomProduct } from "../pages/shared/AddNewCustomProduct/AddNewCustomProduct";
+import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCustomProduct";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -76,6 +79,10 @@ export const router = createBrowserRouter([
             element: <AddProductCard />,
           },
           {
+            path: "add/custom/product",
+            element: <AddNewCustomProduct />,
+          },
+          {
             path: "product/view",
             element: <ListProducts />,
           },
@@ -111,6 +118,10 @@ export const router = createBrowserRouter([
             path: "cart",
             element: <Cart />,
           },
+          {
+            path: "open/orders",
+            element: <OpenOrders />,
+          },
         ],
       },
     ],
@@ -128,8 +139,16 @@ export const router = createBrowserRouter([
         children: [{ path: "", element: <StaffHome /> }],
       },
       {
+        path: "open/orders",
+        element: <OpenOrders />,
+      },
+      {
         path: "add/product",
         element: <AddProductCard />,
+      },
+      {
+        path: "add/custom/product",
+        element: <AddCustomProduct />,
       },
       {
         path: "product/view",

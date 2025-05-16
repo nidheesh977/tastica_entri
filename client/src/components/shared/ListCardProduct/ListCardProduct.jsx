@@ -4,6 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useProducts } from "../../../hooks/useProducts";
+import {useSelector} from 'react-redux'
 
 export const ListCardProduct = () => {
   const [editId, setEditId] = useState(null);
@@ -14,9 +15,9 @@ export const ListCardProduct = () => {
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const { products, updateProduct, deleteProduct } = useProducts();
 
+  const searchQuery = useSelector((state)=> state?.search)
   const productData = products?.filter((product) => {
     const query = searchQuery.toLowerCase();
 
@@ -37,13 +38,6 @@ export const ListCardProduct = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Products
         </h1>
-        <input
-          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
       </div>
 
       <div className="overflow-auto h-96 pb-10">
@@ -183,7 +177,6 @@ export const ListCardProduct = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteProduct(product?._id);
-                          setSearchQuery("");
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />

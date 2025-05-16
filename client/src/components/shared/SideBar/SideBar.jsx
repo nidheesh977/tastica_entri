@@ -2,7 +2,7 @@ import { FaHome } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { FaBoxOpen, FaUserTie } from "react-icons/fa";
-import { MdPersonAdd, MdGroups, MdCategory } from "react-icons/md";
+import { MdPersonAdd, MdGroups, MdCategory, MdReceipt } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -125,6 +125,13 @@ export const SideBar = () => {
         >
           <FaShoppingCart />
           Shopping Cart
+        </li>
+        <li
+          onClick={() => handleSideBar(admin ? "/admin/open/orders" : "/staff/open/orders")}
+          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdReceipt />
+          Open Orders
         </li>
       </ul>
     </div>

@@ -16,8 +16,7 @@ export const AddProductCard = () => {
   const [discountType, setDiscountType] = useState("");
   const [unit, setUnit] = useState("");
 
-  console.log(discountType);
-
+  
   return (
     <>
       <SideBar />
@@ -48,6 +47,16 @@ export const AddProductCard = () => {
             />
 
             <span className="flex gap-4 px-4">
+              <span className="flex gap-1">
+                no
+                <input
+                  type="radio"
+                  value="no"
+                  name="unit"
+                  className="accent-primary"
+                  onChange={(e) => setUnit(e.target.value)}
+                />
+              </span>
               <span className="flex gap-1">
                 kg
                 <input

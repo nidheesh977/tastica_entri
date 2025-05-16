@@ -5,13 +5,14 @@ import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const ListCardCustomer = () => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchQuery = useSelector((state) => state?.search);
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
 
   const customerData = customers?.filter((customer) => {
@@ -30,13 +31,6 @@ export const ListCardCustomer = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Customers
         </h1>
-        <input
-          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
       </div>
 
       <div className="overflow-auto h-96 pb-10">
@@ -114,14 +108,13 @@ export const ListCardCustomer = () => {
                           onClick={() => setAlertMessage(customer?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
-                        <Link to='/admin/customer/view/invoice'>
-                        <MdEventNote
-                          title="Invoices"
-                          size={22}
-                          className="text-primary hover:text-blue-800 cursor-pointer"
-                        />
+                        <Link to="/admin/customer/view/invoice">
+                          <MdEventNote
+                            title="Invoices"
+                            size={22}
+                            className="text-primary hover:text-blue-800 cursor-pointer"
+                          />
                         </Link>
-
                       </div>
                     )}
                     {alertMessage === customer?._id && (
@@ -130,7 +123,6 @@ export const ListCardCustomer = () => {
                         onConfirm={() => {
                           setAlertMessage(null);
                           deleteCustomer(customer?._id);
-                          setSearchQuery('')
                         }}
                         onCancel={() => setAlertMessage(null)}
                       />
