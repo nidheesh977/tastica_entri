@@ -5,63 +5,90 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveInvoiceData } from "../redux/features/invoiceSlice";
 
 export const useInvoices = () => {
-  const invoice = useSelector((state) => state.invoice);
+  const invoiceId = useSelector((state) => state?.invoice?._id);
   const dispatch = useDispatch();
-  // const queryClient = useQueryClient();
-  // const { data } = useQuery({
-  //   queryKey: ["invoices"],
-  //   queryFn: async () => {
-  //     const response = await axiosInstance({
-  //       method: "GET",
-  //       url: "/invoice",
-  //       withCredentials: true,
-  //     });
-  //     return response?.data?.data;
-  //   },
-  // });
+  const queryClient = useQueryClient();
 
-  const { mutate: createInvoice } = useMutation({
-    mutationFn: async (customerId) => {
-      const response = await axiosInstance({
-        method: "POST",
-        url: `/invoice/${customerId}`,
+  const { data } = useQuery({
+    queryKey: ["invoice", invoiceId],
+    enabled: !!invoiceId,
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/invoice/${invoiceId}`, {
         withCredentials: true,
       });
       return response?.data?.data;
     },
+    
+    onError: (error) => {
+      toast.error("Failed to fetch invoice");
+      console.error(error);
+    },
+  });
+
+  const { mutate: createInvoice } = useMutation({
+    mutationFn: async (customerId) => {
+      const response = await axiosInstance.post(
+        `/invoice/${customerId}`,
+        null,
+        {
+          withCredentials: true,
+        }
+      );
+      return response?.data?.data;
+    },
     onSuccess: (data) => {
       dispatch(saveInvoiceData(data));
+      toast.success("Invoice created");
+    },
+    onError: (error) => {
+      toast.error("Failed to create invoice");
     },
   });
 
   const { mutate: addProductToInvoice } = useMutation({
     mutationFn: async ({ productId, quantity }) => {
-      const data = { productId, quantity };
-      const response = await axiosInstance({
-        method: "POST",
-        url: `/invoice/${invoice?._id}/products`,
-        withCredentials: true,
-        data,
-      });
+      const response = await axiosInstance.post(
+        `/invoice/${invoiceId}/products`,
+        { productId, quantity },
+        { withCredentials: true }
+      );
       return response?.data?.data;
     },
     onSuccess: (data) => {
+      toast.success("Product added to invoice");
       dispatch(saveInvoiceData(data));
+       queryClient.invalidateQueries(["invoice"]);
+    },
+    onError: (error) => {
+      toast.error("Failed to add product to invoice");
+      console.error(error?.response?.data?.message);
     },
   });
 
   const { mutate: removeProductFromInvoice } = useMutation({
     mutationFn: async (productId) => {
-      const response = await axiosInstance({
-        method: "PUT",
-        url: `/invoice/${invoice?._id}/product/${productId}`,
-      });
+      const response = await axiosInstance.put(
+        `/invoice/${invoiceId}/product/${productId}`,
+        null,
+        { withCredentials: true }
+      );
       return response?.data?.data;
     },
     onSuccess: (data) => {
       dispatch(saveInvoiceData(data));
+       queryClient.invalidateQueries(["invoice"]);
+      toast.success("Product removed from invoice");
+    },
+    onError: (error) => {
+      toast.error("Failed to remove product from invoice");
+      console.error(error);
     },
   });
 
-  return { createInvoice, addProductToInvoice, removeProductFromInvoice };
+  return {
+    createInvoice,
+    addProductToInvoice,
+    removeProductFromInvoice,
+    invoice:data
+  };
 };

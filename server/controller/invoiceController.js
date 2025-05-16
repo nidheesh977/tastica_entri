@@ -98,7 +98,9 @@ export const addProductToInvoice = async (req,res) => {
 
         let findInvoiceProduct = existInvoice.products.find(item => item.productId.toString() === productId)
         
-       
+        if(!findInvoiceProduct){
+            return res.status(400).json({success:false,message:"Product not exist in invoice"});
+        }
         let productPrice; 
 
         if(productExist.costPrice > 0 ){

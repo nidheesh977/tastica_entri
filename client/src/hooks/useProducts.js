@@ -24,7 +24,8 @@ export const useProducts = () => {
       sellingPrice,
       discount,
       category,
-      discountType
+      discountType,
+      unit,
     }) => {
       const data = {
         productName,
@@ -33,7 +34,8 @@ export const useProducts = () => {
         sellingPrice,
         discount,
         category,
-        discountType
+        discountType,
+        unit,
       };
       await axiosInstance({
         method: "POST",
