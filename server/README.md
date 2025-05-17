@@ -184,3 +184,15 @@
 - Get Product Name<br>
 **method**`GET`<br>
 **URL**`http://localhost:5001/api/v1/search/product/filter?productName=colgate ma`
+
+
+
+## payment Routes<br>
+
+- cash payment
+**method**`POST` <br>
+**URL**`http://localhost:5001/api/v1/payment/cash/invoice/invoiceId`
+
+- card payment
+**method**`POST` <br>
+**URL**`http://localhost:5001/api/v1/payment/card/invoice/invoiceId`
