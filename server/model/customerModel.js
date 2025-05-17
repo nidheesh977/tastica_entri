@@ -33,7 +33,11 @@ const customerSchema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:false
-    }
+    },
+    invoices:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Invoice"
+        }]
 },{ timestamps: true } )
 
 customerSchema.index({customerId:1,phoneNumber:1})

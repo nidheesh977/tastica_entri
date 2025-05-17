@@ -11,7 +11,8 @@ import { generateInvoiceId } from '../utils/generateInvoiceId.js';
 export const createNewInvoiceTab = async (req,res) => {
     try{
       const userId= req.user.id
-      const {customerId} = req.params;  
+      const {customerId} = req.params;
+        const {id,countryName,currencyCode} = req.shop;  
 
       if(!userId){
         return res.status(400).json({success:false,message:"Staff ID is required"})
@@ -45,6 +46,9 @@ export const createNewInvoiceTab = async (req,res) => {
             invoiceNumber:invoiceId,
             staff:staffName,
             customer:customerId,
+            shop:id,
+            countryName,
+            currencyCode
         });
 
         await newInvoice.save();
@@ -111,7 +115,7 @@ export const addProductToInvoice = async (req,res) => {
 
         if(productExist?.costPrice > 0 ){
             productPrice = productExist?.costPrice 
-        }else if(productExist.sellingPrice > 0 ){
+        }else if(productExist?.sellingPrice > 0 ){
             productPrice = productExist?.sellingPrice 
         }
 
@@ -119,7 +123,7 @@ export const addProductToInvoice = async (req,res) => {
 
         if(productExist?.costPrice > 0 ){
             productTotalPrice = productPrice * quantity
-        }else if(productExist.sellingPrice > 0 ){
+        }else if(productExist?.sellingPrice > 0 ){
             productTotalPrice = productPrice * quantity
         }
            
@@ -133,18 +137,16 @@ export const addProductToInvoice = async (req,res) => {
             discountFromProduct:parseFloat(productExist?.discount || 0).toFixed(2),
             discountFromCategory:parseFloat(getDiscount).toFixed(2),
             quantity:parseFloat(quantity).toFixed(2),
-            discountType:productExist?.discountType || "empty",
+            discountType:productExist?.discountType || "percentage",
             productId:productId 
         } 
 
-       console.log(addProduct)
-       console.log(productExist?.discountType)
        
      if(!findInvoiceProduct){ 
 
                 // reduce quantity from product
 
-         const substractQuantity = productExist.quantity - quantity;
+         const substractQuantity = productExist?.quantity - quantity;
          await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
  
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))

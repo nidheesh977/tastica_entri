@@ -43,15 +43,41 @@ const invoiceSchema = new mongoose.Schema({
          default: 0.00
     },
 
-   status:{
+   invoiceStatus:{
         type: String,
-        enum: ["newtab", "saved", "paid", "unpaid"],
+        enum: ["newtab", "saved"],
         default: "newtab"
+    },
+
+    paymentStatus:{
+        type:String,
+        enum:["pending","completed","failed","refunded"],
+        required:true,
+        default:"pending" 
+    },
+
+    paymentMethod:{
+      type:String,
+      enum:["cash","digital"],
+      reqired:true,
+      default:null,
     },
 
     totalAmount:{
        type:Number,
         default: 0.00
+    },
+     countryName:{
+        type:String,
+        required:true
+    },
+    currencyCode:{
+        type:String,
+        required:true
+    },
+     shop:{
+        type:String,
+        required:true
     },
 
     customer:{

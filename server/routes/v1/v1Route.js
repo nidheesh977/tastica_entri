@@ -10,10 +10,12 @@ import customerRouter from "./customerRoute/customerRoutes.js";
 import searchRouter from "./searchRoute/searchRoutes.js";
 import fileUploadRouter from "./fileUploadRoute/fileUploadRoutes.js";
 import customProductRouter from "./customProductRoute/customProductRoutes.js";
+import paymentRouter from "./paymentRoutes/paymentRoute.js";
 
 
 const v1Router = express.Router();
 
+v1Router.use("/payment",paymentRouter);
 v1Router.use("/search",searchRouter);
 v1Router.use("/file",fileUploadRouter);
 v1Router.use("/custom-product",customProductRouter);
