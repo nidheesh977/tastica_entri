@@ -45,7 +45,7 @@ const invoiceSchema = new mongoose.Schema({
 
    invoiceStatus:{
         type: String,
-        enum: ["newtab", "saved"],
+        enum: ["newtab", "saved" , "paid"],
         default: "newtab"
     },
 
