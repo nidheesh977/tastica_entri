@@ -31,7 +31,7 @@ export const productsFileUploader = async (req, res) => {
                     currencyCode: row.currencyCode,
                     shop:row.shop,
                     discountType:row.discountType,
-                    units:row.units
+                    unit:row.unit
                 });
             })
             .on('end', async () => {

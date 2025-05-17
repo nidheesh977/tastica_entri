@@ -12,7 +12,7 @@ export const createCustomProduct = async (req, res) => {
             return res.status(400).json({success:false,message: error.details[0].message });
         }
        
-        const { productName, quantity, units, sellingPrice} = value;
+        const { productName, quantity, unit, sellingPrice} = value;
         const {id,countryName,currencyCode} = req.shop;
 
      
@@ -34,7 +34,7 @@ export const createCustomProduct = async (req, res) => {
             shop:id,
             countryName,
             currencyCode,
-            units,
+            unit,
             isCustomProduct:true
         });
 

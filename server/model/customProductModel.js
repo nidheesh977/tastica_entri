@@ -26,7 +26,7 @@ const customProductSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    units:{
+    unit:{
         type:String,
         enum:['number','kg','li','m'],
         default:'number'

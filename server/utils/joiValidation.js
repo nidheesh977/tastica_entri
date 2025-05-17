@@ -227,10 +227,10 @@ export const newProductValidation = Joi.object({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
-    units:Joi.string().valid('number','kg','li','m').messages({
-        'string.base': 'Units must be a string',
-        'string.empty': 'Units cannot be empty',
-        'any.only': 'Units must be one of the following values: number, kg, li, m',
+    unit:Joi.string().valid('number','kg','li','m').messages({
+        'string.base': 'Unit must be a string',
+        'string.empty': 'Unit cannot be empty',
+        'any.only': 'Unit must be one of the following values: number, kg, li, m',
     }),
 
     
@@ -351,10 +351,10 @@ export const newCustomProductValidation = Joi.object({
     }),
 
     
-    units:Joi.string().valid('number','kg','li','m').messages({
-        'string.base': 'Units must be a string',
-        'string.empty': 'Units cannot be empty',
-        'any.only': 'Units must be one of the following values: number, kg, li, m',
+    unit:Joi.string().valid('number','kg','li','m').messages({
+        'string.base': 'Unit must be a string',
+        'string.empty': 'Unit cannot be empty',
+        'any.only': 'Unit must be one of the following values: number, kg, li, m',
     }),
 
 });
