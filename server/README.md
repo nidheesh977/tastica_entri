@@ -35,6 +35,8 @@
 **URL:** `/api/v1/admin/staff/:id/password`
 
 
+
+
 ## The routes for shop
 
  - 🏤💼 create shop<br>
@@ -142,10 +144,17 @@
 **method:**`GET`<br>
 **URL:**`/api/v1/invoice/:invoiceId`
 
-
 - 📃 invoice save <br>  
 **method**`PATCH`<br>
 **URL**`/api/v1/invoice/:id`
+
+
+## This route for admin
+- 🧑‍💼 "Get full invoice"<br>
+**method:** `GET`<br>
+**URL:** `/api/v1/invoice`
+
+
 
 ## customer routes
 
@@ -165,6 +174,10 @@
 **method**`GET`<br>
 **URL**`/api/v1/customer`
 
+## This route for admin
+- 🧑‍💼 "Get customer invoice"<br>
+**method:** `GET`<br>
+**URL:** `/api/v1/customer/:id`
 
 
 ## Search Routes<br>

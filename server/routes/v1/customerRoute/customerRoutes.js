@@ -1,5 +1,5 @@
 import express from 'express'
-import { createCustomer,deleteCustomer,getCustomer,updateCustomer } from '../../../controller/customerController.js';
+import { createCustomer,deleteCustomer,getCustomer,getSingleCustomer,updateCustomer } from '../../../controller/customerController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
@@ -12,5 +12,5 @@ customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","st
 customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),updateCustomer);
 customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),deleteCustomer);
 
-
+customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleCustomer);
 export default customerRouter;
