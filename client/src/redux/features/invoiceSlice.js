@@ -7,8 +7,11 @@ export const invoiceSlice = createSlice({
     saveInvoiceData: (_, action) => {
       return action.payload;
     },
+    clearInvoiceData: () => {
+      return null
+    }
   },
 });
 
-export const { saveInvoiceData } = invoiceSlice.actions;
+export const { saveInvoiceData, clearInvoiceData } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

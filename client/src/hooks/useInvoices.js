@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { saveInvoiceData } from "../redux/features/invoiceSlice";
+import { saveInvoiceData, clearInvoiceData } from "../redux/features/invoiceSlice";
 import { loadStripe } from "@stripe/stripe-js";
 
 export const useInvoices = () => {
@@ -33,7 +33,7 @@ export const useInvoices = () => {
         null,
         {
           withCredentials: true,
-        },
+        }
       );
       return response?.data?.data;
     },
@@ -51,7 +51,7 @@ export const useInvoices = () => {
       const response = await axiosInstance.post(
         `/invoice/${invoiceId}/products`,
         { productId, quantity },
-        { withCredentials: true },
+        { withCredentials: true }
       );
       return response?.data?.data;
     },
@@ -71,7 +71,7 @@ export const useInvoices = () => {
       const response = await axiosInstance.put(
         `/invoice/${invoiceId}/product/${productId}`,
         null,
-        { withCredentials: true },
+        { withCredentials: true }
       );
       return response?.data?.data;
     },
@@ -97,6 +97,25 @@ export const useInvoices = () => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
+      toast.success("Payment successful.");
+      dispatch(clearInvoiceDat(null))
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+
+  const { mutate: saveInvoice } = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance({
+        method: "PATCH",
+        url: `/invoice/${invoiceId}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
       console.log(data);
     },
     onError: (error) => {
@@ -106,7 +125,7 @@ export const useInvoices = () => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -115,7 +134,7 @@ export const useInvoices = () => {
         withCredentials: true,
       });
       return stripe.redirectToCheckout({
-        sessionId: session.data.sessionId,
+        sessionId: session.data.session.id,
       });
     },
     onSuccess: (data) => {
@@ -133,5 +152,6 @@ export const useInvoices = () => {
     invoice: data,
     makeCashPayment,
     makeOnlinePayment,
+    saveInvoice,
   };
 };
