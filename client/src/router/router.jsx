@@ -27,6 +27,8 @@ import { OpenOrders } from "../pages/shared/OpenOrders/OpenOrders";
 import { AddNewCustomProduct } from "../pages/shared/AddNewCustomProduct/AddNewCustomProduct";
 import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCustomProduct";
 import { UploadCSV } from "../pages/admin/UploadCSV/UploadCSV";
+import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
+import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -127,6 +129,14 @@ export const router = createBrowserRouter([
             path: "open/orders",
             element: <OpenOrders />,
           },
+          {
+            path: "payment/success",
+            element: <PaymentSuccess />,
+          },
+          {
+            path: "payment/cancel",
+            element: <PaymentSuccess />,
+          },
         ],
       },
     ],
@@ -175,6 +185,14 @@ export const router = createBrowserRouter([
         path: "customer/add",
         element: <AddNewCustomer />,
       },
+      {
+            path: "payment/success",
+            element: <PaymentSuccess />,
+          },
+          {
+            path: "payment/cancel",
+            element: <PaymentSuccess />,
+          },
     ],
   },
 ]);

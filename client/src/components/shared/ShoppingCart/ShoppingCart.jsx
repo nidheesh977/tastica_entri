@@ -6,6 +6,8 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
+import { useDispatch } from "react-redux";
+import {clearInvoiceData} from '../../../redux/features/invoiceSlice.js'
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
@@ -20,17 +22,15 @@ export const ShoppingCart = () => {
   } = useInvoices();
 
   const products = invoice?.products;
-
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [mobile, setMobile] = useState("");
-  const [customerId, setCustomerId] = useState("");
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
-  const [payMode, setPayMode] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
 
   const findCustomer = () => {
@@ -49,7 +49,6 @@ export const ShoppingCart = () => {
     if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
-      setCustomerId(matchedCustomer._id);
       createInvoice(matchedCustomer._id);
       setIsNewCustomer(false);
     } else {
@@ -64,22 +63,21 @@ export const ShoppingCart = () => {
     setSearchQuery("");
     setName("");
     setMobile("");
-    setCustomerId("");
     setIsNewCustomer(false);
     setQuantities({});
+    dispatch(clearInvoiceData());
   };
 
   const handlePayNow = () => {
-    setPayMode("cash");
     setShowPayDialog(false);
     makeCashPayment();
     resetBillingState();
   };
 
   const handleOnlinePay = () => {
-    setPayMode("online");
     setShowPayDialog(false);
     makeOnlinePayment();
+    resetBillingState();
   };
 
   const handleCancel = () => {
@@ -94,7 +92,6 @@ export const ShoppingCart = () => {
     if (invoice?.customer) {
       setName(invoice.customer.customerName || "");
       setMobile(invoice.customer.phoneNumber || "");
-      setCustomerId(invoice.customer._id || "");
     }
   }, [invoice]);
   useEffect(() => {
@@ -237,7 +234,7 @@ export const ShoppingCart = () => {
       <div className="mt-2 w-full font-bold">
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Subtotal</div>
-          <div>MVR{Math.round(invoice?.subTotal) || 0}</div>
+          <div>MVR{invoice?.subTotal || 0}</div>
         </div>
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Tax</div>
@@ -245,7 +242,7 @@ export const ShoppingCart = () => {
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
-          <div>MVR{Math.round(invoice?.totalAmount) || 0}</div>
+          <div>MVR{invoice?.totalAmount || 0}</div>
         </div>
       </div>
 
