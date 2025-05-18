@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FaBox } from "react-icons/fa";
+import { useCustomProducts } from "../../../hooks/useCustomProducts";
 export const AddCustomProduct = () => {
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [unit, setUnit] = useState("");
+  const { addCustomProduct } = useCustomProducts();
 
   return (
     <div className="flex justify-center">
@@ -85,7 +87,16 @@ export const AddCustomProduct = () => {
           className="p-4 my-1 w-full bg-white shadow outline-[#155E95]"
         />
 
-        <button className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg">
+        <button
+          className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
+          onClick={() => {
+            addCustomProduct({ productName, quantity, units:unit, sellingPrice });
+            setProductName("");
+            setQuantity("");
+            setUnit("");
+            setSellingPrice("");
+          }}
+        >
           <span className="flex items-center justify-center gap-2 font-semibold">
             Add Product <FaBox />
           </span>

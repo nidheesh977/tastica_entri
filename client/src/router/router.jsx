@@ -26,6 +26,7 @@ import { ListInvoices } from "../pages/shared/ListInvoices/ListInvoices";
 import { OpenOrders } from "../pages/shared/OpenOrders/OpenOrders";
 import { AddNewCustomProduct } from "../pages/shared/AddNewCustomProduct/AddNewCustomProduct";
 import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCustomProduct";
+import { UploadCSV } from "../pages/admin/UploadCSV/UploadCSV";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
           {
             path: "add/category",
             element: <AddNewCategory />,
+          },
+          {
+            path: "upload/csv",
+            element: <UploadCSV />,
           },
           {
             path: "staff/signup",

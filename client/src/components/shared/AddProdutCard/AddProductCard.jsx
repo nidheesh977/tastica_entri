@@ -10,6 +10,7 @@ export const AddProductCard = () => {
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [costPrice, setCostPrice] = useState("");
+  const [costPriceProfit, setCostPriceProfit] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
@@ -89,7 +90,7 @@ export const AddProductCard = () => {
               </span>
             </span>
           </div>
-
+ <div className="flex items-center justify-between  w-full  my-1">
           <input
             type="number"
             value={costPrice}
@@ -97,7 +98,14 @@ export const AddProductCard = () => {
             placeholder="Cost Price"
             className="p-4 my-1 w-full bg-white shadow outline-[#155E95]"
           />
-
+          <input
+            type="number"
+            value={costPriceProfit}
+            onChange={(e) => setCostPriceProfit(e.target.value)}
+            placeholder="Cost Price Profit"
+            className="p-4 my-1 w-full bg-white shadow outline-[#155E95]"
+          />
+</div>
           <input
             type="number"
             value={sellingPrice}
@@ -157,6 +165,7 @@ export const AddProductCard = () => {
                 productName,
                 quantity: Number(quantity),
                 costPrice: Number(costPrice),
+                costPriceProfit: Number(costPriceProfit),
                 sellingPrice: Number(sellingPrice),
                 discount: Number(discount),
                 category,
@@ -166,6 +175,7 @@ export const AddProductCard = () => {
               setProductName("");
               setQuantity("");
               setCostPrice("");
+              setCostPriceProfit("");
               setSellingPrice("");
               setDiscount("");
             }}

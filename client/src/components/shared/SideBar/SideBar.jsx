@@ -1,5 +1,4 @@
-import { FaHome } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
+import { FaHome, FaUsers,  FaFileCsv } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { FaBoxOpen, FaUserTie } from "react-icons/fa";
 import { MdPersonAdd, MdGroups, MdCategory, MdReceipt } from "react-icons/md";
@@ -118,6 +117,16 @@ export const SideBar = () => {
         >
           <BiCategory />
           Add Category
+        </li>
+        <li
+          onClick={() =>
+            handleSideBar("/admin/upload/csv")
+          }
+          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          < FaFileCsv />
+          Upload CSV 
+          
         </li>
         <li
           onClick={() => handleSideBar(admin ? "/admin/cart" : "/staff")}

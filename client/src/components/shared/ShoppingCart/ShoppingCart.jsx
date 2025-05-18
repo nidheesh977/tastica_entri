@@ -14,6 +14,8 @@ export const ShoppingCart = () => {
     removeProductFromInvoice,
     addProductToInvoice,
     invoice,
+    makeCashPayment,
+    makeOnlinePayment,
   } = useInvoices();
 
   const products = invoice?.products;
@@ -43,7 +45,7 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -61,11 +63,13 @@ export const ShoppingCart = () => {
   const handlePayNow = () => {
     setPayMode("cash");
     setShowPayDialog(false);
+    makeCashPayment();
   };
 
   const handleOnlinePay = () => {
     setPayMode("online");
     setShowPayDialog(false);
+    makeOnlinePayment();
   };
 
   const handleCancel = () => {

@@ -6,7 +6,7 @@ export const OpenOrders = () => {
     <>
       <SideBar />
       <div className="flex justify-center px-2 mt-10 m-2">
-        <div className="border border-primary w-full max-w-[800px] h-[500px] p-5 overflow-hidden flex flex-col">
+        <div className="border border-primary w-full max-w-[730px] h-[500px] p-5 overflow-hidden flex flex-col">
           <h1 className="text-center text-primary text-3xl py-2 font-thin">
             Open Orders
           </h1>
@@ -21,7 +21,6 @@ export const OpenOrders = () => {
             <OpenOrderCard />
             <OpenOrderCard />
             <OpenOrderCard />
-            
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { saveInvoiceData } from "../redux/features/invoiceSlice";
+import { loadStripe } from "@stripe/stripe-js";
 
 export const useInvoices = () => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
@@ -18,7 +19,7 @@ export const useInvoices = () => {
       });
       return response?.data?.data;
     },
-    
+
     onError: (error) => {
       toast.error("Failed to fetch invoice");
       console.error(error);
@@ -32,7 +33,7 @@ export const useInvoices = () => {
         null,
         {
           withCredentials: true,
-        }
+        },
       );
       return response?.data?.data;
     },
@@ -50,14 +51,14 @@ export const useInvoices = () => {
       const response = await axiosInstance.post(
         `/invoice/${invoiceId}/products`,
         { productId, quantity },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       return response?.data?.data;
     },
     onSuccess: (data) => {
       toast.success("Product added to invoice");
       dispatch(saveInvoiceData(data));
-       queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["invoice"]);
     },
     onError: (error) => {
       toast.error("Failed to add product to invoice");
@@ -70,13 +71,13 @@ export const useInvoices = () => {
       const response = await axiosInstance.put(
         `/invoice/${invoiceId}/product/${productId}`,
         null,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       return response?.data?.data;
     },
     onSuccess: (data) => {
       dispatch(saveInvoiceData(data));
-       queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["invoice"]);
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
@@ -85,10 +86,52 @@ export const useInvoices = () => {
     },
   });
 
+  const { mutate: makeCashPayment } = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/payment/cash/invoice/${invoiceId}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: makeOnlinePayment } = useMutation({
+    mutationFn: async () => {
+      const stripe = await loadStripe(
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+      );
+
+      const session = await axiosInstance({
+        url: `/payment/card/invoice/${invoiceId}`,
+        method: "POST",
+        withCredentials: true,
+      });
+      return stripe.redirectToCheckout({
+        sessionId: session.data.sessionId,
+      });
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+
   return {
     createInvoice,
     addProductToInvoice,
     removeProductFromInvoice,
-    invoice:data
+    invoice: data,
+    makeCashPayment,
+    makeOnlinePayment,
   };
 };
