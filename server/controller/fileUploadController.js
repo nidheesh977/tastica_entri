@@ -1,6 +1,9 @@
 import csv from 'csv-parser';
 import fs from 'fs';
 import productModel from '../model/productModel.js';
+import categoryModel from '../model/categoryModel.js';
+import shopModel from '../model/shopModel.js';
+import { generateProductId } from '../utils/generateProductId.js';
 
 export const productsFileUploader = async (req, res) => {
     try {
@@ -14,14 +17,11 @@ export const productsFileUploader = async (req, res) => {
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
-                
-                if (!row.product_id || !row.productName || !row.quantity) {
-                    return res.status(400).json({ success: false, message: "Invalid CSV data" });
-                }
+                        
 
                 products.push({
                     product_id: row.product_id,
-                    productName: row.productName,
+                    productName: row.productName.trim(),
                     quantity: Number(row.quantity),
                     costPrice: Number(row.costPrice),
                     sellingPrice: Number(row.sellingPrice),
@@ -31,20 +31,46 @@ export const productsFileUploader = async (req, res) => {
                     currencyCode: row.currencyCode,
                     shop:row.shop,
                     discountType:row.discountType,
-                    unit:row.unit
+                    unit:row.units
                 });
             })
             .on('end', async () => {
                 try {
+
+                    for (const row of products){
+
+                        const findShop = await shopModel.findOne({shopName:row.shop});
+
+                        if(!findShop){
+                          return res.status(400).json({success:false,message:"shop is not found"})
+                        }
+
+                        const getCategory = await categoryModel.findOne({shop:findShop._id,categoryName:row.category.trim()});
+                   
+                        if(!getCategory){
+                            return res.status(400).json({success:false,message:"Category is not found"})
+                        }
+
+                        let productId;
+                               
+                        do {
+                            productId = generateProductId()
+                            } while (await productModel.findOne({product_id:productId}));
+                               
+
+                        row["category"] = getCategory?._id
+                        row["shop"] = findShop?._id
+                        row["product_id"] = productId
+                    } 
                     
                     const existingProductIds = new Set(
-                        (await productModel.find({ product_id: { $in: products.map(p => p.product_id) } }, 'product_id'))
-                            .map(product => product.product_id)
+                        (await productModel.find({ productName: { $in: products.map(p => p.productName) } }, 'productName'))
+                            .map(product => product.productName)
                     );
 
                    
                     const newProducts = products.filter(
-                        (product) => !existingProductIds.has(product.product_id)
+                        (product) => !existingProductIds.has(product.productName)
                     );
 
                     if (newProducts.length === 0) {
@@ -53,6 +79,8 @@ export const productsFileUploader = async (req, res) => {
                             message: "All products in the CSV file already exist",
                         });
                     }
+
+                    console.log(newProducts)
 
                     
                     await productModel.insertMany(newProducts);
@@ -71,7 +99,7 @@ export const productsFileUploader = async (req, res) => {
                         if (err) console.error("Error deleting file:", err);
                     });
                 }
-            })
+            }) 
             .on('error', (err) => {
                 console.error("Error reading file:", err);
                 res.status(500).json({ success: false, message: "Error processing file" });
