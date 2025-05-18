@@ -110,3 +110,18 @@ export const getCustomer = async(req,res) => {
       return res.status(500).json({success:false,message:"Internal Server Error"})
    }
 }
+
+
+export const getSingleCustomer = async (req,res) => {
+   try{
+     const {id} = req.params;
+     const shopId = req.shop.id;
+
+     const getCustomer = await customerModel.findOne({_id:id,shopId:shopId}).populate("invoices")
+
+     res.status(200).json({success:true,message:"Data fetched successfully", data:getCustomer});
+   }catch(error){
+      console.log(error)
+    return res.status(500).json({success:false,message:"Internal Server Error"})
+   }
+}

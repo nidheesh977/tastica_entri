@@ -1,5 +1,5 @@
 import express from 'express'
-import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice,getInvoice } from '../../../controller/invoiceController.js';
+import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice,getInvoice, getFullInvoice } from '../../../controller/invoiceController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
@@ -11,8 +11,12 @@ invoiceRouter.post('/:invoiceId/products',userVerifyToken,checkUserRole('admin',
 invoiceRouter.put('/:invoiceId/product/:productsId',userVerifyToken,checkUserRole('admin','staff'),removeProductFromInvoice);
 invoiceRouter.get('/:invoiceId',userVerifyToken,checkUserRole('admin','staff'),getInvoice);
 
+//  This route only admin
+invoiceRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),getFullInvoice);
 
-// invoiceRouter.patch('/:id/products/:productId',userVerifyToken,checkUserRole('admin','staff'),removeProductFromInvoice);
+
+
+
 // invoiceRouter.patch('/:id',userVerifyToken,checkUserRole('admin','staff'),saveInvoice);
 
 export default invoiceRouter

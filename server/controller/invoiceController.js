@@ -321,3 +321,18 @@ export const removeProductFromInvoice = async (req,res) => {
                 return res.status(500).json({success:false,message:"Internal server error"})
             }
         }
+
+
+        // This endpoint for admin
+        export const getFullInvoice = async (req,res) => {
+            try{
+
+                const {id} = req.shop;
+
+                const fullInvoice = await invoiceModel.find({shop:id}).populate("customer")
+
+                res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
+            }catch(error){
+                res.status(500).json({success:false,message:"Internal server error"})
+            }
+        }
