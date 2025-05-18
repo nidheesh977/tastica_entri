@@ -65,6 +65,7 @@ export const ShoppingCart = () => {
     setMobile("");
     setIsNewCustomer(false);
     setQuantities({});
+    
   };
 
   const handlePayNow = () => {

@@ -9,7 +9,7 @@ export const invoiceSlice = createSlice({
     },
     clearInvoiceData: () => {
       return null
-    }
+    },
   },
 });
 
