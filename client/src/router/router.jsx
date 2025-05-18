@@ -37,7 +37,8 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <ShopLoginPage /> },
+      // { path: "", element: <ShopLoginPage /> },
+      { path: "", element: <PaymentCancel /> },
 
       {
         path: "shop",
@@ -135,7 +136,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "payment/cancel",
-            element: <PaymentCancel/>,
+            element: <PaymentCancel />,
           },
         ],
       },
@@ -186,13 +187,13 @@ export const router = createBrowserRouter([
         element: <AddNewCustomer />,
       },
       {
-            path: "payment/success",
-            element: <PaymentSuccess />,
-          },
-          {
-            path: "payment/cancel",
-            element: <PaymentCancel/>,
-          },
+        path: "payment/success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "payment/cancel",
+        element: <PaymentCancel />,
+      },
     ],
   },
 ]);
