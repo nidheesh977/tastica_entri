@@ -9,6 +9,10 @@ export const onlinePaymentStripe = async (req,res) => {
     try{
        const {invoiceId} = req.params;
 
+       const user = req.user;
+
+       console.log(user)
+
        if(!invoiceId){
         return res.stattus(400).json({success:true,message:"Invoice ID not get"})
        }

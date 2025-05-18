@@ -148,6 +148,10 @@
 **method**`PATCH`<br>
 **URL**`/api/v1/invoice/:id`
 
+- 📃 get invoice saved <br>  
+**method**`GET`<br>
+**URL**`/api/v1/invoice`
+
 
 ## This route for admin
 - 🧑‍💼 "Get full invoice"<br>

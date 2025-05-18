@@ -323,6 +323,53 @@ export const removeProductFromInvoice = async (req,res) => {
         }
 
 
+        export const invoiceSave = async (req,res) => {
+            try{
+                const {id} = req.params;
+
+                if(!id){
+                    return res.status(400).json({success:false,})
+                }
+
+                const findInvoice = await invoiceModel.findById(id)
+              
+
+                if(findInvoice.paymentStatus === "completed"){
+                    return res.status(400).json({success:false,message:"This Invoice cannot be saved it's payment completed"})
+                }
+
+                
+                const saveInvoice = await invoiceModel.findByIdAndUpdate(id,{invoiceStatus:"saved"},{new:true});
+
+                if(!saveInvoice){
+                    return res.status(400).json({success:false,message:"Invoice not found"})
+                }
+
+                res.status(200).json({success:true,message:"Invoice saved",data:saveInvoice})
+            }catch(error){
+                return res.status(500).json({success:false,message:"Internal server error"})
+            }
+        }
+
+
+        export const getSavedInvoice = async (req,res) => {
+            try{
+                const shopId = req.shop.id;
+                
+                if(!shopId){
+                    return res.status(400).json({success:false,message:"Shop ID is not get"});
+                }
+
+                const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"});
+
+                res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
+
+            }catch(error){
+                return res.status(500).json({success:false,message:"Internal server error"})
+            }
+        }
+
+
         // This endpoint for admin
         export const getFullInvoice = async (req,res) => {
             try{
@@ -336,3 +383,4 @@ export const removeProductFromInvoice = async (req,res) => {
                 res.status(500).json({success:false,message:"Internal server error"})
             }
         }
+

@@ -13,4 +13,4 @@ customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin",
 customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),deleteCustomer);
 
 customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleCustomer);
-export default customerRouter;
+export default customerRouter; 
