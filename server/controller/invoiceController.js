@@ -360,7 +360,7 @@ export const removeProductFromInvoice = async (req,res) => {
                     return res.status(400).json({success:false,message:"Shop ID is not get"});
                 }
 
-                const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"});
+                const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"}).populate("customer");
 
                 res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
 
@@ -376,7 +376,7 @@ export const removeProductFromInvoice = async (req,res) => {
 
                 const {id} = req.shop;
 
-                const fullInvoice = await invoiceModel.find({shop:id}).populate("customer")
+                const fullInvoice = await invoiceModel.find({shop:id}).populate("customer");
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){
