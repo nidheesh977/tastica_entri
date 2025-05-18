@@ -4,6 +4,8 @@ import Stripe from 'stripe'
 
 export const onlinePaymentStripe = async (req,res) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_MY)
+
+    
     try{
        const {invoiceId} = req.params;
 
@@ -36,13 +38,16 @@ export const onlinePaymentStripe = async (req,res) => {
                 },
                 quantity:1
             }],
-            mode:"payment"
+            mode:"payment",
+            success_url:"http://localhost:5173/api/v1/",
+            cancel_url:"http://localhost:5173/api/v1/"
         })
 
-        res.status(200).json({success:true,message:"payment Success",session:session.id})
+        res.status(200).json({success:true,message:"payment Success",session:session})
 
        
     }catch(error){
+        console.log(error)
         res.status(500).json({success:false,message:"Internal server error",error})
     }
 }

@@ -154,7 +154,7 @@ export const addProductToInvoice = async (req,res) => {
          const subTotal =  existInvoice.subTotal +  productTotalPrice ;
          const subTotalReduceDiscount = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
 
-         console.log(totalDiscountAmount)
+         
          const newObject = {...addProduct,productDiscount:parseFloat(totalDiscountAmount).toFixed(2)}
          existInvoice.products.push(newObject);
          existInvoice.set("totalDiscount",parseFloat(finalDiscountValue).toFixed(2))
