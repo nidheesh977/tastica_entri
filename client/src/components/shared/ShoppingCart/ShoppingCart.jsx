@@ -16,6 +16,7 @@ export const ShoppingCart = () => {
     invoice,
     makeCashPayment,
     makeOnlinePayment,
+    saveInvoice,
   } = useInvoices();
 
   const products = invoice?.products;
@@ -28,10 +29,7 @@ export const ShoppingCart = () => {
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [quantities, setQuantities] = useState({});
-
-  const [editingQuantities, setEditingQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
-  const [receivedAmount, setReceivedAmount] = useState("");
   const [payMode, setPayMode] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
 
@@ -45,7 +43,7 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -60,10 +58,22 @@ export const ShoppingCart = () => {
     }
   };
 
+  const resetBillingState = () => {
+    setCustomerName("");
+    setPhoneNumber("");
+    setSearchQuery("");
+    setName("");
+    setMobile("");
+    setCustomerId("");
+    setIsNewCustomer(false);
+    setQuantities({});
+  };
+
   const handlePayNow = () => {
     setPayMode("cash");
     setShowPayDialog(false);
     makeCashPayment();
+    resetBillingState();
   };
 
   const handleOnlinePay = () => {
@@ -240,7 +250,10 @@ export const ShoppingCart = () => {
       </div>
 
       <div className="flex gap-2 mt-2 justify-between">
-        <button className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg">
+        <button
+          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
+          onClick={() => saveInvoice()}
+        >
           <FaSave /> Save
         </button>
 
@@ -254,9 +267,7 @@ export const ShoppingCart = () => {
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: MVR${
-            Math.round(invoice?.totalAmount) || 0
-          }`}
+          message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
           onPayNow={handlePayNow}
           onOnlinePay={handleOnlinePay}
           onCancel={handleCancel}
