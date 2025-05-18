@@ -2,7 +2,10 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { saveInvoiceData, clearInvoiceData } from "../redux/features/invoiceSlice";
+import {
+  saveInvoiceData,
+  clearInvoiceData,
+} from "../redux/features/invoiceSlice";
 import { loadStripe } from "@stripe/stripe-js";
 
 export const useInvoices = () => {
@@ -98,7 +101,7 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       toast.success("Payment successful.");
-      dispatch(clearInvoiceDat(null))
+      dispatch(clearInvoiceDat(null));
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);

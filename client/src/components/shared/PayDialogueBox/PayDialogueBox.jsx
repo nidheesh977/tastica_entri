@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FaDollarSign, FaTimes } from "react-icons/fa";
 import { FaMoneyCheckAlt } from "react-icons/fa";
 
@@ -8,6 +9,7 @@ export const PayDialogueBox = ({
   onCancel,
   invoice,
 }) => {
+  const [receivedAmount, setReceivedAmount] = useState("");
   return (
     <div
       className={`fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2
@@ -24,9 +26,13 @@ export const PayDialogueBox = ({
               type="text"
               className="py-2 text-base outline-primary text-center border placeholder:p-3 shadow"
               placeholder="Received Amount"
+              value={receivedAmount}
+              onChange={(e) => setReceivedAmount(e.target.value)}
             />
           </li>
-          <li className="border flex items-center justify-between p-2 w-full shadow">Balance: MVR50</li>
+          <li className="border flex items-center justify-between p-2 w-full shadow">
+            Balance: {receivedAmount ? Number(receivedAmount) - invoice?.totalAmount : 0}
+          </li>
         </ul>
       </ul>
 

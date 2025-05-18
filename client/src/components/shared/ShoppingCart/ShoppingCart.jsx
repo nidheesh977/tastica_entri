@@ -29,10 +29,7 @@ export const ShoppingCart = () => {
   const [mobile, setMobile] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [quantities, setQuantities] = useState({});
-
-  const [editingQuantities, setEditingQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
-  const [receivedAmount, setReceivedAmount] = useState("");
   const [payMode, setPayMode] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
 
@@ -76,7 +73,7 @@ export const ShoppingCart = () => {
     setPayMode("cash");
     setShowPayDialog(false);
     makeCashPayment();
-    resetBillingState()
+    resetBillingState();
   };
 
   const handleOnlinePay = () => {
@@ -270,9 +267,7 @@ export const ShoppingCart = () => {
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: MVR${
-            Math.round(invoice?.totalAmount) || 0
-          }`}
+          message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
           onPayNow={handlePayNow}
           onOnlinePay={handleOnlinePay}
           onCancel={handleCancel}
