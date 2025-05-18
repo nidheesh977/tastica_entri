@@ -11,7 +11,7 @@ invoiceRouter.post('/:invoiceId/products',shopVerifyToken,userVerifyToken,checkU
 invoiceRouter.put('/:invoiceId/product/:productsId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),removeProductFromInvoice);
 invoiceRouter.get('/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getInvoice);
 invoiceRouter.patch('/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),invoiceSave);
-invoiceRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getSavedInvoice);
+invoiceRouter.get('/saved',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getSavedInvoice);
 
 //  This route only admin
 invoiceRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),getFullInvoice);
