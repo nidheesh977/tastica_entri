@@ -131,6 +131,10 @@ export const router = createBrowserRouter([
             element: <OpenOrders />,
           },
           {
+            path: "invoices",
+            element: <ListInvoices />,
+          },
+          {
             path: "payment/success",
             element: <PaymentSuccess />,
           },
@@ -158,6 +162,7 @@ export const router = createBrowserRouter([
         path: "open/orders",
         element: <OpenOrders />,
       },
+      
       {
         path: "add/product",
         element: <AddProductCard />,

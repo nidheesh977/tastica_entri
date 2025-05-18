@@ -7,7 +7,7 @@ import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useDispatch } from "react-redux";
-import {clearInvoiceData} from '../../../redux/features/invoiceSlice.js'
+import { clearInvoiceData } from "../../../redux/features/invoiceSlice.js";
 
 export const ShoppingCart = () => {
   const { customers, addCustomer } = useCustomers();
@@ -65,7 +65,6 @@ export const ShoppingCart = () => {
     setMobile("");
     setIsNewCustomer(false);
     setQuantities({});
-    dispatch(clearInvoiceData());
   };
 
   const handlePayNow = () => {

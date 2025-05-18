@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export const ListCardInvoice = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchQuery = useSelector((state) => state?.search);
   const invoiceData = [
     {
       no: 1,
@@ -148,16 +148,9 @@ export const ListCardInvoice = () => {
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
-        <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
+        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
           Invoices
         </h1>
-        <input
-          className="rounded-xl shadow md:col-span-4 outline-primary h-10 p-5 w-full"
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
       </div>
 
       <div className="overflow-auto h-96 pb-10">

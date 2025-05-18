@@ -101,7 +101,7 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       toast.success("Payment successful.");
-      dispatch(clearInvoiceDat(null));
+      
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
