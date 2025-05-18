@@ -37,8 +37,8 @@ export const router = createBrowserRouter([
     element: <ShopLayout />,
     errorElement: <ErrorPage />,
     children: [
-      // { path: "", element: <ShopLoginPage /> },
-      { path: "", element: <PaymentCancel /> },
+      { path: "", element: <ShopLoginPage /> },
+      // { path: "", element: <PaymentCancel /> },
 
       {
         path: "shop",
