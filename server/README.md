@@ -140,7 +140,7 @@
 **method:**`PUT`<br>
 **URL:**`/api/v1/invoice/:invoiceId/product/:productsId`
 
-- 📃📦🗑 get  invoice<br>
+- 📃📦🗑 get  invoice with id<br>
 **method:**`GET`<br>
 **URL:**`/api/v1/invoice/:invoiceId`
 

@@ -9,9 +9,9 @@ export const onlinePaymentStripe = async (req,res) => {
     try{
        const {invoiceId} = req.params;
 
-       const user = req.user;
+       const {role} = req.user;
 
-       console.log(user)
+       console.log(role)
 
        if(!invoiceId){
         return res.stattus(400).json({success:true,message:"Invoice ID not get"})
@@ -26,6 +26,11 @@ export const onlinePaymentStripe = async (req,res) => {
         if(findInvoice.paymentStatus === "completed"){
             return res.status(400).json({success:false,message:"Invoice already paid"});
         }
+
+           const successUrl = role === "admin" ? process.env.ADMIN_SUCCESS_URL : process.env.STAFF_SUCCESS_URL 
+           const cancelUrl = role === "admin" ? process.env.ADMIN_CANCEL_URL : process.env.STAFF_CANCEL_URL 
+
+           console.log(successUrl)
 
         const totalAmount = findInvoice.totalAmount;
          const countryCurrency = findInvoice.currencyCode.toLowerCase()
@@ -43,8 +48,8 @@ export const onlinePaymentStripe = async (req,res) => {
                 quantity:1
             }],
             mode:"payment",
-            success_url:"http://localhost:5173/api/v1/",
-            cancel_url:"http://localhost:5173/api/v1/"
+            success_url:`${successUrl}/?invoice=${findInvoice._id}`,
+            cancel_url:`${cancelUrl}/?invoice=${findInvoice._id}`
         })
 
         res.status(200).json({success:true,message:"payment Success",session:session})
