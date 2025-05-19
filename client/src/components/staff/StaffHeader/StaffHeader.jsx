@@ -96,7 +96,7 @@ export const StaffHeader = () => {
                 onClick={() => navigate("/staff/open/orders")}
               />
               {savedInvoices?.length !== 0 && (
-                <span className="flex items-center justify-center text-white text-xs w-5 h-5  font-bold  bg-red-500 border border-red-500 rounded-full">
+                <span className="flex items-center justify-center text-white text-xs w-4 h-4  font-bold  bg-red-500 border border-red-500 rounded-full">
                   {savedInvoices?.length}
                 </span>
               )}
