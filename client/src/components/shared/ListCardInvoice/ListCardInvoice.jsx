@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-export const ListCardInvoice = ({ invoices }) => {
+export const ListCardInvoice = ({ invoices, customer }) => {
   const searchQuery = useSelector((state) => state?.search);
 
   const invoicesData = invoices?.filter((invoice) => {
@@ -54,7 +54,7 @@ export const ListCardInvoice = ({ invoices }) => {
                   {invoice?.staff}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {invoice?.customer?.customerName}
+                  {customer || invoice?.customer?.customerName}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {invoice?.totalDiscount}

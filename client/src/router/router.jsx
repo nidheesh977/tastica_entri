@@ -30,6 +30,7 @@ import { UploadCSV } from "../pages/admin/UploadCSV/UploadCSV";
 import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
 import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
+import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -116,8 +117,8 @@ export const router = createBrowserRouter([
             element: <ListCustomers />,
           },
           {
-            path: "customer/view/invoice",
-            element: <ListInvoices />,
+            path: "customer/view/invoice/:id",
+            element: <ListCustomerInvoices />,
           },
           {
             path: "customer/add",
