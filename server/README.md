@@ -152,11 +152,15 @@
 **method**`GET`<br>
 **URL**`/api/v1/invoice/save/status-saved`
 
+- 📃 get invoice With id <br>  
+**method**`POST`<br>
+**URL**`/api/v1/invoice/` id pass through req.body
 
 ## This route for admin
 - 🧑‍💼 "Get full invoice"<br>
 **method:** `GET`<br>
 **URL:** `/api/v1/invoice`
+
 
 
 

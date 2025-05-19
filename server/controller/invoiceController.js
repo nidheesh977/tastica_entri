@@ -371,6 +371,26 @@ export const removeProductFromInvoice = async (req,res) => {
             }
         }
 
+        export const getInvoiceWithId = async (req,res) => {
+            try{
+                const {id} = req.body;
+
+                if(!id){
+                    return res.status(400).json({success:false,message:"Invoice ID not get"});
+                }
+
+                const findInvoice = await invoiceModel.findById(id);
+
+                if(!findInvoice){
+                    return res.status(400).json({success:false,message:"Invoice not found"})
+                };
+
+                res.status(200).json({success:true,message:"Data fetched successfully",data:findInvoice});
+            }catch(error){
+                return res.status(500).json({succcess:false,message:"Internal server error"})
+            }
+        }
+
 
         // This endpoint for admin
         export const getFullInvoice = async (req,res) => {
