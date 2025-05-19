@@ -132,6 +132,10 @@ export const router = createBrowserRouter([
             element: <OpenOrders />,
           },
           {
+            path: "open/orders/data/:id",
+            element: <Cart/>,
+          },
+          {
             path: "invoices",
             element: <ListInvoices />,
           },

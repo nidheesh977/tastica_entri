@@ -17,7 +17,9 @@ export const useInvoices = () => {
     queryKey: ["invoice", invoiceId],
     enabled: !!invoiceId,
     queryFn: async () => {
-      const response = await axiosInstance.get(`/invoice/${invoiceId}`, {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/invoice/${invoiceId}`,
         withCredentials: true,
       });
       return response?.data?.data;
@@ -32,7 +34,9 @@ export const useInvoices = () => {
     queryKey: ["invoices"],
 
     queryFn: async () => {
-      const response = await axiosInstance.get("/invoice", {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/invoice",
         withCredentials: true,
       });
       return response?.data?.data;
@@ -43,14 +47,42 @@ export const useInvoices = () => {
       console.error(error);
     },
   });
-  const { data: savedInvoices } = useQuery({
-    queryKey: ["savedInvoice"],
 
-    queryFn: async () => {
-      const response = await axiosInstance.get("/invoice/saved", {
+  const { mutate: saveInvoice } = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance({
+        method: "PATCH",
+        url: `/invoice/${invoiceId}`,
         withCredentials: true,
       });
+
       return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Saved to open orders");
+      dispatch(clearInvoiceData());
+      queryClient.invalidateQueries(["savedInvoices"]);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+
+  const { data: savedInvoices } = useQuery({
+    queryKey: ["savedInvoices"],
+
+    queryFn: async () => {
+      const response = await axiosInstance({
+        method: "GET",
+        url: "/invoice/save/status-saved",
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+
+    onSuccess: (data) => {
+      dispatch(saveOpenOrderData(data));
     },
 
     onError: (error) => {
@@ -61,13 +93,11 @@ export const useInvoices = () => {
 
   const { mutate: createInvoice } = useMutation({
     mutationFn: async (customerId) => {
-      const response = await axiosInstance.post(
-        `/invoice/${customerId}`,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/invoice/${customerId}`,
+        withCredentials: true,
+      });
       return response?.data?.data;
     },
     onSuccess: (data) => {
@@ -81,11 +111,16 @@ export const useInvoices = () => {
 
   const { mutate: addProductToInvoice } = useMutation({
     mutationFn: async ({ productId, quantity }) => {
-      const response = await axiosInstance.post(
-        `/invoice/${invoiceId}/products`,
-        { productId, quantity },
-        { withCredentials: true }
-      );
+      const data = {
+        productId,
+        quantity,
+      };
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/invoice/${invoiceId}/products`,
+        withCredentials: true,
+        data,
+      });
       return response?.data?.data;
     },
     onSuccess: (data) => {
@@ -101,11 +136,11 @@ export const useInvoices = () => {
 
   const { mutate: removeProductFromInvoice } = useMutation({
     mutationFn: async (productId) => {
-      const response = await axiosInstance.put(
-        `/invoice/${invoiceId}/product/${productId}`,
-        null,
-        { withCredentials: true }
-      );
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${invoiceId}/product/${productId}`,
+        withCredentials: true,
+      });
       return response?.data?.data;
     },
     onSuccess: (data) => {
@@ -138,24 +173,6 @@ export const useInvoices = () => {
     },
   });
 
-  const { mutate: saveInvoice } = useMutation({
-    mutationFn: async () => {
-      const response = await axiosInstance({
-        method: "PATCH",
-        url: `/invoice/${invoiceId}`,
-        withCredentials: true,
-      });
-
-      return response?.data?.data;
-    },
-    onSuccess: (data) => {
-      toast.success("Saved to open orders");
-      dispatch(clearInvoiceData());
-    },
-    onError: (error) => {
-      console.error(error?.response?.data?.message);
-    },
-  });
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(

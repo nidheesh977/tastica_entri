@@ -8,19 +8,21 @@ import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useAdmins } from "../../../hooks/useAdmins";
+import { useInvoices } from "../../../hooks/useInvoices";
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { logout } = useAdmins();
-
   const openNewInvoice = () => {
     window.open("/admin/cart", "_blank");
   };
+  const {savedInvoices} = useInvoices();
+  
+  
 
   return (
     <nav className="w-full">
@@ -85,7 +87,7 @@ export const AdminHeader = () => {
               />
             </li>
             <li
-              className="cursor-pointer rounded-md shadow-xl  p-2 w-full  "
+              className="cursor-pointer rounded-md shadow-xl flex items-center  p-2 w-full  "
               title="Open Orders"
             >
               <MdReceipt
@@ -93,6 +95,8 @@ export const AdminHeader = () => {
                 size={20}
                 onClick={() => navigate("/admin/open/orders")}
               />
+                {savedInvoices?.length !==0  && <span className="flex items-center justify-center w-4 h-4 text-white text-xs  font-bold bg-red-500 border border-red-500 rounded-full">{savedInvoices?.length}</span>}
+              
             </li>
 
             <li
