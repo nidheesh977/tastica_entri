@@ -6,6 +6,7 @@ import {
   saveInvoiceData,
   clearInvoiceData,
 } from "../redux/features/invoiceSlice";
+import { saveSingleInvoice } from "../redux/features/singleInvoiceSlice";
 import { loadStripe } from "@stripe/stripe-js";
 
 export const useInvoices = () => {
@@ -108,6 +109,26 @@ export const useInvoices = () => {
       toast.error("Failed to create invoice");
     },
   });
+  const { mutate: singleInvoice } = useMutation({
+    mutationFn: async ({ singleInvoiceId }) => {
+      console.log(singleInvoiceId);
+      
+      const data = {id: singleInvoiceId };
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/invoice",
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      dispatch(saveSingleInvoice(data));
+    },
+    onError: (error) => {
+      console.log(error?.response?.data?.message);
+    },
+  });
 
   const { mutate: addProductToInvoice } = useMutation({
     mutationFn: async ({ productId, quantity }) => {
@@ -207,5 +228,6 @@ export const useInvoices = () => {
     saveInvoice,
     savedInvoices,
     invoices,
+    singleInvoice,
   };
 };
