@@ -249,7 +249,7 @@ export const ShoppingCart = () => {
       <div className="flex gap-2 mt-2 justify-between">
         <button
           className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => saveInvoice()}
+          onClick={() => {saveInvoice(); resetBillingState()}}
         >
           <FaSave /> Save
         </button>
