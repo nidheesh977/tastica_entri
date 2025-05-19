@@ -53,8 +53,8 @@ const productSchema = new mongoose.Schema({
     },
     unit:{
         type:String,
-        enum:['number','kg','li','m'],
-        default:'number'
+        enum:['no','kg','li','m'],
+        default:'no'
     },
 
     isActive:{
