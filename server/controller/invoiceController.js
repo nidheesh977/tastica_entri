@@ -352,20 +352,22 @@ export const removeProductFromInvoice = async (req,res) => {
         }
 
 
-        export const getSavedInvoice = async (req,res) => {
+
+        export const getInvoiceSaved = async (req,res) => {
+ 
             try{
-                const shopId = req.shop.id;
+            const shopId = req.shop.id;
                 
                 if(!shopId){
                     return res.status(400).json({success:false,message:"Shop ID is not get"});
                 }
 
                 const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"}).populate("customer");
-
+      
                 res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
 
             }catch(error){
-                return res.status(500).json({success:false,message:"Internal server error"})
+                   return res.status(500).json({success:false,message:"Internal server error",error})
             }
         }
 
@@ -374,9 +376,16 @@ export const removeProductFromInvoice = async (req,res) => {
         export const getFullInvoice = async (req,res) => {
             try{
 
-                const {id} = req.shop;
+                const shopId = req.shop.id;
 
-                const fullInvoice = await invoiceModel.find({shop:id}).populate("customer");
+                 if(!shopId){
+                    return res.status(400).json({success:false,message:"Shop ID is not get"});
+                }
+
+                const fullInvoice = await invoiceModel.find({shop:shopId}).populate("customer");
+
+                
+                
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){

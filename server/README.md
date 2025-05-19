@@ -150,7 +150,7 @@
 
 - 📃 get invoice saved <br>  
 **method**`GET`<br>
-**URL**`/api/v1/invoice/saved`
+**URL**`/api/v1/invoice/save/status-saved`
 
 
 ## This route for admin

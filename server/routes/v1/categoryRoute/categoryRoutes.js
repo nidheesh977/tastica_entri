@@ -3,6 +3,7 @@ import {addCategoryDiscount, createCategory, deleteCategory, getCategories, remo
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import {shopVerifyToken} from '../../../middleware/shopCookieTokenVerification.js'
+
 const categoryRoute = express.Router();
 
 categoryRoute.post('/',shopVerifyToken,userVerifyToken,checkUserRole("admin"),createCategory);
