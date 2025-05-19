@@ -7,7 +7,6 @@ import {
   clearInvoiceData,
 } from "../redux/features/invoiceSlice";
 import { loadStripe } from "@stripe/stripe-js";
-import { saveOrderData } from "../redux/features/orderSlice";
 
 export const useInvoices = () => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
@@ -61,8 +60,8 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       toast.success("Saved to open orders");
-      dispatch(saveOrderData(data));
       dispatch(clearInvoiceData());
+      queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -83,7 +82,7 @@ export const useInvoices = () => {
     },
 
     onSuccess: (data) => {
-      dispatch(saveOrderData(data));
+      dispatch(saveOpenOrderData(data));
     },
 
     onError: (error) => {

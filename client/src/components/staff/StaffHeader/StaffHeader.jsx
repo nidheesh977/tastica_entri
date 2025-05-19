@@ -8,6 +8,7 @@ import { IoMenu } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useStaffs } from "../../../hooks/useStaffs";
+import { useInvoices } from "../../../hooks/useInvoices";
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,7 @@ export const StaffHeader = () => {
   const staffName = useSelector((state) => state?.auth?.staffData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { logout } = useStaffs();
+  const { savedInvoices } = useInvoices();
 
   const openNewInvoice = () => {
     window.open("/staff", "_blank");
@@ -93,6 +95,11 @@ export const StaffHeader = () => {
                 size={20}
                 onClick={() => navigate("/staff/open/orders")}
               />
+              {savedInvoices?.length !== 0 && (
+                <span className="flex items-center justify-center text-white text-xs w-5 h-5  font-bold  bg-red-500 border border-red-500 rounded-full">
+                  {savedInvoices?.length}
+                </span>
+              )}
             </li>
 
             <li
