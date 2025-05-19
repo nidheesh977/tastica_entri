@@ -1,7 +1,9 @@
 import { OpenOrderCard } from "../../../components/shared/OpenOrderCard/Product";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
+import { useInvoices } from "../../../hooks/useInvoices";
 
 export const OpenOrders = () => {
+  const { savedInvoices } = useInvoices();
   return (
     <>
       <SideBar />
@@ -12,15 +14,8 @@ export const OpenOrders = () => {
           </h1>
 
           <div className="mt-5 flex-1 overflow-y-auto flex flex-wrap gap-2">
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
-            <OpenOrderCard />
+            <OpenOrderCard savedInvoices={savedInvoices} />
+           
           </div>
         </div>
       </div>

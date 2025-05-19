@@ -29,6 +29,7 @@ import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCusto
 import { UploadCSV } from "../pages/admin/UploadCSV/UploadCSV";
 import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
 import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
+import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -135,6 +136,10 @@ export const router = createBrowserRouter([
             element: <ListInvoices />,
           },
           {
+            path: "invoice/data/:id",
+            element: <InvoiceData />,
+          },
+          {
             path: "payment/success",
             element: <PaymentSuccess />,
           },
@@ -162,7 +167,11 @@ export const router = createBrowserRouter([
         path: "open/orders",
         element: <OpenOrders />,
       },
-      
+      {
+        path: "invoice/data/:id",
+        element: <InvoiceData />,
+      },
+
       {
         path: "add/product",
         element: <AddProductCard />,

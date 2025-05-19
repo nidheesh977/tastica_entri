@@ -28,6 +28,36 @@ export const useInvoices = () => {
       console.error(error);
     },
   });
+  const { data: invoices } = useQuery({
+    queryKey: ["invoices"],
+
+    queryFn: async () => {
+      const response = await axiosInstance.get("/invoice", {
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+
+    onError: (error) => {
+      toast.error("Failed to fetch invoices");
+      console.error(error);
+    },
+  });
+  const { data: savedInvoices } = useQuery({
+    queryKey: ["savedInvoice"],
+
+    queryFn: async () => {
+      const response = await axiosInstance.get("/invoice/saved", {
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+
+    onError: (error) => {
+      toast.error("Failed to fetch saved invoice");
+      console.error(error);
+    },
+  });
 
   const { mutate: createInvoice } = useMutation({
     mutationFn: async (customerId) => {
@@ -101,7 +131,7 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       toast.success("Payment successful.");
-      dispatch(clearInvoiceData())
+      dispatch(clearInvoiceData());
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -119,7 +149,8 @@ export const useInvoices = () => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      console.log(data);
+      toast.success("Saved to open orders");
+      dispatch(clearInvoiceData());
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -142,7 +173,7 @@ export const useInvoices = () => {
     },
     onSuccess: (data) => {
       console.log(data);
-      dispatch(clearInvoiceData())
+      dispatch(clearInvoiceData());
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -157,5 +188,7 @@ export const useInvoices = () => {
     makeCashPayment,
     makeOnlinePayment,
     saveInvoice,
+    savedInvoices,
+    invoices,
   };
 };
