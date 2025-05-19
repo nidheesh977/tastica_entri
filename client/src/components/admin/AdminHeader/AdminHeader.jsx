@@ -13,11 +13,9 @@ export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { logout } = useAdmins();
-
   const openNewInvoice = () => {
     window.open("/admin/cart", "_blank");
   };
@@ -92,7 +90,9 @@ export const AdminHeader = () => {
                 className="hover:text-blue-100 mx-auto"
                 size={20}
                 onClick={() => navigate("/admin/open/orders")}
-              />
+              >
+                <span>1</span>
+              </MdReceipt>
             </li>
 
             <li

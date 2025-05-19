@@ -4,6 +4,7 @@ import sidebarReducer from "./features/sidebarSlice";
 import searchReducer from "./features/searchSlice";
 import categoryReducer from "./features/categorySlice";
 import invoiceReducer from "./features/invoiceSlice";
+import orderReducer from './features/orderSlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,5 +12,6 @@ export const store = configureStore({
     search: searchReducer,
     category: categoryReducer,
     invoice: invoiceReducer,
+    order: orderReducer
   },
 });
