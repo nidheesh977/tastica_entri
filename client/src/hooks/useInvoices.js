@@ -47,7 +47,7 @@ export const useInvoices = () => {
     queryKey: ["savedInvoice"],
 
     queryFn: async () => {
-      const response = await axiosInstance.get("/invoice/saved", {
+      const response = await axiosInstance.get('/invoice/save/status-saved', {
         withCredentials: true,
       });
       return response?.data?.data;

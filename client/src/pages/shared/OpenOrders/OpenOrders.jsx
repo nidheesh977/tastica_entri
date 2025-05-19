@@ -1,4 +1,4 @@
-import { OpenOrderCard } from "../../../components/shared/OpenOrderCard/Product";
+import { OpenOrderCard } from "../../../components/shared/OpenOrderCard/OpenOrderCard";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
 import { useInvoices } from "../../../hooks/useInvoices";
 
