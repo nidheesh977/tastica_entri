@@ -6,9 +6,10 @@ import {
   saveInvoiceData,
   clearInvoiceData,
 } from "../redux/features/invoiceSlice";
+import { saveSingleInvoice } from "../redux/features/singleInvoiceSlice";
 import { loadStripe } from "@stripe/stripe-js";
 
-export const useInvoices = () => {
+export const useInvoices = (customerId = null) => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -27,6 +28,22 @@ export const useInvoices = () => {
 
     onError: (error) => {
       toast.error("Failed to fetch invoice");
+      console.error(error);
+    },
+  });
+  const { data: customerInvoices } = useQuery({
+    queryKey: ["customerInvoices", customerId],
+    enabled: !!customerId,
+    queryFn: async () => {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/customer/${customerId}`,
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+
+    onError: (error) => {
       console.error(error);
     },
   });
@@ -106,6 +123,26 @@ export const useInvoices = () => {
     },
     onError: (error) => {
       toast.error("Failed to create invoice");
+    },
+  });
+  const { mutate: singleInvoice } = useMutation({
+    mutationFn: async ({ singleInvoiceId }) => {
+      console.log(singleInvoiceId);
+
+      const data = { id: singleInvoiceId };
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/invoice",
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      dispatch(saveSingleInvoice(data));
+    },
+    onError: (error) => {
+      console.log(error?.response?.data?.message);
     },
   });
 
@@ -207,5 +244,7 @@ export const useInvoices = () => {
     saveInvoice,
     savedInvoices,
     invoices,
+    singleInvoice,
+    customerInvoices,
   };
 };

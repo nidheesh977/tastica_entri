@@ -108,7 +108,7 @@ export const ListCardCustomer = () => {
                           onClick={() => setAlertMessage(customer?._id)}
                           className="hover:text-red-500 text-secondary cursor-pointer"
                         />
-                        <Link to="/admin/customer/view/invoice">
+                        <Link to={`/admin/customer/view/invoice/${customer?._id}`}>
                           <MdEventNote
                             title="Invoices"
                             size={22}

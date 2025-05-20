@@ -1,9 +1,20 @@
 import { useParams } from "react-router-dom";
 import { useInvoices } from "../../../hooks/useInvoices";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export const InvoiceDataCard = () => {
   const { id } = useParams();
-  const { invoice } = useInvoices(id);
+  const { singleInvoice } = useInvoices();
+
+  useEffect(() => {
+    if (id) {
+      singleInvoice({ singleInvoiceId: id });
+    }
+  }, [id]);
+
+  const invoice = useSelector((state) => state?.singleInvoice);
+
   const products = invoice?.products;
 
   return (
@@ -39,17 +50,23 @@ export const InvoiceDataCard = () => {
                 </td>
               </tr>
             ))}
-            <tr className="font-semibold">
-              <td>SubTotal:</td>
+            <tr className="font-semibold border-t">
+              <td className="border-r border-black">SubTotal:</td>
               <td></td>
               <td></td>
-              <td>489MVR</td>
+              <td className="border-l border-black">{invoice?.subTotal}MVR</td>
             </tr>
-            <tr className="font-semibold py-4">
-              <td>Total:</td>
+            <tr className="font-semibold py-4 border-t border-black">
+              <td className="border-r border-black">Total Discount:</td>
               <td></td>
               <td></td>
-              <td>489MVR</td>
+              <td className="border-l border-black">{invoice?.totalDiscount}MVR</td>
+            </tr>
+            <tr className="font-semibold py-4 border-t border-r border-black">
+              <td className="border-r border-black">Total:</td>
+              <td></td>
+              <td></td>
+              <td className="border-l border-black">{invoice?.totalAmount}MVR</td>
             </tr>
           </tbody>
         </table>

@@ -4,6 +4,7 @@ import sidebarReducer from "./features/sidebarSlice";
 import searchReducer from "./features/searchSlice";
 import categoryReducer from "./features/categorySlice";
 import invoiceReducer from "./features/invoiceSlice";
+import singleInvoiceReducer from "./features/singleInvoiceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     search: searchReducer,
     category: categoryReducer,
     invoice: invoiceReducer,
+    singleInvoice: singleInvoiceReducer,
   },
 });
