@@ -12,6 +12,7 @@ export const ListCardProduct = () => {
   const [editedCategory, setEditedCategory] = useState("");
   const [editedQuantity, setEditedQuantity] = useState(null);
   const [editedCostPrice, setEditedCostPrice] = useState(null);
+  // const [editedCostPriceProfit, setEditedCostPriceProfit] = useState(null);
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
@@ -139,6 +140,7 @@ export const ListCardProduct = () => {
                             productName: editedTitle,
                             quantity: editedQuantity,
                             costPrice: editedCostPrice,
+                            // costPriceProfit: editedCostPriceProfit,
                             sellingPrice: editedSellingPrice,
                             discount: editedDiscount,
                             category: editedCategory,
@@ -159,6 +161,7 @@ export const ListCardProduct = () => {
                             setEditedCategory(product?.category?._id);
                             setEditedSellingPrice(product?.sellingPrice);
                             setEditedCostPrice(product?.costPrice);
+                            // setEditedCostPriceProfit(product?.costPriceProfit);
                             setEditedDiscount(product?.discount);
                           }}
                           className="text-primary hover:text-blue-800 cursor-pointer"

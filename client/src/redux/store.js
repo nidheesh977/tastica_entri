@@ -5,6 +5,7 @@ import searchReducer from "./features/searchSlice";
 import categoryReducer from "./features/categorySlice";
 import invoiceReducer from "./features/invoiceSlice";
 import singleInvoiceReducer from "./features/singleInvoiceSlice";
+import  singleInvoiceOpenOrderReducer  from "./features/singleInvoiceOpenOrderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     category: categoryReducer,
     invoice: invoiceReducer,
     singleInvoice: singleInvoiceReducer,
+    singleInvoiceOpenOrder: singleInvoiceOpenOrderReducer,
   },
 });

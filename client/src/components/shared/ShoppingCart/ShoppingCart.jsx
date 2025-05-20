@@ -6,15 +6,14 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { useDispatch } from "react-redux";
-import { clearInvoiceData } from "../../../redux/features/invoiceSlice.js";
 
-export const ShoppingCart = () => {
+export const ShoppingCart = ({
+  addProductToInvoice,
+  removeProductFromInvoice,
+}) => {
   const { customers, addCustomer } = useCustomers();
   const {
     createInvoice,
-    removeProductFromInvoice,
-    addProductToInvoice,
     invoice,
     makeCashPayment,
     makeOnlinePayment,
@@ -22,7 +21,6 @@ export const ShoppingCart = () => {
   } = useInvoices();
 
   const products = invoice?.products;
-  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -65,7 +63,6 @@ export const ShoppingCart = () => {
     setMobile("");
     setIsNewCustomer(false);
     setQuantities({});
-    
   };
 
   const handlePayNow = () => {
@@ -249,7 +246,10 @@ export const ShoppingCart = () => {
       <div className="flex gap-2 mt-2 justify-between">
         <button
           className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => {saveInvoice(); resetBillingState()}}
+          onClick={() => {
+            saveInvoice();
+            resetBillingState();
+          }}
         >
           <FaSave /> Save
         </button>
