@@ -6,23 +6,23 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { useDispatch } from "react-redux";
-import { clearInvoiceData } from "../../../redux/features/invoiceSlice.js";
 
-export const ShoppingCart = () => {
+export const ShoppingCart = ({
+  addProductToInvoice,
+  removeProductFromInvoice,
+}) => {
   const { customers, addCustomer } = useCustomers();
+
   const {
     createInvoice,
-    removeProductFromInvoice,
-    addProductToInvoice,
     invoice,
     makeCashPayment,
     makeOnlinePayment,
     saveInvoice,
+    redeemPoints,
   } = useInvoices();
 
   const products = invoice?.products;
-  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -32,6 +32,8 @@ export const ShoppingCart = () => {
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
+  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  const [pointAmount, setPointAmount] = useState("");
 
   const findCustomer = () => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
@@ -43,13 +45,14 @@ export const ShoppingCart = () => {
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
     if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
       createInvoice(matchedCustomer._id);
+      setPointAmount(matchedCustomer?.pointAmount);
       setIsNewCustomer(false);
     } else {
       setName("");
@@ -65,7 +68,6 @@ export const ShoppingCart = () => {
     setMobile("");
     setIsNewCustomer(false);
     setQuantities({});
-    
   };
 
   const handlePayNow = () => {
@@ -236,9 +238,28 @@ export const ShoppingCart = () => {
           <div>Subtotal</div>
           <div>MVR{invoice?.subTotal || 0}</div>
         </div>
-        <div className="flex justify-between items-center border px-2 py-2">
-          <div>Tax</div>
-          <div>0</div>
+        <div className="flex justify-between items-center gap-2 border px-2 py-2">
+          <div>Discount</div>
+          <p>{pointAmount}</p>
+          <div>
+            <input
+              className="outline-primary px-2 w-2/3"
+              type="number"
+              onClick={(e) => {
+                setRedeemAmountAdd(e.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <button
+              onClick={() =>
+                redeemPoints(redeemAmountAdd)
+              }
+              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+            >
+              Redeem
+            </button>
+          </div>
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
@@ -249,7 +270,10 @@ export const ShoppingCart = () => {
       <div className="flex gap-2 mt-2 justify-between">
         <button
           className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => {saveInvoice(); resetBillingState()}}
+          onClick={() => {
+            saveInvoice();
+            resetBillingState();
+          }}
         >
           <FaSave /> Save
         </button>

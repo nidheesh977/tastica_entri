@@ -3,9 +3,8 @@ import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useInvoices } from "../../../hooks/useInvoices";
 
-export const Product = () => {
+export const Product = ({ addProductToInvoice }) => {
   const categoryId = useSelector((state) => state.category);
-  const { addProductToInvoice } = useInvoices();
 
   const { products } = useProducts();
   let categoryProducts = products?.filter(

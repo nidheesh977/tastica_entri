@@ -31,6 +31,7 @@ import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
 import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
+import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCartView";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -134,7 +135,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "open/orders/data/:id",
-            element: <Cart/>,
+            element: <OpenOrderCartView/>,
           },
           {
             path: "invoices",

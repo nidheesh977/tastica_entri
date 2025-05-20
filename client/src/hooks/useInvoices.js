@@ -6,11 +6,17 @@ import {
   saveInvoiceData,
   clearInvoiceData,
 } from "../redux/features/invoiceSlice";
-import { saveSingleInvoice } from "../redux/features/singleInvoiceSlice";
+import {
+  clearSingleInvoice,
+  saveSingleInvoice,
+} from "../redux/features/singleInvoiceSlice";
+
 import { loadStripe } from "@stripe/stripe-js";
+import { clearSingleInvoiceOpenOrder } from "../redux/features/singleInvoiceOpenOrderSlice";
 
 export const useInvoices = (customerId = null) => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
+  const singleInvoiceId = useSelector((state) => state?.singleInvoiceOpenOrder);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
@@ -24,6 +30,28 @@ export const useInvoices = (customerId = null) => {
         withCredentials: true,
       });
       return response?.data?.data;
+    },
+
+    onError: (error) => {
+      toast.error("Failed to fetch invoice");
+      console.error(error);
+    },
+  });
+  const { data: singleInvoiceOpenOrder } = useQuery({
+    queryKey: ["singleInvoiceOpenOrder", singleInvoiceId],
+    enabled: !!singleInvoiceId,
+    queryFn: async () => {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/invoice/${singleInvoiceId}`,
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+
+    onSuccess: (data) => {
+      dispatch(saveSingleInvoice(data));
+      console.log(data);
     },
 
     onError: (error) => {
@@ -78,6 +106,7 @@ export const useInvoices = (customerId = null) => {
     onSuccess: (data) => {
       toast.success("Saved to open orders");
       dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
@@ -98,9 +127,7 @@ export const useInvoices = (customerId = null) => {
       return response?.data?.data;
     },
 
-    onSuccess: (data) => {
-      dispatch(saveOpenOrderData(data));
-    },
+    onSuccess: (data) => {},
 
     onError: (error) => {
       toast.error("Failed to fetch saved invoice");
@@ -127,8 +154,6 @@ export const useInvoices = (customerId = null) => {
   });
   const { mutate: singleInvoice } = useMutation({
     mutationFn: async ({ singleInvoiceId }) => {
-      console.log(singleInvoiceId);
-
       const data = { id: singleInvoiceId };
       const response = await axiosInstance({
         method: "POST",
@@ -164,6 +189,32 @@ export const useInvoices = (customerId = null) => {
       toast.success("Product added to invoice");
       dispatch(saveInvoiceData(data));
       queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+    },
+    onError: (error) => {
+      toast.error("Failed to add product to invoice");
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: addProductToInvoiceOpenOrder } = useMutation({
+    mutationFn: async ({ productId, quantity }) => {
+      const data = {
+        productId,
+        quantity,
+      };
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/invoice/${singleInvoiceId}/products`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Product added to invoice");
+      dispatch(saveSingleInvoice(data));
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
       toast.error("Failed to add product to invoice");
@@ -183,6 +234,29 @@ export const useInvoices = (customerId = null) => {
     onSuccess: (data) => {
       dispatch(saveInvoiceData(data));
       queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+
+      toast.success("Product removed from invoice");
+    },
+    onError: (error) => {
+      toast.error("Failed to remove product from invoice");
+      console.error(error);
+    },
+  });
+  const { mutate: removeProductFromInvoiceOpenOrder } = useMutation({
+    mutationFn: async (productId) => {
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${singleInvoiceId}/product/${productId}`,
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      dispatch(saveSingleInvoice(data));
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
@@ -204,6 +278,29 @@ export const useInvoices = (customerId = null) => {
     onSuccess: (data) => {
       toast.success("Payment successful.");
       dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: makeCashPaymentOpenOrder } = useMutation({
+    mutationFn: async (id) => {
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/payment/cash/invoice/${id}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Payment successful.");
+      dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
+      dispatch(clearSingleInvoiceOpenOrder());
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -213,7 +310,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -226,25 +323,97 @@ export const useInvoices = (customerId = null) => {
       });
     },
     onSuccess: (data) => {
-      console.log(data);
       dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
+    mutationFn: async (id) => {
+      const stripe = await loadStripe(
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+      );
+
+      const session = await axiosInstance({
+        url: `/payment/card/invoice/${id}`,
+        method: "POST",
+        withCredentials: true,
+      });
+      return stripe.redirectToCheckout({
+        sessionId: session.data.session.id,
+      });
+    },
+    onSuccess: (data) => {
+      dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
+      dispatch(clearSingleInvoiceOpenOrder());
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: redeemPoints } = useMutation({
+    mutationFn: async ( redeemAmountAdd ) => {
+      const data = { redeemAmountAdd };
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/redeem/${invoiceId}`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast("Points amount added!");
+      console.log(data);
+      queryClient.invalidateQueries(["customers"]);
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: redeemPointsOpenOrder } = useMutation({
+    mutationFn: async ({ redeemAmountAdd, id }) => {
+      const data = { redeemAmountAdd };
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/redeem/${id}`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast("Points amount added!");
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 
   return {
     createInvoice,
     addProductToInvoice,
+    addProductToInvoiceOpenOrder,
     removeProductFromInvoice,
+    removeProductFromInvoiceOpenOrder,
     invoice: data,
+    singleInvoice,
+    singleInvoiceOpenOrder,
     makeCashPayment,
+    makeCashPaymentOpenOrder,
     makeOnlinePayment,
+    makeOnlinePaymentOpenOrder,
     saveInvoice,
     savedInvoices,
     invoices,
-    singleInvoice,
     customerInvoices,
+    redeemPoints,
+    redeemPointsOpenOrder,
   };
 };
