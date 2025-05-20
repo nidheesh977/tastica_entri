@@ -2,6 +2,10 @@ import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js"
 
+
+
+
+
 export const cashPayment = async (req,res) => {
     try{
         const {invoiceId} = req.params;
