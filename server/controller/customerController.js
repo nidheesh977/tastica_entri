@@ -1,7 +1,7 @@
 import customerModel from "../model/customerModel.js";
 import { generateCustomerId } from "../utils/generateCustomerId.js";
 import { customerValidation } from "../utils/joiValidation.js";
-
+import loyalityPointModel from "../model/loyalityPointModel.js"
 
 export const createCustomer = async (req,res) => {
     try{
@@ -104,6 +104,12 @@ export const getCustomer = async(req,res) => {
          return res.status(404).json({success:false,message:"No data found"})
        }
 
+       const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
+       
+      for (const item of fetchData){           
+          item.pointAmount = parseFloat(item.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+      }
+         
        res.status(200).json({success:true,message:"Data fetch successfully",data:fetchData})
    }catch(error){
       console.log(error)

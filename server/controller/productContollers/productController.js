@@ -15,8 +15,9 @@ export const createProduct = async (req, res) => {
        
         const { productName, quantity, costPrice,unit, sellingPrice,costPriceProfit, discount, category ,discountType } = value;
         const {id,countryName,currencyCode} = req.shop;
+   
 
-     
+   
         const lowerCaseproductName = productName.trim().toLowerCase()
  
         const productExist = await productModel.findOne({shop:id, productName:lowerCaseproductName})
@@ -71,7 +72,7 @@ export const createProduct = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
   }
-
+ 
 // ---------------------------------------- Delete product ---------------------------------------------------
 
 export const deleteProduct = async (req, res) => {
