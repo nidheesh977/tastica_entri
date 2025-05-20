@@ -40,7 +40,7 @@ export const createProduct = async (req, res) => {
           costProfitSum = costPrice * (costPriceProfit / 100)
        }
 
-        const checkCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
+        const addCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
        
         //  generating unique ID for customers 
              let productId;
@@ -53,7 +53,7 @@ export const createProduct = async (req, res) => {
             product_id: productId,
             productName:lowerCaseproductName,
             quantity,
-            costPrice:checkCostPrice,
+            costPrice:addCostPrice,
             sellingPrice:sellingPrice,
             discount,
             category,
@@ -104,7 +104,7 @@ export const updateProduct = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { productName, quantity, costPrice,sellingPrice, discount, category,discountType} = value;
+    const { productName, quantity, costPrice, sellingPrice, costPriceProfit, discount, category,discountType} = value;
 
     if (sellingPrice === 0 && costPrice === 0) {
       return res.status(400).json({success: false,message: "Selling price and cost price cannot be 0",});
@@ -114,20 +114,33 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: "You can only add one price rate" });
     }
 
+    
+
     const productExist = await productModel.findById(id);
 
     if (!productExist) {
       return res.status(400).json({ success: false, message: "Product not found" });
     }
 
+   console.log(costPrice)
+
+     let costProfitSum
+
+       if(costPrice > 0){
+          costProfitSum = costPrice * (parseFloat(costPriceProfit) / 100)
+       }
+
+        const addCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
+
     const updatedProduct = await productModel.findByIdAndUpdate(id,{
         productName,
         quantity,
-        costPrice,
+        costPrice:addCostPrice,
         sellingPrice,
         discount,
         category,
-        discountType
+        discountType,
+        costPriceProfit:costPriceProfit
       },
       { new: true }
     );
