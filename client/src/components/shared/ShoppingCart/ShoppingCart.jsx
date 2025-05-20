@@ -12,12 +12,14 @@ export const ShoppingCart = ({
   removeProductFromInvoice,
 }) => {
   const { customers, addCustomer } = useCustomers();
+
   const {
     createInvoice,
     invoice,
     makeCashPayment,
     makeOnlinePayment,
     saveInvoice,
+    redeemPoints,
   } = useInvoices();
 
   const products = invoice?.products;
@@ -30,6 +32,8 @@ export const ShoppingCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
+  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  const [pointAmount, setPointAmount] = useState("");
 
   const findCustomer = () => {
     const isTenDigits = /^\d{10}$/.test(searchQuery);
@@ -41,13 +45,14 @@ export const ShoppingCart = ({
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
+        searchQuery.toLowerCase(),
     );
 
     if (matchedCustomer && matchedCustomer._id) {
       setName(matchedCustomer.customerName);
       setMobile(matchedCustomer.phoneNumber);
       createInvoice(matchedCustomer._id);
+      setPointAmount(matchedCustomer?.pointAmount);
       setIsNewCustomer(false);
     } else {
       setName("");
@@ -233,9 +238,28 @@ export const ShoppingCart = ({
           <div>Subtotal</div>
           <div>MVR{invoice?.subTotal || 0}</div>
         </div>
-        <div className="flex justify-between items-center border px-2 py-2">
-          <div>Tax</div>
-          <div>0</div>
+        <div className="flex justify-between items-center gap-2 border px-2 py-2">
+          <div>Discount</div>
+          <p>{pointAmount}</p>
+          <div>
+            <input
+              className="outline-primary px-2 w-2/3"
+              type="number"
+              onClick={(e) => {
+                setRedeemAmountAdd(e.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <button
+              onClick={() =>
+                redeemPoints({ redeemAmountAdd: Number(redeemAmountAdd) })
+              }
+              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+            >
+              Redeem
+            </button>
+          </div>
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>

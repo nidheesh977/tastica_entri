@@ -22,6 +22,7 @@ export const OpenOrderCart = ({
     makeCashPaymentOpenOrder,
     makeOnlinePaymentOpenOrder,
     saveInvoice,
+    redeemPointsOpenOrder,
   } = useInvoices();
 
   const invoice = singleInvoiceOpenOrder;
@@ -31,6 +32,8 @@ export const OpenOrderCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
+  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  const [pointAmount, setPointAmount] = useState("");
 
   useEffect(() => {
     if (invoice?.products) {
@@ -45,6 +48,7 @@ export const OpenOrderCart = ({
   useEffect(() => {
     if (id) {
       dispatch(saveSingleInvoiceOpenOrder(id));
+      setPointAmount(invoice?.customer?.pointAmount);
     }
   }, [id, dispatch]);
 
@@ -136,8 +140,30 @@ export const OpenOrderCart = ({
           <div>MVR{invoice?.subTotal || 0}</div>
         </div>
         <div className="flex justify-between items-center border px-2 py-2">
-          <div>Tax</div>
-          <div>0</div>
+          <div>Discount</div>
+          <p>{pointAmount}</p>
+          <div>
+            <input
+              className="outline-primary px-2 w-2/3"
+              type="number"
+              onClick={(e) => {
+                setRedeemAmountAdd(e.target.value);
+              }}
+            />
+          </div>
+          <div>
+            <button
+              onClick={() =>
+                redeemPointsOpenOrder({
+                  redeemAmountAdd: Number(redeemAmountAdd),
+                  id,
+                })
+              }
+              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+            >
+              Redeem
+            </button>
+          </div>
         </div>
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>

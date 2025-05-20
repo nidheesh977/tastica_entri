@@ -310,7 +310,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -333,7 +333,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -356,6 +356,47 @@ export const useInvoices = (customerId = null) => {
       console.error(error?.response?.data?.message);
     },
   });
+  const { mutate: redeemPoints } = useMutation({
+    mutationFn: async ({redeemAmountAdd}) => {
+     const data = {redeemAmountAdd}
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/redeem/${invoiceId}`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast('Points amount added!')
+      console.log(data)
+      queryClient.invalidateQueries(["customers"]);
+      
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+  const { mutate: redeemPointsOpenOrder } = useMutation({
+    mutationFn: async ({redeemAmountAdd, id}) => {
+     const data = {redeemAmountAdd}
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/redeem/${id}`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast('Points amount added!')
+      console.log(data);
+      
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
   return {
     createInvoice,
@@ -374,5 +415,7 @@ export const useInvoices = (customerId = null) => {
     savedInvoices,
     invoices,
     customerInvoices,
+    redeemPoints,
+    redeemPointsOpenOrder
   };
 };
