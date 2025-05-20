@@ -1,5 +1,5 @@
 import express from 'express';
-import { addRedeemToInvoice, checkPointRate } from '../../../controller/redeemController/redeemController.js';
+import { addRedeemToInvoice } from '../../../controller/redeemController/redeemController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
@@ -7,6 +7,5 @@ import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 const redeemRouter = express.Router()
 
 redeemRouter.put('/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),addRedeemToInvoice)
-redeemRouter.post('/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),checkPointRate)
 
 export default redeemRouter
