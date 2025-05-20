@@ -218,10 +218,27 @@
 **method**`POST` <br>
 **URL**`/api/v1/payment/card/invoice/invoiceId`
 
+- card payment success
+**method**`PUT` <br>
+**URL**`/api/v1/payment/card/success/invoice/invoiceId`
+
+- card payment failed
+**method**`PUT` <br>
+**URL**`/api/v1/payment/card/failed/invoice/invoiceId`
+
 
 
 ## point redeem routes <br>
 
 -  add redeem to invoice
-**method**`POST` <br>
+**method**`PUT` <br>
 **URL**`/api/v1/redeem/:invoiceId`
+
+
+## Loyality routes <br>
+
+-  create redeem rate  
+**method**`POST` <br>
+**URL**`/api/v1/loyality`
+
+
