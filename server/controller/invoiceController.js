@@ -236,7 +236,7 @@ export const addProductToInvoice = async (req,res) => {
                                         },{new:true})
 
 
-                 return res.status(200).json({success:true,message:"Quantity updated",data:updatedQuantity})
+        return res.status(200).json({success:true,message:"Quantity updated",data:updatedQuantity})
         }
         
        

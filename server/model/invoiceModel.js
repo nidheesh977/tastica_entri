@@ -46,7 +46,7 @@ const invoiceSchema = new mongoose.Schema({
    invoiceStatus:{
         type: String,
         enum: ["newtab", "saved" , "paid"],
-        default: "newtab"
+        default: "saved"
     },
 
     paymentStatus:{
@@ -78,6 +78,11 @@ const invoiceSchema = new mongoose.Schema({
      shop:{
         type:String,
         required:true
+    },
+
+    redeemAmount:{
+        type:Number,
+        default:0
     },
 
     customer:{

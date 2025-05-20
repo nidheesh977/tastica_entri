@@ -34,6 +34,10 @@ const customerSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    pointAmount:{
+        type:Number,
+        default:0
+    },
 
     loyalityPointHistory:{
         type:[{
