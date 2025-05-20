@@ -182,8 +182,8 @@
 **method**`GET`<br>
 **URL**`/api/v1/customer`
 
-## This route for admin
-- 🧑‍💼 "Get customer invoice"<br>
+
+- 🧑‍💼 "Get customer invoice for admin"<br>
 **method:** `GET`<br>
 **URL:** `/api/v1/customer/:id`
 
@@ -200,11 +200,11 @@
 
 - Get all product
 **method**`GET` <br>
-**URL**`http://localhost:5001/api/v1/search/product/filter`
+**URL**`/api/v1/search/product/filter`
 
 - Get Product Name<br>
 **method**`GET`<br>
-**URL**`http://localhost:5001/api/v1/search/product/filter?productName=colgate ma`
+**URL**`/api/v1/search/product/filter?productName=colgate ma`
 
 
 
@@ -212,8 +212,16 @@
 
 - cash payment
 **method**`POST` <br>
-**URL**`http://localhost:5001/api/v1/payment/cash/invoice/invoiceId`
+**URL**`/api/v1/payment/cash/invoice/invoiceId`
 
 - card payment
 **method**`POST` <br>
-**URL**`http://localhost:5001/api/v1/payment/card/invoice/invoiceId`
+**URL**`/api/v1/payment/card/invoice/invoiceId`
+
+
+
+## point redeem routes <br>
+
+-  add redeem to invoice
+**method**`POST` <br>
+**URL**`/api/v1/redeem/:invoiceId`
