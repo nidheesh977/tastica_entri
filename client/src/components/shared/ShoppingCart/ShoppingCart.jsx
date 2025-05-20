@@ -253,7 +253,7 @@ export const ShoppingCart = ({
           <div>
             <button
               onClick={() =>
-                redeemPoints({ redeemAmountAdd: Number(redeemAmountAdd) })
+                redeemPoints(redeemAmountAdd)
               }
               className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
             >

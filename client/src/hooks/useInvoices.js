@@ -310,7 +310,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -333,7 +333,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -357,8 +357,8 @@ export const useInvoices = (customerId = null) => {
     },
   });
   const { mutate: redeemPoints } = useMutation({
-    mutationFn: async ({redeemAmountAdd}) => {
-     const data = {redeemAmountAdd}
+    mutationFn: async ( redeemAmountAdd ) => {
+      const data = { redeemAmountAdd };
       const response = await axiosInstance({
         method: "PUT",
         url: `/redeem/${invoiceId}`,
@@ -368,18 +368,17 @@ export const useInvoices = (customerId = null) => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      toast('Points amount added!')
-      console.log(data)
+      toast("Points amount added!");
+      console.log(data);
       queryClient.invalidateQueries(["customers"]);
-      
     },
     onError: (error) => {
-      console.error(error);
+      console.error(error?.response?.data?.message);
     },
   });
   const { mutate: redeemPointsOpenOrder } = useMutation({
-    mutationFn: async ({redeemAmountAdd, id}) => {
-     const data = {redeemAmountAdd}
+    mutationFn: async ({ redeemAmountAdd, id }) => {
+      const data = { redeemAmountAdd };
       const response = await axiosInstance({
         method: "PUT",
         url: `/redeem/${id}`,
@@ -389,9 +388,8 @@ export const useInvoices = (customerId = null) => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      toast('Points amount added!')
+      toast("Points amount added!");
       console.log(data);
-      
     },
     onError: (error) => {
       console.error(error);
@@ -416,6 +414,6 @@ export const useInvoices = (customerId = null) => {
     invoices,
     customerInvoices,
     redeemPoints,
-    redeemPointsOpenOrder
+    redeemPointsOpenOrder,
   };
 };

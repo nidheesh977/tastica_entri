@@ -155,7 +155,7 @@ export const OpenOrderCart = ({
             <button
               onClick={() =>
                 redeemPointsOpenOrder({
-                  redeemAmountAdd: Number(redeemAmountAdd),
+                  redeemAmountAdd,
                   id,
                 })
               }
