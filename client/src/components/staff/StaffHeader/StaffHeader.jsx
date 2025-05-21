@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useStaffs } from "../../../hooks/useStaffs";
 import { useInvoices } from "../../../hooks/useInvoices";
+import Logo from '../../shared/Logo/logo.png'
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ export const StaffHeader = () => {
             <span className="border rounded p-2 bg-[#155E95] hover:opacity-70">
               <CgMenuLeft size={20} />
             </span>
-            <span className="text-xl font-thin">Tastica</span>
+            <img className="w-36 bg-white rounded" src={Logo} alt="logo" />
           </div>
 
           <div className="md:hidden">

@@ -12,9 +12,9 @@ export const ShopLogin = () => {
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-2 my-20
-        }  max-w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
+        }  max-w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-[#E8F9FF] text-primary shadow-2xl rounded-lg"
       >
-        <h1 className="text-3xl py-10 font-thin text-center text-[#155E95] ">
+        <h1 className="text-3xl py-10 font-thin text-center text-primary ">
           Shop login
         </h1>
 
@@ -23,7 +23,7 @@ export const ShopLogin = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email Address"
-          className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+          className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
 
         <input
@@ -31,11 +31,11 @@ export const ShopLogin = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+          className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
 
         <button
-          className="p-4  bg-[#155E95] my-2 hover:opacity-90 w-full text-white rounded-lg"
+          className="p-4  bg-primary my-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
             login({ email, password });
             setEmail("");

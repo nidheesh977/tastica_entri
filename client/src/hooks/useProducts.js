@@ -78,7 +78,7 @@ export const useProducts = () => {
       quantity,
       costPrice,
       sellingPrice,
-      // costPriceProfit,
+      costPriceProfit,
       discount,
       category,
     }) => {
@@ -86,7 +86,7 @@ export const useProducts = () => {
         productName,
         quantity,
         costPrice,
-        // costPriceProfit,
+        costPriceProfit,
         sellingPrice,
         discount,
         category,

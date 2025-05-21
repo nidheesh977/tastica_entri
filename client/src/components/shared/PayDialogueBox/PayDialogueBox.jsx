@@ -53,7 +53,7 @@ export const PayDialogueBox = ({
         </button>
         <button
           onClick={onCancel}
-          className="px-6 py-3 flex items-center justify-center gap-2 bg-secondary text-sm font-semibold rounded text-white hover:bg-opacity-90"
+          className="px-6 py-3 flex items-center justify-center gap-2 bg-yellow-400 text-sm font-semibold rounded text-white hover:bg-opacity-90"
         >
           <FaTimes />
           Cancel

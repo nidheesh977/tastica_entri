@@ -13,7 +13,7 @@ export const ListCardStaff = () => {
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
   const { staffs, updateStaff, deleteStaff } = useStaffs();
-  const searchQuery = useSelector((state)=> state?.search)
+  const searchQuery = useSelector((state) => state?.search);
 
   const staffData = staffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
@@ -96,7 +96,7 @@ export const ListCardStaff = () => {
                           });
                           setEditId(null);
                         }}
-                        className="text-primary hover:text-blue-800 cursor-pointer"
+                        className="text-primary hover:text-orange-600 cursor-pointer"
                       />
                     ) : (
                       <>
@@ -109,7 +109,7 @@ export const ListCardStaff = () => {
                             setEditedEmail(staff?.email);
                             setEditedMobile(staff?.phoneNumber);
                           }}
-                          className="text-primary hover:text-blue-800 cursor-pointer"
+                          className="text-primary hover:text-orange-600 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"

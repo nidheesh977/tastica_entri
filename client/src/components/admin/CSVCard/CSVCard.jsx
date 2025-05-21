@@ -20,15 +20,15 @@ export const CSVCard = ({ uploadCSVFile, isLoading, title }) => {
         <form
           onSubmit={(e) => e.preventDefault()}
           className="mx-2
-                my-10  w-[500px] h-80 p-10   md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
+                my-10  w-[500px] h-80 p-10   md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg"
         >
-          <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">
+          <h1 className="text-3xl mb-6 font-thin text-center text-primary ">
             Upload {title} CSV File
           </h1>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-[#155E95] "></label>
-            <div className="relative flex items-center justify-center border-2  border-[#155E95] rounded-lg p-4 bg-tertiary hover:bg-blue-100 transition">
+            <label className="block text-sm font-medium text-primary "></label>
+            <div className="relative flex items-center justify-center border-2  border-primary rounded-lg p-4 bg-tertiary hover:bg-orange-100 transition">
               <input
                 type="file"
                 name="file"
@@ -36,7 +36,7 @@ export const CSVCard = ({ uploadCSVFile, isLoading, title }) => {
                 onChange={handleFileChange}
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
-              <span className="text-sm text-[#155E95] font-medium flex items-center gap-2">
+              <span className="text-sm text-primary font-medium flex items-center gap-2">
                 <FaFileCsv className="text-lg" /> Choose CSV file
               </span>
             </div>
@@ -44,7 +44,7 @@ export const CSVCard = ({ uploadCSVFile, isLoading, title }) => {
           {isLoading && <p className="text-primary">Loading..</p>}
           <button
             onClick={() => handleUpload()}
-            className="p-4 my-2  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
+            className="p-4 my-2  bg-primary hover:opacity-90 w-full text-white rounded-lg"
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
               Upload <FaFileCsv />

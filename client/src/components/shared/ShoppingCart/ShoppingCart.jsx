@@ -109,7 +109,7 @@ export const ShoppingCart = ({
   return (
     <div className="p-5 border">
       {!isNewCustomer && name === "" && (
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 h-9">
           {!isNewCustomer && (
             <h1 className="font-bold flex gap-2 text-xl items-center">
               <MdShoppingCart className="text-primary" size={35} /> Cart
@@ -126,7 +126,7 @@ export const ShoppingCart = ({
       )}
 
       {isNewCustomer && (
-        <div className="flex flex-col gap-2 my-2">
+        <div className="flex flex-col gap-2 my-2 h-[214px]">
           <div className="flex items-center justify-between my-2">
             <p className="font-bold">Add New Customer</p>
           </div>
@@ -235,7 +235,7 @@ export const ShoppingCart = ({
         ))}
       </ul>
 
-      <div className="mt-2 w-full font-bold">
+      {!isNewCustomer &&<div className="mt-2 w-full font-bold">
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Subtotal</div>
           <div>MVR{invoice?.subTotal || 0}</div>
@@ -267,11 +267,11 @@ export const ShoppingCart = ({
           <div>Total</div>
           <div>MVR{invoice?.totalAmount || 0}</div>
         </div>
-      </div>
+      </div>}
 
-      <div className="flex gap-2 mt-2 justify-between">
+      {!isNewCustomer && <div className="flex gap-2 mt-2 justify-between">
         <button
-          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
+          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-yellow-400 hover:bg-opacity-90 text-white rounded-lg"
           onClick={() => {
             saveInvoice();
             resetBillingState();
@@ -286,7 +286,7 @@ export const ShoppingCart = ({
         >
           <FaMoneyCheckAlt /> Pay
         </button>
-      </div>
+      </div>}
 
       {showPayDialog && (
         <PayDialogueBox

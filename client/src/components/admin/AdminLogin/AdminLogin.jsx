@@ -15,7 +15,7 @@ export const AdminLogin = () => {
           my-20 md:my-28
          max-w-[500px] px-4 py-10 md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg"
       >
-        <h1 className="text-3xl py-4 font-thin text-center text-[#155E95] ">
+        <h1 className="text-3xl py-4 font-thin text-center text-primary ">
           Admin Login
         </h1>
 
@@ -24,7 +24,7 @@ export const AdminLogin = () => {
           value={phoneNumber}
           placeholder="Mobile"
           onChange={(e) => setPhoneNumber(e.target.value)}
-          className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+          className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
 
         <input
@@ -32,7 +32,7 @@ export const AdminLogin = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+          className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
 
         <button

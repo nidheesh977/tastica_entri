@@ -88,7 +88,7 @@ export const ListCardCustomer = () => {
 
                           setEditId(null);
                         }}
-                        className="text-primary hover:text-blue-800 cursor-pointer"
+                        className="text-primary hover:text-orange-600 cursor-pointer"
                       />
                     ) : (
                       <div className="flex gap-2 items-center mx-auto">
@@ -100,7 +100,7 @@ export const ListCardCustomer = () => {
                             setEditedName(customer?.customerName);
                             setEditedMobile(customer?.phoneNumber);
                           }}
-                          className="text-primary hover:text-blue-800 cursor-pointer"
+                          className="text-primary hover:text-orange-600 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"
@@ -112,7 +112,7 @@ export const ListCardCustomer = () => {
                           <MdEventNote
                             title="Invoices"
                             size={22}
-                            className="text-primary hover:text-blue-800 cursor-pointer"
+                            className="text-primary hover:text-orange-600 cursor-pointer"
                           />
                         </Link>
                       </div>
