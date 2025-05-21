@@ -2,9 +2,8 @@ import { useState } from "react";
 import { FaFileCsv } from "react-icons/fa";
 import { useFileUploads } from "../../../hooks/useFileUploads";
 
-export const CSVCard = () => {
+export const CSVCard = ({ uploadCSVFile, isLoading, title }) => {
   const [csvFile, setCsvFile] = useState(null);
-  const { uploadCSVFile, isLoading } = useFileUploads();
 
   const handleFileChange = (e) => {
     setCsvFile(e.target.files[0]);
@@ -24,7 +23,7 @@ export const CSVCard = () => {
                 my-10  w-[500px] h-80 p-10   md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
         >
           <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">
-            Upload CSV File
+            Upload {title} CSV File
           </h1>
 
           <div className="mb-4">
