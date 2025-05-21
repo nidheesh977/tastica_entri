@@ -3,6 +3,7 @@ import categoryModel from '../model/categoryModel.js';
 import customerModel from '../model/customerModel.js';
 import customProductModel from '../model/customProductModel.js';
 import invoiceModel from '../model/invoiceModel.js';
+import loyalityPointModel from '../model/loyalityPointModel.js';
 import productModel from '../model/productModel.js';
 import { calculateDiscount} from '../utils/calculateInvoice.js';
 import { generateInvoiceId } from '../utils/generateInvoiceId.js';
@@ -373,7 +374,14 @@ export const removeProductFromInvoice = async (req,res) => {
                 }
 
                 const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"}).populate("customer");
-      
+              
+                const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
+                 
+                for(const item of savedInvoice){
+                      item.customer.pointAmount = parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+                }
+                 
+
                 res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
 
             }catch(error){

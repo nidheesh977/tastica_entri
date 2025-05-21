@@ -85,4 +85,4 @@ const productModel = mongoose.model('Product',productSchema);
 //  }) 
 //  .catch(err => {
 //     console.log("error inserting",err)
-//  })
+//  }) 

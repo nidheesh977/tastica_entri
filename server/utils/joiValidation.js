@@ -237,46 +237,58 @@ export const newProductValidation = Joi.object({
 })
 
 export const updateProductValidation = Joi.object({
-    productName: Joi.string().min(3).max(100).required().messages({
+      productName: Joi.string().min(3).max(100).required().messages({
         'string.required': 'Product name is required',
         'string.base': 'Product name must be a string',
+        'string.empty': 'Product name cannot be empty',
         'string.min': 'Product name must be at least 3 characters long',
-        'string.max': 'Product name must be at most 30 characters long',   
+        'string.max': 'Product name must be at most 100 characters long',   
     }),
+
     quantity: Joi.number().integer().min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',
     }),
+    
     costPrice:Joi.number().integer().min(0).messages({
         'number.base': 'Cost price must be a number',
         'number.empty': 'Cost price cannot be empty',
     }),
+
     sellingPrice: Joi.number().integer().min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),
-    discount:Joi.number().integer().min(0).messages({
+
+    discount: Joi.number().integer().min(0).messages({
         'number.base': 'Discount must be a number',
         'number.empty': 'Discount cannot be empty',
     }),
     
-    category: Joi.string().min(24).required().messages({
+       category: Joi.string().min(24).required().messages({
         'string.required': 'Category is required',
         'string.base': 'Category must be a string',
         'string.empty': 'Category cannot be empty',
         'string.min': 'Category must be at least 24 characters long',  
     }),
-     discountType:Joi.string().min(3).max(20).messages({
+
+
+    discountType:Joi.string().min(3).max(20).messages({
         'string.base': 'Discount type must be a string',
         'string.empty': 'Discount type cannot be empty',
         'string.min': 'Discount type must be at least 3 characters long',
         'string.max': 'Discount type must be at most 20 characters long',   
     }),
-     costPriceProfit:Joi.number().integer().min(0).message({
+    costPriceProfit:Joi.number().integer().min(0).message({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
-    })
+    }),
+    unit:Joi.string().valid('no','kg','li','m').messages({
+        'string.base': 'Unit must be a string',
+        'string.empty': 'Unit cannot be empty',
+        'any.only': 'Unit must be one of the following values: no, kg, li, m',
+    }),
 })
 
 

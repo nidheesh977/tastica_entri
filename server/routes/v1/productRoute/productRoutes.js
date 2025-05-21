@@ -14,7 +14,7 @@ const productRouter = express.Router();
 
 productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),createProduct);
 productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),deleteProduct);
-productRouter.put('/update/:id/category/:category',shopVerifyToken,userVerifyToken,checkUserRole('admin'),updateProduct);
+productRouter.put('/update/:id/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),updateProduct);
 
 productRouter.put('/cost-price-profit/:id/add',userVerifyToken,checkUserRole('admin'),addCostPriceProfit);
 productRouter.put('/cost-price-profit/:id/update',userVerifyToken,checkUserRole('admin'),updateCostPriceProfit);
