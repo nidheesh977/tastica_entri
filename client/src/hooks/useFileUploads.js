@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 
 export const useFileUploads = () => {
-  const { mutate: uploadCSVFile } = useMutation({
+  const { mutate: uploadCSVFile, isLoading } = useMutation({
     mutationFn: async (formData) => {
       const response = await axiosInstance({
         method: "POST",
@@ -21,11 +21,12 @@ export const useFileUploads = () => {
     },
     onError: (error) => {
       toast.error("Failed to upload file");
-      console.log(error);
+      console.log(error?.response?.data?.message);
     },
   });
 
   return {
     uploadCSVFile,
+    isLoading
   };
 };

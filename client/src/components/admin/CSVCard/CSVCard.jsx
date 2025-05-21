@@ -4,15 +4,17 @@ import { useFileUploads } from "../../../hooks/useFileUploads";
 
 export const CSVCard = () => {
   const [csvFile, setCsvFile] = useState(null);
-  const { uploadCSVFile } = useFileUploads();
+  const { uploadCSVFile, isLoading } = useFileUploads();
 
   const handleFileChange = (e) => {
     setCsvFile(e.target.files[0]);
   };
 
-  const formData = new FormData();
-  formData.append("file", csvFile);
-
+  const handleUpload = () => {
+    const formData = new FormData();
+    formData.append("file", csvFile);
+    uploadCSVFile(formData);
+  };
   return (
     <>
       <div className="flex justify-center">
@@ -40,9 +42,9 @@ export const CSVCard = () => {
               </span>
             </div>
           </div>
-
+          {isLoading && <p className="text-primary">Loading..</p>}
           <button
-            onClick={() => uploadCSVFile(formData)}
+            onClick={() => handleUpload()}
             className="p-4 my-2  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
