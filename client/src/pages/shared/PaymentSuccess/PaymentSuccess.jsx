@@ -1,21 +1,39 @@
 import { FaCheckCircle } from "react-icons/fa";
 import { MdShoppingCart } from "react-icons/md";
 import { SideBar } from "../../../components/shared/SideBar/SideBar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { axiosInstance } from "../../../config/axiosInstance";
 
 export const PaymentSuccess = () => {
   const queryClient = useQueryClient();
+  const location = useLocation();
+  const navigate = useNavigate();
   const invoiceId = useSelector((state) => state?.invoice?._id);
   const singleInvoiceId = useSelector((state) => state?.singleInvoiceOpenOrder);
-  
+  const params = new URLSearchParams(location.search);
+  const id = params.get("invoice");
+
+  const paymentSuccess = async () => {
+    try {
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/payment/card/success/invoice/${id}`,
+        withCredentials: true,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     queryClient.invalidateQueries(["savedInvoices", invoiceId]);
     queryClient.invalidateQueries(["singleInvoiceOpenOrder", singleInvoiceId]);
+    paymentSuccess();
   }, []);
-  const navigate = useNavigate();
   return (
     <>
       <SideBar />

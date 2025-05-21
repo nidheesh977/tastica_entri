@@ -217,9 +217,11 @@ export const ShoppingCart = ({
                     quantity: quantities[product.productId] ?? "",
                   })
                 }
+                 
               />
-
+             
               <span>
+                
                 <FaTrash
                   className="text-secondary hover:text-red-600 cursor-pointer"
                   onClick={() => setAlertMessage(product._id)}
@@ -227,7 +229,7 @@ export const ShoppingCart = ({
               </span>
             </div>
             <span className=" col-span-12 xl:col-span-2 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
-              MVR{product?.price}
+              MVR{product?.price} 
             </span>
           </li>
         ))}
