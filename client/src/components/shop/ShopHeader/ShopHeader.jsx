@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
-import Logo from '../../shared/Logo/logo.png'
+import Logo from '../../../assets/logo.png'
 
 export const ShopHeader = () => {
   const dispatch = useDispatch();

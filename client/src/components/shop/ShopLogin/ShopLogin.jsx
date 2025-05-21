@@ -12,7 +12,7 @@ export const ShopLogin = () => {
       <form
         onSubmit={(e) => e.preventDefault()}
         className="mx-2 my-20
-        }  max-w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-[#E8F9FF] text-primary shadow-2xl rounded-lg"
+        }  max-w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg"
       >
         <h1 className="text-3xl py-10 font-thin text-center text-primary ">
           Shop login

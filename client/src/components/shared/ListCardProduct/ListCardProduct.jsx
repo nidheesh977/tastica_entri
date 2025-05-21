@@ -144,6 +144,7 @@ export const ListCardProduct = () => {
                             sellingPrice: editedSellingPrice,
                             discount: editedDiscount,
                             category: editedCategory,
+                            
                           });
                           setEditId(null);
                         }}

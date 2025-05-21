@@ -9,7 +9,7 @@ import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useAdmins } from "../../../hooks/useAdmins";
 import { useInvoices } from "../../../hooks/useInvoices";
-import Logo from "../../shared/Logo/logo.png";
+import Logo from "../../../assets/logo.png"
 
 
 export const AdminHeader = () => {

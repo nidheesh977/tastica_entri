@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useStaffs } from "../../../hooks/useStaffs";
 import { useInvoices } from "../../../hooks/useInvoices";
-import Logo from '../../shared/Logo/logo.png'
+import Logo from "../../../assets/logo.png";
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
