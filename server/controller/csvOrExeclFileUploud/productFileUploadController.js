@@ -1,9 +1,9 @@
 import csv from 'csv-parser';
 import fs from 'fs';
-import productModel from '../model/productModel.js';
-import categoryModel from '../model/categoryModel.js';
-import shopModel from '../model/shopModel.js';
-import { generateProductId } from '../utils/generateProductId.js';
+import productModel from '../../model/productModel.js';
+import categoryModel from '../../model/categoryModel.js';
+import shopModel from '../../model/shopModel.js';
+import { generateProductId } from '../../utils/generateProductId.js';
 
 export const productsFileUploader = async (req, res) => {
     try {

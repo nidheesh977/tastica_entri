@@ -28,6 +28,7 @@ export const createNewInvoiceTab = async (req,res) => {
         return res.status(400).json({success:false,message:"Customer does not exist"})
       }
 
+
       const staffExist = await AdminStaffModel.findById(userId)
 
       if(!staffExist){
@@ -91,16 +92,25 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"No Invoice"})
         } 
 
+        if(existInvoice.paymentStatus === "success"){
+            return res.status(400).json({success:false,message:"Invoice already paid"})
+        }
+
         // This variable for the product was exist
         let productExist;
 
          productExist = await productModel.findById(productId)
 
 
-
+        
 
         if(!productExist){
            productExist = await customProductModel.findById(productId)
+        }
+       
+
+        if(quantity > productExist.quantity ){
+            return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
         }
 
      
@@ -334,8 +344,8 @@ export const removeProductFromInvoice = async (req,res) => {
                 const findInvoice = await invoiceModel.findById(id)
               
 
-                if(findInvoice.paymentStatus === "completed"){
-                    return res.status(400).json({success:false,message:"This Invoice cannot be saved it's payment completed"})
+                if(findInvoice.paymentStatus === "success"){
+                    return res.status(400).json({success:false,message:"This Invoice cannot be saved it's payment success"})
                 }
 
                 

@@ -1,4 +1,5 @@
 import categoryModel from '../model/categoryModel.js'
+import { generateCategoryId } from '../utils/generateCategoryId.js';
 import { updateCategoryValidation, newCategoryValidation } from '../utils/joiValidation.js';
 
 // --------------------------------------- create category -----------------------------------------------------
@@ -33,7 +34,17 @@ export const createCategory = async (req, res) => {
 
         const isDiscount = discountRate > 0 ? true : false;
 
+               //  generating unique ID for customers 
+                let categoryId;
+                     
+                 do {
+                      categoryId = generateCategoryId()
+                     } while (await categoryModel.findOne({category_id:categoryId}));
+        
+            
+
         const newCategory = await categoryModel.create({
+            category_id:categoryId,
             categoryName:cateogryNameLowercase,
             description,
             discountRate,

@@ -51,7 +51,7 @@ const invoiceSchema = new mongoose.Schema({
 
     paymentStatus:{
         type:String,
-        enum:["pending","completed","failed","refunded"],
+        enum:["pending","success","failed","refunded"],
         required:true,
         default:"pending" 
     },

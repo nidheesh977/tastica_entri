@@ -176,14 +176,7 @@
   **method**`GET`<br>
   **URL**`/api/v1/customer`
 
-<<<<<<< HEAD
 ## This route for admin
-=======
-
-- 🧑‍💼 "Get customer invoice for admin"<br>
-**method:** `GET`<br>
-**URL:** `/api/v1/customer/:id`
->>>>>>> 6424d90399ed448ac9848a08b056b1a00071d537
 
 - 🧑‍💼 "Get customer invoice"<br>
   **method:** `GET`<br>
@@ -200,35 +193,17 @@
 ## Product filter for admin<br>
 
 - Get all product
-<<<<<<< HEAD
   **method**`GET` <br>
   **URL**`http://localhost:5001/api/v1/search/product/filter`
 
 - Get Product Name<br>
   **method**`GET`<br>
   **URL**`http://localhost:5001/api/v1/search/product/filter?productName=colgate ma`
-=======
-**method**`GET` <br>
-**URL**`/api/v1/search/product/filter`
-
-- Get Product Name<br>
-**method**`GET`<br>
-**URL**`/api/v1/search/product/filter?productName=colgate ma`
-
-
->>>>>>> 6424d90399ed448ac9848a08b056b1a00071d537
 
 ## payment Routes<br>
 
 - cash payment
-<<<<<<< HEAD
-  **method**`POST` <br>
-  **URL**`http://localhost:5001/api/v1/payment/cash/invoice/invoiceId`
 
-- card payment
-  **method**`POST` <br>
-  **URL**`http://localhost:5001/api/v1/payment/card/invoice/invoiceId`
-=======
 **method**`POST` <br>
 **URL**`/api/v1/payment/cash/invoice/invoiceId`
 
@@ -236,11 +211,29 @@
 **method**`POST` <br>
 **URL**`/api/v1/payment/card/invoice/invoiceId`
 
+- card payment success
+**method**`PUT` <br>
+**URL**`/api/v1/payment/card/success/invoice/invoiceId`
+
+- card payment failed
+**method**`PUT` <br>
+**URL**`/api/v1/payment/card/failed/invoice/invoiceId`
+
 
 
 ## point redeem routes <br>
 
 -  add redeem to invoice
-**method**`POST` <br>
+**method**`PUT` <br>
 **URL**`/api/v1/redeem/:invoiceId`
->>>>>>> 6424d90399ed448ac9848a08b056b1a00071d537
+
+
+## File Upload <br>
+
+-  product csv upload
+**method**`post` <br>
+**URL**`/api/v1/file/upload`
+
+-  category csv upload
+**method**`post` <br>
+**URL**`/api/v1/file/upload/category`
