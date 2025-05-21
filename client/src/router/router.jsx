@@ -26,7 +26,8 @@ import { ListInvoices } from "../pages/shared/ListInvoices/ListInvoices";
 import { OpenOrders } from "../pages/shared/OpenOrders/OpenOrders";
 import { AddNewCustomProduct } from "../pages/shared/AddNewCustomProduct/AddNewCustomProduct";
 import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCustomProduct";
-import { UploadCSV } from "../pages/admin/UploadCSV/UploadCSV";
+import { UploadProductsCSV } from "../pages/admin/UploadProductsCSV/UploadProductsCSV";
+import { UploadCategoriesCSV } from "../pages/admin/UploadCategoriesCSV/UploadCategoriesCSV";
 import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
 import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
@@ -102,8 +103,12 @@ export const router = createBrowserRouter([
             element: <AddNewCategory />,
           },
           {
-            path: "upload/csv",
-            element: <UploadCSV />,
+            path: "upload/products/csv",
+            element: <UploadProductsCSV />,
+          },
+          {
+            path: "upload/categories/csv",
+            element: <UploadCategoriesCSV />,
           },
           {
             path: "staff/signup",

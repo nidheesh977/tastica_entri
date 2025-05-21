@@ -9,6 +9,8 @@ import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useAdmins } from "../../../hooks/useAdmins";
 import { useInvoices } from "../../../hooks/useInvoices";
+import Logo from "../../../assets/logo.png"
+
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -32,10 +34,10 @@ export const AdminHeader = () => {
             onClick={() => dispatch(toggleSideBar())}
             className="cursor-pointer flex items-center gap-4"
           >
-            <span className="border rounded p-2 bg-[#155E95] hover:opacity-70">
+            <span className="border rounded p-2 bg-primary hover:opacity-70">
               <CgMenuLeft size={20} />
             </span>
-            <span className="text-xl font-thin">Tastica</span>
+            <img className="w-36 bg-white rounded" src={Logo} alt="logo" />
           </div>
 
           <div className="md:hidden">

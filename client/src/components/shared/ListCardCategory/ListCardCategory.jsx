@@ -96,7 +96,7 @@ export const ListCardCategory = () => {
                           });
                           setEditId(null);
                         }}
-                        className="text-primary hover:text-blue-800 cursor-pointer"
+                        className="text-primary hover:text-orange-600 cursor-pointer"
                       />
                     ) : (
                       <>
@@ -109,7 +109,7 @@ export const ListCardCategory = () => {
                             setEditedDescription(category.description);
                             setEditedDiscount(category.discountRate);
                           }}
-                          className="text-primary hover:text-blue-800 cursor-pointer"
+                          className="text-primary hover:text-orange-600 cursor-pointer"
                         />
                         <MdDelete
                           title="Delete"

@@ -7,7 +7,7 @@ export const OpenOrderCard = ({ savedInvoices }) => {
         <Link to={`/admin/open/orders/data/${savedInvoice?._id}`} key={savedInvoice?._id}>
               
         <div
-          className="bg-[#E8F9FF] w-full md:w-56 h-20 text-sm rounded border flex flex-col justify-between border-black  cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
+          className="bg-tertiary w-full md:w-56 h-20 text-sm rounded border flex flex-col justify-between border-black  cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
           
         >
           <div className="h-10">

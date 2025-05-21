@@ -173,7 +173,7 @@ export const OpenOrderCart = ({
 
       <div className="flex gap-2 mt-2 justify-between">
         <button
-          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
+          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-yellow-400 hover:bg-opacity-90 text-white rounded-lg"
           onClick={() => {
             saveInvoice();
             navigate("/admin/open/orders");

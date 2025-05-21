@@ -16,9 +16,9 @@ export const AddCategory = () => {
         <form
           onSubmit={(e) => e.preventDefault()}
           className="mx-2
-                my-10  max-w-[500px] py-10 p-4  md:px-10 bg-[#E8F9FF] text-[#155E95] shadow-2xl rounded-lg"
+                my-10  max-w-[500px] py-10 p-4  md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg"
         >
-          <h1 className="text-3xl mb-6 font-thin text-center text-[#155E95] ">
+          <h1 className="text-3xl mb-6 font-thin text-center text-primary ">
             Add Category
           </h1>
 
@@ -27,7 +27,7 @@ export const AddCategory = () => {
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
             placeholder="Category"
-            className="p-4 my-1  w-full  bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
           />
 
           <textarea
@@ -35,7 +35,7 @@ export const AddCategory = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
           />
 
           <input
@@ -43,11 +43,11 @@ export const AddCategory = () => {
             value={discountRate}
             onChange={(e) => setDiscountRate(e.target.value)}
             placeholder="Discount Rate"
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-[#155E95]"
+            className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
           />
 
           <button
-            className="p-4 my-4  bg-[#155E95] hover:opacity-90 w-full text-white rounded-lg"
+            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
             onClick={() => {
               addCategory({ categoryName, description, discountRate });
               setCategoryName("");
