@@ -34,7 +34,7 @@ export const onlinePaymentStripe = async (req,res) => {
 
            console.log(successUrl)
 
-        const totalAmount = findInvoice.totalAmount;
+        const totalAmount = parseFloat(findInvoice.totalAmount).toFixed(2);
          const countryCurrency = findInvoice.currencyCode.toLowerCase()
 
         const session = await stripe.checkout.sessions.create({

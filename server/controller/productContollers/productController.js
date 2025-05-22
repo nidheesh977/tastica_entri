@@ -104,7 +104,7 @@ export const updateProduct = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category  ,unit} = value;
+    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category } = value;
 
     
 

@@ -277,11 +277,7 @@ export const updateProductValidation = Joi.object({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
-    unit:Joi.string().valid('no','kg','li','m').messages({
-        'string.base': 'Unit must be a string',
-        'string.empty': 'Unit cannot be empty',
-        'any.only': 'Unit must be one of the following values: no, kg, li, m',
-    }),
+   
 })
 
 

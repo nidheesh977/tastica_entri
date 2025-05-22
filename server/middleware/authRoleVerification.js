@@ -8,6 +8,7 @@ export const checkUserRole = (...roles) => {
         
           let userRole = req.user.role;    
         
+          console.log("admin role", userRole)
         if (!roles.includes(userRole)) {
          return res.status(403).json({success:false, message: "Forbidden" });
         }

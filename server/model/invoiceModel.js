@@ -58,7 +58,7 @@ const invoiceSchema = new mongoose.Schema({
 
     paymentMethod:{
       type:String,
-      enum:["cash","digital"],
+      enum:["cash","digital","internal-device"],
       reqired:true,
       default:null,
     },

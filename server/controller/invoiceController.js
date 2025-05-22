@@ -423,7 +423,7 @@ export const removeProductFromInvoice = async (req,res) => {
                 const fullInvoice = await invoiceModel.find({shop:shopId}).populate("customer").populate("products");
 
                 
-                
+                 
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){
