@@ -273,13 +273,6 @@ export const updateProductValidation = Joi.object({
         'string.min': 'Category must be at least 24 characters long',  
     }),
 
-
-    discountType:Joi.string().min(3).max(20).messages({
-        'string.base': 'Discount type must be a string',
-        'string.empty': 'Discount type cannot be empty',
-        'string.min': 'Discount type must be at least 3 characters long',
-        'string.max': 'Discount type must be at most 20 characters long',   
-    }),
     costPriceProfit:Joi.number().integer().min(0).message({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',

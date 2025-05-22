@@ -414,19 +414,20 @@ export const removeProductFromInvoice = async (req,res) => {
         export const getFullInvoice = async (req,res) => {
             try{
 
-                const shopId = req.shop.id;
+                const shopId = req.shop.id; 
 
                  if(!shopId){
                     return res.status(400).json({success:false,message:"Shop ID is not get"});
                 }
 
-                const fullInvoice = await invoiceModel.find({shop:shopId}).populate("customer");
+                const fullInvoice = await invoiceModel.find({shop:shopId}).populate("customer").populate("products");
 
                 
                 
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){
+                console.log(error)
                 res.status(500).json({success:false,message:"Internal server error"})
             }
         }
