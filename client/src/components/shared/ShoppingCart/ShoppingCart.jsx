@@ -6,6 +6,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -15,12 +16,12 @@ export const ShoppingCart = ({
 
   const {
     createInvoice,
-    invoice,
     makeCashPayment,
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
   } = useInvoices();
+  const { invoice } = useAdmins();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,7 +46,7 @@ export const ShoppingCart = ({
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -225,16 +226,15 @@ export const ShoppingCart = ({
             </div>
             <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
               {product?.price}
-              
             </span>
             <span className="col-span-12 xl:col-span-1">
-                <FaTrash
-                  title="Remove product"
-                  className="text-primary hover:text-orange-600 cursor-pointer"
-                  onClick={() => setAlertMessage(product._id)}
-                  size={12}
-                />
-              </span>
+              <FaTrash
+                title="Remove product"
+                className="text-primary hover:text-orange-600 cursor-pointer"
+                onClick={() => setAlertMessage(product._id)}
+                size={12}
+              />
+            </span>
           </li>
         ))}
       </ul>

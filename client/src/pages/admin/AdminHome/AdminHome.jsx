@@ -33,5 +33,5 @@ export const AdminHome = () => {
         </section>
       </div>
     </>
-  );
-};
+  )
+}

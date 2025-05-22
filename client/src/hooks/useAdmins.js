@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 
 import { useState } from "react";
 

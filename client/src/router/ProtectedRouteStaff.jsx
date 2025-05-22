@@ -18,13 +18,10 @@ export const ProtectedRouteStaff = () => {
         url: "/staff/check-logged",
       });
       dispatch(addStaffData(response?.data?.data));
-      console.log(response);
-      
     } catch (error) {
       dispatch(removeStaffData());
       navigate("/shop/staff/login");
       console.log(error);
-      
     }
   };
 
@@ -32,8 +29,10 @@ export const ProtectedRouteStaff = () => {
     checkStaff();
   }, [location.pathname]);
 
-  return <>
-  <StaffSideBar/>
-  <Outlet />;
-  </>
+  return (
+    <>
+      <StaffSideBar />
+      <Outlet />;
+    </>
+  );
 };

@@ -78,5 +78,5 @@ export const WeeklySales = () => {
         <p>Loading...</p>
       )}
     </div>
-  );
-};
+  )
+}
