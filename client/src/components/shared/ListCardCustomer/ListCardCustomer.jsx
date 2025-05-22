@@ -4,7 +4,6 @@ import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const ListCardCustomer = () => {
@@ -14,7 +13,7 @@ export const ListCardCustomer = () => {
   const [editedMobile, setEditedMobile] = useState("");
   const searchQuery = useSelector((state) => state?.search);
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
-
+  const navigate = useDispatch();
   const customerData = customers?.filter((customer) => {
     const query = searchQuery.toLowerCase();
 
@@ -106,15 +105,19 @@ export const ListCardCustomer = () => {
                           title="Delete"
                           size={22}
                           onClick={() => setAlertMessage(customer?._id)}
-                          className="hover:text-red-500 text-secondary cursor-pointer"
+                          className="hover:text-orange-600 text-primary cursor-pointer"
                         />
-                        <Link to={`/admin/customer/view/invoice/${customer?._id}`}>
-                          <MdEventNote
-                            title="Invoices"
-                            size={22}
-                            className="text-primary hover:text-orange-600 cursor-pointer"
-                          />
-                        </Link>
+
+                        <MdEventNote
+                          onClick={() => {
+                            navigate(
+                              `/admin/customer/view/invoice/${customer?._id}`
+                            );
+                          }}
+                          title="Invoices"
+                          size={22}
+                          className="text-primary hover:text-orange-600 cursor-pointer"
+                        />
                       </div>
                     )}
                     {alertMessage === customer?._id && (

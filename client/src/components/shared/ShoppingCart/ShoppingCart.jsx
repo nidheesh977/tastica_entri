@@ -6,6 +6,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -15,12 +16,12 @@ export const ShoppingCart = ({
 
   const {
     createInvoice,
-    invoice,
     makeCashPayment,
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
   } = useInvoices();
+  const { invoice } = useAdmins();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,7 +46,7 @@ export const ShoppingCart = ({
     const matchedCustomer = customers?.find(
       (customer) =>
         customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase(),
+        searchQuery.toLowerCase()
     );
 
     if (matchedCustomer && matchedCustomer._id) {
@@ -199,94 +200,99 @@ export const ShoppingCart = ({
               <span className="me-2 font-semibold">{index + 1}.</span>
               {product?.productName}
             </span>
-            <div className="flex items-center gap-10 col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
-              <input
-                type="number"
-                className="w-14 bg-tertiary text-center"
-                value={quantities[product?.productId] ?? 1}
-                onChange={(e) => {
-                  const newQty = e.target.value;
-                  setQuantities((prev) => ({
-                    ...prev,
-                    [product.productId]: newQty,
-                  }));
-                }}
-                onBlur={() =>
-                  addProductToInvoice({
-                    productId: product?.productId,
-                    quantity: quantities[product.productId] ?? "",
-                  })
-                }
-                 
-              />
-             
-              <span>
-                
-                <FaTrash
-                  className="text-secondary hover:text-red-600 cursor-pointer"
-                  onClick={() => setAlertMessage(product._id)}
+            <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
+              <>
+                <input
+                  type="number"
+                  className="w-14 bg-tertiary text-center"
+                  value={quantities[product?.productId] ?? 1}
+                  onChange={(e) => {
+                    const newQty = e.target.value;
+                    setQuantities((prev) => ({
+                      ...prev,
+                      [product.productId]: newQty,
+                    }));
+                  }}
+                  onBlur={() =>
+                    addProductToInvoice({
+                      productId: product?.productId,
+                      quantity: quantities[product.productId] ?? "",
+                    })
+                  }
                 />
-              </span>
+                {product?.unit}
+              </>
+              <span>kg</span>
             </div>
-            <span className=" col-span-12 xl:col-span-2 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
-              MVR{product?.price} 
+            <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
+              {product?.price}
+            </span>
+            <span className="col-span-12 xl:col-span-1">
+              <FaTrash
+                title="Remove product"
+                className="text-primary hover:text-orange-600 cursor-pointer"
+                onClick={() => setAlertMessage(product._id)}
+                size={12}
+              />
             </span>
           </li>
         ))}
       </ul>
 
-      {!isNewCustomer &&<div className="mt-2 w-full font-bold">
-        <div className="flex justify-between items-center border px-2 py-2">
-          <div>Subtotal</div>
-          <div>MVR{invoice?.subTotal || 0}</div>
-        </div>
-        <div className="flex justify-between items-center gap-2 border px-2 py-2">
-          <div>Discount</div>
-          <p>{pointAmount}</p>
-          <div>
-            <input
-              className="outline-primary px-2 w-2/3"
-              type="number"
-              onClick={(e) => {
-                setRedeemAmountAdd(e.target.value);
-              }}
-            />
+      {!isNewCustomer && (
+        <div className="mt-2 w-full font-bold">
+          <div className="flex justify-between items-center border px-2 py-2">
+            <div>Subtotal</div>
+            <div>MVR{invoice?.subTotal || 0}</div>
           </div>
-          <div>
-            <button
-              onClick={() =>
-                redeemPoints(redeemAmountAdd)
-              }
-              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
-            >
-              Redeem
-            </button>
+          <div className="flex justify-between items-center gap-2 border px-2 py-2">
+            <div>Discount</div>
+            <p>{pointAmount}</p>
+            <div>
+              <input
+                className="outline-primary px-2 w-2/3"
+                type="number"
+                onClick={(e) => {
+                  setRedeemAmountAdd(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <button
+                onClick={() => redeemPoints(redeemAmountAdd)}
+                className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+              >
+                Redeem
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-between items-center font-semibold border px-2 py-2">
+            <div>Total</div>
+            <div>MVR{invoice?.totalAmount || 0}</div>
           </div>
         </div>
-        <div className="flex justify-between items-center font-semibold border px-2 py-2">
-          <div>Total</div>
-          <div>MVR{invoice?.totalAmount || 0}</div>
+      )}
+
+      {!isNewCustomer && (
+        <div className="flex gap-2 mt-2 justify-between">
+          <button
+            className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
+            onClick={() => {
+              saveInvoice();
+              resetBillingState();
+            }}
+          >
+            <FaSave /> Save
+          </button>
+
+          <button
+            className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-primary hover:bg-opacity-90 text-white rounded-lg"
+            onClick={() => setShowPayDialog(true)}
+          >
+            <FaMoneyCheckAlt /> Pay
+          </button>
         </div>
-      </div>}
-
-      {!isNewCustomer && <div className="flex gap-2 mt-2 justify-between">
-        <button
-          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-yellow-400 hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => {
-            saveInvoice();
-            resetBillingState();
-          }}
-        >
-          <FaSave /> Save
-        </button>
-
-        <button
-          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-primary hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => setShowPayDialog(true)}
-        >
-          <FaMoneyCheckAlt /> Pay
-        </button>
-      </div>}
+      )}
 
       {showPayDialog && (
         <PayDialogueBox

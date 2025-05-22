@@ -94,7 +94,7 @@ export const useProducts = () => {
 
       await axiosInstance({
         method: "PUT",
-        url: `/product/update/${productId}/category/${category}`,
+        url: `/product/update/${productId}`,
         withCredentials: true,
         data,
       });

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBox } from "react-icons/fa";
-import { SideBar } from "../SideBar/SideBar";
+import { AdminSideBar } from "../../admin/AdminSideBar/AdminSideBar"
 import { useCategories } from "../../../hooks/useCategories";
 import { useProducts } from "../../../hooks/useProducts";
 
@@ -19,7 +19,7 @@ export const AddProductCard = () => {
 
   return (
     <>
-      <SideBar />
+      <AdminSideBar />
       <div className="flex justify-center">
         <form
           onSubmit={(e) => e.preventDefault()}

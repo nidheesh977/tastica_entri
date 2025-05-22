@@ -20,53 +20,49 @@ ChartJS.register(
   Legend
 );
 
-export const MonthlySales = () => {
+export const WeeklySales = () => {
   const [chart, setChart] = useState(null);
   const { invoices } = useAdmins();
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
 
-    const monthlyTotals = {};
+    const now = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 6);
+
+    const dailyTotals = {};
 
     invoices.forEach((invoice) => {
       const date = new Date(invoice.createdAt);
-      const month = date.toLocaleDateString("en-IN", {
-        month: "long",
-      });
+      if (date >= sevenDaysAgo && date <= now) {
+        const label = date.toLocaleDateString("en-IN", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        });
 
-      if (!monthlyTotals[month]) {
-        monthlyTotals[month] = 0;
+        if (!dailyTotals[label]) {
+          dailyTotals[label] = 0;
+        }
+        dailyTotals[label] += invoice.totalAmount || 0;
       }
-      monthlyTotals[month] += invoice.totalAmount || 0;
     });
 
-    const monthOrder = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+    const sortedLabels = Object.keys(dailyTotals).sort((a, b) => {
+      return new Date(a) - new Date(b);
+    });
 
-    const labels = monthOrder.filter((m) => monthlyTotals[m] !== undefined);
-    const data = labels.map((month) => monthlyTotals[month]);
+    const data = sortedLabels.map((label) => dailyTotals[label]);
 
     setChart({
-      labels,
+      labels: sortedLabels,
       datasets: [
         {
-          label: "Monthly Sales ₹",
+          label: "Order Total ₹",
           data,
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          borderColor: "rgba(54, 162, 235, 1)",
           borderWidth: 1,
         },
       ],
@@ -75,12 +71,12 @@ export const MonthlySales = () => {
 
   return (
     <div className="w-full h-full border p-4 rounded shadow">
-      <h1 className="font-semibold text-lg mb-4">Monthly Sales Trends</h1>
+      <h1 className="font-semibold">Weekly Sales Trends</h1>
       {chart ? (
         <Bar data={chart} options={{ responsive: true }} />
       ) : (
         <p>Loading...</p>
       )}
     </div>
-  );
-};
+  )
+}

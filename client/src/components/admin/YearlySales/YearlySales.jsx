@@ -9,6 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 ChartJS.register(
   BarElement,
@@ -21,39 +22,33 @@ ChartJS.register(
 
 export const YearlySales = () => {
   const [chart, setChart] = useState(null);
+  const { invoices } = useAdmins();
 
   useEffect(() => {
-    const fetchDummyData = () => {
-      const dummyOrders = [
-        { createdAt: "2021-06-15", totalPrice: 64000 },
-        { createdAt: "2022-04-10", totalPrice: 72000 },
-        { createdAt: "2023-07-20", totalPrice: 81000 },
-        { createdAt: "2024-01-05", totalPrice: 89000 },
-        { createdAt: "2025-03-17", totalPrice: 95000 },
-      ];
+    if (!invoices || invoices.length === 0) return;
 
-      const labels = dummyOrders.map((order) =>
-        new Date(order.createdAt).getFullYear()
-      );
+    const salesByYear = invoices.reduce((acc, invoice) => {
+      const year = new Date(invoice.createdAt).getFullYear();
+      acc[year] = (acc[year] || 0) + invoice.subTotal;
+      return acc;
+    }, {});
 
-      const totalPrices = dummyOrders.map((order) => order.totalPrice);
+    const sortedYears = Object.keys(salesByYear).sort();
+    const totals = sortedYears.map(year => salesByYear[year]);
 
-      setChart({
-        labels,
-        datasets: [
-          {
-            label: "Yearly Sales ₹",
-            data: totalPrices,
-            backgroundColor: "rgba(255, 99, 132, 0.6)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1,
-          },
-        ],
-      });
-    };
-
-    fetchDummyData();
-  }, []);
+    setChart({
+      labels: sortedYears,
+      datasets: [
+        {
+          label: "Yearly Sales ₹",
+          data: totals,
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    });
+  }, [invoices]);
 
   return (
     <div className="w-full h-full border p-4 rounded shadow">

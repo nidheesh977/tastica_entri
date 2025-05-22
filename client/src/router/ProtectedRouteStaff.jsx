@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { addStaffData, removeStaffData } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
+import { StaffSideBar } from "../components/staff/StaffSideBar/StaffSideBar";
 
 export const ProtectedRouteStaff = () => {
   const isStaff = useSelector((state) => state?.auth?.staffData);
@@ -20,6 +21,7 @@ export const ProtectedRouteStaff = () => {
     } catch (error) {
       dispatch(removeStaffData());
       navigate("/shop/staff/login");
+      console.log(error);
     }
   };
 
@@ -27,5 +29,10 @@ export const ProtectedRouteStaff = () => {
     checkStaff();
   }, [location.pathname]);
 
-  return <Outlet />;
+  return (
+    <>
+      <StaffSideBar />
+      <Outlet />;
+    </>
+  );
 };

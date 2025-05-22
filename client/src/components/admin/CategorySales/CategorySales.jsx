@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const DoughnutChart = () => {
+export const CategorySales = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -69,14 +69,14 @@ export const DoughnutChart = () => {
             maintainAspectRatio: false,
 
             plugins: {
-                legend: {
-                  display: true,
-                  position: "top"
-                },
-                title: {
-                  display: true, 
-                },
-            }
+              legend: {
+                display: true,
+                position: "top",
+              },
+              title: {
+                display: true,
+              },
+            },
           }}
           data={chartData}
         />

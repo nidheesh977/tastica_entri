@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { addAdminData, removeAdminData } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
+import { AdminSideBar } from "../components/admin/AdminSideBar/AdminSideBar";
 
 export const ProtectedRouteAdmin = () => {
   const isAdmin = useSelector((state) => state?.auth?.adminData);
@@ -27,5 +28,10 @@ export const ProtectedRouteAdmin = () => {
     checkAdmin();
   }, []);
 
-  return <Outlet />;
+  return (
+    <>
+      <AdminSideBar />
+      <Outlet />;
+    </>
+  );
 };
