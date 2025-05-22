@@ -24,6 +24,10 @@ export const internalDevicePayment = async (req,res) => {
             return res.status(400).json({success:false,message:"Invoice already paid"});
         }
 
+         if(findInvoice.totalAmount === 0){
+             return res.status(400).json({success:false,message:"Please add product"});
+        }
+
         let findCustomer = await customerModel.findById(findInvoice.customer);
 
         if(!findCustomer){

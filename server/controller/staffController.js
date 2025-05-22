@@ -47,9 +47,11 @@ export const loginStaff = async (req,res) => {
 
         const {password:pass,...userData} = userExist._doc;
 
-        res.cookie("staffToken",token,{httpOnly:true,
+        res.cookie("staffToken",token,{
+            httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
             sameSite:"none",
+            path:'/',
             maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:userData})
 
     }catch(error){

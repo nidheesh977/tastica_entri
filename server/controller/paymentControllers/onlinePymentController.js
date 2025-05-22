@@ -13,8 +13,6 @@ export const onlinePaymentStripe = async (req,res) => {
 
        const {role} = req.user;
 
-       console.log(role)
-
        if(!invoiceId){
         return res.stattus(400).json({success:true,message:"Invoice ID not get"})
        }
@@ -25,6 +23,10 @@ export const onlinePaymentStripe = async (req,res) => {
             return res.status(400).json({success:false,message:"Invoice not found"});
         }
 
+        if(findInvoice.totalAmount === 0){
+             return res.status(400).json({success:false,message:"Please add product"});
+        }
+
         if(findInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"});
         }
@@ -32,7 +34,7 @@ export const onlinePaymentStripe = async (req,res) => {
            const successUrl = role === "admin" ? process.env.ADMIN_SUCCESS_URL : process.env.STAFF_SUCCESS_URL 
            const cancelUrl = role === "admin" ? process.env.ADMIN_CANCEL_URL : process.env.STAFF_CANCEL_URL 
 
-           console.log(successUrl)
+          
 
         const totalAmount = parseFloat(findInvoice.totalAmount).toFixed(2);
          const countryCurrency = findInvoice.currencyCode.toLowerCase()

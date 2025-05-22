@@ -2,9 +2,10 @@ import jwt from 'jsonwebtoken'
 
 export const userVerifyToken = async (req,res,next) => {
     try{
-        const token =req.headers?.authorization?.split(" ")[1] || req.cookies.staffToken || req.cookies.adminToken 
- 
-       
+         
+    let token = req.cookies.adminToken || req.cookies.staffToken
+
+   
         if(!token){
             return res.status(401).json({success:false,message:"Unauthorized"})
         }

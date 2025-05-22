@@ -144,9 +144,7 @@ export const updateProduct = async (req, res) => {
         sellingPrice,
         discount,
         category,
-        discountType,
         costPriceProfit:costPriceProfit,
-        unit
       },
       { new: true }
     );

@@ -316,7 +316,8 @@ export const removeProductFromInvoice = async (req,res) => {
         export const getInvoice = async (req,res) => {
             try{
               const {invoiceId} = req.params;
-
+              const shopId = req.shop.id; 
+              
               if(!invoiceId) {
                 return res.status(400).json({success:false,message:"Invoice ID not get"})
               }
@@ -327,8 +328,16 @@ export const removeProductFromInvoice = async (req,res) => {
                     return res.status(400).json({success:false,message:"No Invoice"})
                 }
 
+                 const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
+                 
+
+                 
+                      findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+              
+
                 res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
             }catch(error){
+                console.log(error)
                 return res.status(500).json({success:false,message:"Internal server error"})
             }
         }
@@ -402,6 +411,8 @@ export const removeProductFromInvoice = async (req,res) => {
                 if(!findInvoice){
                     return res.status(400).json({success:false,message:"Invoice not found"})
                 };
+
+               
 
                 res.status(200).json({success:true,message:"Data fetched successfully",data:findInvoice});
             }catch(error){
