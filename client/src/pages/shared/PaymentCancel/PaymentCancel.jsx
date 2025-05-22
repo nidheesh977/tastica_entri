@@ -1,6 +1,7 @@
 import { MdShoppingCart, MdCancel } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export const PaymentCancel = ({ role }) => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const PaymentCancel = ({ role }) => {
   const singleInvoiceId = useSelector((state) => state?.singleInvoiceOpenOrder);
   const params = new URLSearchParams(location.search);
   const id = params.get("invoice");
+  const admin = useSelector((state) => state.auth?.adminData)
 
   const paymentCancel = async () => {
     try {
@@ -37,7 +39,7 @@ export const PaymentCancel = ({ role }) => {
         <p>Payment Cancelled</p>
         <button
           className="bg-primary flex gap-2 items-center cursor-pointer hover:bg-opacity-90 text-white px-2 text-base py-1 rounded"
-          onClick={() => navigate("/admin/cart")}
+          onClick={() => navigate(admin ? "/admin/cart" : '/staff')}
         >
           <MdShoppingCart /> Back to Home
         </button>

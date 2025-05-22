@@ -290,8 +290,8 @@ export const useInvoices = (customerId = null) => {
       });
     },
     onSuccess: (data) => {
-      dispatch(clearInvoiceData());
-      dispatch(clearSingleInvoice());
+      console.log(data);
+      
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);

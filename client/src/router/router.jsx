@@ -152,11 +152,11 @@ export const router = createBrowserRouter([
           },
           {
             path: "payment/success",
-            element: <PaymentSuccess role="admin" />,
+            element: <PaymentSuccess  />,
           },
           {
             path: "payment/cancel",
-            element: <PaymentCancel role="admin" />,
+            element: <PaymentCancel  />,
           },
         ],
       },
