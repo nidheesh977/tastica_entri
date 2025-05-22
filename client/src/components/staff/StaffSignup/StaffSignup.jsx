@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdPersonAdd } from "react-icons/md";
-import { useStaffs } from "../../../hooks/useStaffs";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 export const StaffSignup = () => {
   const [userName, setUserName] = useState("");
@@ -8,7 +8,7 @@ export const StaffSignup = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { signup } = useStaffs();
+  const { staffSignup } = useAdmins;
 
   return (
     <div className="flex justify-center my-10">
@@ -65,7 +65,13 @@ export const StaffSignup = () => {
         <button
           className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            signup({ userName, email, phoneNumber, password, confirmPassword });
+            staffSignup({
+              userName,
+              email,
+              phoneNumber,
+              password,
+              confirmPassword,
+            });
             setUserName("");
             setEmail("");
             setPhoneNumber("");

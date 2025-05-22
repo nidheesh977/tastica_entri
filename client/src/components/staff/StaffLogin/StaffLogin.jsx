@@ -1,11 +1,37 @@
 import { useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
-import { useStaffs } from "../../../hooks/useStaffs";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import {
+  addStaffData,
+  removeStaffData,
+} from "../../../redux/features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const StaffLogin = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useStaffs();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const data = { phoneNumber, password };
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/staff/login",
+        withCredentials: true,
+        data,
+      });
+      toast.success("Login success");
+      dispatch(addStaffData(response?.data?.data));
+      navigate("/staff");
+    } catch (error) {
+      toast.error("Failed to login");
+      dispatch(removeStaffData());
+    }
+  };
 
   return (
     <div className="flex justify-center">
@@ -38,7 +64,7 @@ export const StaffLogin = () => {
         <button
           className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            login({ phoneNumber, password });
+            handleLogin();
             setPhoneNumber("");
             setPassword("");
           }}

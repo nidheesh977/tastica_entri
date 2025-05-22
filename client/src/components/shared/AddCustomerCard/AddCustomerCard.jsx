@@ -16,7 +16,7 @@ export const AddCustomerCard = () => {
            "my-20 md:my-28" : "my-10"
         max-w-[500px] px-4 py-10 md:px-10 bg-tertiary text-primary shadow-2xl rounded-lg'
       >
-        <h1 className="text-3xl py-4 font-thin text-center text-[#155E95] ">
+        <h1 className="text-3xl py-4 font-thin text-center text-primary ">
           Add Customer
         </h1>
 

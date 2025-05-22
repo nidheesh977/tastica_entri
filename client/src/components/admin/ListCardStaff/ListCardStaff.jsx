@@ -3,8 +3,8 @@ import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { useStaffs } from "../../../hooks/useStaffs";
 import { useSelector } from "react-redux";
+import { useAdmins } from "../../../hooks/useAdmins";
 
 export const ListCardStaff = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -12,7 +12,7 @@ export const ListCardStaff = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const { staffs, updateStaff, deleteStaff } = useStaffs();
+  const { staffs, updateStaff, deleteStaff } = useAdmins();
   const searchQuery = useSelector((state) => state?.search);
 
   const staffData = staffs?.filter((staff) => {
@@ -115,7 +115,7 @@ export const ListCardStaff = () => {
                           title="Delete"
                           size={22}
                           onClick={() => setAlertMessage(staff?._id)}
-                          className="hover:text-red-500 text-secondary cursor-pointer"
+                          className="hover:text-orange-600 text-primary cursor-pointer"
                         />
                       </>
                     )}

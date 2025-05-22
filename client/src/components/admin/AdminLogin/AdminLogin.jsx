@@ -1,11 +1,33 @@
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { FaSignInAlt } from "react-icons/fa";
-import { useAdmins } from "../../../hooks/useAdmins";
+import { axiosInstance } from "../../../config/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addAdminData, removeAdminData } from "../../../redux/features/authSlice";
 
 export const AdminLogin = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAdmins();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogin = async (params) => {
+    const data = { phoneNumber, password };
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/admin/login",
+        withCredentials: true,
+        data,
+      });
+      toast.success("Login success");
+      dispatch(addAdminData(response?.data?.data))
+      navigate("/admin");
+    } catch (error) {
+      toast.error("Failed to login");
+      dispatch(removeAdminData());
+    }
+  };
 
   return (
     <div className="flex justify-center">
@@ -38,7 +60,7 @@ export const AdminLogin = () => {
         <button
           className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            login({ phoneNumber, password });
+            handleLogin();
             setPhoneNumber("");
             setPassword("");
           }}

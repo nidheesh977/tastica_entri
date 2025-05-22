@@ -1,5 +1,4 @@
 import { OpenOrderCard } from "../../../components/shared/OpenOrderCard/OpenOrderCard";
-import { SideBar } from "../../../components/shared/SideBar/SideBar";
 import { useInvoices } from "../../../hooks/useInvoices";
 
 export const OpenOrders = () => {
@@ -9,7 +8,7 @@ export const OpenOrders = () => {
 
   return (
     <>
-      <SideBar />
+      
       <div className="flex justify-center px-2 mt-10 m-2">
         <div className="border border-primary w-full max-w-[730px] h-[500px] p-5 overflow-hidden flex flex-col">
           <h1 className="text-center text-primary text-3xl py-2 font-thin">

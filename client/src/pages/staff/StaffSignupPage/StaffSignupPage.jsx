@@ -1,10 +1,10 @@
 import { StaffSignup } from "../../../components/staff/StaffSignup/StaffSignup";
-import { SideBar } from "../../../components/shared/SideBar/SideBar";
+import { AdminSideBar } from "../../../components/admin/AdminSideBar/AdminSideBar";
 
 export const StaffSignupPage = () => {
   return (
     <>
-      <SideBar />
+      <AdminSideBar />
       <StaffSignup />
     </>
   );

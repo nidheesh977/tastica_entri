@@ -20,23 +20,6 @@ export const useInvoices = (customerId = null) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
-    queryKey: ["invoice", invoiceId],
-    enabled: !!invoiceId,
-    queryFn: async () => {
-      const response = await axiosInstance({
-        method: "GET",
-        url: `/invoice/${invoiceId}`,
-        withCredentials: true,
-      });
-      return response?.data?.data;
-    },
-
-    onError: (error) => {
-      toast.error("Failed to fetch invoice");
-      console.error(error);
-    },
-  });
   const { data: singleInvoiceOpenOrder } = useQuery({
     queryKey: ["singleInvoiceOpenOrder", singleInvoiceId],
     enabled: !!singleInvoiceId,
@@ -75,23 +58,7 @@ export const useInvoices = (customerId = null) => {
       console.error(error);
     },
   });
-  const { data: invoices } = useQuery({
-    queryKey: ["invoices"],
-
-    queryFn: async () => {
-      const response = await axiosInstance({
-        method: "GET",
-        url: "/invoice",
-        withCredentials: true,
-      });
-      return response?.data?.data;
-    },
-
-    onError: (error) => {
-      toast.error("Failed to fetch invoices");
-      console.error(error);
-    },
-  });
+  
 
   const { mutate: saveInvoice } = useMutation({
     mutationFn: async () => {
@@ -310,7 +277,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -333,7 +300,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -357,7 +324,7 @@ export const useInvoices = (customerId = null) => {
     },
   });
   const { mutate: redeemPoints } = useMutation({
-    mutationFn: async ( redeemAmountAdd ) => {
+    mutationFn: async (redeemAmountAdd) => {
       const data = { redeemAmountAdd };
       const response = await axiosInstance({
         method: "PUT",
@@ -402,7 +369,6 @@ export const useInvoices = (customerId = null) => {
     addProductToInvoiceOpenOrder,
     removeProductFromInvoice,
     removeProductFromInvoiceOpenOrder,
-    invoice: data,
     singleInvoice,
     singleInvoiceOpenOrder,
     makeCashPayment,
@@ -411,7 +377,6 @@ export const useInvoices = (customerId = null) => {
     makeOnlinePaymentOpenOrder,
     saveInvoice,
     savedInvoices,
-    invoices,
     customerInvoices,
     redeemPoints,
     redeemPointsOpenOrder,

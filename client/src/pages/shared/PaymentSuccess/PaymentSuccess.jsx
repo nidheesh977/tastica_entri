@@ -1,13 +1,12 @@
 import { FaCheckCircle } from "react-icons/fa";
 import { MdShoppingCart } from "react-icons/md";
-import { SideBar } from "../../../components/shared/SideBar/SideBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../config/axiosInstance";
 
-export const PaymentSuccess = () => {
+export const PaymentSuccess = ({ role }) => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ export const PaymentSuccess = () => {
   }, []);
   return (
     <>
-      <SideBar />
+      
       <div className="flex flex-col justify-center items-center gap-4 mt-10 font-bold text-primary text-xl  w-96 h-96 mx-auto shadow-2xl rounded">
         <FaCheckCircle size={50} className="text-green-600" />
         <p>Payment success</p>

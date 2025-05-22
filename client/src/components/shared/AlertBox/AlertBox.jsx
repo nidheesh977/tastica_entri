@@ -7,13 +7,13 @@ export const AlertBox = ({ message, onConfirm, onCancel }) => {
       <p className="mb-4">{message}</p>
       <button
         onClick={onConfirm}
-        className="px-4 py-2 bg-secondary text-sm mx-2 font-semibold rounded text-white hover:bg-opacity-90"
+        className="px-4 py-2 bg-primary text-sm mx-2 font-semibold rounded text-white hover:bg-opacity-90"
       >
         Ok
       </button>
       <button
         onClick={onCancel}
-        className="px-4 py-2 bg-primary text-sm font-semibold rounded text-white hover:bg-opacity-90"
+        className="px-4 py-2 bg-secondary text-sm font-semibold rounded text-white hover:bg-opacity-90"
       >
         Cancel
       </button>

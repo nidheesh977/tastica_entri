@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BiCategory } from "react-icons/bi";
-import { SideBar } from "../../shared/SideBar/SideBar";
+import { AdminSideBar } from "../../../components/admin/AdminSideBar/AdminSideBar";
 import { useCategories } from "../../../hooks/useCategories";
 
 export const AddCategory = () => {
@@ -11,7 +11,7 @@ export const AddCategory = () => {
 
   return (
     <>
-      <SideBar />
+      <AdminSideBar />
       <div className="flex justify-center">
         <form
           onSubmit={(e) => e.preventDefault()}

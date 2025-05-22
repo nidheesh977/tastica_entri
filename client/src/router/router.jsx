@@ -140,7 +140,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "open/orders/data/:id",
-            element: <OpenOrderCartView/>,
+            element: <OpenOrderCartView />,
           },
           {
             path: "invoices",
@@ -152,11 +152,11 @@ export const router = createBrowserRouter([
           },
           {
             path: "payment/success",
-            element: <PaymentSuccess />,
+            element: <PaymentSuccess role="admin" />,
           },
           {
             path: "payment/cancel",
-            element: <PaymentCancel />,
+            element: <PaymentCancel role="admin" />,
           },
         ],
       },
@@ -172,52 +172,63 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <ProtectedRouteStaff />,
-        children: [{ path: "", element: <StaffHome /> }],
-      },
-      {
-        path: "open/orders",
-        element: <OpenOrders />,
-      },
-      {
-        path: "invoice/data/:id",
-        element: <InvoiceData />,
-      },
+        children: [
+          { path: "", element: <StaffHome /> },
 
-      {
-        path: "add/product",
-        element: <AddProductCard />,
-      },
-      {
-        path: "add/custom/product",
-        element: <AddCustomProduct />,
-      },
-      {
-        path: "product/view",
-        element: <ListProducts />,
-      },
-      {
-        path: "category/view",
-        element: <ListCategories />,
-      },
-      {
-        path: "add/category",
-        element: <AddNewCategory />,
-      },
-      {
-        path: "customer/view",
-        element: <ListCustomers />,
-      },
-      {
-        path: "customer/add",
-        element: <AddNewCustomer />,
-      },
-      {
-        path: "payment/success",
-        element: <PaymentSuccess />,
-      },
-      {
-        path: "payment/cancel",
-        element: <PaymentCancel />,
+          {
+            path: "open/orders",
+            element: <OpenOrders />,
+          },
+          {
+            path: "open/orders/data/:id",
+            element: <OpenOrderCartView />,
+          },
+          {
+            path: "invoice/data/:id",
+            element: <InvoiceData />,
+          },
+
+          {
+            path: "add/product",
+            element: <AddProductCard />,
+          },
+          {
+            path: "add/custom/product",
+            element: <AddCustomProduct />,
+          },
+          {
+            path: "product/view",
+            element: <ListProducts />,
+          },
+          {
+            path: "category/view",
+            element: <ListCategories />,
+          },
+          {
+            path: "add/category",
+            element: <AddNewCategory />,
+          },
+          {
+            path: "customer/view",
+            element: <ListCustomers />,
+          },
+          {
+            path: "customer/add",
+            element: <AddNewCustomer />,
+          },
+          {
+            path: "customer/view/invoice/:id",
+            element: <ListCustomerInvoices />,
+          },
+          {
+            path: "payment/success",
+            element: <PaymentSuccess />,
+          },
+          {
+            path: "payment/cancel",
+            element: <PaymentCancel />,
+          },
+        ],
       },
     ],
   },
