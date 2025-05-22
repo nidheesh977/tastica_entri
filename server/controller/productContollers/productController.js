@@ -104,7 +104,9 @@ export const updateProduct = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { productName, quantity, costPrice, sellingPrice, costPriceProfit, discount, category,discountType} = value;
+    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category  ,unit} = value;
+
+    
 
     if (sellingPrice === 0 && costPrice === 0) {
       return res.status(400).json({success: false,message: "Selling price and cost price cannot be 0",});
@@ -114,7 +116,10 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: "You can only add one price rate" });
     }
 
-    
+    if(costPrice > 0 && costPriceProfit === 0){
+      return res.status(400).json({success:false,message:"Cost price profit cannot be empty"})
+    }
+
 
     const productExist = await productModel.findById(id);
 
@@ -122,7 +127,7 @@ export const updateProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: "Product not found" });
     }
 
-   console.log(costPrice)
+
 
      let costProfitSum
 
@@ -140,13 +145,15 @@ export const updateProduct = async (req, res) => {
         discount,
         category,
         discountType,
-        costPriceProfit:costPriceProfit
+        costPriceProfit:costPriceProfit,
+        unit
       },
       { new: true }
     );
 
     res.status(200).json({success: true,message: "Product updated successfully",data: updatedProduct});
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "internal server error" });
   }
 };

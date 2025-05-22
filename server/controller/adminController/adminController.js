@@ -1,8 +1,8 @@
-import AdminStaffModel from "../model/adminAndStaffModel.js";
-import { comparePassword } from "../utils/comparePassword.js";
-import { userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../utils/joiValidation.js";
+import AdminStaffModel from "../../model/adminAndStaffModel.js";
+import { comparePassword } from "../../utils/comparePassword.js";
+import { userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
-import { generateToken } from "../utils/generateToken.js";
+import { generateToken } from "../../utils/generateToken.js";
 
 export const loginAdmin = async (req, res) => {
   try {

@@ -39,14 +39,14 @@ export const productsFileUploader = async (req, res) => {
 
                     for (const row of products){
 
-                        const findShop = await shopModel.findOne({shopName:row.shop});
-
+                        const findShop = await shopModel.findOne({shopName:row.shop.trim()});
+                        
                         if(!findShop){
                           return res.status(400).json({success:false,message:"shop is not found"})
                         }
 
-                        const getCategory = await categoryModel.findOne({shop:findShop._id,categoryName:row.category.trim()});
-                   
+                        const getCategory = await categoryModel.findOne({shop:findShop?._id,categoryName:row.category.trim()});
+
                         if(!getCategory){
                             return res.status(400).json({success:false,message:"Category is not found"})
                         }
@@ -74,7 +74,7 @@ export const productsFileUploader = async (req, res) => {
                     );
 
                     if (newProducts.length === 0) {
-                        return res.status(400).json({
+                        return res.status(400).json({ 
                             success: false,
                             message: "All products in the CSV file already exist",
                         });
@@ -90,6 +90,8 @@ export const productsFileUploader = async (req, res) => {
                         message: "CSV data imported successfully",
                         addedProducts: newProducts.length,
                     });
+
+                    console.log(products)
                 } catch (error) {
                     console.error("Error processing data:", error);
                     res.status(500).json({ success: false, message: "Internal server error" });

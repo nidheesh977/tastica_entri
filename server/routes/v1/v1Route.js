@@ -13,6 +13,7 @@ import customProductRouter from "./customProductRoute/customProductRoutes.js";
 import paymentRouter from "./paymentRoutes/paymentRoute.js";
 import loyalityRouter from './loyalityPointRoute/loyalityPointRoutes.js'
 import redeemRouter from "./redeemRoute/redeemRoutes.js";
+import dashBoardRouter from "./dashboardRoute/dashboardRoutes.js";
 
 const v1Router = express.Router();
 
@@ -30,6 +31,7 @@ v1Router.use("/customer",customerRouter);
 v1Router.use("/super-admin",superAdminRouter);
 v1Router.use("/loyality",loyalityRouter);
 v1Router.use("/redeem",redeemRouter);
+v1Router.use("/dashboard",dashBoardRouter);
 
 
 export default v1Router;

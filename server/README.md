@@ -94,7 +94,7 @@
 
 - 📦🖋 update product<br>
   **method**`PUT`<br>
-  **URL**`/api/v1/product/update/:id/category/:category`
+  **URL**`/api/v1/product/update/:id/`
 
 ## The routes for categories
 
