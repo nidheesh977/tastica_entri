@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
