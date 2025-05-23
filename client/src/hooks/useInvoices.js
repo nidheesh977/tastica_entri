@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   saveInvoiceData,
   clearInvoiceData,
@@ -19,6 +20,8 @@ export const useInvoices = (customerId = null) => {
   const singleInvoiceId = useSelector((state) => state?.singleInvoiceOpenOrder);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const admin = useSelector((state) => state?.autn?.adminData);
 
   const { data: singleInvoiceOpenOrder } = useQuery({
     queryKey: ["singleInvoiceOpenOrder", singleInvoiceId],
@@ -58,7 +61,6 @@ export const useInvoices = (customerId = null) => {
       console.error(error);
     },
   });
-  
 
   const { mutate: saveInvoice } = useMutation({
     mutationFn: async () => {
@@ -244,8 +246,53 @@ export const useInvoices = (customerId = null) => {
     },
     onSuccess: (data) => {
       toast.success("Payment successful.");
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: makeSwipePayment } = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/payment/internal-device/invoice/${invoiceId}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Payment successful.");
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
+      dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
+    },
+    onError: (error) => {
+      console.error(error?.response?.data?.message);
+    },
+  });
+  const { mutate: makeSwipePaymentOpenOrder } = useMutation({
+    mutationFn: async (id) => {
+      const response = await axiosInstance({
+        method: "POST",
+        url: `/payment/internal-device/invoice/${id}`,
+        withCredentials: true,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Payment successful.");
+      dispatch(clearInvoiceData());
+      dispatch(clearSingleInvoice());
+      dispatch(clearSingleInvoiceOpenOrder());
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -291,7 +338,6 @@ export const useInvoices = (customerId = null) => {
     },
     onSuccess: (data) => {
       console.log(data);
-      
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
@@ -372,6 +418,8 @@ export const useInvoices = (customerId = null) => {
     singleInvoice,
     singleInvoiceOpenOrder,
     makeCashPayment,
+    makeSwipePayment,
+    makeSwipePaymentOpenOrder,
     makeCashPaymentOpenOrder,
     makeOnlinePayment,
     makeOnlinePaymentOpenOrder,

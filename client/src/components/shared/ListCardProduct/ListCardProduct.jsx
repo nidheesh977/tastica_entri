@@ -51,6 +51,7 @@ export const ListCardProduct = () => {
               <th className="border border-primary px-4 py-2">Category</th>
               <th className="border border-primary px-4 py-2">Quantity</th>
               <th className="border border-primary px-4 py-2">Cost Price</th>
+              <th className="border border-primary px-4 py-2">Cost Price Profit</th>
               <th className="border border-primary px-4 py-2">Selling Price</th>
               <th className="border border-primary px-4 py-2">Discount</th>
               <th className="border border-primary px-4 py-2">Action</th>
@@ -102,6 +103,18 @@ export const ListCardProduct = () => {
                     />
                   ) : (
                     product?.costPrice
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedCostPriceProfit}
+                      onChange={(e) => setEditedCostPriceProfit(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.costPriceProfit
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">

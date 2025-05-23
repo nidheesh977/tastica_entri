@@ -5,7 +5,7 @@ import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveSingleInvoiceOpenOrder } from "../../../redux/features/singleInvoiceOpenOrderSlice";
 
 export const OpenOrderCart = ({
@@ -14,12 +14,13 @@ export const OpenOrderCart = ({
 }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const admin = useSelector((state) => state?.auth?.adminData);
 
   const {
     singleInvoiceOpenOrder,
     makeCashPaymentOpenOrder,
+    makeSwipePaymentOpenOrder,
     makeOnlinePaymentOpenOrder,
     saveInvoice,
     redeemPointsOpenOrder,
@@ -48,18 +49,28 @@ export const OpenOrderCart = ({
   useEffect(() => {
     if (id) {
       dispatch(saveSingleInvoiceOpenOrder(id));
-      setPointAmount(invoice?.customer?.pointAmount);
     }
   }, [id, dispatch]);
+  useEffect(() => {
+    if (invoice?.customer?.pointAmount !== undefined) {
+      setPointAmount(invoice.customer.pointAmount);
+    }
+  }, [invoice]);
 
-  const handlePayNow = () => {
+  const handleCashPay = () => {
     setShowPayDialog(false);
     makeCashPaymentOpenOrder(id);
 
-    navigate("/admin/open/orders");
+    navigate(admin ? "/admin/open/orders" : "/staff/open/orders");
+  };
+  const handleSwipePay = () => {
+    setShowPayDialog(false);
+    makeSwipePaymentOpenOrder(id);
+
+    navigate(admin ? "/admin/open/orders" : "/staff/open/orders");
   };
 
-  const handleOnlinePay = () => {
+  const handleStripePay = () => {
     setShowPayDialog(false);
     makeOnlinePaymentOpenOrder(id);
   };
@@ -199,8 +210,9 @@ export const OpenOrderCart = ({
       {showPayDialog && (
         <PayDialogueBox
           message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
-          onPayNow={handlePayNow}
-          onOnlinePay={handleOnlinePay}
+          cashPay={handleCashPay}
+          swipePay={handleSwipePay}
+          stripePay={handleStripePay}
           onCancel={handleCancel}
           invoice={invoice}
         />
