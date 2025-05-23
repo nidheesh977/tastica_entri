@@ -109,7 +109,8 @@ export const AdminSideBar = () => {
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaFileCsv />
-          Categories
+           Products
+          
         </li>
 
         <li
@@ -117,7 +118,8 @@ export const AdminSideBar = () => {
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaFileCsv />
-          Products
+          Categories
+         
         </li>
 
         <li

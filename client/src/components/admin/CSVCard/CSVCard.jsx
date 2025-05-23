@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaFileCsv } from "react-icons/fa";
-import { useFileUploads } from "../../../hooks/useFileUploads";
 
 export const CSVCard = ({ uploadCSVFile, isLoading, title }) => {
   const [csvFile, setCsvFile] = useState(null);
