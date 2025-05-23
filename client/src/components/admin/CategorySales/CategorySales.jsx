@@ -8,7 +8,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export const CategorySales = () => {
   const [chartData, setChartData] = useState(null);
   const { invoices } = useAdmins();
-  console.log(invoices);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;

@@ -258,7 +258,7 @@ export const ShoppingCart = ({
               <input
                 className="outline-primary px-2 w-2/3"
                 type="number"
-                onClick={(e) => {
+                onChange={(e) => {
                   setRedeemAmountAdd(e.target.value);
                 }}
               />
@@ -308,7 +308,6 @@ export const ShoppingCart = ({
           stripePay={handleStripePay}
           onCancel={handleCancel}
           invoice={invoice}
-          
         />
       )}
     </div>
