@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { FaDollarSign, FaTimes } from "react-icons/fa";
-import { FaMoneyCheckAlt } from "react-icons/fa";
+import {
+  FaDollarSign,
+  FaTimes,
+  FaCreditCard,
+  FaMoneyCheckAlt,
+} from "react-icons/fa";
 
 export const PayDialogueBox = ({
   message,
-  onPayNow,
-  onOnlinePay,
+  cashPay,
+  swipePay,
+  stripePay,
   onCancel,
   invoice,
 }) => {
@@ -31,21 +36,29 @@ export const PayDialogueBox = ({
             />
           </li>
           <li className="border flex items-center justify-between p-2 w-full shadow">
-            Balance: {receivedAmount ? Number(receivedAmount) - invoice?.totalAmount : 0}
+            Balance:{" "}
+            {receivedAmount ? Number(receivedAmount) - invoice?.totalAmount : 0}
           </li>
         </ul>
       </ul>
 
       <div className="flex justify-center gap-4 mb-4 mt-5">
         <button
-          onClick={onPayNow}
+          onClick={cashPay}
           className="flex items-center justify-center  gap-2 px-6 py-3 bg-primary text-sm font-semibold rounded text-white hover:bg-opacity-90"
         >
           <FaDollarSign />
           Cash
         </button>
         <button
-          onClick={onOnlinePay}
+          onClick={swipePay}
+          className="flex items-center justify-center  gap-2 px-6 py-3 bg-primary text-sm font-semibold rounded text-white hover:bg-opacity-90"
+        >
+          <FaCreditCard />
+          Swipe
+        </button>
+        <button
+          onClick={stripePay}
           className=" flex items-center justify-center gap-2 px-6 py-3 bg-primary text-sm font-semibold rounded text-white hover:bg-opacity-90"
         >
           <FaMoneyCheckAlt />

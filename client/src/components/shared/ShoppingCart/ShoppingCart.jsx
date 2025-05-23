@@ -17,6 +17,7 @@ export const ShoppingCart = ({
   const {
     createInvoice,
     makeCashPayment,
+    makeSwipePayment,
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
@@ -71,13 +72,18 @@ export const ShoppingCart = ({
     setQuantities({});
   };
 
-  const handlePayNow = () => {
+  const handleCashPay = () => {
     setShowPayDialog(false);
     makeCashPayment();
     resetBillingState();
   };
+  const handleSwipePay = () => {
+    setShowPayDialog(false);
+    makeSwipePayment();
+    resetBillingState();
+  };
 
-  const handleOnlinePay = () => {
+  const handleStripePay = () => {
     setShowPayDialog(false);
     makeOnlinePayment();
     resetBillingState();
@@ -297,10 +303,12 @@ export const ShoppingCart = ({
       {showPayDialog && (
         <PayDialogueBox
           message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
-          onPayNow={handlePayNow}
-          onOnlinePay={handleOnlinePay}
+          cashPay={handleCashPay}
+          swipePay={handleSwipePay}
+          stripePay={handleStripePay}
           onCancel={handleCancel}
           invoice={invoice}
+          
         />
       )}
     </div>
