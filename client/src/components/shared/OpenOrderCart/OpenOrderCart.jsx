@@ -157,9 +157,9 @@ export const OpenOrderCart = ({
           <div>MVR{invoice?.subTotal || 0}</div>
         </div> */}
         <div className="flex justify-between items-center border px-2 py-2">
-            <div>Products Discount</div>
-            <div>MVR{invoice?.totalDiscount || 0}</div>
-          </div>
+          <div>Products Discount</div>
+          <div>MVR{invoice?.totalDiscount || 0}</div>
+        </div>
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Discount</div>
           <p>{pointAmount}</p>
@@ -174,12 +174,13 @@ export const OpenOrderCart = ({
           </div>
           <div>
             <button
-              onClick={() =>
+              onClick={() => {
                 redeemPointsOpenOrder({
                   redeemAmountAdd,
                   id,
-                })
-              }
+                });
+                setRedeemAmountAdd("");
+              }}
               className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
             >
               Redeem
