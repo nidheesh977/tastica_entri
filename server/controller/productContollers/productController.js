@@ -137,10 +137,9 @@ export const updateProduct = async (req, res) => {
           costProfitSum = costPrice * (parseFloat(costPriceProfit) / 100)
        }
 
-
-
+       
         const addCostPrice = costPrice === productExist.costPrice ? costPrice : costPrice + costProfitSum
-
+ 
     const updatedProduct = await productModel.findByIdAndUpdate(id,{
         productName,
         quantity,

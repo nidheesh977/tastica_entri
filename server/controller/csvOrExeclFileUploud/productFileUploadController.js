@@ -24,6 +24,7 @@ export const productsFileUploader = async (req, res) => {
                     productName: row.productName.trim(),
                     quantity: Number(row.quantity),
                     costPrice: Number(row.costPrice),
+                    costPriceProfit: Number(row.costPriceProfit),
                     sellingPrice: Number(row.sellingPrice),
                     discount: Number(row.discount),
                     category: row.category,
@@ -51,6 +52,14 @@ export const productsFileUploader = async (req, res) => {
                             return res.status(400).json({success:false,message:"Category is not found"})
                         }
 
+                        let costProfitSum
+
+                        if(row.costPrice > 0){
+                        costProfitSum = row.costPrice * (row.costPriceProfit / 100)
+                        }
+                            
+                        let addCostPrice = row.costPrice === 0 ? row.costPrice : row.costPrice + costProfitSum
+
                         let productId;
                                
                         do {
@@ -61,6 +70,7 @@ export const productsFileUploader = async (req, res) => {
                         row["category"] = getCategory?._id
                         row["shop"] = findShop?._id
                         row["product_id"] = productId
+                        row["costPrice"] = addCostPrice
                     } 
                     
                     const existingProductIds = new Set(
@@ -80,7 +90,7 @@ export const productsFileUploader = async (req, res) => {
                         });
                     }
 
-                    console.log(newProducts)
+                    
 
                     
                     await productModel.insertMany(newProducts);
