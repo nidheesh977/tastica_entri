@@ -26,7 +26,7 @@ export const onlinePaymentStripe = async (req,res) => {
         if(findInvoice.totalAmount === 0){
              return res.status(400).json({success:false,message:"Please add product"});
         }
-
+ 
         if(findInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"});
         }

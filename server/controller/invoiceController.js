@@ -149,10 +149,11 @@ export const addProductToInvoice = async (req,res) => {
             discountFromCategory:parseFloat(getDiscount).toFixed(2),
             quantity:parseFloat(quantity).toFixed(2),
             discountType:productExist?.discountType || "percentage",
-            productId:productId 
+            productId:productId,
+            category:findCategory.categoryName 
         } 
 
-       
+  
      if(!findInvoiceProduct){ 
 
                 // reduce quantity from product

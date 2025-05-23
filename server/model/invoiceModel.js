@@ -28,7 +28,8 @@ const invoiceSchema = new mongoose.Schema({
             productDiscount:{type:Number,default:0},
             discountFromCategory:{type:Number,default: 0},
             discountFromProduct:{type:Number,default:0},
-            discountType:{type:String,enum:["percentage","flat"],default:"percentage"}
+            discountType:{type:String,enum:["percentage","flat"],default:"percentage"},
+            category:{type:String,required:true}
          }   
         ],
         default:[]
