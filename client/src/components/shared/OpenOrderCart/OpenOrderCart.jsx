@@ -167,7 +167,7 @@ export const OpenOrderCart = ({
             <input
               className="outline-primary px-2 w-2/3 border "
               type="text"
-              onClick={(e) => {
+              onChange={(e) => {
                 setRedeemAmountAdd(e.target.value);
               }}
             />
