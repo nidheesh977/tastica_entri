@@ -4,7 +4,7 @@ import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 export const ListCardCustomer = () => {
   const [alertMessage, setAlertMessage] = useState(null);

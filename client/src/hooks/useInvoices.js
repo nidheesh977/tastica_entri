@@ -402,7 +402,7 @@ export const useInvoices = (customerId = null) => {
     },
     onSuccess: (data) => {
       toast("Points amount added!");
-      console.log(data);
+       queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
       console.error(error);
