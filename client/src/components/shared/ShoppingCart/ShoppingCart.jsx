@@ -247,17 +247,21 @@ export const ShoppingCart = ({
 
       {!isNewCustomer && (
         <div className="mt-2 w-full font-bold">
-          <div className="flex justify-between items-center border px-2 py-2">
+          {/* <div className="flex justify-between items-center border px-2 py-2">
             <div>Subtotal</div>
             <div>MVR{invoice?.subTotal || 0}</div>
+          </div> */}
+          <div className="flex justify-between items-center border px-2 py-2">
+            <div>Products Discount</div>
+            <div>MVR{invoice?.totalDiscount || 0}</div>
           </div>
           <div className="flex justify-between items-center gap-2 border px-2 py-2">
             <div>Discount</div>
             <p>{pointAmount}</p>
             <div>
               <input
-                className="outline-primary px-2 w-2/3"
-                type="number"
+                className="outline-primary px-2 w-2/3 border "
+                type="text"
                 onChange={(e) => {
                   setRedeemAmountAdd(e.target.value);
                 }}
