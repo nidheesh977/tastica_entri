@@ -30,6 +30,8 @@ export const addRedeemToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Redeem cannot be negative"})
         }
 
+        
+
         if(findInvoice.redeemAmount === redeemAmountAdd){
             return res.status(400).json({success:false,message:"This Amount Already Added"})
         }
