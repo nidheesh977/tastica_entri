@@ -432,7 +432,7 @@ export const removeProductFromInvoice = async (req,res) => {
                     return res.status(400).json({success:false,message:"Shop ID is not get"});
                 }
 
-                const fullInvoice = await invoiceModel.find({shop:shopId}).populate("customer").populate("products");
+                const fullInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"paid"}).populate("customer").populate("products");
 
                 
                  

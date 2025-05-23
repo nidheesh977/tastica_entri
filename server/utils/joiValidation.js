@@ -251,7 +251,7 @@ export const updateProductValidation = Joi.object({
         'number.empty': 'Quanity cannot be empty',
     }),
     
-    costPrice:Joi.number().integer().min(0).messages({
+    costPrice:Joi.number().precision(2).min(0).messages({
         'number.base': 'Cost price must be a number',
         'number.empty': 'Cost price cannot be empty',
     }),
