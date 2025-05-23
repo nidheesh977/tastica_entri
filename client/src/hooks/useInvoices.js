@@ -271,7 +271,6 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
-      
     },
     onError: (error) => {
       console.error(error?.response?.data?.message);
