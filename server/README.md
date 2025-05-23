@@ -207,6 +207,12 @@
 **method**`POST` <br>
 **URL**`/api/v1/payment/cash/invoice/invoiceId`
 
+- internal-device payment
+
+**method**`POST` <br>
+**URL**`/api/v1/payment/internal-device/invoice/invoiceId`
+
+
 - card payment
 **method**`POST` <br>
 **URL**`/api/v1/payment/card/invoice/invoiceId`
