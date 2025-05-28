@@ -2,8 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-
-
+import {validateData} from '../utils/validateData'
 import { useState } from "react";
 
 export const useAdmins = () => {
@@ -39,6 +38,8 @@ export const useAdmins = () => {
         password,
         confirmPassword
       );
+  
+      
       setError(error);
       const data = {
         userName,
@@ -46,6 +47,7 @@ export const useAdmins = () => {
         phoneNumber,
         password,
       };
+     
 
       await axiosInstance({
         method: "POST",
@@ -59,6 +61,8 @@ export const useAdmins = () => {
     },
     onError: () => {
       toast.error(error || "Failed to signup.");
+     
+
       dispatch(removeStaffData());
     },
   });
@@ -139,5 +143,12 @@ export const useAdmins = () => {
     },
   });
 
-  return { staffs: data, invoice, invoices, staffSignup, updateStaff, deleteStaff };
+  return {
+    staffs: data,
+    invoice,
+    invoices,
+    staffSignup,
+    updateStaff,
+    deleteStaff,
+  };
 };

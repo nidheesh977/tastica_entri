@@ -8,7 +8,7 @@ export const StaffSignup = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { staffSignup } = useAdmins;
+  const { staffSignup } = useAdmins();
 
   return (
     <div className="flex justify-center my-10">
