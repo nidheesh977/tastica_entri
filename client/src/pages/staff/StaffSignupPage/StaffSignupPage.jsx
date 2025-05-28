@@ -5,7 +5,9 @@ export const StaffSignupPage = () => {
   return (
     <>
       <AdminSideBar />
-      <StaffSignup />
+      <div className="flex justify-center m-1">
+        <StaffSignup />
+      </div>
     </>
   );
 };

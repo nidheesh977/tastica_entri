@@ -1,9 +1,12 @@
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
+import { useState } from "react";
+import { validateCustomerData } from "../utils/validateCustomerData";
 
 export const useCustomers = () => {
   const queryClient = useQueryClient();
+  const [error, setError] = useState(null);
   const { data } = useQuery({
     queryKey: ["customers"],
     queryFn: async () => {
@@ -18,6 +21,10 @@ export const useCustomers = () => {
 
   const { mutate: addCustomer } = useMutation({
     mutationFn: async ({ customerName, phoneNumber }) => {
+      const error = validateCustomerData(userName, phoneNumber);
+
+      setError(error);
+
       const data = {
         customerName,
         phoneNumber,
@@ -34,7 +41,7 @@ export const useCustomers = () => {
       queryClient.invalidateQueries(["customers"]);
     },
     onError: () => {
-      toast.error("Failed to add customer.");
+      toast.error('Failed to add new customer!');
     },
   });
 
