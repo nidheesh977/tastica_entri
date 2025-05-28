@@ -21,7 +21,7 @@ export const useInvoices = (customerId = null) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const admin = useSelector((state) => state?.autn?.adminData);
+  const admin = useSelector((state) => state?.auth?.adminData);
 
   const { data: singleInvoiceOpenOrder } = useQuery({
     queryKey: ["singleInvoiceOpenOrder", singleInvoiceId],
@@ -190,6 +190,32 @@ export const useInvoices = (customerId = null) => {
       console.error(error?.response?.data?.message);
     },
   });
+
+const { data: invoice } = useQuery({
+    queryKey: ["invoice", invoiceId],
+    enabled: !!invoiceId,
+    queryFn: async () => {
+      const response = await axiosInstance({
+        method: "GET",
+        url: `/invoice/${invoiceId}`,
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+
+    onError: (error) => {
+      toast.error("Failed to fetch invoice");
+      console.error(error);
+    },
+  });
+
+
+
+
+
+
+
+
 
   const { mutate: removeProductFromInvoice } = useMutation({
     mutationFn: async (productId) => {
@@ -427,6 +453,7 @@ export const useInvoices = (customerId = null) => {
     savedInvoices,
     customerInvoices,
     redeemPoints,
+    invoice,
     redeemPointsOpenOrder,
   };
 };

@@ -29,7 +29,7 @@ export const StaffHeader = () => {
         url: "/staff/logout",
         withCredentials: true,
       });
-      dispatch(removeStaffData);
+      dispatch(removeStaffData());
       toast.success("Logout success");
       navigate("/shop/staff/login")
 

@@ -21,8 +21,9 @@ export const ShoppingCart = ({
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
+    invoice
   } = useInvoices();
-  const { invoice } = useAdmins();
+  // const { invoice } = useAdmins();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
