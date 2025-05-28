@@ -21,7 +21,7 @@ export const useCustomers = () => {
 
   const { mutate: addCustomer } = useMutation({
     mutationFn: async ({ customerName, phoneNumber }) => {
-      const error = validateCustomerData(userName, phoneNumber);
+      const error = validateCustomerData(customerName, phoneNumber);
 
       setError(error);
 
