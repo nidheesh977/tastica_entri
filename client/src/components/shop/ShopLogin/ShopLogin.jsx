@@ -13,7 +13,7 @@ export const ShopLogin = () => {
       <form
         onSubmit={(e) => e.preventDefault()}
         className=" my-20
-          w-full md:w-[500px] pb-10 md:pb-20 px-4 md:px-10 bg-tertiary text-primary shadow-2xl border rounded-lg"
+          w-full md:w-[500px] py-10 md:pb-20 px-4 md:px-10 bg-tertiary text-primary shadow-2xl border rounded-lg"
       >
         <h1 className="text-3xl py-10 font-thin text-center text-primary ">
           Shop login
@@ -39,7 +39,13 @@ export const ShopLogin = () => {
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
             onClick={() => setPasswordShow((prev) => !prev)}
           >
-            {passwordShow ? <FaEye className={passwordShow ? 'text-primary': 'text-gray-400'} /> : <FaEyeSlash />}
+            {passwordShow ? (
+              <FaEye
+                className={passwordShow ? "text-primary" : "text-gray-400"}
+              />
+            ) : (
+              <FaEyeSlash />
+            )}
           </button>
         </div>
 
