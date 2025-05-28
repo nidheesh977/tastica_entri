@@ -329,14 +329,29 @@ export const removeProductFromInvoice = async (req,res) => {
                     return res.status(400).json({success:false,message:"No Invoice"})
                 }
 
-                 const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
-                 
 
-                 
-                      findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+                const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
+
               
+              
+            //   if(getInvoice.isTaxActive === true && getInvoice.taxRate > 0){
+            //     const invoiceTaxTotal = getInvoice.totalAmount * (getInvoice.taxRate) / 100;
+            //     const toFix = invoiceTaxTotal.toFixed(2);
 
-                res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
+            //     const addTaxToTotalAmt = getInvoice.totalAmount + parseFloat(toFix)
+                
+            //     findInvoice["totalAmount"] = addTaxToTotalAmt
+                
+            //     findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+            //      res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
+                 
+            //     }else{
+              findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+              res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
+                 
+                
+                // }
+            
             }catch(error){
                 console.log(error)
                 return res.status(500).json({success:false,message:"Internal server error"})
@@ -387,14 +402,26 @@ export const removeProductFromInvoice = async (req,res) => {
               
                 const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
                  
-                for(const item of savedInvoice){
-                      item.customer.pointAmount = parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+                if(!savedInvoice || savedInvoice.length === 0){
+                    return res.status(404).json({success:false,message:"Open order is empty"})
                 }
-                 
+
+                
+          
+                    for(const item of savedInvoice){
+                        item.customer.pointAmount =parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+                    }
+
 
                 res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
+                
+               
+                 
+
+               
 
             }catch(error){
+                console.log(error)
                    return res.status(500).json({success:false,message:"Internal server error",error})
             }
         }

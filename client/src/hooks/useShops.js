@@ -23,6 +23,8 @@ export const useShops = () => {
         data,
       });
       dispatch(addShopData(response?.data?.data));
+
+      
     },
     onSuccess: () => {
       toast.success("Login success!");
