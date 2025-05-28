@@ -36,13 +36,13 @@ export const loginAdmin = async (req, res) => {
     if (adminExist.role !== "admin") {
       return res.status(400).json({ success: false, message: "You are not an admin" });
     }
-
+ 
     // generate token
     const adminToken = generateToken({id: adminExist._id,role: adminExist.role,});
 
     const { password: pass, ...adminData } = adminExist._doc;
 
-    res.cookie("adminToken", adminToken, {
+    res.cookie("adminToken", adminToken, { 
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.SAMESITE,

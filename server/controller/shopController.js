@@ -76,7 +76,8 @@ export const shopLogin = async (req,res) => {
             secure:process.env.NODE_ENV === 'production',
             sameSite:process.env.SAMESITE,maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:shopData})
 
-    }catch(error){
+    }catch(error){ 
+        console.log(error)
         return res.status(500).json({success:false,message:"internal server error"});
       }  
 }

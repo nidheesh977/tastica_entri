@@ -150,7 +150,7 @@ export const updateProduct = async (req, res) => {
         costPriceProfit:costPriceProfit,
       },
       { new: true }
-    );
+    ); 
 
     res.status(200).json({success: true,message: "Product updated successfully",data: updatedProduct});
   } catch (error) {

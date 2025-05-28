@@ -68,7 +68,7 @@ export const userLoginValidation = Joi.object({
         'string.empty': 'Phone number cannot be empty',
         'string.pattern.base': 'Phone number must be 10 digits long',
     }),
-    password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+    password: Joi.string().min(8).max(20).required().messages({
         'string.required': 'Password is required',
         'string.empty': 'Password cannot be empty',
     }),
