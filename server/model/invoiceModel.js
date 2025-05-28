@@ -89,6 +89,15 @@ const invoiceSchema = new mongoose.Schema({
     customer:{
         type:mongoose.Schema.Types.ObjectId,
             ref:"Customer", 
+    },
+
+     isTaxActive:{
+        type:Boolean,
+        default:false
+    },
+    taxRate:{
+        type:Number,
+        default:0
     }
 },{timestamps:true})
 

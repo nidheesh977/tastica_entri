@@ -174,7 +174,7 @@ export const shopLoginValidation = Joi.object({
         'string.empty': 'Email cannot be empty',
         'string.email': 'Email must be a valid email address',
     }),
-    password:Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+    password:Joi.string().min(8).max(20).required().messages({
         'string.required': 'Password is required',
         'string.empty': 'Password cannot be empty',
     })
