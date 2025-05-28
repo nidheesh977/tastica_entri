@@ -150,6 +150,8 @@ export const ShoppingCart = ({
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             onFocus={() => setPhoneNumber(searchQuery)}
+            minLength={10}
+            maxLength={10}
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
           />

@@ -14,7 +14,7 @@ export const AddProductCard = () => {
   const [sellingPrice, setSellingPrice] = useState("");
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
-  const [discountType, setDiscountType] = useState("");
+  const [discountType, setDiscountType] = useState("percentage");
   const [unit, setUnit] = useState("");
 
   return (
@@ -125,20 +125,22 @@ export const AddProductCard = () => {
                 %
                 <input
                   type="radio"
-                  value="percentage"
+                  value='percentage'
                   name="discountType"
                   className="accent-primary"
-                  onChange={(e) => setDiscountType(e.target.value)}
+                  checked={discountType === 'percentage'}
+                  onChange={() => setDiscountType('percentage')}
                 />
               </span>
               <span className="flex gap-1">
                 MVR
                 <input
                   type="radio"
-                  value="flat"
+                  value='flat'
                   name="discountType"
                   className="accent-primary"
-                  onChange={(e) => setDiscountType(e.target.value)}
+                   checked={discountType === 'flat'}
+                  onChange={() => setDiscountType('flat')}
                 />
               </span>
             </span>
@@ -149,7 +151,7 @@ export const AddProductCard = () => {
             onChange={(e) => setCategory(e.target.value)}
             className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
           >
-            <option className="bg-primary" value="">
+            <option className="bg-white" value="">
               Select a category
             </option>
             {categories?.map((category) => (

@@ -1,5 +1,5 @@
 import { FaHome, FaUsers, FaFileCsv } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaBoxOpen, FaUserTie } from "react-icons/fa";
 import {
   MdPersonAdd,
@@ -12,9 +12,11 @@ import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { BiCategory } from "react-icons/bi";
+import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 
 export const AdminSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const handleSideBar = (route) => {
     navigate(route);
@@ -31,7 +33,7 @@ export const AdminSideBar = () => {
     >
       <ul className="w-full flex flex-col gap-1 text-lg font-bold p-2">
         <li
-          onClick={() => handleSideBar("/admin")}
+          onClick={() => {handleSideBar("/admin"); dispatch(toggleSideBar())}}
           className={
             " bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
           }
@@ -41,7 +43,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/staff/view")}
+          onClick={() => {handleSideBar("/admin/staff/view"); dispatch(toggleSideBar())}}
           className=" bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdGroups />
@@ -49,7 +51,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/staff/signup")}
+          onClick={() => {handleSideBar("/admin/staff/signup"); dispatch(toggleSideBar())}}
           className=" bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaUserTie />
@@ -57,7 +59,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/customer/view")}
+          onClick={() => {handleSideBar("/admin/customer/view"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaUsers />
@@ -65,7 +67,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/customer/add")}
+          onClick={() => {handleSideBar("/admin/customer/add"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdPersonAdd />
@@ -73,7 +75,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/product/view")}
+          onClick={() => {handleSideBar("/admin/product/view"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaBoxOpen />
@@ -81,7 +83,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/add/product")}
+          onClick={() => {handleSideBar("/admin/add/product"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaBox />
@@ -89,7 +91,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/category/view")}
+          onClick={() => {handleSideBar("/admin/category/view"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdCategory />
@@ -97,7 +99,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/add/category")}
+          onClick={() => {handleSideBar("/admin/add/category"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <BiCategory />
@@ -105,7 +107,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/upload/products/csv")}
+          onClick={() => {handleSideBar("/admin/upload/products/csv"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaFileCsv />
@@ -114,7 +116,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/upload/categories/csv")}
+          onClick={() => {handleSideBar("/admin/upload/categories/csv"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaFileCsv />
@@ -123,7 +125,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/cart")}
+          onClick={() => {handleSideBar("/admin/cart"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaShoppingCart />
@@ -131,7 +133,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/invoices")}
+          onClick={() => {handleSideBar("/admin/invoices")}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdEventNote />
@@ -139,7 +141,7 @@ export const AdminSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/admin/open/orders")}
+          onClick={() => {handleSideBar("/admin/open/orders"); dispatch(toggleSideBar())}}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdReceipt />

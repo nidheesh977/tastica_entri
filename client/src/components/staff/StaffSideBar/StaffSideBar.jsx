@@ -1,12 +1,13 @@
 import { FaHome } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdPersonAdd, MdReceipt } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 
 export const StaffSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
-
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const handleSideBar = (route) => {
     navigate(route);
@@ -23,7 +24,10 @@ export const StaffSideBar = () => {
     >
       <ul className="w-full flex flex-col gap-1 text-lg font-bold p-2">
         <li
-          onClick={() => handleSideBar("/staff")}
+          onClick={() => {
+            handleSideBar("/staff");
+            dispatch(toggleSideBar());
+          }}
           className={
             " bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
           }
@@ -33,7 +37,10 @@ export const StaffSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/staff/customer/add")}
+          onClick={() => {
+            handleSideBar("/staff/customer/add");
+            dispatch(toggleSideBar());
+          }}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdPersonAdd />
@@ -41,7 +48,10 @@ export const StaffSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/staff")}
+          onClick={() => {
+            handleSideBar("/staff");
+            dispatch(toggleSideBar());
+          }}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaShoppingCart />
@@ -49,7 +59,10 @@ export const StaffSideBar = () => {
         </li>
 
         <li
-          onClick={() => handleSideBar("/staff/open/orders")}
+          onClick={() => {
+            handleSideBar("/staff/open/orders");
+            dispatch(toggleSideBar());
+          }}
           className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdReceipt />
