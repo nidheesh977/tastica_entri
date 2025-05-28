@@ -41,7 +41,7 @@ export const AdminHeader = () => {
   const { savedInvoices } = useInvoices();
 
   return (
-    <nav className="w-full">
+    <nav className="w-full shadow-xl">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
         <div className="flex justify-between items-center">
           <div
