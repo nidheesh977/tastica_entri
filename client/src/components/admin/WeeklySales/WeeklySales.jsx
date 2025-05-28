@@ -20,6 +20,8 @@ ChartJS.register(
   Legend
 );
 
+import {dark} from '../../../utils/constants'
+
 export const WeeklySales = () => {
   const [chart, setChart] = useState(null);
   const { invoices } = useAdmins();
@@ -61,8 +63,8 @@ export const WeeklySales = () => {
         {
           label: "Order Total ₹",
           data,
-          backgroundColor: "rgba(54, 162, 235, 0.6)",
-          borderColor: "rgba(54, 162, 235, 1)",
+          backgroundColor: `${dark}`,
+          borderColor: `${dark}`,
           borderWidth: 1,
         },
       ],
