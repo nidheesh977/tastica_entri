@@ -191,23 +191,23 @@ export const newProductValidation = Joi.object({
         'string.max': 'Product name must be at most 100 characters long',   
     }),
 
-    quantity: Joi.number().integer().min(0).required().messages({
+    quantity: Joi.number().precision(2).min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',
     }),
     
-    costPrice:Joi.number().integer().min(0).messages({
+    costPrice:Joi.number().precision(2).min(0).messages({
         'number.base': 'Cost price must be a number',
         'number.empty': 'Cost price cannot be empty',
     }),
 
-    sellingPrice: Joi.number().integer().min(0).messages({
+    sellingPrice: Joi.number().precision(2).min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),
 
-    discount: Joi.number().integer().min(0).messages({
+    discount: Joi.number().precision(2).min(0).messages({
         'number.base': 'Discount must be a number',
         'number.empty': 'Discount cannot be empty',
     }),
@@ -223,7 +223,7 @@ export const newProductValidation = Joi.object({
         'string.min': 'Discount type must be at least 3 characters long',
         'string.max': 'Discount type must be at most 20 characters long',   
     }),
-    costPriceProfit:Joi.number().integer().min(0).message({
+    costPriceProfit:Joi.number().precision(2).min(0).message({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
@@ -245,7 +245,7 @@ export const updateProductValidation = Joi.object({
         'string.max': 'Product name must be at most 100 characters long',   
     }),
 
-    quantity: Joi.number().integer().min(0).required().messages({
+    quantity: Joi.number().precision(2).min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
         'number.empty': 'Quanity cannot be empty',
@@ -256,12 +256,12 @@ export const updateProductValidation = Joi.object({
         'number.empty': 'Cost price cannot be empty',
     }),
 
-    sellingPrice: Joi.number().integer().min(0).messages({
+    sellingPrice: Joi.number().precision(2).min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),
 
-    discount: Joi.number().integer().min(0).messages({
+    discount: Joi.number().precision(2).min(0).messages({
         'number.base': 'Discount must be a number',
         'number.empty': 'Discount cannot be empty',
     }),
@@ -273,7 +273,7 @@ export const updateProductValidation = Joi.object({
         'string.min': 'Category must be at least 24 characters long',  
     }),
 
-    costPriceProfit:Joi.number().integer().min(0).message({
+    costPriceProfit:Joi.number().precision(2).min(0).message({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
@@ -298,7 +298,7 @@ export const newCategoryValidation = Joi.object({
         'string.min': 'Description must be at least 3 characters long',
         'string.max': 'Description must be at most 200 characters long',   
     }),
-    discountRate: Joi.number().integer().min(0).messages({
+    discountRate: Joi.number().precision(2).min(0).messages({
         'number.base': 'Discount rate must be a number',
         'number.empty': 'Discount rate cannot be empty',
     }),
@@ -325,11 +325,11 @@ export const customerValidation = Joi.object({
         'string.min': 'Category name must be at least 3 characters long',
         'string.max': 'Category name must be at most 30 characters long',   
     }),
-    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
         'string.base': 'Phone number must be a string',
         'string.empty': 'Phone number cannot be empty',
-        'string.pattern.base': 'Phone number must be 10 digits long',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits ',
     }),
 })
 
@@ -343,23 +343,23 @@ export const newCustomProductValidation = Joi.object({
         'string.max': 'Product name must be at most 100 characters long',   
     }),
 
-    quantity: Joi.number().integer().min(0).required().messages({
+    quantity: Joi.number().precision(2).min(0).required().messages({
         'number.required': 'Quanity is required',
         'number.base': 'Quanity must be a number',
-        'number.empty': 'Quanity cannot be empty',
+        'number.empty': 'Quanity cannot be empty', 
     }),
     
 
-    sellingPrice: Joi.number().integer().min(0).messages({
+    sellingPrice: Joi.number().precision(2).min(0).messages({
         'number.base': 'Selling price must be a number',
         'number.empty': 'Selling price cannot be empty',
     }),
  
     
-    unit:Joi.string().valid('number','kg','li','m').messages({
+    unit:Joi.string().valid('no','kg','li','m').messages({
         'string.base': 'Unit must be a string',
         'string.empty': 'Unit cannot be empty',
-        'any.only': 'Unit must be one of the following values: number, kg, li, m',
+        'any.only': 'Unit must be one of the following values: no, kg, li, m',
     }),
 
 });

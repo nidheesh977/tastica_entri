@@ -16,7 +16,7 @@ invoiceRouter.get('/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('a
 invoiceRouter.patch('/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),invoiceSave);
 invoiceRouter.get('/save/status-saved',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getInvoiceSaved)
 
-invoiceRouter.post('/',getInvoiceWithId)
+invoiceRouter.post('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getInvoiceWithId)
 
 
  
