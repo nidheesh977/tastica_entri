@@ -109,6 +109,7 @@ export const addProductToInvoice = async (req,res) => {
            productExist = await customProductModel.findById(productId)
         }
        
+        
 
         if(quantity > productExist.quantity ){
             return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
@@ -150,7 +151,7 @@ export const addProductToInvoice = async (req,res) => {
             quantity:parseFloat(quantity).toFixed(2),
             discountType:productExist?.discountType || "percentage",
             productId:productId,
-            category:findCategory.categoryName 
+            category:findCategory?.categoryName || "custom product"
         } 
 
   
