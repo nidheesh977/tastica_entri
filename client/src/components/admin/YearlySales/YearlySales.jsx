@@ -19,7 +19,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
+import {light} from '../../../utils/constants'
 export const YearlySales = () => {
   const [chart, setChart] = useState(null);
   const { invoices } = useAdmins();
@@ -42,8 +42,8 @@ export const YearlySales = () => {
         {
           label: "Yearly Sales ₹",
           data: totals,
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor:`${light}`,
+          borderColor: `${light}`,
           borderWidth: 1,
         },
       ],

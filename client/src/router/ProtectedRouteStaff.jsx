@@ -32,7 +32,7 @@ export const ProtectedRouteStaff = () => {
   return (
     <>
       <StaffSideBar />
-      <Outlet />;
+      <Outlet />
     </>
   );
 };

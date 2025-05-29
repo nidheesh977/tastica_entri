@@ -21,6 +21,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+import { dark } from "../../../utils/constants";
 
 export const SalesChart = () => {
   const [chartData, setChartData] = useState(null);
@@ -67,8 +68,8 @@ export const SalesChart = () => {
           label: "Monthly Sales ₹",
           data: sales,
           fill: false,
-          borderColor: "rgba(54, 162, 235, 1)",
-          backgroundColor: "rgba(54, 162, 235, 0.3)",
+          borderColor: `${dark}`,
+          backgroundColor: `${dark}`,
           tension: 0.4,
         },
       ],

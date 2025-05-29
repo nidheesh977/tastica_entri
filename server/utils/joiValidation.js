@@ -10,11 +10,11 @@ export const userSignupValidation = Joi.object({
         'string.max': 'Username must be at most 30 characters long',   
     }),
 
-    phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
         'string.base': 'Phone number must be a string',
         'string.empty': 'Phone number cannot be empty',
-        'string.pattern.base': 'Phone number must be 10 digits long',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits ',
     }),
 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({

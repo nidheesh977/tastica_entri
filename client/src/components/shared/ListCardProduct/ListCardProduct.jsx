@@ -34,7 +34,7 @@ export const ListCardProduct = () => {
   });
 
   return (
-    <div className="md:w-5/6 w-full md:max-h-[520px] text-center pt-5 pb-14 px-5 border border-primary  shadow">
+    <div className="md:w-5/6 w-full md:max-h-[516px] text-center pt-5 pb-14 px-5 border border-primary  shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
           Products

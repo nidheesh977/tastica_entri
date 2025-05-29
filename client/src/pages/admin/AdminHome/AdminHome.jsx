@@ -8,7 +8,7 @@ import { SalesChart } from "../../../components/admin/SalesChart/SalesChart";
 export const AdminHome = () => {
   return (
     <>
-      <div className="lg:h-[700px] p-1">
+      <div className="lg:h-[650px] p-1">
         <section className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-4">
             <CategorySales />

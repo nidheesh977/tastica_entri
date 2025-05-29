@@ -22,14 +22,14 @@ export const StaffSideBar = () => {
       z-50
     `}
     >
-      <ul className="w-full flex flex-col gap-1 text-lg font-bold p-2">
+      <ul className="w-full flex flex-col gap-1 text-lg font-bold p-2 text-primary">
         <li
           onClick={() => {
             handleSideBar("/staff");
             dispatch(toggleSideBar());
           }}
           className={
-            " bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+            " bg-tertiary rounded border flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
           }
         >
           <FaHome />
@@ -41,7 +41,7 @@ export const StaffSideBar = () => {
             handleSideBar("/staff/customer/add");
             dispatch(toggleSideBar());
           }}
-          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdPersonAdd />
           Add Customer
@@ -52,7 +52,7 @@ export const StaffSideBar = () => {
             handleSideBar("/staff");
             dispatch(toggleSideBar());
           }}
-          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+          className="bg-tertiary rounded border flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaShoppingCart />
           Shopping Cart
@@ -63,7 +63,7 @@ export const StaffSideBar = () => {
             handleSideBar("/staff/open/orders");
             dispatch(toggleSideBar());
           }}
-          className="bg-primary rounded flex items-center hover:bg-opacity-90 cursor-pointer gap-2 justify-start p-5 h-10"
+          className="bg-tertiary rounded border flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <MdReceipt />
           Open Orders

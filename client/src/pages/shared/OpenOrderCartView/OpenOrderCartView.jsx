@@ -10,7 +10,7 @@ export const OpenOrderCartView = () => {
   return (
     <>
   
-      <div className="grid grid-cols-12">
+      <div className="grid grid-cols-12 h-[650px]">
         <div className="col-span-12 md:col-span-5 lg:col-span-4">
           <OpenOrderCart
             addProductToInvoice={addProductToInvoiceOpenOrder}

@@ -21,8 +21,9 @@ export const ShoppingCart = ({
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
+    invoice
   } = useInvoices();
-  const { invoice } = useAdmins();
+  // const { invoice } = useAdmins();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
@@ -150,8 +151,8 @@ export const ShoppingCart = ({
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             onFocus={() => setPhoneNumber(searchQuery)}
-            minLength={10}
-            maxLength={10}
+            minLength={7}
+            maxLength={14}
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
           />

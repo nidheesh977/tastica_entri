@@ -20,6 +20,8 @@ ChartJS.register(
   Legend
 );
 
+import {medium} from '../../../utils/constants'
+
 export const MonthlySales = () => {
   const [chart, setChart] = useState(null);
   const { invoices } = useAdmins();
@@ -65,8 +67,8 @@ export const MonthlySales = () => {
         {
           label: "Monthly Sales ₹",
           data,
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: `${medium}`,
+          borderColor: `${medium}`,
           borderWidth: 1,
         },
       ],

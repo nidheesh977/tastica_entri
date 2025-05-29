@@ -402,29 +402,34 @@ export const removeProductFromInvoice = async (req,res) => {
               
                 const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
                  
-                if(!savedInvoice || savedInvoice.length === 0){
-                    return res.status(404).json({success:false,message:"Open order is empty"})
-                }
+                // if(!savedInvoice || savedInvoice.length === 0){
+                //     return res.status(404).json({success:false,message:"Open order is empty"})
+                // }
 
                 
           
+                //    for(const item of savedInvoice){
+                 //       item.customer.pointAmount =parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
+                 //   }
+
+                if(savedInvoice.length === 0){
+                   res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
+                 
+                }else{
                     for(const item of savedInvoice){
                         item.customer.pointAmount =parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
                     }
-
-
-                res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
+                    res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
                 
-               
-                 
-
-               
+                }
+              
 
             }catch(error){
-                console.log(error)
-                   return res.status(500).json({success:false,message:"Internal server error",error})
+                  return res.status(500).json({success:false,message:"Internal server error",error})
             }
         }
+
+
 
         export const getInvoiceWithId = async (req,res) => {
             try{

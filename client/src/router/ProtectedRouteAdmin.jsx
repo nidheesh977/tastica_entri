@@ -31,7 +31,7 @@ export const ProtectedRouteAdmin = () => {
   return (
     <>
       <AdminSideBar />
-      <Outlet />;
+      <Outlet />
     </>
   );
 };
