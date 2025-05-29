@@ -2,12 +2,13 @@ import Joi from 'joi';
 
 
 export const userSignupValidation = Joi.object({
-    userName: Joi.string().min(3).max(30).required().messages({
+    userName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
         'string.required': 'Username is required',
         'string.base': 'Username must be a string',
         'string.empty': 'Username cannot be empty',
         'string.min': 'Username must be at least 3 characters long',
         'string.max': 'Username must be at most 30 characters long',   
+        'string.pattern.base': 'Username can contain only letters',   
     }),
 
     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
@@ -320,10 +321,11 @@ export const updateCategoryValidation = Joi.object({
 
 
 export const customerValidation = Joi.object({
-    customerName: Joi.string().min(3).max(30).messages({
+    customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).messages({
         'string.base': 'Category name must be a string',
         'string.min': 'Category name must be at least 3 characters long',
-        'string.max': 'Category name must be at most 30 characters long',   
+        'string.max': 'Category name must be at most 30 characters long',
+        'string.pattern.base': 'Username can contain only letters',   
     }),
      phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
