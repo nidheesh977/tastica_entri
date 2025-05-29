@@ -402,9 +402,9 @@ export const removeProductFromInvoice = async (req,res) => {
               
                 const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
                  
-                if(!savedInvoice || savedInvoice.length === 0){
-                    return res.status(404).json({success:false,message:"Open order is empty"})
-                }
+                // if(!savedInvoice || savedInvoice.length === 0){
+                //     return res.status(404).json({success:false,message:"Open order is empty"})
+                // }
 
                 
           
