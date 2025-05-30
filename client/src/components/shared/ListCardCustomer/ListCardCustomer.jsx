@@ -4,7 +4,8 @@ import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const ListCardCustomer = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -13,7 +14,7 @@ export const ListCardCustomer = () => {
   const [editedMobile, setEditedMobile] = useState("");
   const searchQuery = useSelector((state) => state?.search);
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
-  const navigate = useDispatch();
+  const navigate = useNavigate();
   const customerData = customers?.filter((customer) => {
     const query = searchQuery.toLowerCase();
 
