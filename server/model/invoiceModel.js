@@ -29,7 +29,8 @@ const invoiceSchema = new mongoose.Schema({
             discountFromCategory:{type:Number,default: 0},
             discountFromProduct:{type:Number,default:0},
             discountType:{type:String,enum:["percentage","flat"],default:"percentage"},
-            category:{type:String,required:true}
+            category:{type:String,required:true},
+            unit:{type:String}
          }   
         ],
         default:[]

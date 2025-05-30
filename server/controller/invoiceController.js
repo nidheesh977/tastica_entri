@@ -73,6 +73,7 @@ export const addProductToInvoice = async (req,res) => {
         const {invoiceId} = req.params;
         const {productId,quantity} = req.body;
 
+        console.log("invoice id",invoiceId)
     
         if(!invoiceId){
             return res.status(400).json({success:false,message:"Invoice ID not get"})
@@ -88,7 +89,7 @@ export const addProductToInvoice = async (req,res) => {
         }
 
         const existInvoice = await invoiceModel.findById(invoiceId);
-
+//   console.log(existInvoice)
          if(!existInvoice){
             return res.status(400).json({success:false,message:"No Invoice"})
         } 
@@ -151,10 +152,13 @@ export const addProductToInvoice = async (req,res) => {
             quantity:parseFloat(quantity).toFixed(2),
             discountType:productExist?.discountType || "percentage",
             productId:productId,
-            category:findCategory?.categoryName || "custom product"
+            category:findCategory?.categoryName || "custom product",
+            unit:productExist.unit
         } 
 
-  
+        console.log(productExist)
+
+ 
      if(!findInvoiceProduct){ 
 
                 // reduce quantity from product
@@ -202,7 +206,7 @@ export const addProductToInvoice = async (req,res) => {
              const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
              const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
 
-             
+              
 
             const updatedQuantity =   await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
                             $set:{
@@ -255,11 +259,11 @@ export const addProductToInvoice = async (req,res) => {
        
       
     }catch(error){
-   
+   console.log(error)
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }
-
+ 
 
 export const removeProductFromInvoice = async (req,res) => {
     try{

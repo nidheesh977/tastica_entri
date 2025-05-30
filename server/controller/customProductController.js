@@ -15,7 +15,9 @@ export const createCustomProduct = async (req, res) => {
         const { productName, quantity, unit, sellingPrice} = value;
         const {id,countryName,currencyCode} = req.shop;
 
-     
+
+        console.log(unit)
+
         const lowerCaseproductName = productName.trim().toLowerCase()
  
         const customProductExist = await customProductModel.findOne({shop:id, productName:lowerCaseproductName})

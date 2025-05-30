@@ -26,15 +26,15 @@ const customProductSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    unit:{
-        type:String,
-        enum:['number','kg','li','m'],
-        default:'number'
+   unit:{
+           type:String,
+           enum:['no','kg','li','m'],
+           default:'no'
     },
     isCustomProduct:{
         type:Boolean,
         default:false
-    }
+    } 
    
 },{timestamps:true});
 
