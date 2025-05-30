@@ -5,13 +5,14 @@ import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useInvoices } from "../../../hooks/useInvoices";
 import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { removeStaffData } from "../../../redux/features/authSlice";
+import { toggleCustomProductHandler } from "../../../redux/features/customProductSlice";
 
 export const StaffHeader = () => {
   const [open, setOpen] = useState(false);
@@ -20,7 +21,7 @@ export const StaffHeader = () => {
   const staffName = useSelector((state) => state?.auth?.staffData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { savedInvoices } = useInvoices();
-  
+  const location = useLocation()
 
   const handleLogout = async () => {
     try {
@@ -31,8 +32,7 @@ export const StaffHeader = () => {
       });
       dispatch(removeStaffData());
       toast.success("Logout success");
-      navigate("/shop/staff/login")
-
+      navigate("/shop/staff/login");
     } catch (error) {
       toast.error("Failed to logout");
     }
@@ -94,16 +94,19 @@ export const StaffHeader = () => {
               />
             </li>
 
-            <li
-              className="cursor-pointer rounded-md shadow-xl w-full p-2 text-primary"
-              title="Add Custom Product"
-            >
-              <FaRegStickyNote
-                className="hover:text-orange-600 mx-auto"
-                size={20}
-                onClick={() => navigate("/staff/add/custom/product")}
-              />
-            </li>
+            {(location.pathname === "/staff" ||
+              location.pathname.startsWith("/staff/open/orders/data/")) && (
+              <li
+                className="cursor-pointer rounded-md shadow-xl w-full p-2 text-primary"
+                title="Add Custom Product"
+              >
+                <FaRegStickyNote
+                  className="hover:text-orange-600 mx-auto"
+                  size={20}
+                  onClick={() => dispatch(toggleCustomProductHandler())}
+                />
+              </li>
+            )}
 
             <li
               className="cursor-pointer flex items-center rounded-md shadow-xl p-2 w-full text-primary"
@@ -120,14 +123,16 @@ export const StaffHeader = () => {
                 </span>
               )}
             </li>
-
-            <li
-              onClick={openNewInvoice}
-              title="Create New Invoice"
-              className="hover:text-orange-600 cursor-pointer font-bold w-full rounded-md text-primary shadow-xl p-2"
-            >
-              <FaPlus size={20} className="mx-auto cursor-pointer" />
-            </li>
+            {(location.pathname === "/staff" ||
+              location.pathname.startsWith("/staff/open/orders/data/")) && (
+              <li
+                onClick={openNewInvoice}
+                title="Create New Invoice"
+                className="hover:text-orange-600 cursor-pointer font-bold w-full rounded-md text-primary shadow-xl p-2"
+              >
+                <FaPlus size={20} className="mx-auto cursor-pointer" />
+              </li>
+            )}
 
             <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
               {staffName && <p className="text-xl mx-auto">{staffName}</p>}

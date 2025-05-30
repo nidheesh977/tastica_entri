@@ -2,10 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useInvoices } from "../../../hooks/useInvoices";
+import { AddCustomProduct } from "../AddCustomProduct/AddCustomProduct";
 
 export const Product = ({ addProductToInvoice }) => {
   const categoryId = useSelector((state) => state.category);
 
+  
   const { products } = useProducts();
   let categoryProducts = products?.filter(
     (product) => product?.category?._id === categoryId

@@ -2,15 +2,15 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useInvoices } from "./useInvoices";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const useCustomProducts = () => {
-  const { addProductToInvoice } = useInvoices();
+  const { addProductToInvoice, addProductToInvoiceOpenOrder } = useInvoices();
   const admin = useSelector((state) => state?.auth?.adminData);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  const location = useLocation();
   const { mutate: addCustomProduct } = useMutation({
     mutationFn: async ({ productName, quantity, unit, sellingPrice }) => {
       const data = { productName, quantity, unit, sellingPrice };
@@ -25,8 +25,14 @@ export const useCustomProducts = () => {
     onSuccess: (data) => {
       toast.success("Custom product added successfully");
 
-      addProductToInvoice({ productId: data?._id, quantity: data?.quantity });
-      admin ? navigate("/admin/cart") : navigate("/staff");
+      if (location.pathname === "/admin/cart" || "/staff") {
+        addProductToInvoice({ productId: data?._id, quantity: data?.quantity });
+      } else {
+        addProductToInvoiceOpenOrder({
+          productId: data?._id,
+          quantity: data?.quantity,
+        });
+      }
     },
     onError: () => {
       toast.error("Failed to add custom product!");

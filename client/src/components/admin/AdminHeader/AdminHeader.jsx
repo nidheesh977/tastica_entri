@@ -3,7 +3,7 @@ import { MdReceipt, MdShoppingCart, MdClose } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
@@ -12,10 +12,12 @@ import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { removeAdminData } from "../../../redux/features/authSlice";
+import { toggleCustomProductHandler } from "../../../redux/features/customProductSlice";
 
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const location = useLocation()
   const navigate = useNavigate();
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
@@ -29,7 +31,7 @@ export const AdminHeader = () => {
       });
       dispatch(removeAdminData());
       toast("Logout success");
-      navigate("/shop/admin/login")
+      navigate("/shop/admin/login");
     } catch (error) {
       toast.error("Failed to logout");
     }
@@ -92,16 +94,16 @@ export const AdminHeader = () => {
               />
             </li>
 
-            <li
+            {(location.pathname === '/admin/cart' || location.pathname.startsWith('/admin/open/orders/data/')) && <li
               className="cursor-pointer rounded-md shadow-xl w-full  p-2 "
               title="Add Custom Product"
             >
               <FaRegStickyNote
                 className="hover:text-orange-600 mx-auto"
                 size={20}
-                onClick={() => navigate("/admin/add/custom/product")}
+                onClick={() => dispatch(toggleCustomProductHandler())}
               />
-            </li>
+            </li>}
             <li
               className="cursor-pointer rounded-md shadow-xl flex items-center  p-2 w-full  "
               title="Open Orders"
@@ -118,13 +120,13 @@ export const AdminHeader = () => {
               )}
             </li>
 
-            <li
+            {(location.pathname === '/admin/cart' || location.pathname.startsWith('/admin/open/orders/data/')) && <li
               onClick={openNewInvoice}
               title="Create New Invoice"
               className=" hover:text-orange-600 cursor-pointer font-bold w-full  rounded-md  shadow-xl  p-2  "
             >
               <FaPlus size={20} className="mx-auto cursor-pointer" />
-            </li>
+            </li>}
 
             <li className="flex items-center w-full rounded-md  shadow-xl p-2">
               {adminName && <p className="text-xl mx-auto">{adminName}</p>}

@@ -3,12 +3,16 @@ import { Category } from "../../../components/shared/Category/Category";
 import { Quantity } from "../../../components/shared/Quantity/Quantity";
 import { Product } from "../../../components/shared/Product/Product";
 import { useInvoices } from "../../../hooks/useInvoices";
+import { useSelector } from "react-redux";
+import { AddCustomProduct } from "../../../components/shared/AddCustomProduct/AddCustomProduct";
 
 export const Cart = () => {
   const { addProductToInvoice, removeProductFromInvoice } = useInvoices();
+  const toggleCustomProduct = useSelector((state) => state.toggleCustomProduct.toggleCustomProduct);
+
   return (
     <>
-     
+       {toggleCustomProduct && <AddCustomProduct/>}
       <div className="grid grid-cols-12 h-[650px]">
         <div className="col-span-12 md:col-span-5 lg:col-span-4  ">
           <ShoppingCart

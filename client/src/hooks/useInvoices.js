@@ -191,7 +191,7 @@ export const useInvoices = (customerId = null) => {
     },
   });
 
-const { data: invoice } = useQuery({
+  const { data: invoice } = useQuery({
     queryKey: ["invoice", invoiceId],
     enabled: !!invoiceId,
     queryFn: async () => {
@@ -208,14 +208,6 @@ const { data: invoice } = useQuery({
       console.error(error);
     },
   });
-
-
-
-
-
-
-
-
 
   const { mutate: removeProductFromInvoice } = useMutation({
     mutationFn: async (productId) => {
@@ -428,7 +420,7 @@ const { data: invoice } = useQuery({
     },
     onSuccess: (data) => {
       toast("Points amount added!");
-       queryClient.invalidateQueries(["customers"]);
+      queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
       console.error(error);
