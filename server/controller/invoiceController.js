@@ -97,10 +97,10 @@ export const addProductToInvoice = async (req,res) => {
         if(existInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"})
         }
-
+ 
         // This variable for the product was exist
         let productExist;
-
+ 
          productExist = await productModel.findById(productId)
 
 
@@ -156,7 +156,7 @@ export const addProductToInvoice = async (req,res) => {
             unit:productExist.unit
         } 
 
-        console.log(productExist)
+        
 
  
      if(!findInvoiceProduct){ 
@@ -197,8 +197,10 @@ export const addProductToInvoice = async (req,res) => {
              await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
 
              const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
-
+              console.log("calculateDiscountAmount",calculateDiscountAmount)
              const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount + calculateDiscountAmount;
+
+              console.log("finalDiscountValue",finalDiscountValue)
 
              const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
              const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;

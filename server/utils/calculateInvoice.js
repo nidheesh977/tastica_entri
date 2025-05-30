@@ -24,7 +24,7 @@ let discountAmount;
         }    
     }else if(productDiscount > 0){
          if(discountType === "percentage"){
-         discountAmount = price * (productDiscount / 100)     
+         discountAmount = price * (productDiscount / 100)   
         }else if(discountType === "flat"){
           discountAmount = productDiscount     
         }
