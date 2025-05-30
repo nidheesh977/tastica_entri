@@ -16,7 +16,7 @@ export const createCustomProduct = async (req, res) => {
         const {id,countryName,currencyCode} = req.shop;
 
 
-        console.log(unit)
+     
 
         const lowerCaseproductName = productName.trim().toLowerCase()
  
@@ -26,7 +26,7 @@ export const createCustomProduct = async (req, res) => {
         //     return res.status(400).json({success:false,message:"Product already exists"})
         // }
 
-          console.log(unit)
+          
        
         const newCustomProduct = new customProductModel({
 

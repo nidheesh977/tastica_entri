@@ -101,9 +101,9 @@ export const productsFileUploader = async (req, res) => {
                         addedProducts: newProducts.length,
                     });
 
-                    console.log(products)
+                    
                 } catch (error) {
-                    console.error("Error processing data:", error);
+                    
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
                    
@@ -113,11 +113,11 @@ export const productsFileUploader = async (req, res) => {
                 }
             }) 
             .on('error', (err) => {
-                console.error("Error reading file:", err);
+                
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
-        console.error("File upload error:", error);
+        
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

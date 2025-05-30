@@ -26,7 +26,7 @@ export const invoiceTotal = async (req,res) => {
             res.status(200).json({success:true,message:"Data fetched successfully",data:result})
 
         }catch(error){
-            console.log(error)
+           
             return res.status(500).json({success:false,message:"Internal server error"})
         }
 }
@@ -42,8 +42,7 @@ export const monthBaseTotal = async (req,res) => {
 
          const startDate = new Date(Date.UTC(startYear, 0, 1));      // Jan 1
     const endDate = new Date(Date.UTC(startYear + 1, 0, 1)); 
-    console.log(startDate)
-    console.log(endDate)
+  
 
         const result = await invoiceModel.aggregate([
             {$match:{shop:id,invoiceStatus:"paid",createdAt:{$gte:startDate,$lt:endDate}}}
@@ -52,7 +51,7 @@ export const monthBaseTotal = async (req,res) => {
         
        res.status(200).json({success:true,message:"Data fetched successfully",data:result})
     }catch(error){
-        console.log(error)
+   
             return res.status(500).json({success:false,message:"Internal server error"})
     }
 }

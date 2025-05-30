@@ -40,7 +40,6 @@ export const createCustomer = async (req,res) => {
        await newCustomer.save()
        res.status(201).json({success:true,message:"customer created successfully"});    
     }catch(error){
-      console.log(error)
        return res.status(500).json({success:false,message:"Internal Server Error"})
     }
 }
@@ -112,7 +111,6 @@ export const getCustomer = async(req,res) => {
          
        res.status(200).json({success:true,message:"Data fetch successfully",data:fetchData})
    }catch(error){
-      console.log(error)
       return res.status(500).json({success:false,message:"Internal Server Error"})
    }
 }
@@ -127,7 +125,6 @@ export const getSingleCustomer = async (req,res) => {
 
      res.status(200).json({success:true,message:"Data fetched successfully", data:getCustomer});
    }catch(error){
-      console.log(error)
     return res.status(500).json({success:false,message:"Internal Server Error"})
    }
 }

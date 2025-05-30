@@ -89,7 +89,7 @@ export const productFilter = async (req,res) => {
         res.status(200).json({success:true,message:"Product data fetched",data:productData})
         
     }catch(error){
-        console.log(error)
+ 
      return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 } 

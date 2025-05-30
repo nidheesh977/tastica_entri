@@ -13,7 +13,7 @@ export const userVerifyToken = async (req,res,next) => {
         jwt.verify(token, process.env.JWT_SECRET_KEY,(err,decoded) => {
             
             if (err) {
-                console.log(err)
+                
                 if (err.name === 'TokenExpiredError') {
                     return res.status(401).json({ success: false, message: "Token expired" });
                 }
@@ -28,7 +28,7 @@ export const userVerifyToken = async (req,res,next) => {
 
         
     }catch(error){
-        console.log(error)
+        
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 }

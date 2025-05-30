@@ -59,7 +59,7 @@ export const createNewInvoiceTab = async (req,res) => {
 
         res.status(201).json({success:true,message:"Invoice created successfully",data:findInvoice})
     }catch(error){
-        console.log(error)
+      
      return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
@@ -73,7 +73,7 @@ export const addProductToInvoice = async (req,res) => {
         const {invoiceId} = req.params;
         const {productId,quantity} = req.body;
 
-        console.log("invoice id",invoiceId)
+      
     
         if(!invoiceId){
             return res.status(400).json({success:false,message:"Invoice ID not get"})
@@ -89,7 +89,7 @@ export const addProductToInvoice = async (req,res) => {
         }
 
         const existInvoice = await invoiceModel.findById(invoiceId);
-//   console.log(existInvoice)
+
          if(!existInvoice){
             return res.status(400).json({success:false,message:"No Invoice"})
         } 
@@ -197,10 +197,10 @@ export const addProductToInvoice = async (req,res) => {
              await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
 
              const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
-              console.log("calculateDiscountAmount",calculateDiscountAmount)
+          
              const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount + calculateDiscountAmount;
 
-              console.log("finalDiscountValue",finalDiscountValue)
+              
 
              const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
              const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
@@ -261,7 +261,7 @@ export const addProductToInvoice = async (req,res) => {
        
       
     }catch(error){
-   console.log(error)
+
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }
@@ -314,7 +314,7 @@ export const removeProductFromInvoice = async (req,res) => {
          res.status(200).json({success:true,message:"Product removed successfully",data:removeProduct})
 
         }catch(error){
-            console.log(error)
+        
         return res.status(500).json({ success: false, message: 'Internalerver error' });
             }
         }
@@ -360,7 +360,7 @@ export const removeProductFromInvoice = async (req,res) => {
                 // }
             
             }catch(error){
-                console.log(error)
+              
                 return res.status(500).json({success:false,message:"Internal server error"})
             }
         }
@@ -478,7 +478,7 @@ export const removeProductFromInvoice = async (req,res) => {
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){
-                console.log(error)
+               
                 res.status(500).json({success:false,message:"Internal server error"})
             }
         }

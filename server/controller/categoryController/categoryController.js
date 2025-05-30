@@ -186,7 +186,7 @@ export const getCategories = async (req,res) => {
 
         res.status(200).json({success:true,message:"Categories fetched successfully",data:categories});
     }catch(error){
-        console.log(error)
+      
         res.status(500).json({success:true,message:"internal server error"})
     }
 }
