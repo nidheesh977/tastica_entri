@@ -25,7 +25,7 @@ export const useCustomProducts = () => {
     onSuccess: (data) => {
       toast.success("Custom product added successfully");
 
-      if (location.pathname === "/admin/cart" || "/staff") {
+      if (location.pathname === "/admin/cart" || location.pathname === "/staff") {
         addProductToInvoice({ productId: data?._id, quantity: data?.quantity });
       } else {
         addProductToInvoiceOpenOrder({
