@@ -3,9 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useInvoices } from "./useInvoices";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const useCustomProducts = () => {
   const { addProductToInvoice } = useInvoices();
+  const admin = useSelector((state)=> state?.auth?.adminData)
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -24,11 +26,12 @@ export const useCustomProducts = () => {
       toast.success("Custom product added successfully");
 
       addProductToInvoice({ productId: data?._id, quantity: data?.quantity });
-      navigate('/admin/cart')
+      admin ? navigate('/admin/cart') : navigate('/staff')
+     
     },
     onError: () => {
       toast.error("Failed to add custom product!");
-      console.log(error?.response?.data?.message);
+      
     },
   });
   return { addCustomProduct };

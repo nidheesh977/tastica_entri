@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
-import Logo from '../../../assets/logo.png'
+import Logo from "../../../assets/logo.png";
 
 export const ShopHeader = () => {
   const dispatch = useDispatch();
@@ -17,13 +17,12 @@ export const ShopHeader = () => {
   const shopname = useSelector((state) => state.auth?.shopData?.shopName);
   const shopLogout = async () => {
     try {
-      const response = await axiosInstance({
+      await axiosInstance({
         method: "POST",
         url: "/shop/logout",
         withCredentials: true,
       });
       toast.success("Logout success");
-      console.log(response);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
