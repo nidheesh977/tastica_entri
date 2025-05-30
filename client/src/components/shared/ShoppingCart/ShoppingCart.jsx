@@ -39,7 +39,7 @@ export const ShoppingCart = ({
   const [pointAmount, setPointAmount] = useState("");
 
   const findCustomer = () => {
-    const isTenDigits = /^\d{10}$/.test(searchQuery);
+    const isTenDigits = /^\d{7}$/.test(searchQuery);
 
     if (!isTenDigits) {
       setIsNewCustomer(false);

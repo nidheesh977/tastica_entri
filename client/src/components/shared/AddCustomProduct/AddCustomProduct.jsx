@@ -90,7 +90,7 @@ export const AddCustomProduct = () => {
         <button
           className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            addCustomProduct({ productName, quantity, units:unit, sellingPrice });
+            addCustomProduct({ productName, quantity, unit, sellingPrice });
             setProductName("");
             setQuantity("");
             setUnit("");
