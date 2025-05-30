@@ -149,14 +149,14 @@ export const AddProductCard = () => {
           <select
             value={category?._id}
             onChange={(e) => setCategory(e.target.value)}
-            className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
+            className="p-4 my-1 w-full bg-tertiary text-primary shadow-2xl outline-primary"
           >
             <option className="bg-white" value="">
               Select a category
             </option>
             {categories?.map((category) => (
               <option
-                className="bg-primary"
+                className="bg-tertiary text-primary"
                 key={category?._id}
                 value={category?._id}
               >

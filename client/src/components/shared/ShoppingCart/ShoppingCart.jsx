@@ -21,7 +21,7 @@ export const ShoppingCart = ({
     makeOnlinePayment,
     saveInvoice,
     redeemPoints,
-    invoice
+    invoice,
   } = useInvoices();
   // const { invoice } = useAdmins();
 
@@ -102,6 +102,7 @@ export const ShoppingCart = ({
     if (invoice?.customer) {
       setName(invoice.customer.customerName || "");
       setMobile(invoice.customer.phoneNumber || "");
+      setPointAmount(invoice.customer.pointAmount || "");
     }
   }, [invoice]);
   useEffect(() => {
@@ -113,6 +114,9 @@ export const ShoppingCart = ({
       setQuantities(initialQuantities);
     }
   }, [invoice]);
+
+  
+  
 
   return (
     <div className="p-5 border">
@@ -229,9 +233,8 @@ export const ShoppingCart = ({
                     })
                   }
                 />
-                {product?.unit}
+                <span>{product?.unit}</span>
               </>
-              <span>kg</span>
             </div>
             <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
               {product?.price}
@@ -272,7 +275,10 @@ export const ShoppingCart = ({
             </div>
             <div>
               <button
-                onClick={() => {redeemPoints(redeemAmountAdd); setRedeemAmountAdd('')}}
+                onClick={() => {
+                  redeemPoints(redeemAmountAdd);
+                  setRedeemAmountAdd("");
+                }}
                 className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
               >
                 Redeem
