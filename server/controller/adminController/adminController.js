@@ -195,7 +195,7 @@ export const UpdateStaff = async (req, res) => {
     const { password: pass, ...updatedStaffData } = updatedStaff._doc;
 
     res.status(200).json({success: true,message: "User data updated successfully",data:updatedStaffData,});
-  } catch {
+  } catch(error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
