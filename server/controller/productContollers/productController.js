@@ -98,8 +98,7 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { error, value } = updateProductValidation.validate(req.body);
-  console.log(typeof value.costPrice)
-  console.log( value)
+
     if (error) {
       return res.status(400).json({ success: false, message: error.details[0].message });
     }
@@ -107,7 +106,7 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category } = value;
 
-    console.log(costPrice)
+    
 
     if (sellingPrice === 0 && costPrice === 0) {
       return res.status(400).json({success: false,message: "Selling price and cost price cannot be 0",});
@@ -154,7 +153,7 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json({success: true,message: "Product updated successfully",data: updatedProduct});
   } catch (error) {
-    console.log(error)
+   
     return res.status(500).json({ success: false, message: "internal server error" });
   }
 };

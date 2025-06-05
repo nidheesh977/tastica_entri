@@ -31,8 +31,7 @@ export const addCostPriceProfit = async (req,res) => {
 
           let costPriceSum = parseFloat(productExist.costPrice) * (parseFloat(costPriceProfit) / 100 )
 
-          console.log(costPriceProfit)
-          console.log(costPriceSum)
+          
         // if(productExist.costPrice > 0){
         //   const updatedProduct  = await productModel.findByIdAndUpdate(id,{
         //          costPrice:toDecimal(costPriceSum),
@@ -43,7 +42,7 @@ export const addCostPriceProfit = async (req,res) => {
         // }
     
     }catch(error){
-        console.log(error)
+        
         return res.status(400).json({success:true,message:"internal server error"})
     }
 }
