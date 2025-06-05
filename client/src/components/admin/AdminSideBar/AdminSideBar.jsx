@@ -16,7 +16,7 @@ import {
 } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
@@ -29,7 +29,6 @@ export const AdminSideBar = () => {
   const [customerManagement, setCustomerManagement] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const handleSideBar = (route) => {
     navigate(route);
   };
@@ -149,7 +148,7 @@ export const AdminSideBar = () => {
           onClick={() => setCustomerManagement(!customerManagement)}
           className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
-          <FaUsers  />
+          <FaUsers />
           Customer Management
           <HiChevronDown
             className={`transform transition-transform duration-300 ${
