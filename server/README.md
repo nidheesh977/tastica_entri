@@ -148,6 +148,11 @@
   **method**`GET`<br>
   **URL**`/api/v1/invoice/save/status-saved`
 
+  - 📃🗑 Delete open order <br>  
+  **method**`Delete`<br>
+  **URL**`/api/v1/invoice/status-saved/:id`
+
+
 - 📃 get invoice With id <br>  
   **method**`POST`<br>
   **URL**`/api/v1/invoice/` id pass through req.body

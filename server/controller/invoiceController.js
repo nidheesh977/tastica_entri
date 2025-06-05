@@ -400,6 +400,33 @@ export const removeProductFromInvoice = async (req,res) => {
         }
 
 
+             export const deleteOpenOrder = async (req,res) => {
+ 
+            try{
+            
+                const {id} = req.params
+                
+                if(!id){
+                    return res.status(400).json({success:false,message:"Invoice ID is not get"});
+                }
+
+                const findInvoice = await invoiceModel.findById(id)
+
+                if(findInvoice.invoiceStatus === "paid"){
+                    return res.status(400).json({success:"false",message:"You cannot delete invoice its paid"})
+                }
+
+                 await invoiceModel.findByIdAndDelete(id)
+
+               
+               res.status(200).json({success:true,message:"Invoice deleted successfully"})
+
+            }catch(error){
+                  return res.status(500).json({success:false,message:"Internal server error",error})
+            }
+        }
+
+
 
         export const getInvoiceWithId = async (req,res) => {
             try{
