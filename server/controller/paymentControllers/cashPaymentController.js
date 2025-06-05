@@ -1,6 +1,7 @@
 import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js"
+import productModel from "../../model/productModel.js";
 
 
 
@@ -15,6 +16,8 @@ export const cashPayment = async (req,res) => {
         }
 
         const findInvoice = await invoiceModel.findById(invoiceId);
+
+  
 
         if(!findInvoice){
             return res.status(400).json({success:false,message:"Invoice not found"});
@@ -51,7 +54,20 @@ export const cashPayment = async (req,res) => {
             return res.status(400).json({success:false,message:"invoice payment failed"})
         }
 
-        // add loyality points to customer
+        // reduce quantity from products
+         
+          let productQnt = findInvoice.products
+
+        for (const item of productQnt){
+             const {productId,quantity} = item;
+
+           await productModel.findByIdAndUpdate(productId,{
+             $inc: {'quantity': -quantity}
+           },{new:true})
+        
+        }
+
+    //     // add loyality points to customer
 
      
     let date = new Date()
@@ -67,21 +83,20 @@ export const cashPayment = async (req,res) => {
             redeemOrEarn:findInvoice.redeemAmount,
             createdAt:date,
             invoice:invoiceId
-      }
+        }
 
+      const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
     
         if(findInvoice.redeemAmount > 0){
-        
-            const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
-          
-
+      
           const getpoints = findInvoice.redeemAmount / findLoyalityRate.loyalityRate
-          let deductLoyality =  findCustomer.loyalityPoint - getpoints  + findInvoice.totalAmount
-
+          let deductLoyality =  findCustomer.loyalityPoint - getpoints  + findInvoice.totalAmount  
           
+           let PointsToAmount = deductLoyality * findLoyalityRate.loyalityRate
 
-      await customerModel.findByIdAndUpdate(findCustomer._id,{
+         await customerModel.findByIdAndUpdate(findCustomer._id,{
             loyalityPoint:Math.round(deductLoyality),
+            pointAmount:parseFloat(PointsToAmount).toFixed(2),
                 $push:{
                     invoices:{$each:[invoiceCashPayment._id]},
                     loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
@@ -93,10 +108,11 @@ export const cashPayment = async (req,res) => {
 
         else if(invoiceCashPayment){
              let addLoyality =  findCustomer.loyalityPoint += findInvoice.totalAmount 
-            
+             let PointsToAmount = addLoyality * findLoyalityRate.loyalityRate
 
            await customerModel.findByIdAndUpdate(findCustomer._id,{
             loyalityPoint:Math.round(addLoyality),
+            pointAmount:parseFloat(PointsToAmount).toFixed(2),
                 $push:{
                     invoices:{$each:[invoiceCashPayment._id]},
                     loyalityPointHistory:{$each:[pointHistory]}
@@ -104,13 +120,13 @@ export const cashPayment = async (req,res) => {
                 
             },{new:true})
 
-                 res.status(200).json({success:true,message:"Cash payment successfully"})
+             res.status(200).json({success:true,message:"Cash payment successfully"})
             
-        }
+        }   
         
- 
     }catch(error){
         return res.status(500).json({success:false,message:"internal server error"})
     }
 }
+
 

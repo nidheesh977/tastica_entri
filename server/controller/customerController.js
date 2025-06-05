@@ -51,6 +51,7 @@ export const createCustomer = async (req,res) => {
       if(error){
        return res.status(400).json({ message: error.details[0].message });
       }
+
        const {id} = req.params;
        const {customerName,phoneNumber} = value;
 
@@ -66,6 +67,7 @@ export const createCustomer = async (req,res) => {
          },{new:true})
 
        res.status(200).json({success:true,message:"customer details updated successfully"})
+
     }catch(error){
       return res.status(500).json({success:false,message:"Internal Server Error"})
     }
@@ -73,6 +75,7 @@ export const createCustomer = async (req,res) => {
 
  export const deleteCustomer = async (req,res) => {
    try{
+
       const {id} = req.params;
 
       const customerFound = await customerModel.findById(id);
@@ -81,9 +84,10 @@ export const createCustomer = async (req,res) => {
          return res.status(403).json({success:false,message:"User not found"})
       }
 
-         await customerModel.findByIdAndDelete(id);
+      await customerModel.findByIdAndDelete(id);
 
-         res.status(200).json({success:true,message:"Customer delete successfully"})
+      res.status(200).json({success:true,message:"Customer delete successfully"})
+
    }catch(error){
       return res.status(500).json({success:false,message:"Internal Server Error"})
    }
@@ -91,25 +95,17 @@ export const createCustomer = async (req,res) => {
 
 export const getCustomer = async(req,res) => {
    try{
+
        const shopId = req.shop.id
 
        if(!shopId){
          return res.status(400).json({success:false,message:"Shop ID is missing"})
        }
 
-       const fetchData = await customerModel.find({shopId:shopId})
-
-       if(fetchData.length === 0 ){
-         return res.status(404).json({success:false,message:"No data found"})
-       }
-
-       const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
-       
-      for (const item of fetchData){           
-          item.pointAmount = parseFloat(item.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
-      }
-         
+       const fetchData = await customerModel.find({shopId:shopId}) 
+ 
        res.status(200).json({success:true,message:"Data fetch successfully",data:fetchData})
+
    }catch(error){
       return res.status(500).json({success:false,message:"Internal Server Error"})
    }
@@ -124,6 +120,7 @@ export const getSingleCustomer = async (req,res) => {
      const getCustomer = await customerModel.findOne({_id:id,shopId:shopId}).populate("invoices")
 
      res.status(200).json({success:true,message:"Data fetched successfully", data:getCustomer});
+
    }catch(error){
     return res.status(500).json({success:false,message:"Internal Server Error"})
    }

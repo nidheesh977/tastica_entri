@@ -11,8 +11,6 @@ export const loginStaff = async (req,res) => {
     try{
       const {error,value} = userLoginValidation.validate(req.body);
 
-      // const tokenExist = req.cookies.token;
-
       if(error){
         return res.status(400).json({ message: error.details[0].message });
       }
@@ -32,13 +30,7 @@ export const loginStaff = async (req,res) => {
             return res.status(400).json({success:false,message:"Invalid credentials"})
         }
 
-        // if(tokenExist){
-        //     return res.status(400).json({success:false,message:"You are already logged in"})
-        // }
-      
-        // // to update staff logged in Status
-        //  await AdminStaffModel.findOneAndUpdate({phoneNumber:phoneNumber},{isLoggedIn:true},{new:true});
-        
+       
         if(userExist.role !== "staff"){
             return res.status(400).json({success:false,message:"You are not a staff"})
         }

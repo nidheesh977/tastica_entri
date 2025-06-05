@@ -13,7 +13,15 @@ export const createProduct = async (req, res) => {
             return res.status(400).json({success:false,message: error.details[0].message });
         }
        
-        const { productName, quantity, costPrice,unit, sellingPrice,costPriceProfit, discount, category ,discountType } = value;
+        const { productName, 
+                quantity, 
+                costPrice,unit, 
+                sellingPrice,
+                costPriceProfit, 
+                discount, 
+                category,
+                discountType } = value; 
+          
         const {id,countryName,currencyCode} = req.shop;
    
 
@@ -34,6 +42,7 @@ export const createProduct = async (req, res) => {
           return res.status(400).json({success:false,message:"You can only add one price rate"})
       }
       
+      // This only for costPrice
        let costProfitSum
 
        if(costPrice > 0){
@@ -42,7 +51,7 @@ export const createProduct = async (req, res) => {
 
         const addCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
        
-        //  generating unique ID for customers 
+        //  generating unique ID for products
              let productId;
        
              do {
@@ -74,6 +83,7 @@ export const createProduct = async (req, res) => {
   }
  
 // ---------------------------------------- Delete product ---------------------------------------------------
+
 
 export const deleteProduct = async (req, res) => {
   try {
@@ -179,6 +189,8 @@ export const getCategoryProducts = async (req, res) => {
        return res.status(500).json({success:false,message:"internal server error"})
     }
 }
+
+
 
 export const getAllProducts = async (req,res) => {
     try{

@@ -4,16 +4,17 @@ import { userLoginValidation, userPasswordValidation, userSignupValidation, user
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../../utils/generateToken.js";
 
+
 export const loginAdmin = async (req, res) => {
   try {
     const { error, value } = userLoginValidation.validate(req.body);
-
+ 
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
     const { phoneNumber, password } = value;
-    // const tokenExist = req.cookies.adminToken;
+
 
     const adminExist = await AdminStaffModel.findOne({phoneNumber:phoneNumber});
 
@@ -27,11 +28,7 @@ export const loginAdmin = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid credentials" });
     }
 
-    //  await AdminStaffModel.findOneAndUpdate({phoneNumber:phoneNumber},{isLoggedIn:true},{new:true});
-
-    // if(tokenExist){
-    //     return res.status(400).json({success:false,message:"User already logged in"})
-    // }
+  
 
     if (adminExist.role !== "admin") {
       return res.status(400).json({ success: false, message: "You are not an admin" });
@@ -70,7 +67,7 @@ export const CreateEmployee = async (req, res) => {
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {
-      return res.status(400).json({ success: false, message: "staff already exists" });
+      return res.status(400).json({ success: false, message: "staff already exists"});
     }
 
     const userphoneNumberExists = await AdminStaffModel.findOne({phoneNumber: phoneNumber});
@@ -97,6 +94,8 @@ export const CreateEmployee = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
 
 export const checkAdminLogin = async (req, res) => {
   try {
@@ -201,6 +200,9 @@ export const UpdateStaff = async (req, res) => {
   }
 };
 
+
+
+
 export const updateUserPassword = async (req, res) => {
   try {
     const { error, value } = userPasswordValidation.validate(req.body);
@@ -232,6 +234,9 @@ export const updateUserPassword = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+
 
 export const logOutAdmin = async (req, res) => {
   try {

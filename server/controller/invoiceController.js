@@ -13,7 +13,7 @@ export const createNewInvoiceTab = async (req,res) => {
     try{
       const userId= req.user.id
       const {customerId} = req.params;
-        const {id,countryName,currencyCode} = req.shop;  
+      const {id,countryName,currencyCode} = req.shop;  
 
       if(!userId){
         return res.status(400).json({success:false,message:"Staff ID is required"})
@@ -102,22 +102,18 @@ export const addProductToInvoice = async (req,res) => {
         let productExist;
  
          productExist = await productModel.findById(productId)
-
-
         
 
         if(!productExist){
            productExist = await customProductModel.findById(productId)
-        }
-       
-        
+        }       
 
         if(quantity > productExist.quantity ){
             return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
         }
 
      
-        // for get gategory discount
+        // for get category discount
         const findCategory = await categoryModel.findOne({_id:productExist?.category})
         const getDiscount = findCategory?.discountRate || 0;
 
@@ -140,9 +136,7 @@ export const addProductToInvoice = async (req,res) => {
             productTotalPrice = productPrice * quantity
         }
            
-         
-        
-
+                
         const addProduct = {
             productName:productExist?.productName,
             price:productPrice,
@@ -153,7 +147,8 @@ export const addProductToInvoice = async (req,res) => {
             discountType:productExist?.discountType || "percentage",
             productId:productId,
             category:findCategory?.categoryName || "custom product",
-            unit:productExist.unit
+            unit:productExist.unit,
+            customProduct:productExist?.isCustomProduct || false
         } 
 
         
@@ -161,14 +156,18 @@ export const addProductToInvoice = async (req,res) => {
  
      if(!findInvoiceProduct){ 
 
-                // reduce quantity from product
-
-         const substractQuantity = productExist?.quantity - quantity;
-         await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
- 
+       
+         
+         // calculate discount
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
+        
+        //  add discount to Total discount
          const finalDiscountValue = existInvoice?.totalDiscount  + parseFloat(totalDiscountAmount);
+        
+        //  add subtotal  
          const subTotal =  existInvoice.subTotal +  productTotalPrice ;
+
+          // substract discount from  total 
          const subTotalReduceDiscount = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
 
          
@@ -184,28 +183,30 @@ export const addProductToInvoice = async (req,res) => {
   
          res.status(200).json({success:true,message:"product Added successfully",data:existInvoice})
       
-        }else if(productExist?.isCustomProduct === true){
+        }else if(findInvoiceProduct?.customProduct === true){
             return res.status(400).json({success:false,message:"Custom product cannot be change quantity"})
         }
-        
-
-
         // This condition for increase quantity than change values
         else if( quantity > findInvoiceProduct.quantity){
-
-             const substractQuantity = productExist.quantity + findInvoiceProduct.quantity - quantity;
-             await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
-
+ 
+           
+             // calculate discount
              const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
-          
+            
+             //  add discount to Total discount
              const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount + calculateDiscountAmount;
 
               
-
+            //  add subtotal 
              const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
+           
+             //  add  total
              const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
-
+            
+             // substract discount from sub total 
              const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
+          
+             // substract discount from  total 
              const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
 
               
@@ -226,33 +227,37 @@ export const addProductToInvoice = async (req,res) => {
         
         else if(quantity < findInvoiceProduct.quantity){
 
-            const substractQuantity = productExist.quantity + findInvoiceProduct.quantity - quantity;
-            await productModel.findByIdAndUpdate(productId,{quantity:substractQuantity},{new:true})
-
+        
+            // calculate discount
             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
                  
+            //  add discount to Total discount
             const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount +  calculateDiscountAmount;
 
+            //  add subtotal 
             const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount - findInvoiceProduct.total + productTotalPrice;
+       
+            //  add  total
             const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount - findInvoiceProduct.total + productTotalPrice
 
              
-
+            // substract discount from sub total 
             const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
+           // substract discount from  total 
             const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
 
              
 
             const updatedQuantity =  await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
                                             $set:{
-                                                "products.$.quantity":quantity,
-                                                "products.$.total":productTotalPrice,
-                                                "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
-                                                totalDiscount:parseFloat(finalDiscountValue).toFixed(2),
-                                                subTotal:parseFloat(finalSubTotalReduceDiscount).toFixed(2),
-                                                totalAmount:parseFloat(finalTotalAmountReduceDiscount).toFixed(2)
-                                            }
-                                        },{new:true})
+                                  "products.$.quantity":quantity,
+                                  "products.$.total":productTotalPrice,
+                                  "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
+                                  totalDiscount:parseFloat(finalDiscountValue).toFixed(2),
+                                  subTotal:parseFloat(finalSubTotalReduceDiscount).toFixed(2),
+                                  totalAmount:parseFloat(finalTotalAmountReduceDiscount).toFixed(2)
+                                 }
+                  },{new:true})
 
 
         return res.status(200).json({success:true,message:"Quantity updated",data:updatedQuantity})
@@ -291,12 +296,7 @@ export const removeProductFromInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"No Product"})
          }
 
-         const findProductFromProductModel = await productModel.findById(getProduct.productId);
 
-            if(findProductFromProductModel){
-                const increaseQuantiy = findProductFromProductModel.quantity + getProduct.quantity;
-                await productModel.findByIdAndUpdate(findProductFromProductModel._id,{quantity:increaseQuantiy},{new:true})
-            }
             
          const productTotal = getProduct.total || 0;
          const productDiscount = getProduct.productDiscount || 0;
@@ -336,28 +336,8 @@ export const removeProductFromInvoice = async (req,res) => {
                     return res.status(400).json({success:false,message:"No Invoice"})
                 }
 
-
-                const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
-
-              
-              
-            //   if(getInvoice.isTaxActive === true && getInvoice.taxRate > 0){
-            //     const invoiceTaxTotal = getInvoice.totalAmount * (getInvoice.taxRate) / 100;
-            //     const toFix = invoiceTaxTotal.toFixed(2);
-
-            //     const addTaxToTotalAmt = getInvoice.totalAmount + parseFloat(toFix)
-                
-            //     findInvoice["totalAmount"] = addTaxToTotalAmt
-                
-            //     findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
-            //      res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
-                 
-            //     }else{
-              findInvoice.customer.pointAmount = parseFloat(findInvoice.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
               res.status(200).json({success:true,message:"Invoice found successfully",data:findInvoice})
-                 
-                
-                // }
+                         
             
             }catch(error){
               
@@ -407,28 +387,11 @@ export const removeProductFromInvoice = async (req,res) => {
 
                 const savedInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"saved"}).populate("customer");
               
-                const findLoyalityPoint = await loyalityPointModel.findOne({shop:shopId})
-                 
-                // if(!savedInvoice || savedInvoice.length === 0){
-                //     return res.status(404).json({success:false,message:"Open order is empty"})
-                // }
-
+               
+                    
+                res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
                 
-          
-                //    for(const item of savedInvoice){
-                 //       item.customer.pointAmount =parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
-                 //   }
-
-                if(savedInvoice.length === 0){
-                   res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
-                 
-                }else{
-                    for(const item of savedInvoice){
-                        item.customer.pointAmount =parseFloat(item.customer.loyalityPoint * findLoyalityPoint.loyalityRate).toFixed(2)
-                    }
-                    res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
                 
-                }
               
 
             }catch(error){
@@ -472,9 +435,6 @@ export const removeProductFromInvoice = async (req,res) => {
                 }
 
                 const fullInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"paid"}).populate("customer").populate("products");
-
-                
-                 
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){

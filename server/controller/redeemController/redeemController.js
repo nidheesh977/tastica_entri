@@ -1,5 +1,4 @@
 import invoiceModel from '../../model/invoiceModel.js'
-import loyalityPointModel from '../../model/loyalityPointModel.js'
 import customerModel from '../../model/customerModel.js'
 
 

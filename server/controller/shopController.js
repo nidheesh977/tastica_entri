@@ -10,22 +10,27 @@ import AdminStaffModel from '../model/adminAndStaffModel.js';
 export const createShop = async (req,res) => {
     
     try {
+        // validating input using Joi
         const {error,value} = shopSignupValidtaion.validate(req.body);
 
         if(error){
             return res.status(400).json({message:error.details[0].message});
         }
 
+        // destructing the input after the Joi validation
         const {shopName,email,password,countryName,currencyCode} = value;
 
+        // check if shop exist 
         const shopExist = await shopModel.findOne({email:email});
 
         if(shopExist){
             return res.status(400).json({message:"Shop already exists"});
         }
 
+        // hashing the password with bcryptjs 
         const hasedPassword = await bcryptjs.hash(password,10);
 
+        // save the data to db
         const newShop = new shopModel({
             shopName,
             email,
@@ -37,6 +42,7 @@ export const createShop = async (req,res) => {
 
         await newShop.save();
 
+        // response to frontend 
         res.status(201).json({success:true,message:"Shop created successfully"});
         
     } catch (error) {
@@ -48,19 +54,25 @@ export const createShop = async (req,res) => {
 export const shopLogin = async (req,res) => {
     try {
 
+        // req.body data checking in Joi validation
         const {error,value} = shopLoginValidation.validate(req.body);
 
+        // validate data error pass to frontend
         if(error){
             return res.status(400).json({message:error.details[0].message});
         }
  
+        // validate data from joi validation 
         const {email,password} = value;
 
+         // check if shop exist 
         const shopExist = await shopModel.findOne({email:email});
 
         if(!shopExist){
             return res.status(400).json({success:false,message:"Shop not found"});
         }
+
+             // check if shop Password is Correct 
 
           const isPasswordCorrect = await comparePassword(password,shopExist.password);
         
@@ -68,18 +80,24 @@ export const shopLogin = async (req,res) => {
             return res.status(400).json({success:false,message:"Invalid credentials"})
         }         
 
+        // Hide password before pass to frontend
         const {password:pass,...shopData} = shopExist._doc
 
+        // Generate token share datas likes shop id , country name , currency code 
         const shopToken = generateToken({id:shopExist._id,role:"shop", countryName:shopExist.countryName, currencyCode:shopExist.currencyCode});
-
+       
+        // Store generate token above
         res.cookie("shopToken",shopToken,{httpOnly:true,
             secure:process.env.NODE_ENV === 'production',
-            sameSite:process.env.SAMESITE,maxAge:24 * 60 * 60 * 1000}).status(200).json({success:true,message:"Login Successfully",data:shopData})
+            sameSite:process.env.SAMESITE,maxAge:24 * 60 * 60 * 1000})
+            .status(200).json({success:true,message:"Login Successfully",data:shopData})
 
     }catch(error){ 
         return res.status(500).json({success:false,message:"internal server error"});
       }  
 }
+
+
 
 // Endpoint to update shop 
     export const shopUpdate = async (req,res) => {
@@ -153,6 +171,7 @@ export const checkShopLogin = async (req,res) => {
         if(shopLogged.role !== "shop" ){
             return res.status(401).json({success:false,message:"Unauthorized"});
         }
+
         const shopExist = await  shopModel.findById(shopLogged.id)
         
         const {password:pass,...shopData} = shopExist._doc;
@@ -168,6 +187,7 @@ export const checkShopLogin = async (req,res) => {
 // Endpoint to log out a shop 
 export const logOutShop = async (req,res) => {
   try{
+    
     res.clearCookie("shopToken")
     res.clearCookie("adminToken")
     res.clearCookie("staffToken") 

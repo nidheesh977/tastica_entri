@@ -25,8 +25,7 @@ const limiter = rateLimit({
             success:false,
             message:"Too many request Please try again later."
         })
-    }
-  
+    }  
 }) 
 
 const corsOption = {
@@ -34,7 +33,7 @@ const corsOption = {
     credentials: true
 }; 
 
-// Apply the rate limiting middleware to all requests.
+// Middlewares
 app.use(cors(corsOption))
 app.use(compression())
 app.use(morgan('tiny'));
@@ -46,7 +45,7 @@ app.use(limiter)
 // connect to mongodb 
 connectDB()
 
-
+// routes Middlewares
 app.use('/api',apiRouter);
 
 

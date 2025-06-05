@@ -172,9 +172,12 @@ export const removeCategoryDiscount = async(req,res) => {
     }
 }
 
+
+
 export const getCategories = async (req,res) => {
     try{
         const {id} = req.shop;
+        
         if(!id){
             return res.status(400).json({success:false,meesage:"Shop ID is not get"})
         }

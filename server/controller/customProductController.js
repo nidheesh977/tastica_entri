@@ -16,17 +16,8 @@ export const createCustomProduct = async (req, res) => {
         const {id,countryName,currencyCode} = req.shop;
 
 
-     
-
         const lowerCaseproductName = productName.trim().toLowerCase()
- 
-        const customProductExist = await customProductModel.findOne({shop:id, productName:lowerCaseproductName})
-
-        // if(customProductExist){
-        //     return res.status(400).json({success:false,message:"Product already exists"})
-        // }
-
-          
+       
        
         const newCustomProduct = new customProductModel({
 

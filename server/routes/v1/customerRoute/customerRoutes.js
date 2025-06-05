@@ -9,8 +9,8 @@ const customerRouter = express.Router();
 
 customerRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),createCustomer);
 customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getCustomer);
-customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),updateCustomer);
-customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),deleteCustomer);
 
+customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateCustomer);
+customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),deleteCustomer);
 customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleCustomer);
 export default customerRouter; 

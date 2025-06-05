@@ -73,8 +73,8 @@ export const userLoginValidation = Joi.object({
         'string.required': 'Password is required',
         'string.empty': 'Password cannot be empty',
     }),
-})
-
+}) 
+ 
 export const userPasswordValidation = Joi.object({
     password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
         'string.required': 'Password is required',
