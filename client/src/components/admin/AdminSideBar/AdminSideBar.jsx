@@ -16,7 +16,7 @@ import {
 } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
@@ -29,7 +29,6 @@ export const AdminSideBar = () => {
   const [customerManagement, setCustomerManagement] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const handleSideBar = (route) => {
     navigate(route);
   };
@@ -37,7 +36,7 @@ export const AdminSideBar = () => {
   return (
     <div
       className={`
-      fixed top-15 md:top-[99px]  left-0 h-[81%] md:h-[77%] xl:h-[81%] w-96 bg-tertiary backdrop-blur  shadow-2xl text-primary
+      fixed top-15 md:top-[99px]  left-0 h-[81%] md:h-[77%] xl:h-[81%] md:w-96 bg-tertiary backdrop-blur  shadow-2xl text-primary
       transform ${sidebar ? "translate-x-0" : "-translate-x-full"}
       transition-transform duration-300 ease-in-out
       z-50
@@ -71,7 +70,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary rounded ${
                 home ? "border border-primary" : "border"
-              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 `}
+              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10 `}
             >
               <FaBoxOpen />
               Products
@@ -83,7 +82,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary rounded ${
                 home ? "border border-primary" : "border"
-              } flex items-center  hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } flex items-center  hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <MdCategory />
               Categories
@@ -95,7 +94,7 @@ export const AdminSideBar = () => {
               }}
               className={` bg-tertiary rounded ${
                 home ? "border border-primary" : "border"
-              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <MdGroups />
               Staffs
@@ -107,7 +106,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 home ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <FaUsers />
               Customers
@@ -137,7 +136,7 @@ export const AdminSideBar = () => {
               }}
               className={` bg-tertiary ${
                 staffManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <FaUserTie />
               Add Staff
@@ -149,7 +148,7 @@ export const AdminSideBar = () => {
           onClick={() => setCustomerManagement(!customerManagement)}
           className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
-          <FaUsers  />
+          <FaUsers />
           Customer Management
           <HiChevronDown
             className={`transform transition-transform duration-300 ${
@@ -167,7 +166,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 customerManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <MdPersonAdd />
               Add Customer
@@ -182,7 +181,7 @@ export const AdminSideBar = () => {
           <FaBoxOpen />
           Product Management
           <HiChevronDown
-            className={`transform transition-transform duration-300 ${
+            className={`transform transition-transform duration-300  ${
               productManagement ? "rotate-180" : ""
             }`}
           />
@@ -197,7 +196,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <FaBox />
               Add Product
@@ -209,7 +208,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center text-sm md:text-lg hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <FaFileCsv />
               Upload Products CSV File
@@ -222,7 +221,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <BiCategory />
               Add Category
@@ -234,7 +233,7 @@ export const AdminSideBar = () => {
               }}
               className={`bg-tertiary ${
                 productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10`}
+              } rounded flex text-xs md:text-lg items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
             >
               <FaFileCsv />
               Upload Categories CSV File
@@ -247,7 +246,7 @@ export const AdminSideBar = () => {
             handleSideBar("/admin/cart");
             dispatch(toggleSideBar());
           }}
-          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 "
         >
           <FaShoppingCart />
           Shopping Cart

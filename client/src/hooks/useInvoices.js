@@ -187,7 +187,7 @@ export const useInvoices = (customerId = null) => {
     },
     onError: (error) => {
       toast.error("Failed to add product to invoice");
-      console.error(error?.response?.data?.message);
+      
     },
   });
 
