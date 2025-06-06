@@ -242,9 +242,29 @@
 ## File Upload <br>
 
 -  product csv upload
-**method**`post` <br>
+**method**`POST` <br>
 **URL**`/api/v1/file/upload`
 
 -  category csv upload
-**method**`post` <br>
+**method**`POST` <br>
 **URL**`/api/v1/file/upload/category`
+
+
+## shop loyality Rate <br>
+
+-  create loyality Rate
+**method**`POST` <br>
+**URL**`/api/v1/loyality`
+
+-  update loyality Rate
+**method**`PUT` <br>
+**URL**`/api/v1/loyality/:id`
+
+-  delete loyality Rate
+**method**`DELETE` <br>
+**URL**`/api/v1/loyality/:id`
+ 
+-  get loyality Rate
+**method**`GET` <br>
+**URL**`/api/v1/loyality`
+ 

@@ -66,6 +66,23 @@ export const createLoyalityRate = async (req,res) =>{
           res.status(200).json({success:true,message:"Loyality data Deleted",data:deleteLoyalityPoint});
 
     }catch(error){
-        return res.status(400).json({success:false,message:"Internal server error"})
+        return res.status(500).json({success:false,message:"Internal server error"})
+    }
+ }
+
+
+ export const getLoyalityRate = async (req,res) => {
+    try{
+        const shopId = req.shop.id
+
+        if(!shopId){
+            return res.status(400).json({success:false,message:"Shop id is not get"});
+        }
+
+        const findLoyalityRate = await loyalityPointModel.find({shop:shopId})
+
+        res.status(200).json({success:true,message:"Data fetched successfullty",data:findLoyalityRate})
+    }catch(error){
+        return res.status(500).json({success:false,message:"Internal server error"})
     }
  }
