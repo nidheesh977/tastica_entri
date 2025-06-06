@@ -42,7 +42,6 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLoginPage /> },
-      // { path: "", element: <PaymentCancel /> },
 
       {
         path: "shop",
@@ -80,7 +79,6 @@ export const router = createBrowserRouter([
           },
           {
             path: "signup",
-            // element: <Login role="Admin" action="Signup" />,
           },
           {
             path: "add/product",
@@ -152,7 +150,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "payment/success",
-            element: <PaymentSuccess  />,
+            element: <PaymentSuccess />,
           },
           {
             path: "payment/cancel",
