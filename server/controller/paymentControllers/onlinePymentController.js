@@ -36,7 +36,8 @@ export const onlinePaymentStripe = async (req,res) => {
            const successUrl = role === "admin" ? process.env.ADMIN_SUCCESS_URL : process.env.STAFF_SUCCESS_URL 
            const cancelUrl = role === "admin" ? process.env.ADMIN_CANCEL_URL : process.env.STAFF_CANCEL_URL 
 
-          
+        
+      
 
         const totalAmount = parseFloat(findInvoice.totalAmount).toFixed(2);
          const countryCurrency = findInvoice.currencyCode.toLowerCase()
@@ -102,7 +103,6 @@ export const OnlinePaymentSuccess = async (req,res) => {
         },{new:true})
 
       
-
          // reduce quantity from products
                          
            let productQnt = findInvoice.products
@@ -154,7 +154,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
                 },
                 
             },{new:true})
-               res.status(200).json({success:true,message:"Cash payment successfully"})
+               res.status(200).json({success:true,message:"Stripe payment successfully"})
         } 
 
         else if(invoiceDigitalPayment){
@@ -171,7 +171,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
                 
             },{new:true})
 
-                 res.status(200).json({success:true,message:"Cash payment successfully"})
+                 res.status(200).json({success:true,message:"Stripe payment successfully"})
             
         }
         
@@ -211,8 +211,8 @@ export const OnlinePaymentFailed = async (req,res) => {
 
         
             await invoiceModel.findByIdAndUpdate(invoiceId,{
-            paymentStatus:"failed",
-            paymentMethod:"digital", 
+             invoiceStatus:"saved", 
+            paymentStatus:"pending",
         },{new:true})
       
 
