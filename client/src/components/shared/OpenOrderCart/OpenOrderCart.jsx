@@ -1,7 +1,7 @@
 import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart } from "react-icons/md";
+import { MdShoppingCart,  MdRemoveShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
@@ -79,7 +79,6 @@ export const OpenOrderCart = ({
     setShowPayDialog(false);
   };
 
-
   return (
     <div className="p-5 border">
       <div className="flex items-center justify-between w-full">
@@ -115,24 +114,29 @@ export const OpenOrderCart = ({
 
             <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <>
-                <input
-                  type="number"
-                  className="w-14 bg-tertiary text-center"
-                  value={quantities[product?.productId] ?? 1}
-                  onChange={(e) => {
-                    const newQty = e.target.value;
-                    setQuantities((prev) => ({
-                      ...prev,
-                      [product.productId]: newQty,
-                    }));
-                  }}
-                  onBlur={() =>
-                    addProductToInvoice({
-                      productId: product?.productId,
-                      quantity: quantities[product.productId] ?? "",
-                    })
-                  }
-                />
+                {!product?.customProduct && (
+                  <input
+                    type="number"
+                    className="w-14 bg-tertiary text-center"
+                    value={quantities[product?.productId] ?? 1}
+                    onChange={(e) => {
+                      const newQty = e.target.value;
+                      setQuantities((prev) => ({
+                        ...prev,
+                        [product.productId]: newQty,
+                      }));
+                    }}
+                    onBlur={() =>
+                      addProductToInvoice({
+                        productId: product?.productId,
+                        quantity: quantities[product.productId] ?? "",
+                      })
+                    }
+                  />
+                )}
+                {product?.customProduct && (
+                  <span className="text-center w-12"> {product?.quantity}</span>
+                )}
                 {product?.unit}
               </>
             </div>
@@ -206,14 +210,20 @@ export const OpenOrderCart = ({
         </button>
 
         <button
-          className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-primary hover:bg-opacity-90 text-white rounded-lg"
-          onClick={() => setShowPayDialog(true)}
+          className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${invoice?.products?.length === 0 ?
+            'bg-gray-400 cursor-not-allowed' : 'bg-primary  hover:bg-opacity-90 '} text-white rounded-lg`}
+          onClick={() => {
+            if (invoice?.products?.length === 0) return;
+            setShowPayDialog(true);
+          }}
         >
-          <FaMoneyCheckAlt /> Pay
+           {invoice?.products?.length === 0 ? <MdRemoveShoppingCart />  : <FaMoneyCheckAlt /> }
+           {invoice?.products?.length === 0 ?  'Cart Empty' : 'Pay'}
         </button>
       </div>
 
       {showPayDialog && (
+        
         <PayDialogueBox
           message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
           cashPay={handleCashPay}
