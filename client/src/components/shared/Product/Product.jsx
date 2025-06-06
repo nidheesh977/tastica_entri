@@ -10,10 +10,11 @@ export const Product = ({ addProductToInvoice }) => {
   const searchQuery = useSelector((state) => state.search);
   const { invoice, singleInvoiceOpenOrder } = useInvoices();
   const { products } = useProducts();
-  const existingCartProducts = invoice?.products || singleInvoiceOpenOrder?.products
+  const existingCartProducts =
+    invoice?.products || singleInvoiceOpenOrder?.products;
   const categoryProducts = useMemo(() => {
     let filtered = products?.filter(
-      (product) => product?.category?._id === categoryId
+      (product) => product?.category?._id === categoryId,
     );
 
     if (searchQuery !== "") {
@@ -26,7 +27,7 @@ export const Product = ({ addProductToInvoice }) => {
           product?.product_id?.toLowerCase().includes(query) ||
           product?.costPrice?.toString().includes(query) ||
           product?.sellingPrice?.toString().includes(query) ||
-          product?.discount?.toString().includes(query)
+          product?.discount?.toString().includes(query),
       );
     }
 
@@ -40,7 +41,7 @@ export const Product = ({ addProductToInvoice }) => {
   return (
     <>
       {categoryProducts?.map((product) => {
-        const isDisabled = isProductInCart(product._id);
+        const isDisabled = isProductInCart(product._id) || !invoice?.customer;
 
         return (
           <div
@@ -69,7 +70,9 @@ export const Product = ({ addProductToInvoice }) => {
 
               {isDisabled && (
                 <p className="text-xs text-center text-red-600 font-medium">
-                  Already in Cart
+                  {!invoice?.customer
+                    ? "First Select Customer"
+                    : "Already in Cart"}
                 </p>
               )}
             </div>
