@@ -2,8 +2,10 @@ import { MdShoppingCart, MdCancel } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { axiosInstance } from "../../../config/axiosInstance";
+import { useEffect } from "react";
 
-export const PaymentCancel = ({ role }) => {
+export const PaymentCancel = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const location = useLocation();
