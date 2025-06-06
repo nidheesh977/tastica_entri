@@ -49,7 +49,7 @@ export const ShoppingCart = ({
         setMobile(matchedCustomer.phoneNumber);
         setPointAmount(matchedCustomer?.pointAmount);
         setIsNewCustomer(false);
-        createInvoice(matchedCustomer._id); // Only if different from current
+        createInvoice(matchedCustomer._id);
       } else if (!matchedCustomer) {
         setName("");
         setIsNewCustomer(true);
@@ -117,7 +117,7 @@ export const ShoppingCart = ({
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
-            placeholder="Enter customer mobile number"
+            placeholder="Search Customer Mobile Number Here"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
