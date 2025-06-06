@@ -41,7 +41,9 @@ export const Product = ({ addProductToInvoice }) => {
   return (
     <>
       {categoryProducts?.map((product) => {
-        const isDisabled = isProductInCart(product._id) || !invoice?.customer;
+        const isDisabled =
+          isProductInCart(product._id) ||
+          (!invoice?.customer && !singleInvoiceOpenOrder?.customer);
 
         return (
           <div
@@ -70,7 +72,7 @@ export const Product = ({ addProductToInvoice }) => {
 
               {isDisabled && (
                 <p className="text-xs text-center text-red-600 font-medium">
-                  {!invoice?.customer
+                  {!invoice?.customer && !singleInvoiceOpenOrder?.customer
                     ? "First Select Customer"
                     : "Already in Cart"}
                 </p>
