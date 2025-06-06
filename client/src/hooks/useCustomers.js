@@ -40,8 +40,10 @@ export const useCustomers = () => {
       toast.success("Customer added successfully!");
       queryClient.invalidateQueries(["customers"]);
     },
-    onError: () => {
-      toast.error('Failed to add new customer!');
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to add new customer!",
+      );
     },
   });
 
@@ -57,8 +59,10 @@ export const useCustomers = () => {
       toast.success("Customer deleted successfully!");
       queryClient.invalidateQueries(["customers"]);
     },
-    onError: () => {
-      toast.error("Failed to delete customer.");
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete customer.",
+      );
     },
   });
 
@@ -79,8 +83,10 @@ export const useCustomers = () => {
       toast.success("Customer updated successfully!");
       queryClient.invalidateQueries(["customers"]);
     },
-    onError: () => {
-      toast.error("Failed to update customer.");
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to update customer.",
+      );
     },
   });
 

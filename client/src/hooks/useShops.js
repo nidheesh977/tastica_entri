@@ -30,8 +30,8 @@ export const useShops = () => {
       toast.success("Login success!");
       navigate("/shop");
     },
-    onError: () => {
-      toast.error("Failed to login.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to login.");
       dispatch(removeShopData());
     },
   });

@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 import {
   saveInvoiceData,
   clearInvoiceData,
@@ -20,8 +20,6 @@ export const useInvoices = (customerId = null) => {
   const singleInvoiceId = useSelector((state) => state?.singleInvoiceOpenOrder);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const admin = useSelector((state) => state?.auth?.adminData);
 
   const { data: singleInvoiceOpenOrder } = useQuery({
     queryKey: ["singleInvoiceOpenOrder", singleInvoiceId],
@@ -41,8 +39,7 @@ export const useInvoices = (customerId = null) => {
     },
 
     onError: (error) => {
-      toast.error("Failed to fetch invoice");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to fetch invoice");
     },
   });
   const { data: customerInvoices } = useQuery({
@@ -58,7 +55,9 @@ export const useInvoices = (customerId = null) => {
     },
 
     onError: (error) => {
-      console.error(error);
+      toast.error(
+        error?.response?.data?.message || "Failed to fetch customer invoice",
+      );
     },
   });
 
@@ -79,7 +78,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message)
     },
   });
 
@@ -99,8 +98,8 @@ export const useInvoices = (customerId = null) => {
     onSuccess: (data) => {},
 
     onError: (error) => {
-      toast.error("Failed to fetch saved invoice");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to fetch saved invoice");
+      
     },
   });
 
@@ -118,7 +117,7 @@ export const useInvoices = (customerId = null) => {
       toast.success("Invoice created");
     },
     onError: (error) => {
-      toast.error("Failed to create invoice");
+      toast.error(error?.response?.data?.message || "Failed to create invoice");
     },
   });
   const { mutate: singleInvoice } = useMutation({
@@ -136,7 +135,7 @@ export const useInvoices = (customerId = null) => {
       dispatch(saveSingleInvoice(data));
     },
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Failed to fetch invoice')
     },
   });
 
@@ -161,8 +160,8 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      toast.error("Failed to add product to invoice");
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to add product to invoice");
+    
     },
   });
   const { mutate: addProductToInvoiceOpenOrder } = useMutation({
@@ -203,8 +202,8 @@ export const useInvoices = (customerId = null) => {
     },
 
     onError: (error) => {
-      toast.error("Failed to fetch invoice");
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to fetch invoice");
+      
     },
   });
 
@@ -225,8 +224,8 @@ export const useInvoices = (customerId = null) => {
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
-      toast.error("Failed to remove product from invoice");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to remove product from invoice");
+     
     },
   });
   const { mutate: removeProductFromInvoiceOpenOrder } = useMutation({
@@ -246,8 +245,8 @@ export const useInvoices = (customerId = null) => {
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
-      toast.error("Failed to remove product from invoice");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to remove product from invoice");
+      
     },
   });
 
@@ -290,7 +289,7 @@ export const useInvoices = (customerId = null) => {
       dispatch(clearSingleInvoice());
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Failed fetch open order!')
     },
   });
   const { mutate: makeSwipePaymentOpenOrder } = useMutation({
@@ -312,7 +311,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Payment failed!')
     },
   });
   const { mutate: makeCashPaymentOpenOrder } = useMutation({
@@ -334,7 +333,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Payment failed!')
     },
   });
 
@@ -357,7 +356,7 @@ export const useInvoices = (customerId = null) => {
       console.log(data);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Payment failed!')
     },
   });
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
@@ -383,7 +382,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Payment failed!')
     },
   });
   const { mutate: redeemPoints } = useMutation({
@@ -403,7 +402,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
-      console.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Failed to redeem points!')
     },
   });
   const { mutate: redeemPointsOpenOrder } = useMutation({
@@ -422,7 +421,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
-      console.error(error);
+      toast.error(error?.response?.data?.message || 'Failed to redeem points!')
     },
   });
 
@@ -437,10 +436,9 @@ export const useInvoices = (customerId = null) => {
     onSuccess: () => {
       dispatch(clearSingleInvoiceOpenOrder());
       queryClient.invalidateQueries(["savedInvoices"]);
-      
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Failed to delete open order!')
     },
   });
 

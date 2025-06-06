@@ -50,8 +50,8 @@ export const useProducts = () => {
       toast.success("Product added successfully!");
       queryClient.invalidateQueries(["products"]);
     },
-    onError: () => {
-      toast.error("Failed to add product.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to add product.");
     },
   });
   const { mutate: deleteProduct } = useMutation({
@@ -66,8 +66,8 @@ export const useProducts = () => {
       toast.success("Product deleted successfully!");
       queryClient.invalidateQueries(["products"]);
     },
-    onError: () => {
-      toast.error("Failed to delete product.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to delete product.");
     },
   });
 
@@ -104,8 +104,8 @@ export const useProducts = () => {
       queryClient.invalidateQueries(["products"]);
     },
 
-    onError: () => {
-      toast.error("Failed to update product.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to update product.");
     },
   });
 

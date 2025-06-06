@@ -30,8 +30,8 @@ export const useCategories = () => {
       toast.success("Category added successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
-    onError: () => {
-      toast.error("Failed to add category.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to add category.");
     },
   });
   const { mutate: deleteCategory } = useMutation({
@@ -46,8 +46,10 @@ export const useCategories = () => {
       toast.success("Category deleted successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
-    onError: () => {
-      toast.error("Failed to delete category.");
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete category.",
+      );
     },
   });
 
@@ -69,8 +71,10 @@ export const useCategories = () => {
       toast.success("Category updated successfully!");
       queryClient.invalidateQueries(["categories"]);
     },
-    onError: () => {
-      toast.error("Failed to update category.");
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to update category.",
+      );
     },
   });
 

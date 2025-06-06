@@ -4,6 +4,7 @@ import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { validateData } from "../utils/validateData";
 import { useState } from "react";
+import { removeStaffData } from "../redux/features/authSlice";
 
 export const useAdmins = () => {
   const dispatch = useDispatch();
@@ -24,20 +25,8 @@ export const useAdmins = () => {
   });
 
   const { mutate: staffSignup } = useMutation({
-    mutationFn: async ({
-      userName,
-      email,
-      phoneNumber,
-      password,
-      
-    }) => {
-      const error = validateData(
-        userName,
-        email,
-        phoneNumber,
-        password,
-        
-      );
+    mutationFn: async ({ userName, email, phoneNumber, password }) => {
+      const error = validateData(userName, email, phoneNumber, password);
 
       setError(error);
       const data = {
@@ -58,7 +47,7 @@ export const useAdmins = () => {
       toast.success("Signup success!");
     },
     onError: () => {
-      toast.error(error || "Failed to signup.");
+      toast.error(error?.response?.data?.message || "Failed to signup.");
 
       dispatch(removeStaffData());
     },
@@ -84,7 +73,9 @@ export const useAdmins = () => {
       queryClient.invalidateQueries(["staffs"]);
     },
     onError: () => {
-      toast.error("Failed to update staff.");
+      toast.error(
+        error?.response?.data?.message || "Failed to update staff data!",
+      );
     },
   });
 
@@ -101,7 +92,7 @@ export const useAdmins = () => {
       queryClient.invalidateQueries(["staffs"]);
     },
     onError: () => {
-      toast.error("Failed to delete staff.");
+      toast.error(error?.response?.data?.message || "Failed to delete staff.");
     },
   });
   const { data: invoice } = useQuery({
@@ -117,8 +108,7 @@ export const useAdmins = () => {
     },
 
     onError: (error) => {
-      toast.error("Failed to fetch invoice");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to fetch invoice");
     },
   });
 
@@ -135,8 +125,7 @@ export const useAdmins = () => {
     },
 
     onError: (error) => {
-      toast.error("Failed to fetch invoices");
-      console.error(error);
+      toast.error(error?.response?.data?.message || "Failed to fetch invoices");
     },
   });
 
