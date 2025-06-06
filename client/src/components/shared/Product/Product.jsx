@@ -1,61 +1,81 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
+import { useMemo } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { AddCustomProduct } from "../AddCustomProduct/AddCustomProduct";
 
 export const Product = ({ addProductToInvoice }) => {
-  const categoryId = useSelector((state) => state.category);
-
-  
-  const { products } = useProducts();
-  let categoryProducts = products?.filter(
-    (product) => product?.category?._id === categoryId
-  );
-
-  const searchQuery = useSelector((state) => state.search);
   const dispatch = useDispatch();
-  if (searchQuery !== "") {
-    categoryProducts = products?.filter((product) => {
-      const query = searchQuery.toLowerCase();
+  const categoryId = useSelector((state) => state.category);
+  const searchQuery = useSelector((state) => state.search);
+  const { invoice, singleInvoiceOpenOrder } = useInvoices();
+  const { products } = useProducts();
+  const existingCartProducts = invoice?.products || singleInvoiceOpenOrder?.products
+  const categoryProducts = useMemo(() => {
+    let filtered = products?.filter(
+      (product) => product?.category?._id === categoryId
+    );
 
-      return (
-        product?.productName?.toLowerCase().includes(query) ||
-        product?.category?.categoryName.toLowerCase().includes(query) ||
-        product?.quantity.toString().toLowerCase().includes(query) ||
-        product?.product_id?.toLowerCase().includes(query) ||
-        product?.costPrice?.toString().includes(query) ||
-        product?.sellingPrice?.toString().includes(query) ||
-        product?.discount?.toString().includes(query)
+    if (searchQuery !== "") {
+      const query = searchQuery.toLowerCase();
+      filtered = products?.filter(
+        (product) =>
+          product?.productName?.toLowerCase().includes(query) ||
+          product?.category?.categoryName?.toLowerCase().includes(query) ||
+          product?.quantity?.toString().includes(query) ||
+          product?.product_id?.toLowerCase().includes(query) ||
+          product?.costPrice?.toString().includes(query) ||
+          product?.sellingPrice?.toString().includes(query) ||
+          product?.discount?.toString().includes(query)
       );
-    });
-  }
+    }
+
+    return filtered;
+  }, [products, categoryId, searchQuery]);
+
+  const isProductInCart = (productId) => {
+    return existingCartProducts?.some((p) => p.productId === productId);
+  };
 
   return (
     <>
-      {categoryProducts?.map((product) => (
-        <div
-          key={product?._id}
-          onClick={() => {
-            dispatch(saveSearchQuery(""));
+      {categoryProducts?.map((product) => {
+        const isDisabled = isProductInCart(product._id);
 
-            addProductToInvoice({
-              productId: product?._id,
-              quantity: 1,
-            });
-          }}
-          className="bg-tertiary w-full md:w-56 h-20 text-sm rounded border flex flex-col justify-between border-primary cursor-pointer hover:border-primary hover:border-2 font-semibold p-5"
-        >
-          <div className="h-10">
-            <h1 className="pb-4 font-bold">{product?.productName}</h1>
+        return (
+          <div
+            key={product._id}
+            onClick={() => {
+              if (isDisabled) return;
+              dispatch(saveSearchQuery(""));
+              addProductToInvoice({ productId: product._id, quantity: 1 });
+            }}
+            className={`bg-tertiary w-full md:w-56 h-36 text-sm rounded border flex flex-col justify-between p-5 font-semibold ${
+              isDisabled
+                ? "border-gray-400 cursor-not-allowed opacity-50"
+                : "border-primary cursor-pointer hover:border-2"
+            }`}
+          >
+            <div className="h-10">
+              <h1 className="pb-4 font-bold">{product.productName}</h1>
+            </div>
+            <div>
+              <p className="border-t border-black text-center font-bold py-1">
+                MVR{product.sellingPrice || product.costPrice}
+              </p>
+              <p className="border-t border-black text-center font-bold py-1">
+                Available Stock {product?.quantity} {product?.unit}
+              </p>
+
+              {isDisabled && (
+                <p className="text-xs text-center text-red-600 font-medium">
+                  Already in Cart
+                </p>
+              )}
+            </div>
           </div>
-          <div>
-            <p className=" border-t  border-black text-center font-bold ">
-              MVR{product?.sellingPrice || product?.costPrice}
-            </p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 };

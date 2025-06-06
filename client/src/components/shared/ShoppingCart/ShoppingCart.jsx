@@ -6,7 +6,6 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { useAdmins } from "../../../hooks/useAdmins";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -23,7 +22,6 @@ export const ShoppingCart = ({
     redeemPoints,
     invoice,
   } = useInvoices();
-  // const { invoice } = useAdmins();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,30 +36,26 @@ export const ShoppingCart = ({
   const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
   const [pointAmount, setPointAmount] = useState("");
 
-  const findCustomer = () => {
-    const isTenDigits = /^\d{7}$/.test(searchQuery);
+  useEffect(() => {
+    if (searchQuery?.length === 7) {
+      const matchedCustomer = customers?.find(
+        (customer) =>
+          customer?.phoneNumber?.toString().toLowerCase() ===
+          searchQuery.toLowerCase(),
+      );
 
-    if (!isTenDigits) {
-      setIsNewCustomer(false);
-      return;
+      if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
+        setName(matchedCustomer.customerName);
+        setMobile(matchedCustomer.phoneNumber);
+        setPointAmount(matchedCustomer?.pointAmount);
+        setIsNewCustomer(false);
+        createInvoice(matchedCustomer._id); // Only if different from current
+      } else if (!matchedCustomer) {
+        setName("");
+        setIsNewCustomer(true);
+      }
     }
-    const matchedCustomer = customers?.find(
-      (customer) =>
-        customer?.phoneNumber?.toString().toLowerCase() ===
-        searchQuery.toLowerCase()
-    );
-
-    if (matchedCustomer && matchedCustomer._id) {
-      setName(matchedCustomer.customerName);
-      setMobile(matchedCustomer.phoneNumber);
-      createInvoice(matchedCustomer._id);
-      setPointAmount(matchedCustomer?.pointAmount);
-      setIsNewCustomer(false);
-    } else {
-      setName("");
-      setIsNewCustomer(true);
-    }
-  };
+  }, [searchQuery, customers]);
 
   const resetBillingState = () => {
     setCustomerName("");
@@ -95,10 +89,6 @@ export const ShoppingCart = ({
   };
 
   useEffect(() => {
-    findCustomer();
-  }, [searchQuery, customers]);
-
-  useEffect(() => {
     if (invoice?.customer) {
       setName(invoice.customer.customerName || "");
       setMobile(invoice.customer.phoneNumber || "");
@@ -114,9 +104,6 @@ export const ShoppingCart = ({
       setQuantities(initialQuantities);
     }
   }, [invoice]);
-
-  
-  
 
   return (
     <div className="p-5 border">

@@ -186,8 +186,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      toast.error("Failed to add product to invoice");
-      
+      toast.error(error?.response?.data?.message || "Something went wrong!");
     },
   });
 
@@ -205,7 +204,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error("Failed to fetch invoice");
-      console.error(error);
+      console.error(error?.response?.data?.message);
     },
   });
 
@@ -342,7 +341,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -364,7 +363,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -427,6 +426,24 @@ export const useInvoices = (customerId = null) => {
     },
   });
 
+  const { mutate: deleteOpenOrder } = useMutation({
+    mutationFn: async (id) => {
+      await axiosInstance({
+        method: "DELETE",
+        url: `/invoice/status-saved/${id}`,
+        withCredentials: true,
+      });
+    },
+    onSuccess: () => {
+      dispatch(clearSingleInvoiceOpenOrder());
+      queryClient.invalidateQueries(["savedInvoices"]);
+      
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
   return {
     createInvoice,
     addProductToInvoice,
@@ -447,5 +464,6 @@ export const useInvoices = (customerId = null) => {
     redeemPoints,
     invoice,
     redeemPointsOpenOrder,
+    deleteOpenOrder,
   };
 };
