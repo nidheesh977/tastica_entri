@@ -79,7 +79,7 @@ export const createLoyalityRate = async (req,res) =>{
             return res.status(400).json({success:false,message:"Shop id is not get"});
         }
 
-        const findLoyalityRate = await loyalityPointModel.find({shop:shopId})
+        const findLoyalityRate = await loyalityPointModel.findOne({shop:shopId})
 
         res.status(200).json({success:true,message:"Data fetched successfullty",data:findLoyalityRate})
     }catch(error){
