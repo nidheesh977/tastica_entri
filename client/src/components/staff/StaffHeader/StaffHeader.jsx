@@ -21,7 +21,7 @@ export const StaffHeader = () => {
   const staffName = useSelector((state) => state?.auth?.staffData?.userName);
   const searchQuery = useSelector((state) => state?.search);
   const { savedInvoices } = useInvoices();
-  const location = useLocation()
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -34,7 +34,7 @@ export const StaffHeader = () => {
       toast.success("Logout success");
       navigate("/shop/staff/login");
     } catch (error) {
-      toast.error("Failed to logout");
+      toast.error(error?.response?.data?.message || "Failed to logout");
     }
   };
 
@@ -69,7 +69,7 @@ export const StaffHeader = () => {
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-tertiary w-full text-center md:gap-5">
             <li className="md:border-none cursor-pointer rounded-md relative">
               <input
-                className="border border-primary px-8 py-2 outline-primary rounded text-primary w-[275px] lg:w-80 xl:w-96"
+                className="border border-primary px-8 py-2 outline-primary rounded text-primary w-[275px] md:w-48 lg:w-80 xl:w-96"
                 placeholder="Smart Search"
                 type="text"
                 value={searchQuery}

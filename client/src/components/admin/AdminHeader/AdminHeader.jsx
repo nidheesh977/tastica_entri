@@ -17,7 +17,7 @@ import { toggleCustomProductHandler } from "../../../redux/features/customProduc
 export const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const location = useLocation()
+  const location = useLocation();
   const navigate = useNavigate();
   const adminName = useSelector((state) => state?.auth?.adminData?.userName);
   const searchQuery = useSelector((state) => state?.search);
@@ -33,7 +33,7 @@ export const AdminHeader = () => {
       toast("Logout success");
       navigate("/shop/admin/login");
     } catch (error) {
-      toast.error("Failed to logout");
+      toast.error(error?.response?.data?.message || "Failed to logout");
     }
   };
 
@@ -69,7 +69,7 @@ export const AdminHeader = () => {
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-tertiary  w-full  text-center md:gap-5">
             <li className=" md:border-none cursor-pointer rounded-md relative">
               <input
-                className="border border-primary  px-8 py-2 outline-primary rounded text-black w-[275px] lg:w-80 xl:w-96"
+                className="border border-primary  px-8 py-2 outline-primary rounded text-black w-[275px] md:w-48 lg:w-80 xl:w-96"
                 placeholder="Smart Search"
                 type="text"
                 value={searchQuery}
@@ -94,16 +94,19 @@ export const AdminHeader = () => {
               />
             </li>
 
-            {(location.pathname === '/admin/cart' || location.pathname.startsWith('/admin/open/orders/data/')) && <li
-              className="cursor-pointer rounded-md shadow-xl w-full  p-2 "
-              title="Add Custom Product"
-            >
-              <FaRegStickyNote
-                className="hover:text-orange-600 mx-auto"
-                size={20}
-                onClick={() => dispatch(toggleCustomProductHandler())}
-              />
-            </li>}
+            {(location.pathname === "/admin/cart" ||
+              location.pathname.startsWith("/admin/open/orders/data/")) && (
+              <li
+                className="cursor-pointer rounded-md shadow-xl w-full  p-2 "
+                title="Add Custom Product"
+              >
+                <FaRegStickyNote
+                  className="hover:text-orange-600 mx-auto"
+                  size={20}
+                  onClick={() => dispatch(toggleCustomProductHandler())}
+                />
+              </li>
+            )}
             <li
               className="cursor-pointer rounded-md shadow-xl flex items-center  p-2 w-full  "
               title="Open Orders"
@@ -120,13 +123,16 @@ export const AdminHeader = () => {
               )}
             </li>
 
-            {(location.pathname === '/admin/cart' || location.pathname.startsWith('/admin/open/orders/data/')) && <li
-              onClick={openNewInvoice}
-              title="Create New Invoice"
-              className=" hover:text-orange-600 cursor-pointer font-bold w-full  rounded-md  shadow-xl  p-2  "
-            >
-              <FaPlus size={20} className="mx-auto cursor-pointer" />
-            </li>}
+            {(location.pathname === "/admin/cart" ||
+              location.pathname.startsWith("/admin/open/orders/data/")) && (
+              <li
+                onClick={openNewInvoice}
+                title="Create New Invoice"
+                className=" hover:text-orange-600 cursor-pointer font-bold w-full  rounded-md  shadow-xl  p-2  "
+              >
+                <FaPlus size={20} className="mx-auto cursor-pointer" />
+              </li>
+            )}
 
             <li className="flex items-center w-full rounded-md  shadow-xl p-2">
               {adminName && <p className="text-xl mx-auto">{adminName}</p>}

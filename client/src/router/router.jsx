@@ -33,6 +33,7 @@ import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
 import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCartView";
+import { LoyaltyPoints } from "../pages/admin/LoyaltyPoints/LoyaltyPoints";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -147,6 +148,10 @@ export const router = createBrowserRouter([
           {
             path: "invoice/data/:id",
             element: <InvoiceData />,
+          },
+          {
+            path: "loyalty/points",
+            element: <LoyaltyPoints />,
           },
           {
             path: "payment/success",

@@ -5,6 +5,7 @@ import {
   FaBoxOpen,
   FaUserTie,
 } from "react-icons/fa";
+import { FiGift } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { HiChevronDown } from "react-icons/hi";
 import {
@@ -272,6 +273,16 @@ export const AdminSideBar = () => {
         >
           <MdReceipt />
           Open Orders
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/admin/loyalty/points");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <FiGift />
+          Manage Loyalty Points
         </li>
       </ul>
     </div>
