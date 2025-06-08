@@ -1,12 +1,13 @@
 import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart,  MdRemoveShoppingCart } from "react-icons/md";
+import { MdShoppingCart, MdRemoveShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveSingleInvoiceOpenOrder } from "../../../redux/features/singleInvoiceOpenOrderSlice";
+import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
 
 export const OpenOrderCart = ({
   addProductToInvoice,
@@ -25,6 +26,8 @@ export const OpenOrderCart = ({
     saveInvoice,
     redeemPointsOpenOrder,
   } = useInvoices();
+
+  const { loyaltyPoints } = useLoyaltyPoints();
 
   const invoice = singleInvoiceOpenOrder;
 
@@ -165,33 +168,35 @@ export const OpenOrderCart = ({
           <div>Products Discount</div>
           <div>MVR{invoice?.totalDiscount || 0}</div>
         </div>
-        <div className="flex justify-between items-center border px-2 py-2">
-          <div>Discount</div>
-          <p>{pointAmount}</p>
-          <div>
-            <input
-              className="outline-primary px-2 w-2/3 border "
-              type="text"
-              onChange={(e) => {
-                setRedeemAmountAdd(e.target.value);
-              }}
-            />
+        {loyaltyPoints?.loyalityRate && (
+          <div className="flex justify-between items-center border px-2 py-2">
+            <div>Discount</div>
+            <p>{pointAmount}</p>
+            <div>
+              <input
+                className="outline-primary px-2 w-2/3 border "
+                type="text"
+                onChange={(e) => {
+                  setRedeemAmountAdd(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  redeemPointsOpenOrder({
+                    redeemAmountAdd,
+                    id,
+                  });
+                  setRedeemAmountAdd("");
+                }}
+                className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+              >
+                Redeem
+              </button>
+            </div>
           </div>
-          <div>
-            <button
-              onClick={() => {
-                redeemPointsOpenOrder({
-                  redeemAmountAdd,
-                  id,
-                });
-                setRedeemAmountAdd("");
-              }}
-              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
-            >
-              Redeem
-            </button>
-          </div>
-        </div>
+        )}
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
           <div>MVR{invoice?.totalAmount || 0}</div>
@@ -210,20 +215,26 @@ export const OpenOrderCart = ({
         </button>
 
         <button
-          className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${invoice?.products?.length === 0 ?
-            'bg-gray-400 cursor-not-allowed' : 'bg-primary  hover:bg-opacity-90 '} text-white rounded-lg`}
+          className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
+            invoice?.products?.length === 0
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-primary  hover:bg-opacity-90 "
+          } text-white rounded-lg`}
           onClick={() => {
             if (invoice?.products?.length === 0) return;
             setShowPayDialog(true);
           }}
         >
-           {invoice?.products?.length === 0 ? <MdRemoveShoppingCart />  : <FaMoneyCheckAlt /> }
-           {invoice?.products?.length === 0 ?  'Cart Empty' : 'Pay'}
+          {invoice?.products?.length === 0 ? (
+            <MdRemoveShoppingCart />
+          ) : (
+            <FaMoneyCheckAlt />
+          )}
+          {invoice?.products?.length === 0 ? "Cart Empty" : "Pay"}
         </button>
       </div>
 
       {showPayDialog && (
-        
         <PayDialogueBox
           message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
           cashPay={handleCashPay}
