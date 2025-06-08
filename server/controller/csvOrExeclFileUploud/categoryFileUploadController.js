@@ -56,13 +56,13 @@ export const categoryFileUploader = async (req, res) => {
                     } 
                     
                     const existingCategoriesIds = new Set(
-                        (await categoryModel.find({ category_id: { $in: categories.map(c => c.category_id) } }, 'category_id'))
-                            .map(category => category.category_id)
+                        (await categoryModel.find({categoryName: { $in: categories.map(c => c.categoryName) } }, 'categoryName'))
+                            .map(category => category.categoryName)
                     );
 
                    
                     const newCategory = categories.filter(
-                        (category) => !existingCategoriesIds.has(category.category_id)
+                        (category) => !existingCategoriesIds.has(category.categoryName )
                     );
 
                     if (newCategory.length === 0) {
@@ -82,7 +82,7 @@ export const categoryFileUploader = async (req, res) => {
                         addedCategories: newCategory.length,
                     });
                 } catch (error) {
-                  
+                  console.log(error)
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
                    
@@ -96,7 +96,7 @@ export const categoryFileUploader = async (req, res) => {
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
-   
+
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
