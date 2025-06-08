@@ -14,7 +14,7 @@ async function connectDB() {
       await mongoose.connect(process.env.MONGODB_URI,{
         connectTimeoutMS: 10000, // Set a timeout for the connection attempt
       });
-      console.log('Connected to MongoDB');
+      ('Connected to MongoDB');
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
       throw error; // Re-throw the error to fail the test setup
@@ -42,7 +42,7 @@ beforeAll(async () => {
 afterAll(async () => {
   try {
       await mongoose.connection.close();
-      console.log('Disconnected from MongoDB');
+      ('Disconnected from MongoDB');
     } catch (error) {
       console.error('Error disconnecting from MongoDB:', error);
     }
@@ -91,8 +91,8 @@ describe('POST /api/v1/login-admin', () => {
       password:"akshai984"	
     })
 
-    console.log("Response Status:", response.statusCode); // Debugging
-    console.log("Response Body:", response.body);
+    ("Response Status:", response.statusCode); // Debugging
+    ("Response Body:", response.body);
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({success:true,message:"admin Login Successfully",data:expect.any(Object)})
     
@@ -144,8 +144,8 @@ describe('GET /api/v1/admin/check-logged',() => {
        .set("Authorization", `Bearer ${staffToken}`)
 
        // Debugging logs (optional)
-    console.log("Response Status:", response.statusCode);
-    console.log("Response Body:", response.body);
+    ("Response Status:", response.statusCode);
+    ("Response Body:", response.body);
 
        expect(response.statusCode).toBe(403)
        expect(response.body).toEqual({success:false,message:"Forbidden"})

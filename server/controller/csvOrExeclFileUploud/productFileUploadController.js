@@ -11,8 +11,26 @@ export const productsFileUploader = async (req, res) => {
             return res.status(400).json({ success: false, message: "No file uploaded" });
         }
 
+        if(req.file){
+
+        }
+
         const filePath = req.file.path;
-        const products = [];
+     
+
+        const getProductFile = req.file.originalname
+
+        const checkproductfile = getProductFile.includes("products.csv")
+
+        if(!checkproductfile){
+             fs.unlink(filePath, (err) => {
+                        if (err) console.error("Error deleting file:",);
+                      });
+            return res.status(400).json({ success: false, message: "This file is not Products file"});
+           
+        }
+
+           const products = [];
 
         fs.createReadStream(filePath)
             .pipe(csv())
@@ -47,6 +65,7 @@ export const productsFileUploader = async (req, res) => {
                         }
 
                         const getCategory = await categoryModel.findOne({shop:findShop?._id,categoryName:row.category.trim()});
+                                  
 
                         if(!getCategory){
                             return res.status(400).json({success:false,message:"Category is not found"})
@@ -73,17 +92,26 @@ export const productsFileUploader = async (req, res) => {
                         row["costPrice"] = addCostPrice
                     } 
                     
-                    const existingProductIds = new Set(
-                        (await productModel.find({ productName: { $in: products.map(p => p.productName) } }, 'productName'))
-                            .map(product => product.productName)
-                    );
-
+                    const files = products.map(row => ({
+                                           productName:row.productName,
+                                           shop:row.shop
+                                       }))
                    
-                    const newProducts = products.filter(
-                        (product) => !existingProductIds.has(product.productName)
-                    );
-
-                    if (newProducts.length === 0) {
+                                      
+                    const existingDocs = await productModel.find({
+                                           productName: {$in:files.map(f => f.productName)},
+                                           shop: {$in:files.map(f => f.shop)}
+                                       })                       
+                   
+                   
+                                      
+                    const existingSet = new Set(
+                                           existingDocs.map(doc => `${doc.productName}::${doc.shop}`)
+                                            )                     
+                   
+                   
+                    const newFiles = products.filter(file => !existingSet.has(`${file.productName}::${file.shop}`))
+                   if (newFiles.length === 0) {
                         return res.status(400).json({ 
                             success: false,
                             message: "All products in the CSV file already exist",
@@ -93,12 +121,12 @@ export const productsFileUploader = async (req, res) => {
                     
 
                     
-                    await productModel.insertMany(newProducts);
+                    await productModel.insertMany(newFiles);
 
                     res.status(200).json({
                         success: true,
                         message: "CSV data imported successfully",
-                        addedProducts: newProducts.length,
+                        addedProducts: newFiles.length,
                     });
 
                     
@@ -108,7 +136,7 @@ export const productsFileUploader = async (req, res) => {
                 } finally {
                    
                     fs.unlink(filePath, (err) => {
-                        if (err) console.error("Error deleting file:", err);
+                        if (err) console.error("Error deleting file:",);
                     });
                 }
             }) 

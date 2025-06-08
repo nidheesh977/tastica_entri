@@ -11,8 +11,21 @@ export const categoryFileUploader = async (req, res) => {
             return res.status(400).json({ success: false, message: "No file uploaded" });
         }
 
+
         const filePath = req.file.path;
-        const categories = [];
+       
+        const getCategoryFile = req.file.originalname
+
+        const checkCategoryfile = getCategoryFile.includes("categories.csv")
+
+        if(!checkCategoryfile){
+             fs.unlink(filePath, (err) => {
+                                    if (err) console.error("Error deleting file:",);
+                      });
+            return res.status(400).json({ success: false, message: "This file is not categories file"});
+        }
+
+         const categories = [];
             
         fs.createReadStream(filePath)
             .pipe(csv())
@@ -35,10 +48,13 @@ export const categoryFileUploader = async (req, res) => {
                     for (const row of categories){
 
                         const findShop = await shopModel.findOne({shopName:row.shop});
-
+                      
+                        
                         if(!findShop){
                           return res.status(400).json({success:false,message:"shop is not found"})
                         }
+ 
+                      
 
                           let categoryId;
                                               
@@ -55,34 +71,44 @@ export const categoryFileUploader = async (req, res) => {
 
                     } 
                     
-                    const existingCategoriesIds = new Set(
-                        (await categoryModel.find({categoryName: { $in: categories.map(c => c.categoryName) } }, 'categoryName'))
-                            .map(category => category.categoryName)
-                    );
+                
+
+                    const files = categories.map(row => ({
+                        categoryName:row.categoryName,
+                        shop:row.shop
+                    }))
 
                    
-                    const newCategory = categories.filter(
-                        (category) => !existingCategoriesIds.has(category.categoryName )
-                    );
+                    const existingDocs = await categoryModel.find({
+                        categoryName: {$in:files.map(f => f.categoryName)},
+                        shop: {$in:files.map(f => f.shop)}
+                    })
 
-                    if (newCategory.length === 0) {
+
+                   
+                    const existingSet = new Set(
+                        existingDocs.map(doc => `${doc.categoryName}::${doc.shop}`)
+                    )
+
+
+                     const newFiles = categories.filter(file => !existingSet.has(`${file.categoryName}::${file.shop}`))
+
+
+                       if (newFiles.length === 0) {
                         return res.status(400).json({
                             success: false,
                             message: "All categories in the CSV file already exist",
                         });
                     }
 
-
-                    
-                    await categoryModel.insertMany(newCategory);
+                       await categoryModel.insertMany(newFiles);
 
                     res.status(200).json({
                         success: true,
                         message: "CSV data imported successfully",
-                        addedCategories: newCategory.length,
+                         addedCategories: newFiles.length,
                     });
                 } catch (error) {
-                  console.log(error)
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
                    

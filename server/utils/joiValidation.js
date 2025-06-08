@@ -171,11 +171,11 @@ export const shopUpdateValidtaion = Joi.object({
 export const shopLoginValidation = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
         'string.required': 'Email is required',
-        'string.base': 'Email must be a string',
         'string.empty': 'Email cannot be empty',
+        'string.base': 'Email must be a string',
         'string.email': 'Email must be a valid email address',
     }),
-    password:Joi.string().min(8).max(20).required().messages({
+    password:Joi.string().required().messages({
         'string.required': 'Password is required',
         'string.empty': 'Password cannot be empty',
     })
