@@ -41,7 +41,7 @@ export const ShoppingCart = ({
       const matchedCustomer = customers?.find(
         (customer) =>
           customer?.phoneNumber?.toString().toLowerCase() ===
-          searchQuery.toLowerCase(),
+          searchQuery.toLowerCase()
       );
 
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
@@ -64,7 +64,7 @@ export const ShoppingCart = ({
     setName("");
     setMobile("");
     setIsNewCustomer(false);
-    setQuantities({});
+    setQuantities("");
   };
 
   const handleCashPay = () => {
@@ -89,21 +89,10 @@ export const ShoppingCart = ({
   };
 
   useEffect(() => {
-    if (invoice?.customer) {
-      setName(invoice.customer.customerName || "");
-      setMobile(invoice.customer.phoneNumber || "");
-      setPointAmount(invoice.customer.pointAmount || "");
-    }
-  }, [invoice]);
-  useEffect(() => {
-    if (invoice?.products) {
-      const initialQuantities = {};
-      invoice.products.forEach((product) => {
-        initialQuantities[product.productId] = product.quantity;
-      });
-      setQuantities(initialQuantities);
-    }
-  }, [invoice]);
+    return () => {
+      window.location.reload();
+    };
+  }, []);
 
   return (
     <div className="p-5 border">

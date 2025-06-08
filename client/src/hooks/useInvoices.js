@@ -56,7 +56,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to fetch customer invoice",
+        error?.response?.data?.message || "Failed to fetch customer invoice"
       );
     },
   });
@@ -71,14 +71,14 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Saved to open orders");
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message)
+      toast.error(error?.response?.data?.message);
     },
   });
 
@@ -95,11 +95,10 @@ export const useInvoices = (customerId = null) => {
       return response?.data?.data;
     },
 
-    onSuccess: (data) => {},
-
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to fetch saved invoice");
-      
+      toast.error(
+        error?.response?.data?.message || "Failed to fetch saved invoice"
+      );
     },
   });
 
@@ -135,7 +134,7 @@ export const useInvoices = (customerId = null) => {
       dispatch(saveSingleInvoice(data));
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed to fetch invoice')
+      toast.error(error?.response?.data?.message || "Failed to fetch invoice");
     },
   });
 
@@ -160,8 +159,9 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to add product to invoice");
-    
+      toast.error(
+        error?.response?.data?.message || "Failed to add product to invoice"
+      );
     },
   });
   const { mutate: addProductToInvoiceOpenOrder } = useMutation({
@@ -203,7 +203,6 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to fetch invoice");
-      
     },
   });
 
@@ -224,8 +223,10 @@ export const useInvoices = (customerId = null) => {
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to remove product from invoice");
-     
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to remove product from invoice"
+      );
     },
   });
   const { mutate: removeProductFromInvoiceOpenOrder } = useMutation({
@@ -245,8 +246,10 @@ export const useInvoices = (customerId = null) => {
       toast.success("Product removed from invoice");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to remove product from invoice");
-      
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to remove product from invoice"
+      );
     },
   });
 
@@ -260,7 +263,7 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Payment successful.");
       queryClient.invalidateQueries(["savedInvoices"]);
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
@@ -281,7 +284,7 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Payment successful.");
       queryClient.invalidateQueries(["savedInvoices"]);
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
@@ -289,7 +292,7 @@ export const useInvoices = (customerId = null) => {
       dispatch(clearSingleInvoice());
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed fetch open order!')
+      toast.error(error?.response?.data?.message || "Failed fetch open order!");
     },
   });
   const { mutate: makeSwipePaymentOpenOrder } = useMutation({
@@ -302,7 +305,7 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Payment successful.");
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
@@ -311,7 +314,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Payment failed!')
+      toast.error(error?.response?.data?.message || "Payment failed!");
     },
   });
   const { mutate: makeCashPaymentOpenOrder } = useMutation({
@@ -324,7 +327,7 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Payment successful.");
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
@@ -333,14 +336,14 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Payment failed!')
+      toast.error(error?.response?.data?.message || "Payment failed!");
     },
   });
 
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -356,13 +359,13 @@ export const useInvoices = (customerId = null) => {
       console.log(data);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Payment failed!')
+      toast.error(error?.response?.data?.message || "Payment failed!");
     },
   });
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -374,7 +377,7 @@ export const useInvoices = (customerId = null) => {
         sessionId: session.data.session.id,
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
       dispatch(clearSingleInvoiceOpenOrder());
@@ -382,7 +385,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Payment failed!')
+      toast.error(error?.response?.data?.message || "Payment failed!");
     },
   });
   const { mutate: redeemPoints } = useMutation({
@@ -402,7 +405,7 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed to redeem points!')
+      toast.error(error?.response?.data?.message || "Failed to redeem points!");
     },
   });
   const { mutate: redeemPointsOpenOrder } = useMutation({
@@ -416,12 +419,12 @@ export const useInvoices = (customerId = null) => {
       });
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast("Points amount added!");
       queryClient.invalidateQueries(["customers"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed to redeem points!')
+      toast.error(error?.response?.data?.message || "Failed to redeem points!");
     },
   });
 
@@ -438,7 +441,9 @@ export const useInvoices = (customerId = null) => {
       queryClient.invalidateQueries(["savedInvoices"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || 'Failed to delete open order!')
+      toast.error(
+        error?.response?.data?.message || "Failed to delete open order!"
+      );
     },
   });
 
