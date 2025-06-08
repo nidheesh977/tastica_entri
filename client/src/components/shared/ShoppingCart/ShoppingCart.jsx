@@ -6,6 +6,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
+import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -22,6 +23,8 @@ export const ShoppingCart = ({
     redeemPoints,
     invoice,
   } = useInvoices();
+
+  const { loyaltyPoints } = useLoyaltyPoints();
 
   const products = invoice?.products;
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +44,7 @@ export const ShoppingCart = ({
       const matchedCustomer = customers?.find(
         (customer) =>
           customer?.phoneNumber?.toString().toLowerCase() ===
-          searchQuery.toLowerCase(),
+          searchQuery.toLowerCase()
       );
 
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
@@ -64,7 +67,7 @@ export const ShoppingCart = ({
     setName("");
     setMobile("");
     setIsNewCustomer(false);
-    setQuantities({});
+    setQuantities("");
   };
 
   const handleCashPay = () => {
@@ -89,21 +92,10 @@ export const ShoppingCart = ({
   };
 
   useEffect(() => {
-    if (invoice?.customer) {
-      setName(invoice.customer.customerName || "");
-      setMobile(invoice.customer.phoneNumber || "");
-      setPointAmount(invoice.customer.pointAmount || "");
-    }
-  }, [invoice]);
-  useEffect(() => {
-    if (invoice?.products) {
-      const initialQuantities = {};
-      invoice.products.forEach((product) => {
-        initialQuantities[product.productId] = product.quantity;
-      });
-      setQuantities(initialQuantities);
-    }
-  }, [invoice]);
+    return () => {
+      window.location.reload();
+    };
+  }, []);
 
   return (
     <div className="p-5 border">
@@ -254,30 +246,37 @@ export const ShoppingCart = ({
             <div>Products Discount</div>
             <div>MVR{invoice?.totalDiscount || 0}</div>
           </div>
-          <div className="flex justify-between items-center gap-2 border px-2 py-2">
-            <div>Discount</div>
-            <p>{pointAmount}</p>
-            <div>
-              <input
-                className="outline-primary px-2 w-2/3 border "
-                type="text"
-                onChange={(e) => {
-                  setRedeemAmountAdd(e.target.value);
-                }}
-              />
-            </div>
-            <div>
-              <button
-                onClick={() => {
-                  redeemPoints(redeemAmountAdd);
-                  setRedeemAmountAdd("");
-                }}
-                className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
-              >
-                Redeem
-              </button>
-            </div>
-          </div>
+          {loyaltyPoints?.loyalityRate && (
+            <>
+              {" "}
+              <div className="flex justify-between items-center gap-2 border px-2 py-2">
+                <div>Discount</div>
+                <p>{pointAmount}</p>
+
+                <div>
+                  <input
+                    className="outline-primary px-2 w-2/3 border "
+                    type="text"
+                    onChange={(e) => {
+                      setRedeemAmountAdd(e.target.value);
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <button
+                    onClick={() => {
+                      redeemPoints(redeemAmountAdd);
+                      setRedeemAmountAdd("");
+                    }}
+                    className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+                  >
+                    Redeem
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
           <div className="flex justify-between items-center font-semibold border px-2 py-2">
             <div>Total</div>
             <div>MVR{invoice?.totalAmount || 0}</div>
