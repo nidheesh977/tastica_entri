@@ -32,8 +32,7 @@ export const AddCustomerCard = () => {
           type="text"
           placeholder="Mobile"
           value={phoneNumber}
-          minLength={7}
-          maxLength={14}
+          maxLength={7}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
