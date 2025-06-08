@@ -3,16 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 
 export const useFileUploads = () => {
-  const { mutate: uploadProductsCSVFile, isLoading } = useMutation({
+  const uploadProductsMutation = useMutation({
     mutationFn: async (formData) => {
-      const response = await axiosInstance({
-        method: "POST",
-        url: "/file/upload",
-        data: formData,
+      const response = await axiosInstance.post("/file/upload", formData, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
       return response?.data?.data;
     },
@@ -20,38 +15,32 @@ export const useFileUploads = () => {
       toast.success("File uploaded successfully");
     },
     onError: (error) => {
-      toast.error(
-        error?.response?.data?.message || "Failed to upload file",
-      );
+      toast.error(error?.response?.data?.message || "Failed to upload file");
     },
   });
-  const { mutate: uploadCategoriesCSVFile, isLoading: isLoadingCategories } =
-    useMutation({
-      mutationFn: async (formData) => {
-        const response = await axiosInstance({
-          method: "POST",
-          url: "/file/upload/category",
-          data: formData,
+
+  const uploadCategoriesMutation = useMutation({
+    mutationFn: async (formData) => {
+      const response = await axiosInstance.post(
+        "/file/upload/category",
+        formData,
+        {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        return response?.data?.data;
-      },
-      onSuccess: () => {
-        toast.success("File uploaded successfully");
-      },
-      onError: (error) => {
-        toast.error(error?.response?.data?.message || "Failed to upload file");
-        
-      },
-    });
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return response?.data?.data;
+    },
+    onSuccess: () => {
+      toast.success("File uploaded successfully");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to upload file");
+    },
+  });
 
   return {
-    uploadProductsCSVFile,
-    uploadCategoriesCSVFile,
-    isLoading,
-    isLoadingCategories,
+    uploadProductsCSVFile: uploadProductsMutation,
+    uploadCategoriesCSVFile: uploadCategoriesMutation,
   };
 };
