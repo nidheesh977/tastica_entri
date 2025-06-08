@@ -140,10 +140,10 @@ export const OnlinePaymentSuccess = async (req,res) => {
 
         if(findInvoice.redeemAmount > 0){
 
-          const getpoints = findInvoice.redeemAmount / findLoyalityRate.loyalityRate
+          const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
           let deductLoyality =  findCustomer.loyalityPoint - getpoints  + findInvoice.totalAmount
 
-         let PointsToAmount = deductLoyality * findLoyalityRate.loyalityRate
+         let PointsToAmount = deductLoyality * findLoyalityRate?.loyalityRate || 0
 
       await customerModel.findByIdAndUpdate(findCustomer._id,{
             loyalityPoint:Math.round(deductLoyality),
@@ -159,7 +159,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
 
         else if(invoiceDigitalPayment){
              let addLoyality =  findCustomer.loyalityPoint += findInvoice.totalAmount 
-             let PointsToAmount = addLoyality * findLoyalityRate.loyalityRate
+             let PointsToAmount = addLoyality * findLoyalityRate?.loyalityRate || 0
 
            await customerModel.findByIdAndUpdate(findCustomer._id,{
             loyalityPoint:Math.round(addLoyality),
