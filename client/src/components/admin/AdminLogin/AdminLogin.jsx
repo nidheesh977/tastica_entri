@@ -12,7 +12,7 @@ export const AdminLogin = () => {
   const [passwordShow, setPasswordShow] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleLogin = async (params) => {
+  const handleLogin = async () => {
     const data = { phoneNumber, password };
     try {
       const response = await axiosInstance({
@@ -25,7 +25,7 @@ export const AdminLogin = () => {
       dispatch(addAdminData(response?.data?.data))
       navigate("/admin");
     } catch (error) {
-      toast.error("Failed to login");
+      toast.error(error?.response?.data?.message || "Failed to login");
       dispatch(removeAdminData());
     }
   };
@@ -45,8 +45,7 @@ export const AdminLogin = () => {
           type="text"
           value={phoneNumber}
           placeholder="Mobile"
-          minLength={7}
-          maxLength={14}
+          maxLength={7}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
         />
