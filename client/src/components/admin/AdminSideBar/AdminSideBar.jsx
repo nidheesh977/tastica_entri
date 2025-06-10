@@ -69,9 +69,8 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/product/view");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary rounded ${
-                home ? "border border-primary" : "border"
-              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10 `}
+              className="bg-tertiary rounded 
+              flex items-center hover:bg-orange-50  cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaBoxOpen />
               Products
@@ -81,9 +80,7 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/category/view");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary rounded ${
-                home ? "border border-primary" : "border"
-              } flex items-center  hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary rounded flex items-center  hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdCategory />
               Categories
@@ -93,9 +90,9 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/staff/view");
                 dispatch(toggleSideBar());
               }}
-              className={` bg-tertiary rounded ${
-                home ? "border border-primary" : "border"
-              } flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary rounded 
+               
+             flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdGroups />
               Staffs
@@ -105,9 +102,8 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/customer/view");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                home ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary
+              rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaUsers />
               Customers
@@ -135,9 +131,9 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/staff/signup");
                 dispatch(toggleSideBar());
               }}
-              className={` bg-tertiary ${
-                staffManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary
+              
+              rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaUserTie />
               Add Staff
@@ -165,9 +161,7 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/customer/add");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                customerManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdPersonAdd />
               Add Customer
@@ -195,9 +189,7 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/add/product");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaBox />
               Add Product
@@ -207,9 +199,7 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/upload/products/csv");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                productManagement ? "border border-primary" : "border"
-              } rounded flex items-center text-sm md:text-lg hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary  rounded flex items-center text-sm md:text-lg hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaFileCsv />
               Upload Products CSV File
@@ -220,9 +210,7 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/add/category");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                productManagement ? "border border-primary" : "border"
-              } rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <BiCategory />
               Add Category
@@ -232,9 +220,9 @@ export const AdminSideBar = () => {
                 handleSideBar("/admin/upload/categories/csv");
                 dispatch(toggleSideBar());
               }}
-              className={`bg-tertiary ${
-                productManagement ? "border border-primary" : "border"
-              } rounded flex text-xs md:text-lg items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10`}
+              className="bg-tertiary 
+                
+              rounded flex text-xs md:text-lg items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <FaFileCsv />
               Upload Categories CSV File
