@@ -148,6 +148,10 @@
   **method**`GET`<br>
   **URL**`/api/v1/invoice/save/status-saved`
 
+  - 📃 clear invoice  <br>  
+  **method**`PUT`<br>
+  **URL**`/api/v1/invoice/:id/clear`
+
   - 📃🗑 Delete open order <br>  
   **method**`Delete`<br>
   **URL**`/api/v1/invoice/status-saved/:id`
@@ -263,8 +267,14 @@
 -  delete loyality Rate
 **method**`DELETE` <br>
 **URL**`/api/v1/loyality/:id`
- 
+
 -  get loyality Rate
 **method**`GET` <br>
 **URL**`/api/v1/loyality`
  
+
+- ## Admin dashboard 💼 <br>
+
+-  get payment method total
+**method**`GET` <br>
+**URL**`/api/v1/dashboard/invoice/payment-method`

@@ -426,6 +426,35 @@ export const removeProductFromInvoice = async (req,res) => {
             }
         }
 
+        // phase 2 task
+
+        export const invoiceClear = async(req,res) => {
+            try{
+                const {id} = req.params;
+
+                if(!id){
+                    return res.status(400).json({success:false,message:"Invoice ID is missing"});
+                }
+
+                const findInvoiceAndUpdate = await invoiceModel.findByIdAndUpdate(id,
+                    {
+                        subTotal:0,
+                        totalDiscount:0,
+                        products:[],
+                        totalAmount:0,
+                        taxRate:0,
+                        redeemAmount:0
+
+                    },{new:true});
+
+                
+                res.status(200).json({success:true,message:"Products cleared successfully",data:findInvoiceAndUpdate})
+                
+            }catch(error){
+                return res.status(500).json({success:false,message:"Internal server error"})
+            }
+        }
+
 
 
         export const getInvoiceWithId = async (req,res) => {
