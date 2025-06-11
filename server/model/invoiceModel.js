@@ -100,7 +100,8 @@ const invoiceSchema = new mongoose.Schema({
     taxRate:{
         type:Number,
         default:0
-    }
+    },   
+    
 },{timestamps:true})
 
 invoiceSchema.index({invoiceNumber:1})
