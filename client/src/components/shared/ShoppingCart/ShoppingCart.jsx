@@ -221,7 +221,7 @@ export const ShoppingCart = ({
               </>
             </div>
             <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
-              {product?.price}
+              {product?.price * product?.quantity}
             </span>
             <span className="col-span-12 xl:col-span-1">
               <FaTrash
