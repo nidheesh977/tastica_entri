@@ -104,12 +104,13 @@ export const ShoppingCart = ({
           {!isNewCustomer && (
             <h1 className="font-bold flex gap-2 text-xl items-center">
               <MdShoppingCart className="text-primary" size={35} /> Cart
+              
             </h1>
           )}
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
-            placeholder="Search Customer Mobile Number Here"
+            placeholder="Customer Mobile Number"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
