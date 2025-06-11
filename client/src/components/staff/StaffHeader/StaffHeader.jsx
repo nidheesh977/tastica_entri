@@ -69,7 +69,18 @@ export const StaffHeader = () => {
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-tertiary w-full text-center md:gap-5">
             <li className="md:border-none cursor-pointer rounded-md relative">
               <input
-                className="border border-primary px-8 py-2 outline-primary rounded text-primary w-[275px] md:w-48 lg:w-80 xl:w-96"
+                className={`border border-primary px-8 py-2 outline-primary rounded text-primary w-[275px]
+                  
+                  
+                  ${
+                    location.pathname === "/staff" ||
+                    location.pathname.startsWith("/staff/open/orders/data/")
+                      ? "md:w-24"
+                      : "md:w-48"
+                  }
+                  
+                  
+                  lg:w-80 xl:w-96`}
                 placeholder="Smart Search"
                 type="text"
                 value={searchQuery}

@@ -4,7 +4,7 @@ export const customProductSlice = createSlice({
   name: "toggleCustomProduct",
   initialState: { toggleCustomProduct: false },
   reducers: {
-    toggleCustomProductHandler: (state, _) => {
+    toggleCustomProductHandler: (state) => {
       state.toggleCustomProduct = !state.toggleCustomProduct;
     },
   },
