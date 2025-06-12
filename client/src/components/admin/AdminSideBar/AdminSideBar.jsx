@@ -14,6 +14,7 @@ import {
   MdCategory,
   MdReceipt,
   MdEventNote,
+  MdDashboard,
 } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -46,7 +47,6 @@ export const AdminSideBar = () => {
       <ul className="w-full flex flex-col bg-tertiary gap-1 text-lg font-bold p-2 transition-all duration-1000">
         <li
           onClick={() => {
-            handleSideBar("/admin");
             setHome(!home);
           }}
           className={
@@ -64,6 +64,17 @@ export const AdminSideBar = () => {
         {home && (
           <>
             {" "}
+            <li
+              onClick={() => {
+                handleSideBar("/admin");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary rounded 
+              flex items-center hover:bg-orange-50  cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <MdDashboard />
+              Dashboard
+            </li>
             <li
               onClick={() => {
                 handleSideBar("/admin/product/view");
