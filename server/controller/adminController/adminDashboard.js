@@ -116,7 +116,7 @@ import invoiceModel from "../../model/invoiceModel.js"
 export const paymentMethodInvoice = async (req,res) =>{
     try{
         const {id} = req.shop;
-        const {month,day,method,year} = req.body;
+        const {month,day,method,year} = req.query;
 
         if(!month || !day || !method || !year){
             return res.status(400).json({success:false,message:"All data required"})
