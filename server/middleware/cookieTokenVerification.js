@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken'
 export const userVerifyToken = async (req,res,next) => {
     try{
          
-    let token = req.cookies.adminToken || req.cookies.staffToken
+    let token = req.cookies.superAdminToken || req.cookies.adminToken || req.cookies.staffToken
 
-   
+
         if(!token){
             return res.status(401).json({success:false,message:"Unauthorized"})
         }
@@ -19,7 +19,7 @@ export const userVerifyToken = async (req,res,next) => {
                 }
                 return res.status(403).json({ success: false, message: "Forbidden" });
             }
-
+  
              req.user = decoded
 
              
@@ -28,7 +28,7 @@ export const userVerifyToken = async (req,res,next) => {
 
         
     }catch(error){
-        
-        res.status(500).json({ success: false, message: "Internal server error" });
+      
+      return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }

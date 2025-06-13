@@ -79,9 +79,7 @@ import invoiceModel from "../../model/invoiceModel.js"
          const startDate = new Date(new Date().getFullYear() ,0,1);
          const endDate = new Date(new Date().getFullYear() ,0,1)
 
-         console.log(startDate)
-         console.log(endDate)
-         console.log(getYear)
+   
 
             const result = await invoiceModel.aggregate([
             {$match:{shop:id,invoiceStatus:"paid",createdAt:{$gte:startDate,$lt:endDate}}},
@@ -135,7 +133,8 @@ export const paymentMethodInvoice = async (req,res) =>{
          endDate = new Date(`${yearGet}-${monthGet}-${nextDay}`)
                     
             const result = await invoiceModel.aggregate([
-            {$match:{shop:id,invoiceStatus:"paid",paymentMethod:method,createdAt:{$gte:targetDate,$lt:endDate}}},
+            {$match:{shop:id,invoiceStatus:"paid",$or:[{paymentMethod:method},{paymentStatus:method}],createdAt:{$gte:targetDate,$lt:endDate}}},
+          
             {$group:{
                     _id:null,
                     totalAmount:{$sum:"$totalAmount"},

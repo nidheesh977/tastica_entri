@@ -278,3 +278,43 @@
 -  get payment method total
 **method**`GET` <br>
 **URL**`/api/v1/dashboard/invoice/payment-method`
+
+
+- ## super Admin  💼💼 <br>
+
+-  Login super admin
+**method**`POST` <br>
+**URL**`/api/v1/super-admin/login`
+
+-  check super admin Logged
+**method**`get` <br>
+**URL**`/api/v1/super-admin/check-logged`
+
+- super admin Log-out
+**method**`POST` <br>
+**URL**`/api/v1/super-admin/logout`
+
+- super admin shop create
+**method**`POST` <br>
+**URL**`/api/v1/super-admin/create-shop`
+
+- super admin get all shop
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/shop`
+
+
+- super admin create employee
+**method**`POST` <br>
+**URL**`/api/v1/super-admin/create-employee`
+
+- super admin delete employee
+**method**`DELETE` <br>
+**URL**`/api/v1/super-admin/employee/:id/delete`
+
+- super admin update employee
+**method**`PUT` <br>
+**URL**`/api/v1/super-admin/employee/:id/update`
+
+- super admin list employee
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/employee/list?shop=id`
