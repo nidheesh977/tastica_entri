@@ -244,7 +244,7 @@ export const router = createBrowserRouter([
     element: <SuperAdminLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <SuperAdminLoginPage /> },
+      { path: "super/admin/login", element: <SuperAdminLoginPage /> },
 
       {
         path: "super/admin",

@@ -1,4 +1,4 @@
-import { FaHome } from "react-icons/fa";
+import { FaArrowLeft, FaHome } from "react-icons/fa";
 import { MdAdminPanelSettings, MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -40,10 +40,19 @@ export const ShopHeader = () => {
         <div className="flex items-center font-thin gap-5 text-primary">
           {location.pathname === "/" && (
             <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
-              <MdAdminPanelSettings
+              <MdAdminPanelSettings onClick={()=> navigate('/super/admin/login')}
                 className="hover:text-orange-600 mx-auto"
                 size={20}
                 title="Super Admin"
+              />
+            </span>
+          )}
+          {location.pathname === "/super/admin/login" && (
+            <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
+              <FaArrowLeft onClick={()=> navigate('/')}
+                className="hover:text-orange-600 mx-auto"
+                size={20}
+                title="Back"
               />
             </span>
           )}
