@@ -8,7 +8,7 @@ import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification
 
 const adminRouter = express.Router();
 
-adminRouter.post('/login',loginAdmin);
+adminRouter.post('/login',shopVerifyToken,loginAdmin);
 
 // protected routes
 adminRouter.post('/create-employee',shopVerifyToken,userVerifyToken,checkUserRole("admin"),CreateEmployee);

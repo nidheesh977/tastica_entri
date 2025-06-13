@@ -2,6 +2,7 @@ import express from "express";
 import { checkStaffLogin,  loginStaff, logOutStaff } from "../../../controller/staffController.js";
 import { checkUserRole } from "../../../middleware/authRoleVerification.js";
 import { userVerifyToken} from "../../../middleware/cookieTokenVerification.js";
+import { shopVerifyToken } from "../../../middleware/shopCookieTokenVerification.js";
 
 
 
@@ -10,11 +11,11 @@ import { userVerifyToken} from "../../../middleware/cookieTokenVerification.js";
 const staffRouter = express.Router();
 
 
-staffRouter.post('/login', loginStaff)
+staffRouter.post('/login',shopVerifyToken,loginStaff)
 
 //  protected routes
-staffRouter.get('/check-logged',userVerifyToken,checkUserRole("staff"),checkStaffLogin)
-staffRouter.post('/logout',userVerifyToken,checkUserRole("staff"),logOutStaff)
+staffRouter.get('/check-logged',shopVerifyToken,userVerifyToken,checkUserRole("staff"),checkStaffLogin)
+staffRouter.post('/logout',shopVerifyToken,userVerifyToken,checkUserRole("staff"),logOutStaff)
 
 
 

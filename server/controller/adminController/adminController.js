@@ -14,9 +14,9 @@ export const loginAdmin = async (req, res) => {
     }
 
     const { phoneNumber, password } = value;
+    const {id} = req.shop;
 
-
-    const adminExist = await AdminStaffModel.findOne({phoneNumber:phoneNumber});
+    const adminExist = await AdminStaffModel.findOne({shopId:id,phoneNumber:phoneNumber});
 
     if (!adminExist) {
       return res.status(400).json({ success: false, message: "User not found" });
