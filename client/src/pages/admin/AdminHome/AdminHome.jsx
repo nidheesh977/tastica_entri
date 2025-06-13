@@ -13,10 +13,10 @@ export const AdminHome = () => {
           <div className="col-span-12 lg:col-span-4">
             <CategorySales />
           </div>
-          <div className="col-span-12 lg:col-span-4">
+          <div className="col-span-12 lg:col-span-5 xl:col-span-4">
             <SalesPerformance />
           </div>
-          <div className="col-span-12 lg:col-span-4">
+          <div className="col-span-12 lg:col-span-3 xl:col-span-4">
             <SalesChart />
           </div>
         </section>

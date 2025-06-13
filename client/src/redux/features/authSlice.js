@@ -6,31 +6,31 @@ export const authSlice = createSlice({
     superAdminData: null,
     adminData: null,
     staffData: null,
-    shopData: null
+    shopData: null,
   },
   reducers: {
     addSuperAdminData: (state, action) => {
       state.superAdminData = action.payload;
     },
-    removeSuperAdminData: (state, _) => {
+    removeSuperAdminData: (state) => {
       state.superAdminData = null;
     },
     addAdminData: (state, action) => {
       state.adminData = action.payload;
     },
-    removeAdminData: (state, _) => {
+    removeAdminData: (state) => {
       state.adminData = null;
     },
     addStaffData: (state, action) => {
       state.staffData = action.payload;
     },
-    removeStaffData: (state, _) => {
+    removeStaffData: (state) => {
       state.staffData = null;
     },
     addShopData: (state, action) => {
       state.shopData = action.payload;
     },
-    removeShopData: (state, _) => {
+    removeShopData: (state) => {
       state.shopData = null;
     },
   },
@@ -44,6 +44,6 @@ export const {
   addStaffData,
   removeStaffData,
   addShopData,
-  removeShopData
+  removeShopData,
 } = authSlice.actions;
 export default authSlice.reducer;

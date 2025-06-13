@@ -5,9 +5,11 @@ import { AdminHome } from "../pages/admin/AdminHome/AdminHome";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
 import { ProtectedRouteShop } from "./ProtectedRouteShop";
+import {ProtectedRouteSuperAdmin} from './ProtectedRouteSuperAdmin'
 import { Home } from "../pages/shop/Home/Home";
 import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
+import {SuperAdminLayout} from '../layout/SuperAdminLayout'
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
@@ -34,6 +36,7 @@ import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
 import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCartView";
 import { LoyaltyPoints } from "../pages/admin/LoyaltyPoints/LoyaltyPoints";
+import { SuperAdminLoginPage } from '../pages/superAdmin/SuperAdminLoginPage/SuperAdminLoginPage'
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -159,7 +162,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "payment/cancel",
-            element: <PaymentCancel  />,
+            element: <PaymentCancel />,
           },
         ],
       },
@@ -230,6 +233,32 @@ export const router = createBrowserRouter([
           {
             path: "payment/cancel",
             element: <PaymentCancel />,
+          },
+        ],
+      },
+    ],
+  },
+  // Super Admin
+  {
+    path: "",
+    element: <SuperAdminLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: "super/admin/login", element: <SuperAdminLoginPage /> },
+
+      {
+        path: "super/admin",
+        element: <ProtectedRouteSuperAdmin />,
+        children: [
+          { path: "", element: <Home /> },
+
+          {
+            path: "admin/login",
+            element: <AdminLoginPage />,
+          },
+          {
+            path: "staff/login",
+            element: <StaffLoginPage />,
           },
         ],
       },
