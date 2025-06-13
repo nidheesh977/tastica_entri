@@ -38,6 +38,7 @@ import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCa
 import { LoyaltyPoints } from "../pages/admin/LoyaltyPoints/LoyaltyPoints";
 import { SuperAdminLoginPage } from "../pages/superAdmin/SuperAdminLoginPage/SuperAdminLoginPage";
 import { CreateShop } from "../pages/superAdmin/CreateShop/CreateShop";
+import { SuperAdminHome } from "../pages/superAdmin/SuperAdminHome/SuperAdminHome";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -251,7 +252,7 @@ export const router = createBrowserRouter([
         path: "super/admin",
         element: <ProtectedRouteSuperAdmin />,
         children: [
-          { path: "", element: <Home /> },
+          { path: "", element: <SuperAdminHome /> },
 
           {
             path: "super/admin/create/shop",
