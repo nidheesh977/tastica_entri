@@ -1,10 +1,10 @@
-import { SuperAdminLogin } from "../../../components/superAdmin/SuperAdminLogin/SuperAdminLogin";
+import { AdminLogin } from "../../../components/admin/AdminLogin/AdminLogin";
 
 
 export const AdminLoginPage = () => {
   return (
     <div className="flex justify-center m-1">
-      <SuperAdminLogin />
+      <AdminLogin />
     </div>
   );
 };

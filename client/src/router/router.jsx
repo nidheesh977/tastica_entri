@@ -5,9 +5,11 @@ import { AdminHome } from "../pages/admin/AdminHome/AdminHome";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
 import { ProtectedRouteShop } from "./ProtectedRouteShop";
+import {ProtectedRouteSuperAdmin} from './ProtectedRouteSuperAdmin'
 import { Home } from "../pages/shop/Home/Home";
 import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
+import {SuperAdminLayout} from '../layout/SuperAdminLayout'
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
@@ -34,6 +36,7 @@ import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
 import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCartView";
 import { LoyaltyPoints } from "../pages/admin/LoyaltyPoints/LoyaltyPoints";
+import { SuperAdminLoginPage } from '../pages/superAdmin/SuperAdminLoginPage/SuperAdminLoginPage'
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -237,68 +240,25 @@ export const router = createBrowserRouter([
   },
   // Super Admin
   {
-    path: "super/admin",
-    element: <StaffLayout />,
+    path: "",
+    element: <SuperAdminLayout />,
     errorElement: <ErrorPage />,
     children: [
+      { path: "", element: <SuperAdminLoginPage /> },
+
       {
-        path: "",
-        element: <ProtectedRouteStaff />,
+        path: "super/admin",
+        element: <ProtectedRouteSuperAdmin />,
         children: [
-          { path: "", element: <StaffHome /> },
+          { path: "", element: <Home /> },
 
           {
-            path: "open/orders",
-            element: <OpenOrders />,
+            path: "admin/login",
+            element: <AdminLoginPage />,
           },
           {
-            path: "open/orders/data/:id",
-            element: <OpenOrderCartView />,
-          },
-          {
-            path: "invoice/data/:id",
-            element: <InvoiceData />,
-          },
-
-          {
-            path: "add/product",
-            element: <AddProductCard />,
-          },
-          {
-            path: "add/custom/product",
-            element: <AddCustomProduct />,
-          },
-          {
-            path: "product/view",
-            element: <ListProducts />,
-          },
-          {
-            path: "category/view",
-            element: <ListCategories />,
-          },
-          {
-            path: "add/category",
-            element: <AddNewCategory />,
-          },
-          {
-            path: "customer/view",
-            element: <ListCustomers />,
-          },
-          {
-            path: "customer/add",
-            element: <AddNewCustomer />,
-          },
-          {
-            path: "customer/view/invoice/:id",
-            element: <ListCustomerInvoices />,
-          },
-          {
-            path: "payment/success",
-            element: <PaymentSuccess />,
-          },
-          {
-            path: "payment/cancel",
-            element: <PaymentCancel />,
+            path: "staff/login",
+            element: <StaffLoginPage />,
           },
         ],
       },

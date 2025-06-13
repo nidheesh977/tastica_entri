@@ -1,6 +1,6 @@
 import { FaHome } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { MdPersonAdd, MdReceipt } from "react-icons/md";
+import { MdPersonAdd } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
@@ -58,16 +58,7 @@ export const SuperAdminSideBar = () => {
           Shopping Cart
         </li>
 
-        <li
-          onClick={() => {
-            handleSideBar("/staff/open/orders");
-            dispatch(toggleSideBar());
-          }}
-          className="bg-tertiary rounded border flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
-        >
-          <MdReceipt />
-          Open Orders
-        </li>
+        
       </ul>
     </div>
   );

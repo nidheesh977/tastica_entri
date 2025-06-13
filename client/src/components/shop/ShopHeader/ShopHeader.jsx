@@ -15,7 +15,7 @@ export const ShopHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const shopname = useSelector((state) => state.auth?.shopData?.shopName);
+  const shopname = useSelector((state) => state.auth?.shopData?.shopName || null);
   const shopLogout = async () => {
     try {
       await axiosInstance({

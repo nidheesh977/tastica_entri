@@ -1,45 +1,38 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdReceipt, MdShoppingCart, MdClose, MdRefresh } from "react-icons/md";
+import { MdAdminPanelSettings, MdClose } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
-import { useInvoices } from "../../../hooks/useInvoices";
 import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
-import { removeStaffData } from "../../../redux/features/authSlice";
-import { toggleCustomProductHandler } from "../../../redux/features/customProductSlice";
+import { removeSuperAdminData } from "../../../redux/features/authSlice";
 
 export const SuperAdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const staffName = useSelector((state) => state?.auth?.staffData?.userName);
+  const superAdminName = useSelector(
+    (state) => state?.auth?.superAdminData?.userName
+  );
   const searchQuery = useSelector((state) => state?.search);
-  const { savedInvoices } = useInvoices();
-  const location = useLocation();
 
   const handleLogout = async () => {
     try {
       await axiosInstance({
         method: "POST",
-        url: "/staff/logout",
+        url: "/super/admin/logout",
         withCredentials: true,
       });
-      dispatch(removeStaffData());
+      dispatch(removeSuperAdminData());
       toast.success("Logout success");
-      navigate("/shop/staff/login");
+      navigate("/super/admin/login");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to logout");
     }
-  };
-
-  const openNewInvoice = () => {
-    window.open("/staff", "_blank");
   };
 
   return (
@@ -58,16 +51,6 @@ export const SuperAdminHeader = () => {
               src={Logo}
               alt="logo"
             />
-            {(location.pathname === "/staff" ||
-              location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <span className="rounded-md shadow-xl items-center p-2 w-full">
-                <MdRefresh
-                  className=" hover:text-orange-600 mx-auto"
-                  size={20}
-                  title="Reset"
-                />
-              </span>
-            )}
           </div>
 
           <div className="md:hidden">
@@ -97,63 +80,14 @@ export const SuperAdminHeader = () => {
               )}
             </li>
 
-            <li
-              className="cursor-pointer rounded shadow-xl w-full p-2 text-primary"
-              title="Shopping Cart"
-            >
-              <MdShoppingCart
-                className="hover:text-orange-600 mx-auto"
-                size={20}
-                onClick={() => navigate("/staff")}
-              />
-            </li>
-
-            {(location.pathname === "/staff" ||
-              location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <li
-                className="cursor-pointer rounded-md shadow-xl w-full p-2 text-primary"
-                title="Add Custom Product"
-              >
-                <FaRegStickyNote
-                  className="hover:text-orange-600 mx-auto"
-                  size={20}
-                  onClick={() => dispatch(toggleCustomProductHandler())}
-                />
-              </li>
-            )}
-
-            <li
-              className="cursor-pointer flex items-center rounded-md shadow-xl p-2 w-full text-primary"
-              title="Open Orders"
-            >
-              <MdReceipt
-                className="hover:text-orange-600 mx-auto text-primary"
-                size={20}
-                onClick={() => navigate("/staff/open/orders")}
-              />
-              {savedInvoices?.length !== 0 && (
-                <span className="flex items-center justify-center text-tertiary text-xs w-4 h-4  font-bold  bg-primary border border-primary rounded-full">
-                  {savedInvoices?.length}
-                </span>
+            <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
+              {superAdminName && (
+                <p className="text-xl mx-auto">{superAdminName}</p>
               )}
             </li>
-            {(location.pathname === "/staff" ||
-              location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <li
-                onClick={openNewInvoice}
-                title="Create New Invoice"
-                className="hover:text-orange-600 cursor-pointer font-bold w-full rounded-md text-primary shadow-xl p-2"
-              >
-                <FaPlus size={20} className="mx-auto cursor-pointer" />
-              </li>
-            )}
-
-            <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
-              {staffName && <p className="text-xl mx-auto">{staffName}</p>}
-            </li>
             <li className="w-full rounded-md shadow-xl p-2">
-              {staffName && (
-                <FaUserTie
+              {superAdminName && (
+                <MdAdminPanelSettings
                   size={20}
                   className="hover:text-orange-600 cursor-pointer mx-auto text-primary"
                   onClick={() => handleLogout()}

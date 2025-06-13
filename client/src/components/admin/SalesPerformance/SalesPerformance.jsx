@@ -44,7 +44,7 @@ export const SalesPerformance = () => {
     <div className="border flex flex-col gap-1 rounded shadow p-2 w-full md:h-96">
       <h1 className="font-semibold mb-2">Sales Performance</h1>
 
-      <div >
+      <div>
         <div
           style={{ background: `${dark}` }}
           className=" flex justify-between px-4 text-tertiary text-center font-bold py-2"

@@ -1,26 +1,29 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { addAdminData, removeAdminData } from "../redux/features/authSlice";
+import {
+  addSuperAdminData,
+  removeSuperAdminData,
+} from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
-import { AdminSideBar } from "../components/admin/AdminSideBar/AdminSideBar";
+import { SuperAdminSideBar } from "../components/superAdmin/SuperAdminSideBar/SuperAdminSideBar";
 
 export const ProtectedRouteSuperAdmin = () => {
-  const isAdmin = useSelector((state) => state?.auth?.adminData);
+  const isSuperAdmin = useSelector((state) => state?.auth?.superAdminData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const checkAdmin = async () => {
-    if (isAdmin) return;
+    if (isSuperAdmin) return;
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: "/admin/check-logged",
+        url: "/super-admin/check-logged",
       });
-      dispatch(addAdminData(response?.data?.data));
+      dispatch(addSuperAdminData(response?.data?.data));
     } catch (error) {
-      dispatch(removeAdminData());
-      navigate("/shop/admin/login");
+      dispatch(removeSuperAdminData());
+      navigate("/super/admin/login");
     }
   };
 
@@ -30,7 +33,7 @@ export const ProtectedRouteSuperAdmin = () => {
 
   return (
     <>
-      <AdminSideBar />
+      <SuperAdminSideBar />
       <Outlet />
     </>
   );
