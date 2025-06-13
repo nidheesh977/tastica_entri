@@ -1,12 +1,12 @@
 import { FaHome } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
+import { MdAdminPanelSettings, MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeAdminData,
   removeStaffData,
   removeShopData,
 } from "../../../redux/features/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
 import Logo from "../../../assets/logo.png";
@@ -14,6 +14,7 @@ import Logo from "../../../assets/logo.png";
 export const ShopHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const shopname = useSelector((state) => state.auth?.shopData?.shopName);
   const shopLogout = async () => {
     try {
@@ -37,6 +38,15 @@ export const ShopHeader = () => {
           </div>
         </div>
         <div className="flex items-center font-thin gap-5 text-primary">
+          {location.pathname === "/" && (
+            <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
+              <MdAdminPanelSettings
+                className="hover:text-orange-600 mx-auto"
+                size={20}
+                title="Super Admin"
+              />
+            </span>
+          )}
           {shopname && (
             <FaHome
               className="cursor-pointer hover:text-orange-600"
