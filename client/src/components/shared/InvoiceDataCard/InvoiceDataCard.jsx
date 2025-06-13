@@ -46,27 +46,22 @@ export const InvoiceDataCard = () => {
                   {product?.quantity}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {product?.price}
+                  {product?.price * product?.quantity}
                 </td>
               </tr>
             ))}
-            <tr className="font-semibold border-t">
-              <td className="border-r border-black">SubTotal:</td>
+           
+            <tr className="font-semibold py-4 border-t border-primary">
+              <td className="border-r border-primary">Total Discount:</td>
               <td></td>
               <td></td>
-              <td className="border-l border-black">{invoice?.subTotal}MVR</td>
+              <td className="border-l border-primary">{invoice?.totalDiscount}MVR</td>
             </tr>
-            <tr className="font-semibold py-4 border-t border-black">
-              <td className="border-r border-black">Total Discount:</td>
+            <tr className="font-semibold py-4 border-t border-r border-primary">
+              <td className="border-r border-primary">Total:</td>
               <td></td>
               <td></td>
-              <td className="border-l border-black">{invoice?.totalDiscount}MVR</td>
-            </tr>
-            <tr className="font-semibold py-4 border-t border-r border-black">
-              <td className="border-r border-black">Total:</td>
-              <td></td>
-              <td></td>
-              <td className="border-l border-black">{invoice?.totalAmount}MVR</td>
+              <td className="border-l border-primary">{invoice?.totalAmount}MVR</td>
             </tr>
           </tbody>
         </table>

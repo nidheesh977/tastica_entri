@@ -5,8 +5,9 @@ import searchReducer from "./features/searchSlice";
 import categoryReducer from "./features/categorySlice";
 import invoiceReducer from "./features/invoiceSlice";
 import singleInvoiceReducer from "./features/singleInvoiceSlice";
-import  singleInvoiceOpenOrderReducer  from "./features/singleInvoiceOpenOrderSlice";
-import  toggleCustomProductReducer  from "./features/customProductSlice";
+import singleInvoiceOpenOrderReducer from "./features/singleInvoiceOpenOrderSlice";
+import toggleCustomProductReducer from "./features/customProductSlice";
+import quantityReducer from "./features/quantitySlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     singleInvoice: singleInvoiceReducer,
     singleInvoiceOpenOrder: singleInvoiceOpenOrderReducer,
     toggleCustomProduct: toggleCustomProductReducer,
+    toggleQuantity: quantityReducer,
   },
 });

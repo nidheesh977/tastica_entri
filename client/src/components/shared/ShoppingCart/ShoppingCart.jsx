@@ -104,12 +104,13 @@ export const ShoppingCart = ({
           {!isNewCustomer && (
             <h1 className="font-bold flex gap-2 text-xl items-center">
               <MdShoppingCart className="text-primary" size={35} /> Cart
+              
             </h1>
           )}
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
-            placeholder="Search Customer Mobile Number Here"
+            placeholder="Customer Mobile Number"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -221,7 +222,7 @@ export const ShoppingCart = ({
               </>
             </div>
             <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
-              {product?.price}
+              {product?.price * product?.quantity}
             </span>
             <span className="col-span-12 xl:col-span-1">
               <FaTrash

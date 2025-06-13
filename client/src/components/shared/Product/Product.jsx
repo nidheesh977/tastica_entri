@@ -3,6 +3,7 @@ import { useProducts } from "../../../hooks/useProducts";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import { useMemo } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
+import { toggleQuantityHandler } from "../../../redux/features/quantitySlice";
 
 export const Product = ({ addProductToInvoice }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export const Product = ({ addProductToInvoice }) => {
     invoice?.products || singleInvoiceOpenOrder?.products;
   const categoryProducts = useMemo(() => {
     let filtered = products?.filter(
-      (product) => product?.category?._id === categoryId,
+      (product) => product?.category?._id === categoryId
     );
 
     if (searchQuery !== "") {
@@ -27,7 +28,7 @@ export const Product = ({ addProductToInvoice }) => {
           product?.product_id?.toLowerCase().includes(query) ||
           product?.costPrice?.toString().includes(query) ||
           product?.sellingPrice?.toString().includes(query) ||
-          product?.discount?.toString().includes(query),
+          product?.discount?.toString().includes(query)
       );
     }
 
@@ -51,6 +52,7 @@ export const Product = ({ addProductToInvoice }) => {
             onClick={() => {
               if (isDisabled) return;
               dispatch(saveSearchQuery(""));
+              dispatch(toggleQuantityHandler());
               addProductToInvoice({ productId: product._id, quantity: 1 });
             }}
             className={`bg-tertiary w-full md:w-56 h-36 text-sm rounded border flex flex-col justify-between p-5 font-semibold ${

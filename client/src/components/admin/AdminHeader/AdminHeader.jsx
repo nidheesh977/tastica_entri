@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { MdReceipt, MdShoppingCart, MdClose } from "react-icons/md";
+import { MdReceipt, MdShoppingCart, MdClose, MdRefresh } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
@@ -46,14 +46,28 @@ export const AdminHeader = () => {
     <nav className="w-full shadow-xl">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
         <div className="flex justify-between items-center">
-          <div
-            onClick={() => dispatch(toggleSideBar())}
-            className="cursor-pointer flex items-center gap-4"
-          >
-            <span className="border border-primary rounded p-2 bg-tertiary hover:bg-orange-50 hover:border-orange-600 ">
+          <div className="cursor-pointer flex items-center gap-4">
+            <span
+              onClick={() => dispatch(toggleSideBar())}
+              className="border border-primary rounded p-2 bg-tertiary hover:bg-orange-50 hover:border-orange-600 "
+            >
               <CgMenuLeft size={20} />
             </span>
-            <img className="w-36 rounded" src={Logo} alt="logo" />
+            <img
+              className="w-36 rounded md:hidden lg:block"
+              src={Logo}
+              alt="logo"
+            />
+            {(location.pathname === "/admin/cart" ||
+              location.pathname.startsWith("/admin/open/orders/data/")) && (
+              <span className="rounded-md shadow-xl items-center p-2 w-full">
+                <MdRefresh
+                  className=" hover:text-orange-600 mx-auto "
+                  size={20}
+                  title="Reset"
+                />
+              </span>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -69,7 +83,7 @@ export const AdminHeader = () => {
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-tertiary  w-full  text-center md:gap-5">
             <li className=" md:border-none cursor-pointer rounded-md relative">
               <input
-                className="border border-primary  px-8 py-2 outline-primary rounded text-black w-[275px] md:w-48 lg:w-80 xl:w-96"
+                className="border border-primary px-8 py-2 outline-primary rounded text-black w-[275px] md:w-52 lg:w-72 xl:w-96"
                 placeholder="Smart Search"
                 type="text"
                 value={searchQuery}

@@ -1,6 +1,6 @@
-import { ShopSignup } from "../../../components/shop/ShopSignup/ShopSignup";
+import { ShopSignup } from "../../../components/superAdmin/ShopSignup/ShopSignup";
 
-export const ShopSignupPage = ({ action = "signup" }) => {
+export const ShopSignupPage = () => {
   return (
     <div>
       <ShopSignup />
