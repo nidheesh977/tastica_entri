@@ -40,6 +40,7 @@ import { SuperAdminLoginPage } from "../pages/superAdmin/SuperAdminLoginPage/Sup
 import { CreateShop } from "../pages/superAdmin/CreateShop/CreateShop";
 import { SuperAdminHome } from "../pages/superAdmin/SuperAdminHome/SuperAdminHome";
 import { CreateStaff } from "../pages/superAdmin/CreateStaff/CreateStaff";
+import { ListShops } from "../pages/superAdmin/ListShops/ListShops";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -260,8 +261,12 @@ export const router = createBrowserRouter([
             element: <CreateShop />,
           },
           {
-            path:"create/staff",
+            path: "create/staff",
             element: <CreateStaff />,
+          },
+          {
+            path: "shops",
+            element: <ListShops />,
           },
         ],
       },
