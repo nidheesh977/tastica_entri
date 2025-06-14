@@ -24,7 +24,7 @@ export const SuperAdminHeader = () => {
     try {
       await axiosInstance({
         method: "POST",
-        url: "/super/admin/logout",
+        url: "/super-admin/logout",
         withCredentials: true,
       });
       dispatch(removeSuperAdminData());
@@ -82,7 +82,7 @@ export const SuperAdminHeader = () => {
 
             <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
               {superAdminName && (
-                <p className="text-xl mx-auto">{superAdminName}</p>
+                <p className="text-md w-24 mx-auto">{superAdminName}</p>
               )}
             </li>
             <li className="w-full rounded-md shadow-xl p-2">

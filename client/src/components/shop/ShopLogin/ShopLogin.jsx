@@ -1,12 +1,32 @@
 import { useState } from "react";
 import { FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useShops } from "../../../hooks/useShops";
+import { axiosInstance } from "../../../config/axiosInstance";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addShopData, removeShopData } from "../../../redux/features/authSlice";
 
 export const ShopLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const { login } = useShops();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (email, password) => {
+    const data = { email, password };
+    try {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/shop/login",
+        withCredentials: true,
+        data,
+      });
+      toast.success("Login success");
+      dispatch(addShopData(response?.data?.data));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to login!");
+      dispatch(removeShopData());
+    }
+  };
 
   return (
     <>
@@ -52,7 +72,7 @@ export const ShopLogin = () => {
         <button
           className="p-4  bg-primary my-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            login({ email, password });
+            handleLogin(email, password);
             setEmail("");
             setPassword("");
           }}

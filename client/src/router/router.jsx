@@ -5,11 +5,11 @@ import { AdminHome } from "../pages/admin/AdminHome/AdminHome";
 import { ProtectedRouteAdmin } from "./ProtectedRouteAdmin";
 import { ProtectedRouteStaff } from "./ProtectedRouteStaff";
 import { ProtectedRouteShop } from "./ProtectedRouteShop";
-import {ProtectedRouteSuperAdmin} from './ProtectedRouteSuperAdmin'
+import { ProtectedRouteSuperAdmin } from "./ProtectedRouteSuperAdmin";
 import { Home } from "../pages/shop/Home/Home";
 import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
-import {SuperAdminLayout} from '../layout/SuperAdminLayout'
+import { SuperAdminLayout } from "../layout/SuperAdminLayout";
 import { Cart } from "../pages/shared/Cart/Cart";
 import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
@@ -36,7 +36,12 @@ import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
 import { OpenOrderCartView } from "../pages/shared/OpenOrderCartView/OpenOrderCartView";
 import { LoyaltyPoints } from "../pages/admin/LoyaltyPoints/LoyaltyPoints";
-import { SuperAdminLoginPage } from '../pages/superAdmin/SuperAdminLoginPage/SuperAdminLoginPage'
+import { SuperAdminLoginPage } from "../pages/superAdmin/SuperAdminLoginPage/SuperAdminLoginPage";
+import { CreateShop } from "../pages/superAdmin/CreateShop/CreateShop";
+import { SuperAdminHome } from "../pages/superAdmin/SuperAdminHome/SuperAdminHome";
+import { CreateStaff } from "../pages/superAdmin/CreateStaff/CreateStaff";
+import { ListShops } from "../pages/superAdmin/ListShops/ListShops";
+import { ListStaffsSuperAdmin } from "../pages/superAdmin/ListStaffsSuperAdmin/ListStaffsSuperAdmin";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -250,15 +255,23 @@ export const router = createBrowserRouter([
         path: "super/admin",
         element: <ProtectedRouteSuperAdmin />,
         children: [
-          { path: "", element: <Home /> },
+          { path: "", element: <SuperAdminHome /> },
 
           {
-            path: "admin/login",
-            element: <AdminLoginPage />,
+            path: "create/shop",
+            element: <CreateShop />,
           },
           {
-            path: "staff/login",
-            element: <StaffLoginPage />,
+            path: "create/staff",
+            element: <CreateStaff />,
+          },
+          {
+            path: "staffs",
+            element: <ListStaffsSuperAdmin />,
+          },
+          {
+            path: "shops",
+            element: <ListShops />,
           },
         ],
       },

@@ -26,7 +26,7 @@ export const SuperAdminLogin = () => {
       });
       toast.success("Login success");
       dispatch(addSuperAdminData(response?.data?.data));
-      navigate("/admin");
+      navigate("/super/admin");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to login");
       dispatch(removeSuperAdminData());
