@@ -116,27 +116,48 @@ export const paymentMethodInvoice = async (req,res) =>{
         const {id} = req.shop;
         const {month,day,method,year} = req.query;
 
-        if(!month || !day || !method || !year){
+
+        if(!month || !day  || !year){
             return res.status(400).json({success:false,message:"All data required"})
         }
         
         let targetDate;
         let endDate; 
+
+        const parseDay = parseInt(day)
                
         const yearGet = String(year).padStart(2,"0")
         const monthGet = String(month).padStart(2,"0")
         const dayOfMonth = String(day).padStart(2,"0")
-        const nextDay = String(day + 1).padStart(2,"0")
+        const nextDay = String(parseDay + 1).padStart(2,"0")
 
 
          targetDate = new Date(`${yearGet}-${monthGet}-${dayOfMonth}`)
          endDate = new Date(`${yearGet}-${monthGet}-${nextDay}`)
+
+    
                     
-            const result = await invoiceModel.aggregate([
-            {$match:{shop:id,invoiceStatus:"paid",$or:[{paymentMethod:method},{paymentStatus:method}],createdAt:{$gte:targetDate,$lt:endDate}}},
-          
-            {$group:{
-                    _id:null,
+        const result = await invoiceModel.aggregate([
+          {$match:{shop:id,invoiceStatus:"paid",paymentMethod:{$in:["cash","internal-device","digital"]},createdAt:{$gte:targetDate,$lt:endDate}}},
+           
+          {$facet:{
+            paymentMethodType:[{
+                    $group:{
+                    _id:"$paymentMethod",
+                    totalAmount:{$sum:"$totalAmount"},
+                    count:{$sum:1}
+                }},
+
+                {$project:{
+                    _id:0,
+                    paymentType:"$_id",
+                    roundedTotalAmount:{$round:["$totalAmount",2]},
+                     count:1,
+                },
+            }],
+            grandTotal:[{
+                  $group:{
+                    _id:0,
                     totalAmount:{$sum:"$totalAmount"},
                     count:{$sum:1}
                 }},
@@ -144,14 +165,21 @@ export const paymentMethodInvoice = async (req,res) =>{
                 {$project:{
                     _id:0,
                     roundedTotalAmount:{$round:["$totalAmount",2]},
-                     count:1,
-                     method
-                }},
-
-                
-             
-        ])          
-     res.status(200).json({success:true,message:"Data fetched successfully",data:result})
+                     count:1
+                },
+          }]
+          }}
+       
+        ])   
+        
+        const data = {
+            paymentMethodType:result[0].paymentMethodType,
+            grandTotal:result[0].grandTotal[0] || {roundedTotalAmount:0,count:0}
+        }
+   
+        
+     res.status(200).json({success:true,message:"Data fetched successfully",data:data})
+     
     }catch(error){
         return res.status(500).json({success:false,message:"Internal server error"})
     }
