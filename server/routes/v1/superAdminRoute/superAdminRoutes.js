@@ -1,8 +1,10 @@
 import express from 'express';
-import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, UpdateStaffBySuperAdmin } from '../../../controller/superAdminController.js';
+import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, UpdateStaffBySuperAdmin} from '../../../controller/superAdminController.js';
 import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
+import { updateStaffPassword } from '../../../controller/commonController/commonController.js';
+
 
 const superAdminRouter = express.Router();
 
@@ -20,6 +22,7 @@ superAdminRouter.post('/create-employee',userVerifyToken,checkUserRole("super-ad
 superAdminRouter.delete('/employee/:id/delete',userVerifyToken,checkUserRole("super-admin"),deleteStaffBySuperAdmin);
 superAdminRouter.put('/employee/:id/update',userVerifyToken,checkUserRole("super-admin"),UpdateStaffBySuperAdmin);
 superAdminRouter.get('/employee/list',userVerifyToken,checkUserRole("super-admin"),getStaffsBySuperAdmin);
+superAdminRouter.patch('/employee/update/:id/password',userVerifyToken,checkUserRole("super-admin"),updateStaffPassword);
 
 
  
