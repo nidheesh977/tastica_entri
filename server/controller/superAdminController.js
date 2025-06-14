@@ -1,6 +1,7 @@
 import AdminStaffModel from "../model/adminAndStaffModel.js";
 import shopModel from "../model/shopModel.js"
 import { comparePassword } from "../utils/comparePassword.js";
+import { otpToken } from "../utils/generateOtpToken.js";
 import { generateToken } from "../utils/generateToken.js";
 import { shopSignupValidtaion, userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation} from "../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
@@ -211,8 +212,9 @@ export const getStaffsBySuperAdmin = async (req,res) => {
     try{
      const {shop} = req.query;
 
-     const shops = await AdminStaffModel.find({shopId:shop,role:{$in:["admin","staff"]}}).sort({role:1})
+     const shops = await AdminStaffModel.find({shopId:shop,role:{$in:["admin","staff"]}}).select("-password").sort({role:1})
 
+    
     res.status(200).json({ success: true, message: "staff data fetched successfully",data:shops });
     }catch(error){
       return res.status(500).json({ success: false, message: "Internal Server Error" }); 

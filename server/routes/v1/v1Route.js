@@ -15,6 +15,7 @@ import loyalityRouter from './loyalityPointRoute/loyalityPointRoutes.js'
 import redeemRouter from "./redeemRoute/redeemRoutes.js";
 import dashBoardRouter from "./dashboardRoute/dashboardRoutes.js";
 import taxRouter from "./taxRoute/taxRoutes.js";
+import passwordResetRouter from "./passwordResetRoute/passwordResetRoute.js";
 
 const v1Router = express.Router();
 
@@ -33,6 +34,7 @@ v1Router.use("/super-admin",superAdminRouter);
 v1Router.use("/loyality",loyalityRouter);
 v1Router.use("/redeem",redeemRouter);
 v1Router.use("/dashboard",dashBoardRouter);
+v1Router.use("/password",passwordResetRouter);
 v1Router.use("/tax",taxRouter);
 
 

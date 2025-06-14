@@ -26,7 +26,7 @@ import mongoose from 'mongoose';
     },
     role:{
         type:String,
-        enum:['superadmin','admin','staff'],
+        enum:['super-admin','admin','staff'],
         default:'staff'
     },
     isAdmin:{
