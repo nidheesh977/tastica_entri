@@ -84,7 +84,7 @@ export const SuperAdminSideBar = () => {
             </li>
             <li
               onClick={() => {
-                handleSideBar("/super/admin/shops");
+                handleSideBar("/super/admin/staffs");
                 dispatch(toggleSideBar());
               }}
               className="bg-tertiary rounded 

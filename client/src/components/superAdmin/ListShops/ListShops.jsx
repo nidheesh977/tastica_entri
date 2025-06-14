@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { useShops } from "../../../hooks/useShops";
+import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 
 export const ListShopCard = () => {
-  const { shops } = useShops();
+  const { shops } = useSuperAdmins();
 
   const searchQuery = useSelector((state) => state?.search);
 
@@ -40,8 +40,12 @@ export const ListShopCard = () => {
             {shopData?.map((shop, index) => (
               <tr key={shop?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
-                <td className="border border-primary px-4 py-2">{shop?.shopName}</td>
-                <td className="border border-primary px-4 py-2">{shop?.email}</td>
+                <td className="border border-primary px-4 py-2">
+                  {shop?.shopName}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {shop?.email}
+                </td>
                 <td className="border border-primary px-4 py-2">
                   {shop?.countryName}
                 </td>

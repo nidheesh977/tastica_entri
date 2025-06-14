@@ -1,15 +1,16 @@
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { validateData } from "../utils/validateData";
 import { useState } from "react";
 import { removeStaffData } from "../redux/features/authSlice";
 
 export const useSuperAdmins = () => {
   const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
+
+  const selectedShopId = useSelector((state) => state?.selectedShopId);
 
   const [error, setError] = useState(null);
   const { data: shops } = useQuery({
@@ -23,12 +24,12 @@ export const useSuperAdmins = () => {
       return response?.data?.data;
     },
   });
-  const { data } = useQuery({
-    queryKey: ["staffs"],
+  const { data: shopStaffs } = useQuery({
+    queryKey: ["shopStaffs"],
     queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
-        url: "/admin/staff/list",
+        url: `/super-admin/employee/list?shop=${selectedShopId}`,
         withCredentials: true,
       });
       return response?.data?.data;
@@ -63,6 +64,38 @@ export const useSuperAdmins = () => {
       dispatch(removeStaffData());
     },
   });
+  const { mutate: createShop } = useMutation({
+    mutationFn: async ({
+      shopName,
+      email,
+      countryName,
+      currencyCode,
+      password,
+    }) => {
+      const data = {
+        shopName,
+        email,
+        countryName,
+        currencyCode,
+        password,
+      };
+
+      await axiosInstance({
+        method: "POST",
+        url: "/super-admin/create-shop",
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Staff created successfully");
+    },
+    onError: () => {
+      toast.error(error?.response?.data?.message || "Failed to create staff!.");
+
+      dispatch(removeStaffData());
+    },
+  });
 
   const { mutate: updateStaff } = useMutation({
     mutationFn: async ({ staffId, userName, email, phoneNumber }) => {
@@ -74,19 +107,17 @@ export const useSuperAdmins = () => {
 
       await axiosInstance({
         method: "PUT",
-        url: `admin/staff/${staffId}`,
+        url: `super-admin/employee/${staffId}id/update`,
         withCredentials: true,
         data,
       });
     },
     onSuccess: () => {
       toast.success("Staff updated successfully!");
-      queryClient.invalidateQueries(["staffs"]);
+      queryClient.invalidateQueries(["shopDStaffs"]);
     },
     onError: () => {
-      toast.error(
-        error?.response?.data?.message || "Failed to update staff data!"
-      );
+      toast.error(error?.response?.data?.message || "Failed to update staff!");
     },
   });
 
@@ -94,7 +125,7 @@ export const useSuperAdmins = () => {
     mutationFn: async (staffId) => {
       axiosInstance({
         method: "DELETE",
-        url: `/admin/staff/${staffId}`,
+        url: `/super-admin/employee/${staffId}/delete`,
         withCredentials: true,
       });
     },
@@ -108,8 +139,9 @@ export const useSuperAdmins = () => {
   });
 
   return {
+    createShop,
     shops,
-    staffs: data,
+    shopStaffs,
     createStaff,
     updateStaff,
     deleteStaff,

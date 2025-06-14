@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdStorefront } from "react-icons/md";
 import { SuperAdminSideBar } from "../../superAdmin/SuperAdminSideBar/SuperAdminSideBar";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 
 export const ShopCreateCard = () => {
   const [shopName, setShopName] = useState("");
@@ -10,7 +11,7 @@ export const ShopCreateCard = () => {
   const [currencyCode, setCurrencyCode] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-
+  const { createShop } = useSuperAdmins();
   return (
     <>
       <SuperAdminSideBar />
@@ -80,7 +81,23 @@ export const ShopCreateCard = () => {
             </button>
           </div>
 
-          <button className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg">
+          <button
+            onClick={() => {
+              createShop({
+                shopName,
+                email,
+                currencyCode,
+                countryName,
+                password,
+              });
+              setCountryName("");
+              setCurrencyCode("");
+              setPassword("");
+              setEmail("");
+              setShopName("");
+            }}
+            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
+          >
             <span className="flex items-center justify-center gap-2 font-semibold">
               Create Shop <MdStorefront />
             </span>

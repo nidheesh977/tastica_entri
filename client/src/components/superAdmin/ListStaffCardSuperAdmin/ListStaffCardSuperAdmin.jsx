@@ -3,19 +3,22 @@ import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { useSelector } from "react-redux";
-import { useAdmins } from "../../../hooks/useAdmins";
+import { useDispatch, useSelector } from "react-redux";
+import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
+import { saveSelectedShopId } from "../../../redux/features/selectedShopSlice";
 
-export const ListCardStaff = () => {
+export const ListStaffCardSuperAdmin = () => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const { staffs, updateStaff, deleteStaff } = useAdmins();
+  const [shopId, setShopId] = useState("");
+  const { shops, shopStaffs, updateStaff, deleteStaff } = useSuperAdmins();
   const searchQuery = useSelector((state) => state?.search);
+  const dispatch = useDispatch();
 
-  const staffData = staffs?.filter((staff) => {
+  const staffData = shopStaffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
 
     return (
@@ -24,13 +27,37 @@ export const ListCardStaff = () => {
       staff?.phoneNumber.toString().toLowerCase().includes(query)
     );
   });
+  
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
-        <h1 className="font-thin text-start md:col-span-8 text-3xl my-6 text-primary">
-          Staffs
-        </h1>
+        <div className="flex justify-between items-center  font-thin text-start md:col-span-12 text-3xl my-6 text-primary">
+          <div>Staffs</div>
+
+          <select
+            value={shopId}
+            onChange={(e) => {
+              const selectedValue = e.target.value;
+              setShopId(selectedValue);
+              dispatch(saveSelectedShopId(selectedValue));
+            }}
+            className=" rounded p-2 text-lg border border-primary my-1  bg-tertiary text-primary shadow-2xl outline-primary"
+          >
+            <option className="bg-white" value="">
+              Select a shop
+            </option>
+            {shops?.map((shop) => (
+              <option
+                className="bg-tertiary text-primary"
+                key={shop?._id}
+                value={shop?._id}
+              >
+                {shop?.shopName}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="overflow-auto h-96 pb-10">
@@ -41,7 +68,6 @@ export const ListCardStaff = () => {
               <th className="border border-primary px-4 py-2">Name</th>
               <th className="border border-primary px-4 py-2">Email</th>
               <th className="border border-primary px-4 py-2">Mobile</th>
-              <th className="border border-primary px-4 py-2">Shop Name</th>
               <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
@@ -82,7 +108,7 @@ export const ListCardStaff = () => {
                     staff?.phoneNumber
                   )}
                 </td>
-                <td className="border border-primary px-4 py-2">{staff?.shopName}</td>
+                
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
                     {editId === staff._id ? (
