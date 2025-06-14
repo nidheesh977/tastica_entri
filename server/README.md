@@ -318,3 +318,7 @@
 - super admin list employee
 **method**`GET` <br>
 **URL**`/api/v1/super-admin/employee/list?shop=id`
+
+- 🧑‍💼🗑 "super admin Update staff password"
+  **method:** `Patch`<br>
+  **URL:** `/api/v1/super-admin/employee/update/:id/password`
