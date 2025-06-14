@@ -2,8 +2,6 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { validateData } from "../utils/validateData";
-import { useState } from "react";
 import { removeStaffData } from "../redux/features/authSlice";
 
 export const useSuperAdmins = () => {
@@ -12,7 +10,6 @@ export const useSuperAdmins = () => {
 
   const selectedShopId = useSelector((state) => state?.selectedShopId);
 
-  const [error, setError] = useState(null);
   const { data: shops } = useQuery({
     queryKey: ["shops"],
     queryFn: async () => {
@@ -25,8 +22,9 @@ export const useSuperAdmins = () => {
     },
   });
   const { data: shopStaffs } = useQuery({
-    queryKey: ["shopStaffs"],
+    queryKey: ["shopStaffs", selectedShopId],
     queryFn: async () => {
+      if (!selectedShopId) return [];
       const response = await axiosInstance({
         method: "GET",
         url: `/super-admin/employee/list?shop=${selectedShopId}`,
@@ -37,15 +35,21 @@ export const useSuperAdmins = () => {
   });
 
   const { mutate: createStaff } = useMutation({
-    mutationFn: async ({ userName, email, phoneNumber, password }) => {
-      const error = validateData(userName, email, phoneNumber, password);
-
-      setError(error);
+    mutationFn: async ({
+      userName,
+      email,
+      phoneNumber,
+      password,
+      shopId,
+      role,
+    }) => {
       const data = {
         userName,
         email,
         phoneNumber,
         password,
+        shopId,
+        role,
       };
 
       await axiosInstance({
@@ -57,8 +61,9 @@ export const useSuperAdmins = () => {
     },
     onSuccess: () => {
       toast.success("Staff created successfully");
+      queryClient.invalidateQueries(["shopStaffs"]);
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to create staff!.");
 
       dispatch(removeStaffData());
@@ -75,8 +80,8 @@ export const useSuperAdmins = () => {
       const data = {
         shopName,
         email,
-        countryName,
-        currencyCode,
+        countryName: countryName.charAt(0).toUpperCase() + countryName.slice(1),
+        currencyCode: currencyCode.toUpperCase(),
         password,
       };
 
@@ -88,10 +93,11 @@ export const useSuperAdmins = () => {
       });
     },
     onSuccess: () => {
-      toast.success("Staff created successfully");
+      toast.success("Shop created successfully");
+      queryClient.invalidateQueries(["shops"]);
     },
-    onError: () => {
-      toast.error(error?.response?.data?.message || "Failed to create staff!.");
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to create shop!.");
 
       dispatch(removeStaffData());
     },
@@ -116,7 +122,7 @@ export const useSuperAdmins = () => {
       toast.success("Staff updated successfully!");
       queryClient.invalidateQueries(["shopDStaffs"]);
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to update staff!");
     },
   });
@@ -131,9 +137,10 @@ export const useSuperAdmins = () => {
     },
     onSuccess: () => {
       toast.success("Staff deleted successfully!");
-      queryClient.invalidateQueries(["staffs"]);
+      queryClient.invalidateQueries(["shopStaffs"]);
+      queryClient.invalidateQueries(["shops",selectedShopId]);
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to delete staff.");
     },
   });

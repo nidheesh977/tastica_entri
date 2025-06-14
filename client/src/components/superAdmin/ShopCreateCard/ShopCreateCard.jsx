@@ -38,7 +38,7 @@ export const ShopCreateCard = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              className="p-4 w-4/12 bg-white outline-primary"
+              className="p-4 w-full bg-white outline-primary"
             />
           </div>
           <div className="flex items-center justify-between  w-full  my-1">

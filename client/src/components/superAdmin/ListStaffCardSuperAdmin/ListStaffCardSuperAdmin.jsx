@@ -27,7 +27,6 @@ export const ListStaffCardSuperAdmin = () => {
       staff?.phoneNumber.toString().toLowerCase().includes(query)
     );
   });
-  
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -108,7 +107,7 @@ export const ListStaffCardSuperAdmin = () => {
                     staff?.phoneNumber
                   )}
                 </td>
-                
+
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
                     {editId === staff._id ? (
