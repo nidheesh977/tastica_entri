@@ -20,7 +20,7 @@ export const StaffHeader = () => {
   const navigate = useNavigate();
   const staffName = useSelector((state) => state?.auth?.staffData?.userName);
   const searchQuery = useSelector((state) => state?.search);
-  const { savedInvoices } = useInvoices();
+  const { savedInvoices, clearInvoice } = useInvoices();
   const location = useLocation();
 
   const handleLogout = async () => {
@@ -60,7 +60,7 @@ export const StaffHeader = () => {
             />
             {(location.pathname === "/staff" ||
               location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <span className="rounded-md shadow-xl items-center p-2 w-full">
+              <span className="rounded-md shadow-xl items-center p-2 w-full" onClick={()=>clearInvoice()}>
                 <MdRefresh
                   className=" hover:text-orange-600 mx-auto"
                   size={20}

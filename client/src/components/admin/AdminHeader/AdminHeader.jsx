@@ -61,9 +61,11 @@ export const AdminHeader = () => {
             />
             {(location.pathname === "/admin/cart" ||
               location.pathname.startsWith("/admin/open/orders/data/")) && (
-              <span className="rounded-md shadow-xl items-center p-2 w-full">
+              <span
+                className="rounded-md shadow-xl items-center p-2 w-full"
+                onClick={() => clearInvoice()}
+              >
                 <MdRefresh
-                  onClick={()=> clearInvoice()}
                   className=" hover:text-orange-600 mx-auto "
                   size={20}
                   title="Reset"
