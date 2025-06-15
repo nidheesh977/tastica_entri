@@ -7,7 +7,6 @@ import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
-import { saveSingleInvoice } from "../../../redux/features/singleInvoiceSlice";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -23,7 +22,6 @@ export const ShoppingCart = ({
     saveInvoice,
     redeemPoints,
     invoice,
-    clearInvoice,
   } = useInvoices();
 
   const { loyaltyPoints } = useLoyaltyPoints();
