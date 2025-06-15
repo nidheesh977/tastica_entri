@@ -7,6 +7,7 @@ import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
+import { saveSingleInvoice } from "../../../redux/features/singleInvoiceSlice";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -22,6 +23,7 @@ export const ShoppingCart = ({
     saveInvoice,
     redeemPoints,
     invoice,
+    clearInvoice,
   } = useInvoices();
 
   const { loyaltyPoints } = useLoyaltyPoints();
@@ -58,7 +60,7 @@ export const ShoppingCart = ({
         setIsNewCustomer(true);
       }
     }
-  }, [searchQuery, customers]);
+  }, [searchQuery, customers, invoice]);
 
   const resetBillingState = () => {
     setCustomerName("");
@@ -93,7 +95,8 @@ export const ShoppingCart = ({
 
   useEffect(() => {
     return () => {
-      window.location.reload();
+      resetBillingState();
+      saveInvoice();
     };
   }, []);
 
@@ -104,7 +107,6 @@ export const ShoppingCart = ({
           {!isNewCustomer && (
             <h1 className="font-bold flex gap-2 text-xl items-center">
               <MdShoppingCart className="text-primary" size={35} /> Cart
-              
             </h1>
           )}
           <input
