@@ -322,3 +322,19 @@
 - 🧑‍💼🗑 "super admin Update staff password"
   **method:** `Patch`<br>
   **URL:** `/api/v1/super-admin/employee/update/:id/password`
+
+- ## password reset  💼💼 <br>
+
+-  send otp
+**method**`POST` <br>
+**URL**`/api/v1/password/otp`
+
+
+-  verify otp
+**method**`POST` <br>
+**URL**`/api/v1/password/otp/verify`
+
+
+-  reset password
+**method**`POST` <br>
+**URL**`/api/v1/password/reset`

@@ -7,7 +7,9 @@ import { updateStaffPassword } from '../../../controller/commonController/common
 
 
 
+
 const adminRouter = express.Router();
+
 
 adminRouter.post('/login',shopVerifyToken,loginAdmin);
 
@@ -19,6 +21,7 @@ adminRouter.put('/staff/:id',shopVerifyToken,userVerifyToken,checkUserRole("admi
 adminRouter.patch('/staff/:id/password',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateStaffPassword);
 adminRouter.post('/logout',shopVerifyToken,userVerifyToken,checkUserRole("admin"),logOutAdmin);
 adminRouter.get('/check-logged',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkAdminLogin);
+
 
  
 export default adminRouter;

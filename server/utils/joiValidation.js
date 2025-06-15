@@ -365,3 +365,50 @@ export const newCustomProductValidation = Joi.object({
     }),
 
 });
+
+
+export const otpSendEmailValidation = Joi.object({
+     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Email is required',
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Email must be a valid email address',
+
+    }),
+})
+
+
+export const otpSendEmailAndPasswordValidation = Joi.object({
+     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Email is required',
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Email must be a valid email address',
+        }),
+    password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+        'string.required': 'Password is required',
+        'string.base': 'Password must be a string',
+        'string.empty': 'Password cannot be empty',
+        'string.min': 'Password must be at least 8 characters long',
+        'string.max': 'Password must be at most 20 characters long',
+        'string.pattern.base': 'Password must contain only letters, numbers or characters',
+    }),
+    
+})
+
+
+export const otpVerification = Joi.object({
+     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Email is required',
+        'string.base': 'Email must be a string',
+        'string.empty': 'Email cannot be empty',
+        'string.email': 'Email must be a valid email address',
+        }),
+   otp: Joi.string().max(6).required().messages({
+        'string.required': 'OTP is required',
+        'string.base': 'OTP must be a string',
+        'string.empty': 'OTP cannot be empty',
+        'string.max': 'OTP must be at most 6 characters long',       
+   })
+    
+})
