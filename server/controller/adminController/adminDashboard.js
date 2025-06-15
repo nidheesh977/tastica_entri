@@ -117,33 +117,56 @@ export const paymentMethodInvoice = async (req,res) =>{
         const {month,day,method,year} = req.query;
 
 
-        if(!month || !day  || !year){
-            return res.status(400).json({success:false,message:"All data required"})
-        }
+     
+
+        const y = parseInt(year)
+        const m = parseInt(month)
+        const d = parseInt(day)
         
-        let targetDate;
+        let startDate;
         let endDate; 
+        if(y && m && d ){
+            startDate = new Date(y,  m - 1, d)
+            endDate = new Date(y , m - 1 , d + 1)
+        }else if(y && m){
+            startDate = new Date(y, m - 1, 1)
+            endDate = new Date(y , m, 1)
+        }
+        else if(y){
+            startDate = new Date(y,  0, 1)
+            endDate = new Date(y + 1,  0, 1)
+        }else{
+            startDate = new Date( new Date.getFullYear(), 0 , 1)
+            endDate = new Date( new Date.getFullYear() + 1, 0 , 1)
+         
+        }
 
-        const parseDay = parseInt(day)
-               
-        const yearGet = String(year).padStart(2,"0")
-        const monthGet = String(month).padStart(2,"0")
-        const dayOfMonth = String(day).padStart(2,"0")
-        const nextDay = String(parseDay + 1).padStart(2,"0")
 
 
-         targetDate = new Date(`${yearGet}-${monthGet}-${dayOfMonth}`)
-         endDate = new Date(`${yearGet}-${monthGet}-${nextDay}`)
+       const groupId = {
+        paymentMethod:"$paymentMethod"
+       }
 
+       if(!day && !month){
+        groupId.year = {$year:"$createdAt"}
+       }else if(!day && month){
+        groupId.year = {$year:"$createdAt"}
+        groupId.month = {$month:"$createdAt"}
+       }else if(day){
+        groupId.year = {$year:"$createdAt"}
+        groupId.month = {$month:"$createdAt"}
+        groupId.day = {$dayOfMonth:"$createdAt"}
+
+       }
     
                     
         const result = await invoiceModel.aggregate([
-          {$match:{shop:id,invoiceStatus:"paid",paymentMethod:{$in:["cash","internal-device","digital"]},createdAt:{$gte:targetDate,$lt:endDate}}},
+          {$match:{shop:id,invoiceStatus:"paid",paymentMethod:{$in:["cash","internal-device","digital"]},createdAt:{$gte:startDate,$lt:endDate}}},
            
           {$facet:{
-            paymentMethodType:[{
+            yearly:[{
                     $group:{
-                    _id:"$paymentMethod",
+                    _id:groupId,
                     totalAmount:{$sum:"$totalAmount"},
                     count:{$sum:1}
                 }},
@@ -157,7 +180,7 @@ export const paymentMethodInvoice = async (req,res) =>{
             }],
             grandTotal:[{
                   $group:{
-                    _id:0,
+                    _id:"$_id.year",
                     totalAmount:{$sum:"$totalAmount"},
                     count:{$sum:1}
                 }},
@@ -167,20 +190,26 @@ export const paymentMethodInvoice = async (req,res) =>{
                     roundedTotalAmount:{$round:["$totalAmount",2]},
                      count:1
                 },
-          }]
+          }],
+
+              
+
+// 
           }}
        
         ])   
         
         const data = {
-            paymentMethodType:result[0].paymentMethodType,
+          year:{  yearly:result[0].yearly,
             grandTotal:result[0].grandTotal[0] || {roundedTotalAmount:0,count:0}
+            },
         }
    
         
      res.status(200).json({success:true,message:"Data fetched successfully",data:data})
      
     }catch(error){
+        console.log(error)
         return res.status(500).json({success:false,message:"Internal server error"})
     }
 }
