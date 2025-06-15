@@ -4,13 +4,14 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { addShopData, removeShopData } from "../../../redux/features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export const ShopLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleLogin = async (email, password) => {
     const data = { email, password };
     try {
@@ -21,6 +22,7 @@ export const ShopLogin = () => {
         data,
       });
       toast.success("Login success");
+      navigate('/shop')
       dispatch(addShopData(response?.data?.data));
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to login!");

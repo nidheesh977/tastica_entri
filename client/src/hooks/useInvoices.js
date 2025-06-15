@@ -63,6 +63,7 @@ export const useInvoices = (customerId = null) => {
 
   const { mutate: saveInvoice } = useMutation({
     mutationFn: async () => {
+      if (!invoiceId) return;
       const response = await axiosInstance({
         method: "PATCH",
         url: `/invoice/${invoiceId}`,
@@ -162,6 +163,30 @@ export const useInvoices = (customerId = null) => {
       toast.error(
         error?.response?.data?.message || "Failed to add product to invoice"
       );
+    },
+  });
+  const { mutate: clearInvoice } = useMutation({
+    mutationFn: async () => {
+      const idToClear = invoiceId || singleInvoiceId;
+      if (!idToClear) return;
+
+      await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${idToClear}/clear`,
+        withCredentials: true,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Invoice cleared");
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+      queryClient.invalidateQueries([
+        "singleInvoiceOpenOrder",
+        singleInvoiceId,
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to clear invoice");
     },
   });
   const { mutate: addProductToInvoiceOpenOrder } = useMutation({
@@ -468,5 +493,6 @@ export const useInvoices = (customerId = null) => {
     invoice,
     redeemPointsOpenOrder,
     deleteOpenOrder,
+    clearInvoice,
   };
 };

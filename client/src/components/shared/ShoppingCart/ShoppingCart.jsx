@@ -58,7 +58,7 @@ export const ShoppingCart = ({
         setIsNewCustomer(true);
       }
     }
-  }, [searchQuery, customers]);
+  }, [searchQuery, customers, invoice]);
 
   const resetBillingState = () => {
     setCustomerName("");
@@ -93,7 +93,8 @@ export const ShoppingCart = ({
 
   useEffect(() => {
     return () => {
-      window.location.reload();
+      resetBillingState();
+      saveInvoice();
     };
   }, []);
 
@@ -104,7 +105,6 @@ export const ShoppingCart = ({
           {!isNewCustomer && (
             <h1 className="font-bold flex gap-2 text-xl items-center">
               <MdShoppingCart className="text-primary" size={35} /> Cart
-              
             </h1>
           )}
           <input
