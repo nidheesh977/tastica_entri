@@ -277,7 +277,10 @@
 
 -  get payment method total
 **method**`GET` <br>
-**URL**`/api/v1/dashboard/invoice/payment-method`
+**URL**`/api/v1/dashboard/invoice/payment-method?year=2025` 
+**URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6`
+**URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6&day=10`
+
 
 
 - ## super Admin  💼💼 <br>
