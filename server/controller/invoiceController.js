@@ -6,7 +6,7 @@ import invoiceModel from '../model/invoiceModel.js';
 import loyalityPointModel from '../model/loyalityPointModel.js';
 import productModel from '../model/productModel.js';
 import { calculateDiscount} from '../utils/calculateInvoice.js';
-import { generateInvoiceId } from '../utils/generateInvoiceId.js';
+import { generateId } from '../utils/generateId.js';
 
 
 export const createNewInvoiceTab = async (req,res) => {
@@ -41,7 +41,7 @@ export const createNewInvoiceTab = async (req,res) => {
       let invoiceId;
 
       do {
-         invoiceId = generateInvoiceId()
+         invoiceId = generateId("INVO")
       } while (await invoiceModel.findOne({invoiceNumber:invoiceId}));
 
         const newInvoice =  invoiceModel({

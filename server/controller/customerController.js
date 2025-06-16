@@ -1,16 +1,18 @@
 import customerModel from "../model/customerModel.js";
-import { generateCustomerId } from "../utils/generateCustomerId.js";
+import { generateId } from "../utils/generateId.js";
 import { customerValidation } from "../utils/joiValidation.js";
 import loyalityPointModel from "../model/loyalityPointModel.js"
 
 export const createCustomer = async (req,res) => {
-    try{
-       const {error,value} = customerValidation.validate(req.body);
+
+    const {error,value} = customerValidation.validate(req.body);
 
        if(error){
         return res.status(400).json({ message: error.details[0].message });
        }
 
+    try{
+      
        const {customerName,phoneNumber} = value;
        const shopId = req.shop.id;
    
@@ -25,14 +27,14 @@ export const createCustomer = async (req,res) => {
       let customerId;
 
       do {
-         customerId = generateCustomerId()
+         customerId = generateId("CUS")
       } while (await customerModel.findOne({customerId:customerId}));
 
-   
+      const lowerCaseCustomerName = customerName.toLowerCase()
 
        const newCustomer = new customerModel({
         customerId,
-        customerName,
+        customerName:lowerCaseCustomerName,
         phoneNumber,
         shopId
        })
@@ -40,6 +42,7 @@ export const createCustomer = async (req,res) => {
        await newCustomer.save()
        res.status(201).json({success:true,message:"customer created successfully"});    
     }catch(error){
+      console.log(error)
        return res.status(500).json({success:false,message:"Internal Server Error"})
     }
 }

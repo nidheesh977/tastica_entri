@@ -2,7 +2,7 @@ import csv from 'csv-parser';
 import fs from 'fs';
 import categoryModel from '../../model/categoryModel.js';
 import shopModel from '../../model/shopModel.js';
-import { generateCategoryId } from '../../utils/generateCategoryId.js';
+import { generateId } from '../../utils/generateId.js';
 
 
 export const categoryFileUploader = async (req, res) => {
@@ -59,7 +59,7 @@ export const categoryFileUploader = async (req, res) => {
                           let categoryId;
                                               
                            do {
-                              categoryId = generateCategoryId()
+                              categoryId = generateId("CATE")
                                } while (await categoryModel.findOne({category_id:categoryId}));
                                                      
 
@@ -122,7 +122,6 @@ export const categoryFileUploader = async (req, res) => {
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
-
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

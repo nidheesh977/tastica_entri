@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+const staffPermissions = ["product_read","product_update","product_delete","product_create","category_read","category_update","category_delete","category_create","customer_read","customer_update","customer_delete","customer_create"]
 
  const userSchema = mongoose.Schema({
     userName:{
@@ -39,7 +40,7 @@ import mongoose from 'mongoose';
     },
     permissions:{
         type:[String],
-        enum:["product_read","product_update","product_delete","product_create","category_read","category_update","category_delete","category_create","customer_read","customer_update","customer_delete","customer_create"],
+        enum:staffPermissions,
         default:["product_read","category_read"]
     }
     

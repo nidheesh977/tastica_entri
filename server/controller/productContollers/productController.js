@@ -1,5 +1,5 @@
 import productModel from "../../model/productModel.js";
-import { generateProductId } from "../../utils/generateProductId.js";
+import { generateId } from "../../utils/generateId.js";
 import {newProductValidation,updateProductValidation} from "../../utils/joiValidation.js";
 
 // ---------------------------------------- Create a new product -------------------------------------------
@@ -55,7 +55,7 @@ export const createProduct = async (req, res) => {
              let productId;
        
              do {
-              productId = generateProductId()
+              productId = generateId("PROD")
              } while (await productModel.findOne({product_id:productId}));
        
         const newProduct = new productModel({

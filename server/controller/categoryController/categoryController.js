@@ -1,5 +1,5 @@
 import categoryModel from '../../model/categoryModel.js'
-import { generateCategoryId } from '../../utils/generateCategoryId.js';
+import { generateId } from '../../utils/generateId.js';
 import { updateCategoryValidation, newCategoryValidation } from '../../utils/joiValidation.js';
 
 // --------------------------------------- create category -----------------------------------------------------
@@ -38,7 +38,7 @@ export const createCategory = async (req, res) => {
                 let categoryId;
                      
                  do {
-                      categoryId = generateCategoryId()
+                      categoryId = generateId("CATE")
                      } while (await categoryModel.findOne({category_id:categoryId}));
         
             

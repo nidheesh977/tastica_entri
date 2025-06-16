@@ -3,7 +3,7 @@ import fs from 'fs';
 import productModel from '../../model/productModel.js';
 import categoryModel from '../../model/categoryModel.js';
 import shopModel from '../../model/shopModel.js';
-import { generateProductId } from '../../utils/generateProductId.js';
+import { generateId } from '../../utils/generateId.js';
 
 export const productsFileUploader = async (req, res) => {
     try {
@@ -82,7 +82,7 @@ export const productsFileUploader = async (req, res) => {
                         let productId;
                                
                         do {
-                            productId = generateProductId()
+                            productId = generateId("PROD")
                             } while (await productModel.findOne({product_id:productId}));
                                
 

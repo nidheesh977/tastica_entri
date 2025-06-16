@@ -322,10 +322,11 @@ export const updateCategoryValidation = Joi.object({
 
 export const customerValidation = Joi.object({
     customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).messages({
-        'string.base': 'Category name must be a string',
-        'string.min': 'Category name must be at least 3 characters long',
-        'string.max': 'Category name must be at most 30 characters long',
-        'string.pattern.base': 'Username can contain only letters',   
+        'string.base': 'User name must be a string',
+        'string.empty': 'User number cannot be empty',
+        'string.min': 'User name must be at least 3 characters long',
+        'string.max': 'User name must be at most 30 characters long',
+        'string.pattern.base': 'User name can contain only letters',   
     }),
      phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
