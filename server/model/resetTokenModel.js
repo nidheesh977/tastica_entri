@@ -17,6 +17,6 @@ const otpSchema = new mongoose.Schema({
     },
 },{timestamps:true})
 
-const otpTokenModel = mongoose.model("Otp",otpSchema);
+const resetTokenModel = mongoose.model("tokenReset",otpSchema);
 
-export default otpTokenModel
+export default resetTokenModel
