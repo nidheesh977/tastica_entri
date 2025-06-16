@@ -167,7 +167,7 @@ export const SalesPerformance = () => {
           className=" flex justify-between px-4 text-tertiary text-center font-bold py-2"
         >
           Year
-          <span>{year}</span>
+          <span>{customYear}</span>
           <input
             className="accent-white border border-tertiary text-center"
             style={{ background: `${light}` }}

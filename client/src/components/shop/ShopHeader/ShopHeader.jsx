@@ -24,6 +24,7 @@ export const ShopHeader = () => {
         withCredentials: true,
       });
       toast.success("Logout success");
+      dispatch(removeShopData())
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
