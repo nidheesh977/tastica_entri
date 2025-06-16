@@ -113,7 +113,7 @@ export const useSuperAdmins = () => {
 
       await axiosInstance({
         method: "PUT",
-        url: `super-admin/employee/${staffId}id/update`,
+        url: `super-admin/employee/${staffId}/update`,
         withCredentials: true,
         data,
       });
