@@ -1,10 +1,9 @@
 import express from'express';
-import { resetPassword, sendResetLink, verifyOtp } from '../../../controller/commonController/commonController.js';
+import { resetPassword, sendResetLink} from '../../../controller/commonController/commonController.js';
 
 const passwordResetRouter = express.Router();
 
 passwordResetRouter.post('/reset-link',sendResetLink);
-passwordResetRouter.post('/otp/verify',verifyOtp);
-passwordResetRouter.post('/reset',resetPassword);
+passwordResetRouter.post('/reset/:token',resetPassword);
 
 export default passwordResetRouter;

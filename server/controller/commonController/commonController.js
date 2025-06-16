@@ -1,6 +1,6 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
-import otpTokenModel from "../../model/otpTokenModel.js";
-import { otpSendEmailAndPasswordValidation, otpSendEmailValidation, otpVerification, userPasswordValidation } from "../../utils/joiValidation.js";
+import resetTokenModel from "../../model/resetTokenModel.js";
+import { resetPasswordValidation, resetSendEmailValidation, userPasswordValidation } from "../../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
 import { nodeMailerTransporter } from "../../utils/nodeMailerTransporter.js";
 import {v4 as uuidv4 } from "uuid"
@@ -50,7 +50,7 @@ export const sendResetLink = async (req,res) => {
   try{
 
     // Validate body data
-     const { error, value } = otpSendEmailValidation.validate(req.body);
+     const { error, value } = resetSendEmailValidation.validate(req.body);
      
      // Data error 
         if (error) {
@@ -59,7 +59,7 @@ export const sendResetLink = async (req,res) => {
     
     const {email} = value;
 
-    // Generate otp 
+    // Generate Token 
     const resetToken = uuidv4();
 
     // Check user exist
@@ -70,41 +70,30 @@ export const sendResetLink = async (req,res) => {
       return res.status(400).json({success:false,message:"User not found"})
     }
 
-    console.log(resetToken)
 
     
-    
-     // To set OTP expire time 5m 
+     // To set Token expire time 5m 
      const expireDate = new Date(Date.now() + 5 * 60 * 1000);
 
     // Create transporter for send email 
       const transporter = nodeMailerTransporter()
 
-    // Delete existing OTP of this user
-      await otpTokenModel.deleteMany({userId:findUser._id})
+    // Delete existing Token of this user
+      await resetTokenModel.deleteMany({userId:findUser._id})
 
-    //  create a new OTP
-     const newOtp = new otpTokenModel({resetToken,expiresAt:expireDate,userId:findUser._id})
+    //  create a new Token
+     const newOtp = new resetTokenModel({resetToken,expiresAt:expireDate,userId:findUser._id})
      await newOtp.save()
 
      const resetLink = `${process.env.ADMIN_SUCCESS_URL}?reset=${resetToken}`
 
-     console.log(resetLink)
-     
-    // send OTP to email
-    await transporter.sendMail({
-      from:process.env.NODE_GMAIL_SENDER,
-      to:email,
-      subject:"Password Reset Request",
-      html:`<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
+     const html = `<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
                   <h2 style="color:#007bff;">${findUser.role} Password Reset Request </h2>
                   <p>Hello ${findUser.userName} </p>
                   <p>You requested a password reset for your ${findUser.role} account</p>
                   <p style="text-align:center>
 
-                    
-
-                    <a href="${resetLink}">
+                    <a href="${resetLink}" >
                     Reset Password
                     </a>
 
@@ -117,96 +106,71 @@ export const sendResetLink = async (req,res) => {
                  © ${new Date().getFullYear()} zensettle ${findUser.role} panel. All rights reserved.
                   </p>
             </div>`
+     
+    // send OTP to email
+    await transporter.sendMail({
+      from:process.env.NODE_GMAIL_SENDER,
+      to:email,
+      subject:"Password Reset Request",
+      html:html
     })
     
    
-    res.status(200).json({success:true,message:"Otp send successfully",data:email})
+    res.status(200).json({success:true,message:"Reset link send successfully"})
   }catch(error){
     console.log(error)
     return res.status(500).json({success:false,message:"Internal server error"})
   }
 }
 
-// ----------------------------------------------------verify OTP-------------------------------------------------
 
-export const verifyOtp = async (req,res) => {
-  try{
 
-    // Validate body data
-     const { error, value } = otpVerification.validate(req.body);
-     
-     // Data error 
-        if (error) {
-          return res.status(400).json({ message: error.details[0].message });
-        }
-   
-      const {otp,email} = value;
-
-      if(!otp){
-        return res.status(400).json({success:false,message:"otp not empty"})
-      }
-
-      // Check OTP exist
-      const findRecord = await otpTokenModel.findOne({email:email})
-
-      if(!findRecord){
-        return res.status(400).json({success:false,message:"Otp expired or not found"})
-      }
-
-      // Check OTP expire time
-      if(findRecord.expiresAt < new Date()){
-        await otpTokenModel.deleteMany({email})
-          return res.status(400).json({success:false,message:"OTP has expired"})
-      }
-
-      // Compare hashed OTP
-      const isMatch = await bcryptjs.compare(otp,findRecord.otp)
-
-      if(!isMatch){
-        return res.status(400).json({success:false,message:"Invalid OTP"})
-      }
-
-      // Compare OTP true delete otp from DB
-      await otpTokenModel.deleteMany({email})
-
-      res.status(200).json({success:true,message:"OTP verified",data:email})
-
-  }catch(error){
-     return res.status(500).json({success:false,message:"Internal server error"})
-  }
-}
 
 // ------------------------------------------------- Reset password -----------------------------------------------
 
 export const resetPassword = async (req, res) => {
-  try {
 
     // Validate body data
-    const { error, value } = otpSendEmailAndPasswordValidation.validate(req.body);
+    const { error, value } = resetPasswordValidation.validate(req.body);
 
    // Data error 
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
- 
- 
-    const { password,email } = value;
 
-    // Check user Exist
-    const userExist = await AdminStaffModel.findOne({email:email});
+  try {
 
-    if (!userExist) {
-      return res.status(400).json({ success: true, message: "User not found" });
+    const { password} = value;
+    const {token} = req.params;
+
+    const resetToken = await resetTokenModel.findOne({resetToken:token})
+
+    
+
+    if(!resetToken || resetToken.expiresAt < new Date()){
+      await resetTokenModel.deleteMany({resetToken:token})
+      return res.status(400).json({success:false,message:"Invalid or expired reset link"})
     }
 
-    // Hashing the password
-    userExist.password = await bcryptjs.hash(password, 10);
 
-    // Save hashed password
-    await userExist.save()
+    const user = await AdminStaffModel.findOne({_id:resetToken.userId})
+
+
+    if(!user){
+      return res.status(400).json({success:false,message:"User not found"})
+    }
+
+    
+    user.password = await bcryptjs.hash(password,10)
+
+    await user.save()
+
+    await resetTokenModel.deleteMany({userId:user._id})
+  
     res.status(200).json({ success: true, message: "User password updated successfully"});
 
   } catch (error) {
+  
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
