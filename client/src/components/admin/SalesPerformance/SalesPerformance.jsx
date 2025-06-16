@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 
 import { dark, medium, light } from "../../../utils/constants";
+import { useDashboard } from "../../../hooks/useDashboard";
 
 export const SalesPerformance = () => {
   const [date, setDate] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(0);
+  const [customYear, setCustomYear] = useState(0);
   const [month, setMonth] = useState("");
+  const [customMonth, setCustomMonth] = useState("");
   const [day, setDay] = useState("");
-  const [method, setMethod] = useState("");
+  const { dateSales, yearSales, monthSales } = useDashboard(
+    year,
+    month,
+    day,
+    customMonth,
+    customYear
+  );
+
   const monthNames = [
     "January",
     "February",
@@ -30,9 +40,21 @@ export const SalesPerformance = () => {
     const day = String(today.getDate()).padStart(2, "0");
     setYear(year);
     setMonth(month);
+    setCustomMonth(month);
+    setCustomYear(year);
     setDay(day);
     setDate(`${year}-${month}-${day}`);
   }, []);
+
+  const handleDateChange = (e) => {
+    const value = e.target.value;
+    const [year, month, day] = value.split("-");
+
+    setYear(year);
+    setMonth(month);
+    setDay(day);
+    setDate(value);
+  };
 
   const isToday = (inputDate) => {
     const today = new Date();
@@ -47,11 +69,11 @@ export const SalesPerformance = () => {
       <div>
         <div
           style={{ background: `${dark}` }}
-          className=" flex justify-between px-4 text-tertiary text-center font-bold py-2"
+          className=" flex justify-between px-4  text-tertiary text-center font-bold py-2"
         >
           {isToday(date) ? "Today" : "Date"}
           <input
-            onChange={(e) => setDate(e.currentTarget.value)}
+            onChange={(e) => handleDateChange(e)}
             value={date}
             className="accent-white"
             style={{ background: `${dark}` }}
@@ -63,25 +85,28 @@ export const SalesPerformance = () => {
             style={{ background: `${dark}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Cash MVR1200
+            Cash MVR
+            {dateSales?.date?.paymentMethod?.[0]?.roundedTotalAmount || 0}
           </div>
-          <di
+          <div
             style={{ background: `${dark}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Swipe MVR1220
-          </di>
+            Swipe MVR
+            {dateSales?.date?.paymentMethod?.[1]?.roundedTotalAmount || 0}
+          </div>
           <div
             style={{ background: `${dark}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white"
           >
-            Stripe MVR1550
+            Stripe MVR
+            {dateSales?.date?.paymentMethod?.[2]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${dark}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Total MVR4500
+            Total MVR{dateSales?.date?.grandTotal?.roundedTotalAmount}
           </div>
         </div>
       </div>
@@ -92,10 +117,13 @@ export const SalesPerformance = () => {
           className=" flex justify-between px-4  text-tertiary text-center font-bold py-2 "
         >
           Month
-          <span>{monthNames[Number(month - 1)]}</span>
+          <span>{monthNames[Number(customMonth - 1)]}</span>
           <input
-            onChange={(e) => setMonth(e.currentTarget.value)}
-            value={month}
+            onChange={(e) => {
+              setCustomMonth(e.currentTarget.value);
+              setYear(year);
+            }}
+            value={customMonth}
             className="accent-white border border-tertiary text-center"
             style={{ background: `${medium}` }}
             type="number"
@@ -108,25 +136,28 @@ export const SalesPerformance = () => {
             style={{ background: `${medium}` }}
             className=" col-span-12 md:col-span-3 border  p-3  text-sm font-semibold text-center text-white "
           >
-            Cash MVR1200
+            Cash MVR
+            {dateSales?.date?.paymentMethod?.[0]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${medium}` }}
             className="col-span-12 md:col-span-3 border  p-3  text-sm font-semibold text-center text-white "
           >
-            Swipe MVR1220
+            Swipe MVR
+            {dateSales?.date?.paymentMethod?.[1]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${medium}` }}
             className="col-span-12 md:col-span-3 border  p-3  text-sm font-semibold text-center text-white "
           >
-            Stripe MVR1550
+            Stripe MVR
+            {dateSales?.date?.paymentMethod?.[2]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${medium}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Total MVR4500
+            Total MVR{monthSales?.date?.grandTotal?.roundedTotalAmount}
           </div>
         </div>
       </div>
@@ -138,13 +169,13 @@ export const SalesPerformance = () => {
           Year
           <span>{year}</span>
           <input
-            onChange={(e) => setYear(e.currentTarget.value)}
-            value={year}
             className="accent-white border border-tertiary text-center"
             style={{ background: `${light}` }}
             type="number"
+            value={customYear}
             min="1900"
             max="2100"
+            onChange={(e) => setCustomYear(e.target.value)}
           />
         </div>
         <div className="grid grid-cols-12 w-full">
@@ -152,25 +183,28 @@ export const SalesPerformance = () => {
             style={{ background: `${light}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Cash MVR1200
+            Cash MVR
+            {dateSales?.date?.paymentMethod?.[0]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${light}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Swipe MVR1220
+            Swipe MVR
+            {dateSales?.date?.paymentMethod?.[1]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${light}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Stripe MVR1550
+            Stripe MVR
+            {dateSales?.date?.paymentMethod?.[2]?.roundedTotalAmount || 0}
           </div>
           <div
             style={{ background: `${light}` }}
             className="border col-span-12 md:col-span-3  p-3  text-sm font-semibold text-center text-white "
           >
-            Total MVR4500
+            Total MVR{yearSales?.date?.grandTotal?.roundedTotalAmount}
           </div>
         </div>
       </div>

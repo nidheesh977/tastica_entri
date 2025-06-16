@@ -138,7 +138,7 @@ export const useSuperAdmins = () => {
     onSuccess: () => {
       toast.success("Staff deleted successfully!");
       queryClient.invalidateQueries(["shopStaffs"]);
-      queryClient.invalidateQueries(["shops",selectedShopId]);
+      queryClient.invalidateQueries(["shops", selectedShopId]);
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to delete staff.");
