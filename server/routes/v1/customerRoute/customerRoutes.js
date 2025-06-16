@@ -3,14 +3,14 @@ import { createCustomer,deleteCustomer,getCustomer,getSingleCustomer,updateCusto
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
+import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 
 
 const customerRouter = express.Router();
 
 customerRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),createCustomer);
-customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getCustomer);
-
-customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateCustomer);
-customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),deleteCustomer);
+customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_read"),getCustomer);
+customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkPermission("customer_update"),updateCustomer);
+customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkPermission("customer_delete"),deleteCustomer);
 customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleCustomer);
 export default customerRouter; 

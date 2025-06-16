@@ -1,5 +1,5 @@
 import express from 'express'
-import { loginAdmin, CreateEmployee, checkAdminLogin, logOutAdmin, getStaffs, deleteStaff, UpdateStaff} from '../../../controller/adminController/adminController.js';
+import { loginAdmin, CreateEmployee, checkAdminLogin, logOutAdmin, getStaffs, deleteStaff, UpdateStaff, addPermissionToStaff, removePermissionFromStaff} from '../../../controller/adminController/adminController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
@@ -21,6 +21,9 @@ adminRouter.put('/staff/:id',shopVerifyToken,userVerifyToken,checkUserRole("admi
 adminRouter.patch('/staff/:id/password',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateStaffPassword);
 adminRouter.post('/logout',shopVerifyToken,userVerifyToken,checkUserRole("admin"),logOutAdmin);
 adminRouter.get('/check-logged',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkAdminLogin);
+
+adminRouter.patch('/staff/:id/permissions/add',shopVerifyToken,userVerifyToken,checkUserRole("admin"),addPermissionToStaff);
+adminRouter.patch('/staff/:id/permissions/remove',shopVerifyToken,userVerifyToken,checkUserRole("admin"),removePermissionFromStaff);
 
 
  

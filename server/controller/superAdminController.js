@@ -270,6 +270,7 @@ export const UpdateStaffBySuperAdmin = async (req, res) => {
     const {shopId,role} = body;
     const { id } = req.params;
 
+  
     if (!id) {
       return res.status(400).json({ success: false, message: "Id is missing" });
     }

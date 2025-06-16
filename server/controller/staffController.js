@@ -36,7 +36,7 @@ export const loginStaff = async (req,res) => {
             return res.status(400).json({success:false,message:"You are not a staff"})
         }
                
-        const token = generateToken({id:userExist._id,role:userExist.role});
+        const token = generateToken({id:userExist._id,role:userExist.role,permissions:userExist.permissions});
 
         const {password:pass,...userData} = userExist._doc;
 

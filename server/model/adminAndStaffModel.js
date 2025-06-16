@@ -37,6 +37,11 @@ import mongoose from 'mongoose';
         type:Boolean,
         default:false
     },
+    permissions:{
+        type:[String],
+        enum:["product_read","product_update","product_delete","product_create","category_read","category_update","category_delete","category_create","customer_read","customer_update","customer_delete","customer_create"],
+        default:["product_read","category_read"]
+    }
     
    
  },{timestamps:true})

@@ -34,6 +34,15 @@
   **method:** `Patch`<br>
   **URL:** `/api/v1/admin/staff/:id/password`
 
+  - 🧑‍💼🗑 "Add permissions"
+  **method:** `Patch`<br>
+  **URL:** `api/v1/admin/staff/:id/permissions/add`
+
+    - 🧑‍💼🗑 "remove permissions"
+  **method:** `Patch`<br>
+  **URL:** `api/v1/admin/staff/:id/permissions/remove`
+
+
 ## The routes for shop
 
 - 🏤💼 create shop<br>

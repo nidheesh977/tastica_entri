@@ -7,34 +7,17 @@ import { addCostPriceProfit, removeCostPriceProfit, updateCostPriceProfit } from
 import { addCostPrice, removeCostPrice } from '../../../controller/productContollers/costPriceController.js';
 import { addSellingPrice, removeSellingPrice } from '../../../controller/productContollers/sellingPriceController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
+import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 ;
 
 const productRouter = express.Router();
  
 
-productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),createProduct);
-productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),deleteProduct);
-productRouter.put('/update/:id/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),updateProduct);
-
-productRouter.put('/cost-price-profit/:id/add',userVerifyToken,checkUserRole('admin'),addCostPriceProfit);
-productRouter.put('/cost-price-profit/:id/update',userVerifyToken,checkUserRole('admin'),updateCostPriceProfit);
-productRouter.put('/cost-price-profit/:id/remove',userVerifyToken,checkUserRole('admin'),removeCostPriceProfit);
-
-productRouter.put('/discount/:id/add',userVerifyToken,checkUserRole('admin'),addDiscount);
-productRouter.put('/discount/:id/remove',userVerifyToken,checkUserRole('admin'),removeDiscount);
-
-productRouter.put('/cost-price/:id/add',userVerifyToken,checkUserRole('admin'),addCostPrice);
-productRouter.put('/cost-price/:id/remove',userVerifyToken,checkUserRole('admin'),removeCostPrice);
-
-
-productRouter.put('/selling-price/:id/add',userVerifyToken,checkUserRole('admin'),addSellingPrice);
-productRouter.put('/selling-price/:id/remove',userVerifyToken,checkUserRole('admin'),removeSellingPrice);
-
-// get products for admin and staff
-
+productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_create"),createProduct);
+productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_delete"),deleteProduct);
+productRouter.put('/update/:id/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_update"),updateProduct);
+productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),checkPermission("product_read"),getAllProducts);
 productRouter.get('/category-search',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getCategoryProducts);
-productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getAllProducts);
-
 
 
 
