@@ -5,7 +5,8 @@ import customProductModel from '../model/customProductModel.js';
 import invoiceModel from '../model/invoiceModel.js';
 import loyalityPointModel from '../model/loyalityPointModel.js';
 import productModel from '../model/productModel.js';
-import { calculateDiscount} from '../utils/calculateInvoice.js';
+import { calculateDiscount} from '../utils/calculateDiscount.js';
+import { calculateInvoiceTotal } from '../utils/calculateInvoice.js';
 import { generateId } from '../utils/generateId.js';
 
 
@@ -193,32 +194,20 @@ export const addProductToInvoice = async (req,res) => {
              // calculate discount
              const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
             
-             //  add discount to Total discount
-             const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount + calculateDiscountAmount;
-
-              
-            //  add subtotal 
-             const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
-           
-             //  add  total
-             const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount -  findInvoiceProduct.total + productTotalPrice;
-            
-             // substract discount from sub total 
-             const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
           
-             // substract discount from  total 
-             const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
 
+            const {discountAmount,subTotalAmount,totalAmount} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice)
               
 
+            
             const updatedQuantity =   await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
                             $set:{
                                 "products.$.quantity":quantity,
                                 "products.$.total":productTotalPrice,
                                 "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
-                                totalDiscount:parseFloat(finalDiscountValue).toFixed(2),
-                                subTotal:parseFloat(finalSubTotalReduceDiscount).toFixed(2),
-                                totalAmount:parseFloat(finalTotalAmountReduceDiscount).toFixed(2)
+                                totalDiscount:parseFloat(discountAmount).toFixed(2),
+                                subTotal:parseFloat(subTotalAmount).toFixed(2),
+                                totalAmount:parseFloat(totalAmount).toFixed(2)
                             }
                         },{new:true})
 
@@ -231,34 +220,22 @@ export const addProductToInvoice = async (req,res) => {
             // calculate discount
             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
                  
-            //  add discount to Total discount
-            const finalDiscountValue = existInvoice.totalDiscount - findInvoiceProduct.productDiscount +  calculateDiscountAmount;
+         
 
-            //  add subtotal 
-            const finalSubTotal = existInvoice.subTotal + findInvoiceProduct.productDiscount - findInvoiceProduct.total + productTotalPrice;
-       
-            //  add  total
-            const finalTotalAmount = existInvoice.subTotal + findInvoiceProduct.productDiscount - findInvoiceProduct.total + productTotalPrice
+            const {discountAmount,subTotalAmount,totalAmount} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice)
 
              
-            // substract discount from sub total 
-            const finalSubTotalReduceDiscount = finalDiscountValue > 0 ? finalSubTotal - calculateDiscountAmount : finalSubTotal;
-           // substract discount from  total 
-            const finalTotalAmountReduceDiscount = finalDiscountValue > 0 ? finalTotalAmount - calculateDiscountAmount : finalTotalAmount;
-
-             
-
             const updatedQuantity =  await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
                                             $set:{
                                   "products.$.quantity":quantity,
                                   "products.$.total":productTotalPrice,
                                   "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
-                                  totalDiscount:parseFloat(finalDiscountValue).toFixed(2),
-                                  subTotal:parseFloat(finalSubTotalReduceDiscount).toFixed(2),
-                                  totalAmount:parseFloat(finalTotalAmountReduceDiscount).toFixed(2)
+                                  totalDiscount:parseFloat(discountAmount).toFixed(2),
+                                  subTotal:parseFloat(subTotalAmount).toFixed(2),
+                                  totalAmount:parseFloat(totalAmount).toFixed(2)
                                  }
                   },{new:true})
-
+ 
 
         return res.status(200).json({success:true,message:"Quantity updated",data:updatedQuantity})
         }
@@ -266,7 +243,7 @@ export const addProductToInvoice = async (req,res) => {
        
       
     }catch(error){
-
+console.log(error)
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }
@@ -344,7 +321,7 @@ export const removeProductFromInvoice = async (req,res) => {
                 return res.status(500).json({success:false,message:"Internal server error"})
             }
         }
-
+ 
 
         export const invoiceSave = async (req,res) => {
             try{

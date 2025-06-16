@@ -1,5 +1,5 @@
 import productModel from "../../model/productModel.js";
-import { toDecimal } from "../../utils/calculateInvoice.js";
+import { toDecimal } from "../../utils/calculateDiscount.js";
 
 
 

@@ -164,7 +164,7 @@ export const paymentMethodInvoice = async (req,res) =>{
           {$match:{shop:id,invoiceStatus:"paid",paymentMethod:{$in:["cash","internal-device","digital"]},createdAt:{$gte:startDate,$lt:endDate}}},
            
           {$facet:{
-            yearly:[{
+            paymentMethod:[{
                     $group:{
                     _id:groupId,
                     totalAmount:{$sum:"$totalAmount"},
@@ -200,7 +200,7 @@ export const paymentMethodInvoice = async (req,res) =>{
         ])   
         
         const data = {
-          year:{  yearly:result[0].yearly,
+          date:{  paymentMethod:result[0].paymentMethod,
             grandTotal:result[0].grandTotal[0] || {roundedTotalAmount:0,count:0}
             },
         }

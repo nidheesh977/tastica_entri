@@ -1,7 +1,6 @@
 import AdminStaffModel from "../model/adminAndStaffModel.js";
 import shopModel from "../model/shopModel.js"
 import { comparePassword } from "../utils/comparePassword.js";
-import { otpToken } from "../utils/generateOtpToken.js";
 import { generateToken } from "../utils/generateToken.js";
 import { shopSignupValidtaion, userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation} from "../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'

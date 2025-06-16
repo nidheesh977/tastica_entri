@@ -1,10 +1,9 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import otpTokenModel from "../../model/otpTokenModel.js";
-import { otpToken } from "../../utils/generateOtpToken.js";
 import { otpSendEmailAndPasswordValidation, otpSendEmailValidation, otpVerification, userPasswordValidation } from "../../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
 import { nodeMailerTransporter } from "../../utils/nodeMailerTransporter.js";
-
+import {v4 as uuidv4 } from "uuid"
 
 
 export const updateStaffPassword = async (req, res) => {
@@ -45,8 +44,9 @@ export const updateStaffPassword = async (req, res) => {
   }
 };
 
+
 // --------------------------------------------send otp for reset password--------------------------------------------------
-export const sendOtp = async (req,res) => {
+export const sendResetLink = async (req,res) => {
   try{
 
     // Validate body data
@@ -60,7 +60,7 @@ export const sendOtp = async (req,res) => {
     const {email} = value;
 
     // Generate otp 
-    const otp = otpToken();
+    const resetToken = uuidv4();
 
     // Check user exist
     const findUser = await AdminStaffModel.findOne({email:email})
@@ -70,36 +70,49 @@ export const sendOtp = async (req,res) => {
       return res.status(400).json({success:false,message:"User not found"})
     }
 
-    // Hashing OTP
-    const hashOtp = await bcryptjs.hash(otp,10);
+    console.log(resetToken)
+
     
-    // To set OTP expire time 5m 
-    const expireDate = new Date(Date.now() + 5 * 60 * 1000);
+    
+     // To set OTP expire time 5m 
+     const expireDate = new Date(Date.now() + 5 * 60 * 1000);
 
     // Create transporter for send email 
-    const transporter = nodeMailerTransporter()
+      const transporter = nodeMailerTransporter()
 
     // Delete existing OTP of this user
-     await otpTokenModel.deleteMany({email})
+      await otpTokenModel.deleteMany({userId:findUser._id})
 
-    // create a new OTP
-    const newOtp = new otpTokenModel({otp:hashOtp,expiresAt:expireDate,email:email})
-    await newOtp.save()
+    //  create a new OTP
+     const newOtp = new otpTokenModel({resetToken,expiresAt:expireDate,userId:findUser._id})
+     await newOtp.save()
 
+     const resetLink = `${process.env.ADMIN_SUCCESS_URL}?reset=${resetToken}`
+
+     console.log(resetLink)
+     
     // send OTP to email
     await transporter.sendMail({
       from:process.env.NODE_GMAIL_SENDER,
       to:email,
-      subject:"Your OTP for Password Reset",
-      html:`<div style="font-family:Arial, san-serif;padding:20px color:#333;">
+      subject:"Password Reset Request",
+      html:`<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
                   <h2 style="color:#007bff;">${findUser.role} Password Reset Request </h2>
                   <p>Hello ${findUser.userName} </p>
-                  <p>You requested a password reset for Your admin account</p>
-                  <p>Your One-Time Password (OTP) is:</p>
-                  <h3 style="background-color">
-                  ${otp}
-                  </h3>
-                  <p>This OTP is validfor only 5 minutes. Do not share this code with anyone</p>
+                  <p>You requested a password reset for your ${findUser.role} account</p>
+                  <p style="text-align:center>
+
+                    
+
+                    <a href="${resetLink}">
+                    Reset Password
+                    </a>
+
+                    <p> If the button doesn't work, copy this link : </p>
+                    <p> <a href="${resetLink}">${resetLink}</a> </p>
+
+                  </p>
+                  <p>This link is valid for only 5 minutes.</p>
                   <p style="color:#777;font-size:12px;">
                  © ${new Date().getFullYear()} zensettle ${findUser.role} panel. All rights reserved.
                   </p>
@@ -109,6 +122,7 @@ export const sendOtp = async (req,res) => {
    
     res.status(200).json({success:true,message:"Otp send successfully",data:email})
   }catch(error){
+    console.log(error)
     return res.status(500).json({success:false,message:"Internal server error"})
   }
 }

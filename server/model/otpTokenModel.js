@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const otpSchema = new mongoose.Schema({
-    email:{
-        type:String,
-        required:true
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+               ref:"User",
 
     },
-    otp:{
+    resetToken:{
         type:String,
         required:true
 

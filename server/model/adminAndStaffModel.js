@@ -11,7 +11,7 @@ const staffPermissions = ["product_read","product_update","product_delete","prod
         type:String,
         required:true,
         unique:true
-    },
+    }, 
     password:{
         type:String,
         required:true
