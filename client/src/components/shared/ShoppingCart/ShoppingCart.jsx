@@ -1,5 +1,5 @@
 import { MdPersonAdd, MdRemoveShoppingCart } from "react-icons/md";
-import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
+import { FaSave, FaMoneyCheckAlt, FaTrash, FaPhoneSlash } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
@@ -110,10 +110,23 @@ export const ShoppingCart = ({
           <input
             className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
             type="text"
-            placeholder="Customer Mobile Number"
+            placeholder="Phone Number"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <span
+            className="cursor-pointer rounded-md shadow-xl flex items-center  p-2"
+            title="Invoice Without Phone Number"
+          >
+            <FaPhoneSlash
+              className="hover:text-orange-600 mx-auto text-primary"
+              size={18}
+              onClick={() => {
+                setSearchQuery("0000000");
+                setIsNewCustomer(false);
+              }}
+            />
+          </span>
         </div>
       )}
 

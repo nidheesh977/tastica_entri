@@ -7,7 +7,7 @@ export const CreateStaffCard = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [role] = useState("staff");
+  const [role, setRole] = useState("staff");
   const [shopId, setShopId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,7 +24,7 @@ export const CreateStaffCard = () => {
         w-full md:w-[500px] px-4 py-10 md:px-10 bg-tertiary text-primary shadow-2xl border rounded-lg'
     >
       <h1 className="text-3xl py-4 font-thin text-center text-primary ">
-        Create Staff
+        Create Employee
       </h1>
 
       <input
@@ -90,6 +90,30 @@ export const CreateStaffCard = () => {
           )}
         </button>
       </div>
+      <span className="flex gap-4 px-4">
+              <span className="flex gap-1">
+              Staff
+                <input
+                  type="radio"
+                  value='staff'
+                  name="role"
+                  className="accent-primary"
+                  checked={role === 'staff'}
+                  onChange={() => setRole('staff')}
+                />
+              </span>
+              <span className="flex gap-1">
+              Admin
+                <input
+                  type="radio"
+                  value='admin'
+                  name="role"
+                  className="accent-primary"
+                   checked={role === 'admin'}
+                  onChange={() => setRole('admin')}
+                />
+              </span>
+            </span>
 
       <button
         className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"

@@ -52,16 +52,19 @@ export const useSuperAdmins = () => {
         role,
       };
 
-      await axiosInstance({
+      const response = await axiosInstance({
         method: "POST",
         url: "/super-admin/create-employee",
         withCredentials: true,
         data,
       });
+
+      return response?.data?.data;
     },
     onSuccess: () => {
-      toast.success("Staff created successfully");
-      queryClient.invalidateQueries(["shopStaffs"]);
+      toast.success("Employee created successfully");
+
+      queryClient.invalidateQueries(["shopStaffs", selectedShopId]);
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to create staff!.");
@@ -138,7 +141,7 @@ export const useSuperAdmins = () => {
     onSuccess: () => {
       toast.success("Staff deleted successfully!");
       queryClient.invalidateQueries(["shopStaffs"]);
-      queryClient.invalidateQueries(["shops",selectedShopId]);
+      queryClient.invalidateQueries(["shops", selectedShopId]);
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to delete staff.");

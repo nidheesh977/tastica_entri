@@ -32,7 +32,7 @@ export const ListStaffCardSuperAdmin = () => {
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
         <div className="flex justify-between items-center  font-thin text-start md:col-span-12 text-3xl my-6 text-primary">
-          <div>Staffs</div>
+          <div>Employees</div>
 
           <select
             value={shopId}
@@ -65,6 +65,7 @@ export const ListStaffCardSuperAdmin = () => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">Role</th>
               <th className="border border-primary px-4 py-2">Email</th>
               <th className="border border-primary px-4 py-2">Mobile</th>
               <th className="border border-primary px-4 py-2">Action</th>
@@ -84,6 +85,9 @@ export const ListStaffCardSuperAdmin = () => {
                   ) : (
                     staff?.userName
                   )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {staff?.role}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === staff?._id ? (

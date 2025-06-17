@@ -1,11 +1,7 @@
 import { FaArrowLeft, FaHome } from "react-icons/fa";
 import { MdAdminPanelSettings, MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  removeAdminData,
-  removeStaffData,
-  removeShopData,
-} from "../../../redux/features/authSlice";
+import { removeAdminData, removeShopData, removeStaffData } from "../../../redux/features/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
@@ -15,7 +11,10 @@ export const ShopHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const shopname = useSelector((state) => state.auth?.shopData?.shopName || null);
+  const shopname = useSelector(
+    (state) => state.auth?.shopData?.shopName || null
+  );
+
   const shopLogout = async () => {
     try {
       await axiosInstance({
@@ -23,7 +22,11 @@ export const ShopHeader = () => {
         url: "/shop/logout",
         withCredentials: true,
       });
+      dispatch(removeShopData());
+      dispatch(removeAdminData());
+      dispatch(removeStaffData());
       toast.success("Logout success");
+      navigate("/");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     }
@@ -40,7 +43,8 @@ export const ShopHeader = () => {
         <div className="flex items-center font-thin gap-5 text-primary">
           {location.pathname === "/" && (
             <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
-              <MdAdminPanelSettings onClick={()=> navigate('/super/admin/login')}
+              <MdAdminPanelSettings
+                onClick={() => navigate("/super/admin/login")}
                 className="hover:text-orange-600 mx-auto"
                 size={20}
                 title="Super Admin"
@@ -49,7 +53,8 @@ export const ShopHeader = () => {
           )}
           {location.pathname === "/super/admin/login" && (
             <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
-              <FaArrowLeft onClick={()=> navigate('/')}
+              <FaArrowLeft
+                onClick={() => navigate("/")}
                 className="hover:text-orange-600 mx-auto"
                 size={20}
                 title="Back"
@@ -69,13 +74,7 @@ export const ShopHeader = () => {
             <MdLogout
               size={20}
               title="Logout"
-              onClick={() => {
-                dispatch(removeShopData());
-                dispatch(removeAdminData());
-                dispatch(removeStaffData());
-                shopLogout();
-                navigate("/");
-              }}
+              onClick={() => shopLogout()}
               className="cursor-pointer hover:text-orange-600"
             />
           )}
