@@ -45,6 +45,29 @@ export const updateStaffPassword = async (req, res) => {
 };
 
 
+// ------------------------------------------- Get single  staff ------------------------------------------------
+
+export const getSingleStaff = async (req,res) => {
+
+  try{
+     const {shopId,id} = req.params;
+
+     if(!shopId || !id){
+      return res.status(400).json({success:false,message:"Id is missing"});
+     }
+
+     const staff = await AdminStaffModel.findOne({shopId:shopId,_id:id});
+
+     const {password:pass,...staffData} = staff._doc;
+
+     res.status(200).json({success:true,message:"staff fetched successfully",data:staffData});
+ 
+  }catch{
+     res.status(500).json({ success:false, message: "Internal Server Error"});
+  }
+}
+
+
 // --------------------------------------------send otp for reset password--------------------------------------------------
 export const sendResetLink = async (req,res) => {
   try{

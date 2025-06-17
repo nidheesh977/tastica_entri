@@ -3,7 +3,7 @@ import { loginAdmin, CreateEmployee, checkAdminLogin, logOutAdmin, getStaffs, de
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
-import { addPermissionToStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
+import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
 
 
 
@@ -25,5 +25,6 @@ adminRouter.get('/check-logged',shopVerifyToken,userVerifyToken,checkUserRole("a
 adminRouter.patch('/staff/:id/password',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateStaffPassword);
 adminRouter.patch('/staff/:id/permissions',shopVerifyToken,userVerifyToken,checkUserRole("admin"),addPermissionToStaff);
 adminRouter.delete('/staff/:id/permissions',shopVerifyToken,userVerifyToken,checkUserRole("admin"),removePermissionFromStaff);
+adminRouter.get('/staff/:id/:shopId',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleStaff);
  
 export default adminRouter;

@@ -43,6 +43,9 @@
 **method**`DELETE` <br>
 **URL**`/api/v1/admin/staff/:id/permissions`
 
+-  admin get staff
+**method**`GET` <br>
+**URL**`/api/v1/admin/staff/:id/:shopId`
 
 
 ## The routes for shop
@@ -358,6 +361,11 @@
 - 🧑‍💼🗑 "super admin Update staff password"
   **method:** `Patch`<br>
   **URL:** `/api/v1/super-admin/employees/:id/password`
+
+- super admin get staff
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/staff/:id/:shopId`
+
 
 - ## password reset  💼💼 <br>
 

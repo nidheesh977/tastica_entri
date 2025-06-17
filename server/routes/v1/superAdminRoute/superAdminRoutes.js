@@ -3,7 +3,7 @@ import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdm
 import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
-import { addPermissionToStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
+import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
 
 
 const superAdminRouter = express.Router();
@@ -30,7 +30,8 @@ superAdminRouter.get('/employees',userVerifyToken,checkUserRole("super-admin"),g
 superAdminRouter.patch('/employees/:id/password',userVerifyToken,checkUserRole("super-admin"),updateStaffPassword);
 superAdminRouter.patch('/staff/:id/permissions',userVerifyToken,checkUserRole("super-admin"),addPermissionToStaff);
 superAdminRouter.delete('/staff/:id/permissions',userVerifyToken,checkUserRole("super-admin"),removePermissionFromStaff);
-
+superAdminRouter.get('/staff/:id/:shopId',userVerifyToken,checkUserRole("super-admin"),getSingleStaff);
+ 
  
 
 export default superAdminRouter
