@@ -1,7 +1,11 @@
 import { FaArrowLeft, FaHome } from "react-icons/fa";
 import { MdAdminPanelSettings, MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import { removeAdminData, removeShopData, removeStaffData } from "../../../redux/features/authSlice";
+import {
+  removeAdminData,
+  removeShopData,
+  removeStaffData,
+} from "../../../redux/features/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
@@ -51,10 +55,13 @@ export const ShopHeader = () => {
               />
             </span>
           )}
-          {location.pathname === "/super/admin/login" && (
+          {[
+            "/super/admin/login",
+            "/super/admin/reset/password/send/mail",
+          ].includes(location.pathname) && (
             <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
               <FaArrowLeft
-                onClick={() => navigate("/")}
+                onClick={() => navigate(-1)}
                 className="hover:text-orange-600 mx-auto"
                 size={20}
                 title="Back"

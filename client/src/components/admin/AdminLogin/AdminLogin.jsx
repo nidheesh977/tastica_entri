@@ -76,7 +76,7 @@ export const AdminLogin = () => {
       </div>
       <Link
         className="hover:text-orange-600 "
-        to={`/shop/admin/reset/password/${123}`}
+        to="/shop/admin/reset/password/send/mail"
       >
         Forgot Password?
       </Link>

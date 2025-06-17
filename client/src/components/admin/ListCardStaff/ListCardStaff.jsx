@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
+import { HiShieldCheck } from "react-icons/hi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useSelector } from "react-redux";
 import { useAdmins } from "../../../hooks/useAdmins";
@@ -115,6 +116,11 @@ export const ListCardStaff = () => {
                           title="Delete"
                           size={22}
                           onClick={() => setAlertMessage(staff?._id)}
+                          className="hover:text-orange-600 text-primary cursor-pointer"
+                        />
+                        <HiShieldCheck
+                          title="Permissions"
+                          size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
                       </>
