@@ -92,7 +92,7 @@ export const SuperAdminSideBar = () => {
              flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdGroups />
-              Staffs
+              Employees
             </li>
           </>
         )}
@@ -132,7 +132,7 @@ export const SuperAdminSideBar = () => {
           className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
           <FaUserTie />
-          Staff Management
+          Employee Management
           <HiChevronDown
             className={`transform transition-transform duration-300 ${
               staffManagement ? "rotate-180" : ""
@@ -150,7 +150,7 @@ export const SuperAdminSideBar = () => {
               className="bg-tertiary rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdGroups />
-              Add Staff
+              Add Employee
             </li>
           </>
         )}
