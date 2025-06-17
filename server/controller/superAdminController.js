@@ -176,18 +176,30 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {
-      return res.status(400).json({ success: false, message: "staff already exists"});
+      return res.status(400).json({ success: false, message: "staff already exist"});
+    }
+
+    if (userAccountExists?.role === "admin"){
+      return res.status(400).json({ success: false, message: "admin already exist"});
     }
 
     const userphoneNumberExists = await AdminStaffModel.findOne({phoneNumber: phoneNumber});
 
     if (userphoneNumberExists) {
-      return res.status(400).json({ success: false, message: "Phone number already exists"});
+      return res.status(400).json({ success: false, message: "Phone number already exist"});
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     const userNameLowerCase = userName.toLowerCase();
+
+    let Permissions;
+
+    if(role === "admin"){
+      Permissions = ["product_read","product_update","product_delete","product_create","category_read","category_update","category_delete","category_create","customer_read","customer_update","customer_delete","customer_create"]
+    }else{
+       Permissions = ["product_read","category_read","customer_read"]
+    }
 
     const newUser = new AdminStaffModel({
       userName: userNameLowerCase,
@@ -195,13 +207,16 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
       email,
       password: hashedPassword,
       shopId,
-      role
+      role,
+      permissions:Permissions
     });
 
+    const {password:pass,...userDate} = newUser._doc
     
      await newUser.save();
-    res.status(201).json({ success: true, message: "staff created successfully" });
+    res.status(201).json({ success: true, message: "staff created successfully" ,data:userDate});
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
