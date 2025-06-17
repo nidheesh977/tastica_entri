@@ -76,7 +76,7 @@ export const SuperAdminLogin = () => {
       </div>
       <Link
         className="hover:text-orange-600 "
-        to={`/super/admin/reset/password/${123}`}
+        to='/super/admin/reset/password/send/mail'
       >
         Forgot Password?
       </Link>

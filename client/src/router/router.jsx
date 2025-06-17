@@ -11,7 +11,7 @@ import { AdminLayout } from "../layout/AdminLayout";
 import { StaffLayout } from "../layout/StaffLayout";
 import { SuperAdminLayout } from "../layout/SuperAdminLayout";
 import { Cart } from "../pages/shared/Cart/Cart";
-import { AddProductCard } from "../components/shared/AddProdutCard/AddProductCard";
+import { AddProductCard } from "../components/shared/AddProductCard/AddProductCard";
 import { StaffHome } from "../pages/staff/StaffHome/StaffHome";
 import { AddNewCategory } from "../pages/shared/AddNewCategory/AddNewCategory";
 import { ListStaffs } from "../pages/admin/ListStaffs/ListStaffs";
@@ -43,7 +43,10 @@ import { CreateStaff } from "../pages/superAdmin/CreateStaff/CreateStaff";
 import { ListShops } from "../pages/superAdmin/ListShops/ListShops";
 import { ListStaffsSuperAdmin } from "../pages/superAdmin/ListStaffsSuperAdmin/ListStaffsSuperAdmin";
 import { AdminPasswordReset } from "../pages/admin/AdminPasswordReset/AdminPasswordReset";
+import { AdminForgotPasswordMail } from "../pages/admin/AdminForgotPasswordEmail/AdminForgotPasswordEmail";
 import { SuperAdminPasswordReset } from "../pages/superAdmin/SuperAdminPasswordReset/SuperAdminPasswordReset";
+import { Permissions } from "../pages/admin/Permissions/Permissions";
+import { SuperAdminForgotPasswordMail } from "../pages/superAdmin/superAdminForgotPasswordMail/SuperAdminForgotPasswordMail";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -53,6 +56,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLoginPage /> },
+      // { path: "", element: <Permissions /> },
 
       {
         path: "shop",
@@ -63,6 +67,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/login",
             element: <AdminLoginPage />,
+          },
+          {
+            path: "admin/reset/password/send/mail",
+            element: <AdminForgotPasswordMail />,
           },
           {
             path: "admin/reset/password/:token",
@@ -256,6 +264,10 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "super/admin/login", element: <SuperAdminLoginPage /> },
+      {
+        path: "super/admin/reset/password/send/mail",
+        element: <SuperAdminForgotPasswordMail />,
+      },
       {
         path: "super/admin/reset/password/:token",
         element: <SuperAdminPasswordReset />,

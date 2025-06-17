@@ -6,6 +6,7 @@ import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useDispatch, useSelector } from "react-redux";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 import { saveSelectedShopId } from "../../../redux/features/selectedShopSlice";
+import { HiShieldCheck } from "react-icons/hi";
 
 export const ListStaffCardSuperAdmin = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -146,6 +147,11 @@ export const ListStaffCardSuperAdmin = () => {
                           title="Delete"
                           size={22}
                           onClick={() => setAlertMessage(staff?._id)}
+                          className="hover:text-orange-600 text-primary cursor-pointer"
+                        />
+                        <HiShieldCheck
+                          title="Permissions"
+                          size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
                       </>

@@ -91,29 +91,29 @@ export const CreateStaffCard = () => {
         </button>
       </div>
       <span className="flex gap-4 px-4">
-              <span className="flex gap-1">
-              Staff
-                <input
-                  type="radio"
-                  value='staff'
-                  name="role"
-                  className="accent-primary"
-                  checked={role === 'staff'}
-                  onChange={() => setRole('staff')}
-                />
-              </span>
-              <span className="flex gap-1">
-              Admin
-                <input
-                  type="radio"
-                  value='admin'
-                  name="role"
-                  className="accent-primary"
-                   checked={role === 'admin'}
-                  onChange={() => setRole('admin')}
-                />
-              </span>
-            </span>
+        <span className="flex gap-1">
+          Staff
+          <input
+            type="radio"
+            value="staff"
+            name="role"
+            className="accent-primary"
+            checked={role === "staff"}
+            onChange={() => setRole("staff")}
+          />
+        </span>
+        <span className="flex gap-1">
+          Admin
+          <input
+            type="radio"
+            value="admin"
+            name="role"
+            className="accent-primary"
+            checked={role === "admin"}
+            onChange={() => setRole("admin")}
+          />
+        </span>
+      </span>
 
       <button
         className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"

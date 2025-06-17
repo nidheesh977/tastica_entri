@@ -1,7 +1,11 @@
 import { FaArrowLeft, FaHome } from "react-icons/fa";
 import { MdAdminPanelSettings, MdLogout } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import { removeAdminData, removeShopData, removeStaffData } from "../../../redux/features/authSlice";
+import {
+  removeAdminData,
+  removeShopData,
+  removeStaffData,
+} from "../../../redux/features/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../../../config/axiosInstance";
