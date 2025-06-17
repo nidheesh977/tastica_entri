@@ -337,16 +337,10 @@
 
 - ## password reset  💼💼 <br>
 
--  send otp
+-  send reset link
 **method**`POST` <br>
-**URL**`/api/v1/password/otp`
-
-
--  verify otp
-**method**`POST` <br>
-**URL**`/api/v1/password/otp/verify`
-
+**URL**`/api/v1/password/reset-link`
 
 -  reset password
 **method**`POST` <br>
-**URL**`/api/v1/password/reset`
+**URL**`/api/v1/password/reset/:token`
