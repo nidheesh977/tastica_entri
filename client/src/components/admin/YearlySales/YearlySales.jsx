@@ -19,7 +19,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import {light} from '../../../utils/constants'
+import {light} from '../../../../utils/constants'
 export const YearlySales = () => {
   const [chart, setChart] = useState(null);
   const { invoices } = useAdmins();

@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-import {dark} from '../../../utils/constants'
+import {dark} from '../../../../utils/constants'
 
 export const WeeklySales = () => {
   const [chart, setChart] = useState(null);

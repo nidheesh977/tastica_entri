@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-import {medium} from '../../../utils/constants'
+import {medium} from '../../../../utils/constants'
 
 export const MonthlySales = () => {
   const [chart, setChart] = useState(null);

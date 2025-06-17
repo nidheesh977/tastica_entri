@@ -21,7 +21,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import { dark } from "../../../utils/constants";
+import { dark } from "../../../../utils/constants";
 
 export const SalesChart = () => {
   const [chartData, setChartData] = useState(null);

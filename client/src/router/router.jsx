@@ -42,6 +42,8 @@ import { SuperAdminHome } from "../pages/superAdmin/SuperAdminHome/SuperAdminHom
 import { CreateStaff } from "../pages/superAdmin/CreateStaff/CreateStaff";
 import { ListShops } from "../pages/superAdmin/ListShops/ListShops";
 import { ListStaffsSuperAdmin } from "../pages/superAdmin/ListStaffsSuperAdmin/ListStaffsSuperAdmin";
+import { AdminPasswordReset } from "../pages/admin/AdminPasswordReset/AdminPasswordReset";
+import { SuperAdminPasswordReset } from "../pages/superAdmin/SuperAdminPasswordReset/SuperAdminPasswordReset";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -61,6 +63,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/login",
             element: <AdminLoginPage />,
+          },
+          {
+            path: "admin/reset/password/:token",
+            element: <AdminPasswordReset />,
           },
           {
             path: "staff/login",
@@ -250,6 +256,10 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "super/admin/login", element: <SuperAdminLoginPage /> },
+      {
+        path: "super/admin/reset/password/:token",
+        element: <SuperAdminPasswordReset />,
+      },
 
       {
         path: "super/admin",
