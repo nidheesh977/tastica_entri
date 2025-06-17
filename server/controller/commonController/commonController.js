@@ -85,7 +85,9 @@ export const sendResetLink = async (req,res) => {
      const newOtp = new resetTokenModel({resetToken,expiresAt:expireDate,userId:findUser._id})
      await newOtp.save()
 
-     const resetLink = `${process.env.ADMIN_SUCCESS_URL}?reset=${resetToken}`
+    const roleBasedResetLink =  findUser.role === "super-admin" ? process.env.SUPER_ADMIN_PASSWORD_RESET_LINK : process.env.ADMIN_PASSWORD_RESET_LINK
+
+    const resetLink = `${roleBasedResetLink}/${resetToken}`
 
      const html = `<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
                   <h2 style="color:#007bff;">${findUser.role} Password Reset Request </h2>
