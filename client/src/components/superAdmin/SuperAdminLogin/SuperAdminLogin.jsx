@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FaSignInAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { axiosInstance } from "../../../config/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   addSuperAdminData,
@@ -74,6 +74,12 @@ export const SuperAdminLogin = () => {
           )}
         </button>
       </div>
+      <Link
+        className="hover:text-orange-600 "
+        to={`/super/admin/reset/password/${123}`}
+      >
+        Forgot Password?
+      </Link>
 
       <button
         className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { dark, medium, light } from "../../../utils/constants";
+import { dark, medium, light } from "../../../../utils/constants";
 import { useDashboard } from "../../../hooks/useDashboard";
 
 export const SalesPerformance = () => {
