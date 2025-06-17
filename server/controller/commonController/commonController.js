@@ -1,6 +1,6 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import resetTokenModel from "../../model/resetTokenModel.js";
-import { resetPasswordValidation, resetSendEmailValidation, userPasswordValidation } from "../../utils/joiValidation.js";
+import { addPermissionValidation, resetPasswordValidation, resetSendEmailValidation, userPasswordValidation } from "../../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
 import { nodeMailerTransporter } from "../../utils/nodeMailerTransporter.js";
 import {v4 as uuidv4 } from "uuid"
@@ -89,7 +89,7 @@ export const sendResetLink = async (req,res) => {
 
     const resetLink = `${roleBasedResetLink}/${resetToken}`
 
-     const html = `<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
+    const html = `<div style="font-family:Arial, san-serif;color:#333;line-height:1.6">
                   <h2 style="color:#007bff;">${findUser.role} Password Reset Request </h2>
                   <p>Hello ${findUser.userName} </p>
                   <p>You requested a password reset for your ${findUser.role} account</p>
@@ -176,3 +176,61 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+export const addPermissionToStaff = async (req,res) => {
+
+    const { error, value } = addPermissionValidation.validate(req.body);
+
+     if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+  try{
+
+ 
+  const {permission} = value;
+  const {id} = req.params;
+ 
+
+  if(!id){
+     return res.status(400).json({success:false,message:"ID is missing"})
+  }
+
+   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$addToSet:{permissions:permission}},{new:true})
+
+  res.status(200).json({success:true,message:"permissions added successfully",data:addPermissions})
+
+  }catch(error){
+    return res.status(500).json({ success: false, message: "internal server error"});
+  }
+}
+
+
+export const removePermissionFromStaff = async (req,res) => {
+
+    const { error, value } = addPermissionValidation.validate(req.body);
+
+     if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+  try{
+
+ 
+  const {permission} = value;
+  const {id} = req.params;
+ 
+
+  if(!id){
+     return res.status(400).json({success:false,message:"ID is missing"})
+  }
+
+   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$pull:{permissions:permission}},{new:true})
+
+  res.status(200).json({success:true,message:"permission remove successfully",data:addPermissions})
+
+  }catch(error){
+    return res.status(500).json({ success: false, message: "internal server error"});
+  }
+}
