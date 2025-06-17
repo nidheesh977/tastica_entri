@@ -34,13 +34,15 @@
   **method:** `Patch`<br>
   **URL:** `/api/v1/admin/staff/:id/password`
 
-  - 🧑‍💼🗑 "Add permissions"
-  **method:** `Patch`<br>
-  **URL:** `api/v1/admin/staff/:id/permissions/add`
+ -  admin add permission
+**method**`PATCH` <br>
+**URL**`/api/v1/admin/staff/:id/permissions`
 
-    - 🧑‍💼🗑 "remove permissions"
-  **method:** `Patch`<br>
-  **URL:** `api/v1/admin/staff/:id/permissions/remove`
+
+-  admin DELETE permission
+**method**`DELETE` <br>
+**URL**`/api/v1/admin/staff/:id/permissions`
+
 
 
 ## The routes for shop
@@ -306,34 +308,56 @@
 **method**`POST` <br>
 **URL**`/api/v1/super-admin/logout`
 
+- super admin account update
+**method**`PUT` <br>
+**URL**`/api/v1/super-admin/:id`
+
+
 - super admin shop create
 **method**`POST` <br>
-**URL**`/api/v1/super-admin/create-shop`
+**URL**`/api/v1/super-admin/shops`
 
 - super admin get all shop
 **method**`GET` <br>
-**URL**`/api/v1/super-admin/shop`
+**URL**`/api/v1/super-admin/shops`
 
+- super admin update shop
+**method**`PUT` <br>
+**URL**`/api/v1/super-admin/shops/:id`
+
+- super admin update shop
+**method**`PATCH` <br>
+**URL**`/api/v1/super-admin/shops/:id`
 
 - super admin create employee
 **method**`POST` <br>
-**URL**`/api/v1/super-admin/create-employee`
+**URL**`/api/v1/super-admin/employees`
 
 - super admin delete employee
 **method**`DELETE` <br>
-**URL**`/api/v1/super-admin/employee/:id/delete`
+**URL**`/api/v1/super-admin/employees/:id`
+
+- super admin add permission
+**method**`PATCH` <br>
+**URL**`/api/v1/super-admin/staff/:id/permissions`
+
+
+- super admin DELETE permission
+**method**`DELETE` <br>
+**URL**`/api/v1/super-admin/staff/:id/permissions`
+
 
 - super admin update employee
 **method**`PUT` <br>
-**URL**`/api/v1/super-admin/employee/:id/update`
+**URL**`/api/v1/super-admin/employees/:id`
 
 - super admin list employee
 **method**`GET` <br>
-**URL**`/api/v1/super-admin/employee/list?shop=id`
+**URL**`/api/v1/super-admin/employees?shop=id`
 
 - 🧑‍💼🗑 "super admin Update staff password"
   **method:** `Patch`<br>
-  **URL:** `/api/v1/super-admin/employee/update/:id/password`
+  **URL:** `/api/v1/super-admin/employees/:id/password`
 
 - ## password reset  💼💼 <br>
 

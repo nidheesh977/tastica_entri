@@ -2,7 +2,7 @@ import AdminStaffModel from "../model/adminAndStaffModel.js";
 import shopModel from "../model/shopModel.js"
 import { comparePassword } from "../utils/comparePassword.js";
 import { generateToken } from "../utils/generateToken.js";
-import { shopSignupValidtaion, userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation} from "../utils/joiValidation.js"
+import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, userLoginValidation, userSignupValidation, userUpdateValidation} from "../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
 
 
@@ -53,6 +53,51 @@ import bcryptjs from 'bcryptjs'
         res.status(500).json({ success: false, message: "Internal Server Error" });
       }
     };
+
+
+    
+    export const UpdateSuperAdmin = async (req, res) => {
+      try {
+        const { error, value } = userUpdateValidation.validate(req.body);
+    
+        if (error) {
+          return res.status(400).json({ message: error.details[0].message });
+        }
+    
+        const { userName, phoneNumber, email} = value;
+    
+        const { id } = req.params;
+    
+        if (!id) {
+          return res.status(400).json({ success: false, message: "Id is missing" });
+        }
+    
+        const ExistSuperAdmin = await AdminStaffModel.findById(id);
+    
+        if (!ExistSuperAdmin) {
+          return res.status(400).json({ success: true, message: "super admin not found" });
+        }
+
+          
+        const userNameLowerCase = userName.toLowerCase();
+    
+        const superAdminUpdated = await AdminStaffModel.findByIdAndUpdate(id,{
+            userName: userNameLowerCase,
+            phoneNumber,
+            email,
+          },
+          { new: true }
+        );
+    
+        const { password: pass, ...superAdminData } = superAdminUpdated._doc;
+    
+        res.status(200).json({success: true,message: "User data updated successfully",data:superAdminData,});
+      } catch(error) {
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+      }
+    };
+    
+    
 
     
     export const checkSuperAdminLogin = async (req,res) => {
@@ -126,6 +171,88 @@ export const createShop = async (req,res) => {
         return res.status(500).json({success:false,message:"Internal server error"});
     }
 }
+
+export const updateShopBySuperAdmin = async (req,res) => {
+
+   const {error,value} = shopUpdateValidtaion.validate(req.body);
+
+        if(error){
+            return res.status(400).json({message:error.details[0].message});
+        }
+  
+  try{
+
+    const {shopName,email,countryName,currencyCode} = value;
+    const {id} = req.params;
+
+    if(!id){
+      return res.status(400).json({success:false,message:"Shop ID is missing"})
+    }
+    
+    const shopExist = await shopModel.findById(id);
+
+     if(!shopExist){
+      return res.status(400).json({success:false,message:"Shop not found"})
+     }
+
+     const updatedShop = await shopModel.findByIdAndUpdate(id,{
+                           shopName,
+                           email,
+                           countryName,
+                           currencyCode
+                        },{new:true})
+
+     const {password:pass,...shopData} = updatedShop._doc;
+
+     res.status(200).json({success:true,message:"shop updated successfully",data:shopData})                   
+
+  }catch(error){
+     return res.status(500).json({success:false,message:"Internal server error"});
+  }
+}
+
+
+
+export const updateShopPasswordBySuperAdmin = async (req, res) => {
+
+   const { error, value } = shopPasswordValidation.validate(req.body);
+
+    // Data error 
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+  try {
+   
+    const { id } = req.params;
+    const { password } = value;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Id is missing" });
+    }
+
+    // Check user exist
+    const shopExist = await shopModel.findById(id);
+
+    if (!shopExist) {
+      return res.status(400).json({ success: true, message: "User not found" });
+    }
+
+    // Hashing the password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    // Update password
+   const shopPasswordUpdate =  await shopModel.findByIdAndUpdate(id,{password: hashedPassword,},{ new: true });
+
+
+   const  {password:pass,...shopData} = shopPasswordUpdate._doc
+
+    res.status(200).json({ success: true, message: "Shop password updated successfully",data:shopData});
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
 
 
 export const getShops = async (req,res) => {
@@ -263,6 +390,8 @@ export const deleteStaffBySuperAdmin = async (req, res) => {
 };
 
 
+
+
 export const UpdateStaffBySuperAdmin = async (req, res) => {
   try {
 
@@ -295,11 +424,6 @@ export const UpdateStaffBySuperAdmin = async (req, res) => {
       return res.status(400).json({ success: true, message: "User not found" });
     }
 
-    const checkPhoneNumberExist = await AdminStaffModel.findOne({shopId:shopId,phoneNumber:phoneNumber});
-
-    if(checkPhoneNumberExist){
-        return res.status(400).json({success:false,message:"This phone number already exist in this shop"})
-    }
 
     const userNameLowerCase = userName.toLowerCase();
 

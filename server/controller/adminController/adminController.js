@@ -1,6 +1,6 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import { comparePassword } from "../../utils/comparePassword.js";
-import { addPermissionValidation, userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../../utils/joiValidation.js";
+import {  userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../../utils/generateToken.js";
 
@@ -171,7 +171,7 @@ export const UpdateStaff = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { userName, phoneNumber, email, password } = value;
+    const { userName, phoneNumber, email} = value;
 
     const { id } = req.params;
 
@@ -216,59 +216,3 @@ export const logOutAdmin = async (req, res) => {
 };
 
 
-export const addPermissionToStaff = async (req,res) => {
-
-    const { error, value } = addPermissionValidation.validate(req.body);
-
-     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-  try{
-
- 
-  const {permission} = value;
-  const {id} = req.params;
- 
-
-  if(!id){
-     return res.status(400).json({success:false,message:"ID is missing"})
-  }
-
-   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$addToSet:{permissions:permission}},{new:true})
-
-  res.status(200).json({success:true,message:"permissions added successfully",data:addPermissions})
-
-  }catch(error){
-    return res.status(500).json({ success: false, message: "internal server error"});
-  }
-}
-
-
-export const removePermissionFromStaff = async (req,res) => {
-
-    const { error, value } = addPermissionValidation.validate(req.body);
-
-     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-  try{
-
- 
-  const {permission} = value;
-  const {id} = req.params;
- 
-
-  if(!id){
-     return res.status(400).json({success:false,message:"ID is missing"})
-  }
-
-   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$pull:{permissions:permission}},{new:true})
-
-  res.status(200).json({success:true,message:"permissions remove successfully",data:addPermissions})
-
-  }catch(error){
-    return res.status(500).json({ success: false, message: "internal server error"});
-  }
-}

@@ -162,9 +162,20 @@ export const shopUpdateValidtaion = Joi.object({
         'string.base': 'Currency code must be a string',
         'string.empty': 'Currency code cannot be empty',
         'string.length': 'Currency code must be exactly 3 uppercase letters',
-        'string.pattern.base': 'Currency code must contain only uppercase letters(e.g.,INR, USD',   
+        'string.pattern.base': 'Currency code must contain only uppercase letters(e.g.MVR,INR, USD)',   
     }),
 
+})
+
+export const shopPasswordValidation = Joi.object({
+    password: Joi.string().min(8).max(20).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+        'string.required': 'Password is required',
+        'string.base': 'Password must be a string',
+        'string.empty': 'Password cannot be empty',
+        'string.min': 'Password must be at least 8 characters long',
+        'string.max': 'Password must be at most 20 characters long',
+        'string.pattern.base': 'Password must contain only letters, numbers or characters',
+    }),
 })
 
 
@@ -391,8 +402,6 @@ export const resetPasswordValidation = Joi.object({
     }),
     
 })
-
-
 
 
 export const addPermissionValidation = Joi.object({
