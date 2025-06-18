@@ -15,7 +15,7 @@ export const useSuperAdmins = () => {
     queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
-        url: "/super-admin/shop",
+        url: "/super-admin/shops",
         withCredentials: true,
       });
       return response?.data?.data;
@@ -27,7 +27,7 @@ export const useSuperAdmins = () => {
       if (!selectedShopId) return [];
       const response = await axiosInstance({
         method: "GET",
-        url: `/super-admin/employee/list?shop=${selectedShopId}`,
+        url: `/super-admin/employees?shop=${selectedShopId}`,
         withCredentials: true,
       });
       return response?.data?.data;
@@ -116,7 +116,7 @@ export const useSuperAdmins = () => {
 
       await axiosInstance({
         method: "PUT",
-        url: `super-admin/employee/${staffId}/update`,
+        url: `super-admin/employees/${staffId}`,
         withCredentials: true,
         data,
       });
@@ -148,8 +148,42 @@ export const useSuperAdmins = () => {
     },
   });
 
+  const { mutate: updateShop } = useMutation({
+    mutationFn: async ({
+      shopId,
+      shopName,
+      email,
+      countryName,
+      currencyCode,
+    }) => {
+      const data = {
+        shopName,
+        email,
+        countryName,
+        currencyCode,
+      };
+
+      await axiosInstance({
+        method: "PUT",
+        url: `/super-admin/shops/${shopId}`,
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Shop data updated successfully!");
+      queryClient.invalidateQueries(["shops"]);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to update shop data!"
+      );
+    },
+  });
+
   return {
     createShop,
+    updateShop,
     shops,
     shopStaffs,
     createStaff,

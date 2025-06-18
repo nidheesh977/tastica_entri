@@ -5,15 +5,15 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-export const Permissions = () => {
+export const SuperAdminPermissions = () => {
   const { id } = useParams();
-  const shopId = useSelector((state) => state?.auth?.shopData?._id);
+  const shopId = useSelector((state) => state?.selectedShopId);
   const [permissionData, setPermissionData] = useState([]);
   const addPermission = async (permission) => {
     try {
       await axiosInstance({
         method: "PATCH",
-        url: `/admin/staff/${id}/permissions`,
+        url: `/super-admin/staff/${id}/permissions`,
         withCredentials: true,
         data: { permission },
       });
@@ -28,7 +28,7 @@ export const Permissions = () => {
     try {
       await axiosInstance({
         method: "DELETE",
-        url: `/admin/staff/${id}/permissions`,
+        url: `/super-admin/staff/${id}/permissions`,
         withCredentials: true,
         data: { permission },
       });
@@ -40,7 +40,7 @@ export const Permissions = () => {
     }
   };
 
-  const adminHasPermission = (permission) =>
+  const superAdminHasPermission = (permission) =>
     permissionData.includes(permission);
 
   const getStaffPermission = async () => {
@@ -48,7 +48,7 @@ export const Permissions = () => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: `/admin/staff/${id}/${shopId}`,
+        url: `/super-admin/staff/${id}/${shopId}`,
       });
       setPermissionData(response?.data?.data?.permissions);
 
@@ -65,8 +65,8 @@ export const Permissions = () => {
       getStaffPermission();
     }
   }, [shopId]);
-  const togglePermissionAdmin = (permission) => {
-    const has = adminHasPermission(permission);
+  const togglePermissionSuperAdmin = (permission) => {
+    const has = superAdminHasPermission(permission);
     if (has) {
       removePermission(permission);
       setPermissionData((prev) => prev.filter((p) => p !== permission));
@@ -80,8 +80,8 @@ export const Permissions = () => {
     <>
       <div className=" m-2  my-10 md:flex mt-10 justify-around ">
         <PermissionCard
-          togglePermission={togglePermissionAdmin}
-          hasPermission={adminHasPermission}
+          togglePermission={togglePermissionSuperAdmin}
+          hasPermission={superAdminHasPermission}
         />
       </div>
     </>

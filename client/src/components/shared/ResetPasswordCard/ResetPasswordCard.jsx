@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash, FaKey } from "react-icons/fa";
 
-export const ResetPasswordCard = ({resetPassword}) => {
+export const ResetPasswordCard = ({ resetPassword }) => {
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
 
@@ -41,7 +41,7 @@ export const ResetPasswordCard = ({resetPassword}) => {
       <button
         className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
         onClick={() => {
-          resetPassword({password})
+          resetPassword({ password });
           setPassword("");
         }}
       >

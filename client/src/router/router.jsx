@@ -46,7 +46,10 @@ import { AdminPasswordReset } from "../pages/admin/AdminPasswordReset/AdminPassw
 import { AdminForgotPasswordMail } from "../pages/admin/AdminForgotPasswordEmail/AdminForgotPasswordEmail";
 import { SuperAdminPasswordReset } from "../pages/superAdmin/SuperAdminPasswordReset/SuperAdminPasswordReset";
 import { Permissions } from "../pages/admin/Permissions/Permissions";
+import { SuperAdminPermissions } from "../pages/superAdmin/SuperAdminPermissions/SuperAdminPermissions";
 import { SuperAdminForgotPasswordMail } from "../pages/superAdmin/superAdminForgotPasswordMail/SuperAdminForgotPasswordMail";
+import { StaffPasswordReset } from "../pages/admin/StaffResetPassword/StaffResetPassword";
+import { EmployeeResetPassword } from "../pages/superAdmin/EmployeeResetPassword/EmployeeResetPassword";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -56,7 +59,6 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLoginPage /> },
-      // { path: "", element: <Permissions /> },
 
       {
         path: "shop",
@@ -76,6 +78,7 @@ export const router = createBrowserRouter([
             path: "admin/reset/password/:token",
             element: <AdminPasswordReset />,
           },
+
           {
             path: "staff/login",
             element: <StaffLoginPage />,
@@ -140,6 +143,10 @@ export const router = createBrowserRouter([
             element: <ListStaffs />,
           },
           {
+            path: "staff/reset/password/:staffId",
+            element: <StaffPasswordReset />,
+          },
+          {
             path: "customer/view",
             element: <ListCustomers />,
           },
@@ -182,6 +189,10 @@ export const router = createBrowserRouter([
           {
             path: "payment/cancel",
             element: <PaymentCancel />,
+          },
+          {
+            path: "permissions/:id",
+            element: <Permissions />,
           },
         ],
       },
@@ -290,6 +301,15 @@ export const router = createBrowserRouter([
           {
             path: "staffs",
             element: <ListStaffsSuperAdmin />,
+          },
+          {
+            path: "employee/reset/password/:employeeId",
+            element: <EmployeeResetPassword />,
+          },
+
+          {
+            path: "permissions/:id",
+            element: <SuperAdminPermissions />,
           },
           {
             path: "shops",

@@ -7,6 +7,7 @@ import {
 } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
 import { SuperAdminSideBar } from "../components/superAdmin/SuperAdminSideBar/SuperAdminSideBar";
+import { storeError } from "../redux/features/errorSlice";
 
 export const ProtectedRouteSuperAdmin = () => {
   const isSuperAdmin = useSelector((state) => state?.auth?.superAdminData);
@@ -23,6 +24,7 @@ export const ProtectedRouteSuperAdmin = () => {
       dispatch(addSuperAdminData(response?.data?.data));
     } catch (error) {
       dispatch(removeSuperAdminData());
+      dispatch(storeError(error?.response?.data?.message));
       navigate("/super/admin/login");
     }
   };

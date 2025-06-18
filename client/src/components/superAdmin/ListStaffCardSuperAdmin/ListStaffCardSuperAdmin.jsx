@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdLockReset } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 import { saveSelectedShopId } from "../../../redux/features/selectedShopSlice";
 import { HiShieldCheck } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 export const ListStaffCardSuperAdmin = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -18,6 +19,7 @@ export const ListStaffCardSuperAdmin = () => {
   const { shops, shopStaffs, updateStaff, deleteStaff } = useSuperAdmins();
   const searchQuery = useSelector((state) => state?.search);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const staffData = shopStaffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
@@ -150,10 +152,25 @@ export const ListStaffCardSuperAdmin = () => {
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
                         <HiShieldCheck
+                          onClick={() =>
+                            navigate(`/super/admin/permissions/${staff?._id}`)
+                          }
                           title="Permissions"
                           size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
+                        {staff?.role !== "admin" && (
+                          <MdLockReset
+                            onClick={() =>
+                              navigate(
+                                `/super/admin/employee/reset/password/${staff?._id}`
+                              )
+                            }
+                            title="Reset Password"
+                            size={22}
+                            className="hover:text-orange-600 text-primary cursor-pointer"
+                          />
+                        )}
                       </>
                     )}
                     {alertMessage === staff._id && (

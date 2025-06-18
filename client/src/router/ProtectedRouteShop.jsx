@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../config/axiosInstance";
 import { addShopData, removeShopData } from "../redux/features/authSlice";
+import {storeError} from '../redux/features/errorSlice'
 
 export const ProtectedRouteShop = () => {
   const isShop = useSelector((state) => state?.auth?.shopData);
@@ -18,6 +19,7 @@ export const ProtectedRouteShop = () => {
       });
       dispatch(addShopData(response?.data?.data));
     } catch (error) {
+      dispatch(storeError(error?.response?.data?.message));
       dispatch(removeShopData());
       navigate("/");
     }
