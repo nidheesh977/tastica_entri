@@ -1,11 +1,22 @@
 import { useSelector } from "react-redux";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaSave } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
+import { HiShieldCheck } from "react-icons/hi";
 
 export const ListShopCard = () => {
-  const { shops } = useSuperAdmins();
+  const { shops, updateShop } = useSuperAdmins();
+
+  const [editId, setEditId] = useState(null);
+  const [editedName, setEditedName] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editedCountry, setEditedCountry] = useState("");
+  const [editedCurrency, setEditedCurrency] = useState("");
 
   const searchQuery = useSelector((state) => state?.search);
-
+  const navigate = useNavigate();
   const shopData = shops?.filter((shop) => {
     const query = searchQuery.toLowerCase();
 
@@ -34,6 +45,7 @@ export const ListShopCard = () => {
               <th className="border border-primary px-4 py-2">Email</th>
               <th className="border border-primary px-4 py-2">Country</th>
               <th className="border border-primary px-4 py-2">Currency</th>
+              <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -41,16 +53,93 @@ export const ListShopCard = () => {
               <tr key={shop?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
-                  {shop?.shopName}
+                  {editId === shop?._id ? (
+                    <input
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    shop?.shopName
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {shop?.email}
+                  {editId === shop?._id ? (
+                    <input
+                      value={editedEmail}
+                      onChange={(e) => setEditedEmail(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    shop?.email
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {shop?.countryName}
+                  {editId === shop?._id ? (
+                    <input
+                      value={editedCountry}
+                      onChange={(e) => setEditedCountry(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    shop?.countryName
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {shop?.currencyCode}
+                  {editId === shop?._id ? (
+                    <input
+                      value={editedCurrency}
+                      onChange={(e) => setEditedCurrency(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    shop?.currencyCode
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2 text-center">
+                  <div className="flex justify-start items-center h-12 gap-2">
+                    {editId === shop._id ? (
+                      <FaSave
+                        title="Save"
+                        size={20}
+                        className="text-primary hover:text-orange-600 cursor-pointer"
+                        onClick={() => {
+                          updateShop({
+                            shopId: shop?._id,
+                            shopName: editedName,
+                            email: editedEmail,
+                            countryName: editedCountry,
+                            currencyCode: editedCurrency,
+                          });
+                          setEditId(null);
+                        }}
+                      />
+                    ) : (
+                      <>
+                        <FiEdit
+                          title="Edit"
+                          size={20}
+                          onClick={() => {
+                            setEditId(shop?._id);
+                            setEditedName(shop?.shopName);
+                            setEditedEmail(shop?.email);
+                            setEditedCountry(shop?.countryName);
+                            setEditedCurrency(shop?.currencyCode);
+                          }}
+                          className="text-primary hover:text-orange-600 cursor-pointer"
+                        />
+
+                        <HiShieldCheck
+                          onClick={() =>
+                            navigate(`/admin/permissions/${shop?._id}`)
+                          }
+                          title="Permissions"
+                          size={22}
+                          className="hover:text-orange-600 text-primary cursor-pointer"
+                        />
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

@@ -8,7 +8,8 @@ import singleInvoiceReducer from "./features/singleInvoiceSlice";
 import singleInvoiceOpenOrderReducer from "./features/singleInvoiceOpenOrderSlice";
 import toggleCustomProductReducer from "./features/customProductSlice";
 import quantityReducer from "./features/quantitySlice";
-import  selectedShopReducer from "./features/selectedShopSlice";
+import selectedShopReducer from "./features/selectedShopSlice";
+import errorReducer from "./features/errorSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     toggleCustomProduct: toggleCustomProductReducer,
     toggleQuantity: quantityReducer,
     selectedShopId: selectedShopReducer,
+    error: errorReducer,
   },
 });

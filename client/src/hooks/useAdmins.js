@@ -74,7 +74,7 @@ export const useAdmins = () => {
     },
     onError: () => {
       toast.error(
-        error?.response?.data?.message || "Failed to update staff data!",
+        error?.response?.data?.message || "Failed to update staff data!"
       );
     },
   });
