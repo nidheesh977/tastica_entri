@@ -50,13 +50,13 @@ export const updateStaffPassword = async (req, res) => {
 export const getSingleStaff = async (req,res) => {
 
   try{
-     const {shopId,id} = req.params;
+     const {id} = req.params;
 
-     if(!shopId || !id){
+     if(!id){
       return res.status(400).json({success:false,message:"Id is missing"});
      }
 
-     const staff = await AdminStaffModel.findOne({shopId:shopId,_id:id});
+     const staff = await AdminStaffModel.findById(id);
 
      const {password:pass,...staffData} = staff._doc;
 

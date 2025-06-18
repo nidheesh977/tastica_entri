@@ -364,7 +364,11 @@
 
 - super admin get staff
 **method**`GET` <br>
-**URL**`/api/v1/super-admin/staff/:id/:shopId`
+**URL**`/api/v1/super-admin/staff/:id`
+
+- super admin profile
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/`
 
 
 - ## password reset  💼💼 <br>

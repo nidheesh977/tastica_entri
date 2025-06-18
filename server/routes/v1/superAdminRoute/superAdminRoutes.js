@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, updateShopBySuperAdmin, updateShopPasswordBySuperAdmin, UpdateStaffBySuperAdmin, UpdateSuperAdmin} from '../../../controller/superAdminController.js';
+import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, superAdminProfilePage, updateShopBySuperAdmin, updateShopPasswordBySuperAdmin, UpdateStaffBySuperAdmin, UpdateSuperAdmin} from '../../../controller/superAdminController.js';
 import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
@@ -13,6 +13,7 @@ superAdminRouter.post('/login', superAdminlogin);
 superAdminRouter.get('/check-logged',userVerifyToken,checkUserRole("super-admin"),checkSuperAdminLogin);
 superAdminRouter.post('/logout',userVerifyToken,checkUserRole("super-admin"),logOutSuperAdmin);
 superAdminRouter.put('/:id',userVerifyToken,checkUserRole("super-admin"),UpdateSuperAdmin);
+superAdminRouter.get('/',userVerifyToken,checkUserRole("super-admin"),superAdminProfilePage);
 
 // This routes for shops
 superAdminRouter.post('/shops',userVerifyToken,checkUserRole("super-admin"),createShop);
@@ -30,7 +31,7 @@ superAdminRouter.get('/employees',userVerifyToken,checkUserRole("super-admin"),g
 superAdminRouter.patch('/employees/:id/password',userVerifyToken,checkUserRole("super-admin"),updateStaffPassword);
 superAdminRouter.patch('/staff/:id/permissions',userVerifyToken,checkUserRole("super-admin"),addPermissionToStaff);
 superAdminRouter.delete('/staff/:id/permissions',userVerifyToken,checkUserRole("super-admin"),removePermissionFromStaff);
-superAdminRouter.get('/staff/:id/:shopId',userVerifyToken,checkUserRole("super-admin"),getSingleStaff);
+superAdminRouter.get('/staff/:id',userVerifyToken,checkUserRole("super-admin"),getSingleStaff);
  
  
 

@@ -115,10 +115,29 @@ import bcryptjs from 'bcryptjs'
             
            
         } catch (error) {
-          res.status(500).json({success:false,message:"Internal Server Error"})
+         return res.status(500).json({success:false,message:"Internal Server Error"})
         }
     }
     
+    export const superAdminProfilePage = async (req,res) => {
+           try{
+
+            const superAdminId = req.user.id;
+
+            if(!superAdminId){
+              return res.status(400).json({success:false,message:"Super admin ID is not get"})
+            }
+
+          const getProfile = await AdminStaffModel.findById(superAdminId);
+
+          const {password:pass,...superAdminData} = getProfile._doc;
+
+          res.status(200).json({success:true,message:"Data fetched Successfully",data:superAdminData})
+
+           }catch(error){
+              return res.status(500).json({success:false,message:"Internal Server Error"})
+           }
+    }
     
     
     
