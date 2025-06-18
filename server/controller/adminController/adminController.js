@@ -127,7 +127,7 @@ export const getStaffs = async (req, res) => {
       return res.status(400).json({ success: false, message: "Shop ID is missing" });
     }
 
-    const fetchData = await AdminStaffModel.find({ shopId: shopId, role:{$in:["admin","staff"]}}).select("-password").sort({role:1});
+    const fetchData = await AdminStaffModel.find({ role:{$in:["admin","staff"]}}).select("-password").sort({role:1});
 
     res.status(200).json({success: true, message: "Data fetch successfully",data:fetchData});
   } catch (error) {

@@ -1,0 +1,5 @@
+export {createProduct } from "./createProduct.controller.js"
+export {deleteProduct } from "./deleteProduct.controller.js"
+export {getCategoryProducts } from "./productsGetWithCategory.controller.js"
+export {updateProduct } from "./updateProduct.controller.js"
+export {getAllProducts } from "./getAllProducts.controller.js"

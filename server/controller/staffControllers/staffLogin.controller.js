@@ -1,11 +1,7 @@
-import AdminStaffModel from '../model/adminAndStaffModel.js';
-import {userLoginValidation} from '../utils/joiValidation.js';
-import { comparePassword } from '../utils/comparePassword.js';
-import { generateToken } from '../utils/generateToken.js';
-
-// create newUser
-
-// login staff
+import AdminStaffModel from '../../model/adminAndStaffModel.js';
+import {userLoginValidation} from '../../utils/joiValidation.js';
+import { comparePassword } from '../../utils/comparePassword.js';
+import { generateToken } from '../../utils/generateToken.js';
 
 export const loginStaff = async (req,res) => {
     try{
@@ -50,38 +46,4 @@ export const loginStaff = async (req,res) => {
     }catch(error){
          res.status(500).json({success:false,message:"Internal Server Error"})
     }
-}
-
-
-export const checkStaffLogin = async (req,res) => {
-    try {
-        const userLogged = req.user;
-
-        if(userLogged.role !== "staff"){
-            return res.status(401).json({success:false,message:"Unauthorized"});
-        }
-        const userExist = await  AdminStaffModel.findById(userLogged.id)
-        
-        const {password:pass,...userData} = userExist._doc;
-
-        res.status(200).json({success:true,message:"staff is logged in",data:userData});
-        
-       
-    } catch (error) {
-      res.status(500).json({success:false,message:"Internal Server Error"})
-    }
-}
-
-
-
-
-// Endpoint to log out a staff member by clearing the authentication token
-
-export const logOutStaff = async (req,res) => {
-  try{
-    res.clearCookie("staffToken")
-    res.status(200).json({success:true,message:"staff logged out successfully"})
-  }catch(error){
-     return res.status(500).json({success:false,message:"internal server error"})
-  }
 }

@@ -1,11 +1,7 @@
 import express from 'express';
-import { createProduct, deleteProduct, getAllProducts, getCategoryProducts, productListTest,productListTestforAdmin, updateProduct } from '../../../controller/productContollers/productController.js';
+import { createProduct, deleteProduct, getAllProducts, getCategoryProducts, updateProduct } from '../../../controller/productContollers/index.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
-import { addDiscount, removeDiscount } from '../../../controller/productContollers/discountController.js';
-import { addCostPriceProfit, removeCostPriceProfit, updateCostPriceProfit } from '../../../controller/productContollers/costPriceProfitController.js';
-import { addCostPrice, removeCostPrice } from '../../../controller/productContollers/costPriceController.js';
-import { addSellingPrice, removeSellingPrice } from '../../../controller/productContollers/sellingPriceController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 ;

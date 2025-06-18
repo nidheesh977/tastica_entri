@@ -1,8 +1,8 @@
-import AdminStaffModel from "../model/adminAndStaffModel.js";
-import shopModel from "../model/shopModel.js"
-import { comparePassword } from "../utils/comparePassword.js";
-import { generateToken } from "../utils/generateToken.js";
-import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, userLoginValidation, userSignupValidation, userUpdateValidation} from "../utils/joiValidation.js"
+import AdminStaffModel from "../../model/adminAndStaffModel.js";
+import shopModel from "../../model/shopModel.js"
+import { comparePassword } from "../../utils/comparePassword.js";
+import { generateToken } from "../../utils/generateToken.js";
+import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, userLoginValidation, userSignupValidation, userUpdateValidation} from "../../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
 
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, superAdminProfilePage, updateShopBySuperAdmin, updateShopPasswordBySuperAdmin, UpdateStaffBySuperAdmin, UpdateSuperAdmin} from '../../../controller/superAdminController.js';
+import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, superAdminProfilePage, updateShopBySuperAdmin, updateShopPasswordBySuperAdmin, UpdateStaffBySuperAdmin, UpdateSuperAdmin} from '../../../controller/superAdminController/superAdminController.js';
 import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';

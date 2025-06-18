@@ -65,8 +65,7 @@ import invoiceModel from "../../model/invoiceModel.js"
         
        res.status(200).json({success:true,message:"Data fetched successfully",data:result})
     }catch(error){
-
-            return res.status(500).json({success:false,message:"Internal server error"})
+         return res.status(500).json({success:false,message:"Internal server error"})
     }
     }
 
