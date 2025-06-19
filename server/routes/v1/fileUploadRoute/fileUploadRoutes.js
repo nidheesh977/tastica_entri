@@ -5,6 +5,7 @@ import { categoryFileUploader } from '../../../controller/csvOrExeclFileUploud/c
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
+import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 
 const fileUploadRouter = express.Router()
 
