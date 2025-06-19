@@ -10,7 +10,7 @@ const customerRouter = express.Router();
 
 customerRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),createCustomer);
 customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_read"),getCustomer);
-customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkPermission("customer_update"),updateCustomer);
-customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),checkPermission("customer_delete"),deleteCustomer);
-customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleCustomer);
+customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_update"),updateCustomer);
+customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_delete"),deleteCustomer);
+customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getSingleCustomer);
 export default customerRouter; 
