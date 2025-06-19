@@ -9,9 +9,9 @@ import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 const productRouter = express.Router();
  
 
-productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_create"),createProduct);
-productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_delete"),deleteProduct);
-productRouter.put('/update/:id/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),checkPermission("product_update"),updateProduct);
+productRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole('admin',"staff"),checkPermission("product_create"),createProduct);
+productRouter.delete('/delete/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin',"staff"),checkPermission("product_delete"),deleteProduct);
+productRouter.put('/update/:id/',shopVerifyToken,userVerifyToken,checkUserRole('admin',"staff"),checkPermission("product_update"),updateProduct);
 productRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),checkPermission("product_read"),getAllProducts);
 productRouter.get('/category-search',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getCategoryProducts);
 
