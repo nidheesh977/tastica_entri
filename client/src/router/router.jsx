@@ -50,6 +50,13 @@ import { SuperAdminPermissions } from "../pages/superAdmin/SuperAdminPermissions
 import { SuperAdminForgotPasswordMail } from "../pages/superAdmin/superAdminForgotPasswordMail/SuperAdminForgotPasswordMail";
 import { StaffPasswordReset } from "../pages/admin/StaffResetPassword/StaffResetPassword";
 import { EmployeeResetPassword } from "../pages/superAdmin/EmployeeResetPassword/EmployeeResetPassword";
+import { AddCategoryStaff } from "../pages/staff/AddCategoryStaff";
+import { ListCategoriesStaff } from "../pages/staff/ListCategoriesStaff";
+import { UploadCategoriesStaff } from "../pages/staff/UploadCategoriesStaff/UploadCategoriesStaff";
+import { AddProductStaff } from "../pages/staff/AddProductStaff/AddProductStaff";
+import { ListProductsStaff } from "../pages/staff/ListProductsStaff/ListProductsStaff";
+import { AddCustomerStaff } from "../pages/staff/AddCustomerStaff/AddCustomerStaff";
+import { ListCustomersStaff } from "../pages/staff/ListCustomersStaff/ListCustomersStaff";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -226,7 +233,11 @@ export const router = createBrowserRouter([
 
           {
             path: "add/product",
-            element: <AddProductCard />,
+            element: <AddProductStaff />,
+          },
+          {
+            path: "view/product",
+            element: <ListProductsStaff />,
           },
           {
             path: "add/custom/product",
@@ -238,19 +249,27 @@ export const router = createBrowserRouter([
           },
           {
             path: "category/view",
-            element: <ListCategories />,
+            element: <ListCategoriesStaff />,
           },
           {
             path: "add/category",
-            element: <AddNewCategory />,
+            element: <AddCategoryStaff />,
           },
           {
             path: "customer/view",
-            element: <ListCustomers />,
+            element: <ListCustomersStaff />,
           },
           {
             path: "customer/add",
-            element: <AddNewCustomer />,
+            element: <AddCustomerStaff />,
+          },
+          {
+            path: "upload/products/csv",
+            element: <UploadProductsStaff />,
+          },
+          {
+            path: "upload/categories/csv",
+            element: <UploadCategoriesStaff />,
           },
           {
             path: "customer/view/invoice/:id",
