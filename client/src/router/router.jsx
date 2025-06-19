@@ -50,11 +50,12 @@ import { SuperAdminPermissions } from "../pages/superAdmin/SuperAdminPermissions
 import { SuperAdminForgotPasswordMail } from "../pages/superAdmin/superAdminForgotPasswordMail/SuperAdminForgotPasswordMail";
 import { StaffPasswordReset } from "../pages/admin/StaffResetPassword/StaffResetPassword";
 import { EmployeeResetPassword } from "../pages/superAdmin/EmployeeResetPassword/EmployeeResetPassword";
-import { AddCategoryStaff } from "../pages/staff/AddCategoryStaff";
-import { ListCategoriesStaff } from "../pages/staff/ListCategoriesStaff";
+import { AddCategoryStaff } from "../pages/staff/AddCategoryStaff/AddCategoryStaff";
+import { ListCategoriesStaff } from "../pages/staff/ListCategoriesStaff/ListCategoriesStaff";
 import { UploadCategoriesStaff } from "../pages/staff/UploadCategoriesStaff/UploadCategoriesStaff";
 import { AddProductStaff } from "../pages/staff/AddProductStaff/AddProductStaff";
 import { ListProductsStaff } from "../pages/staff/ListProductsStaff/ListProductsStaff";
+import { UploadProductsStaff } from "../pages/staff/UploadProductsStaffs/UploadProductsStaff";
 import { AddCustomerStaff } from "../pages/staff/AddCustomerStaff/AddCustomerStaff";
 import { ListCustomersStaff } from "../pages/staff/ListCustomersStaff/ListCustomersStaff";
 
