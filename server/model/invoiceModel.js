@@ -31,7 +31,10 @@ const invoiceSchema = new mongoose.Schema({
             discountType:{type:String,enum:["percentage","flat"],default:"percentage"},
             category:{type:String,required:true},
             unit:{type:String},
-            customProduct:{type:Boolean,default:false}
+            customProduct:{type:Boolean,default:false},
+            taxRate:{type:Number,default:0},
+            taxAmount:{type:Number,default:0},
+            
          }   
         ],
         default:[]
@@ -97,7 +100,7 @@ const invoiceSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    taxRate:{
+    totalTax:{
         type:Number,
         default:0
     },   

@@ -1,5 +1,5 @@
 import express from 'express';
-import { invoiceTotal, monthBaseTotal, paymentMethodInvoice, yearBaseSale } from '../../../controller/adminController/adminDashboard.js';
+import { invoiceTotal, monthBaseTotal, paymentMethodInvoice, yearBaseSale } from '../../../controller/dashboardController.js/adminDashboard.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';

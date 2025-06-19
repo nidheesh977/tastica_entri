@@ -1,13 +1,14 @@
-import AdminStaffModel from '../model/adminAndStaffModel.js';
-import categoryModel from '../model/categoryModel.js';
-import customerModel from '../model/customerModel.js';
-import customProductModel from '../model/customProductModel.js';
-import invoiceModel from '../model/invoiceModel.js';
-import loyalityPointModel from '../model/loyalityPointModel.js';
-import productModel from '../model/productModel.js';
-import { calculateDiscount} from '../utils/calculateDiscount.js';
-import { calculateInvoiceTotal } from '../utils/calculateInvoice.js';
-import { generateId } from '../utils/generateId.js';
+import AdminStaffModel from '../../model/adminAndStaffModel.js';
+import categoryModel from '../../model/categoryModel.js';
+import customerModel from '../../model/customerModel.js';
+import customProductModel from '../../model/customProductModel.js';
+import invoiceModel from '../../model/invoiceModel.js';
+import loyalityPointModel from '../../model/loyalityPointModel.js';
+import productModel from '../../model/productModel.js';
+import { calculateDiscount} from '../../utils/calculateDiscount.js';
+import { calculateInvoiceTotal } from '../../utils/calculateInvoice.js';
+import { generateId } from '../../utils/generateId.js';
+import { caluculateTax } from '../../utils/productTaxCalculate.js';
 
 
 export const createNewInvoiceTab = async (req,res) => {
@@ -149,7 +150,8 @@ export const addProductToInvoice = async (req,res) => {
             productId:productId,
             category:findCategory?.categoryName || "custom product",
             unit:productExist.unit,
-            customProduct:productExist?.isCustomProduct || false
+            customProduct:productExist?.isCustomProduct || false,
+            taxRate:productExist?.productTax || 0
         } 
 
         
@@ -161,26 +163,33 @@ export const addProductToInvoice = async (req,res) => {
          
          // calculate discount
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
-        
+
+         const calculateTaxAmount = caluculateTax(addProduct.total,addProduct.taxRate)
         //  add discount to Total discount
          const finalDiscountValue = existInvoice?.totalDiscount  + parseFloat(totalDiscountAmount);
         
         //  add subtotal  
          const subTotal =  existInvoice.subTotal +  productTotalPrice ;
 
-          // substract discount from  total 
-         const subTotalReduceDiscount = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
+         const addTax = existInvoice.totalTax + calculateTaxAmount;
 
-         
-         const newObject = {...addProduct,productDiscount:parseFloat(totalDiscountAmount).toFixed(2)}
+          // substract discount from  total 
+         const subTotalReduce = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
+
+         const TotalAmount = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
+
+         const addTaxToTotal = addTax > 0 ? TotalAmount + addTax : TotalAmount
+               
+         const newObject = {...addProduct,productDiscount:parseFloat(totalDiscountAmount).toFixed(2), taxAmount:calculateTaxAmount}
          existInvoice.products.push(newObject);
          existInvoice.set("totalDiscount",parseFloat(finalDiscountValue).toFixed(2))
-         existInvoice.set("subTotal", parseFloat(subTotalReduceDiscount).toFixed(2))
-         existInvoice.set("totalAmount", parseFloat(subTotalReduceDiscount).toFixed(2))
+         existInvoice.set("subTotal", parseFloat(subTotalReduce).toFixed(2))
+         existInvoice.set("totalAmount", parseFloat(addTaxToTotal).toFixed(2))
+         existInvoice.set("totalTax", parseFloat(addTax).toFixed(2))
           
         
          await existInvoice.save();
- 
+  
   
          res.status(200).json({success:true,message:"product Added successfully",data:existInvoice})
       
@@ -194,9 +203,9 @@ export const addProductToInvoice = async (req,res) => {
              // calculate discount
              const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
             
-          
+             const calculateTaxAmount = caluculateTax(productTotalPrice,findInvoiceProduct.taxRate)
 
-            const {discountAmount,subTotalAmount,totalAmount} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice)
+            const {discountAmount,subTotalAmount,addTaxToTotalAmt,taxAmountAfterUpdateQty} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice,calculateTaxAmount)
               
 
             
@@ -205,9 +214,12 @@ export const addProductToInvoice = async (req,res) => {
                                 "products.$.quantity":quantity,
                                 "products.$.total":productTotalPrice,
                                 "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
+                                "products.$.taxAmount":parseFloat(calculateTaxAmount).toFixed(2),
                                 totalDiscount:parseFloat(discountAmount).toFixed(2),
                                 subTotal:parseFloat(subTotalAmount).toFixed(2),
-                                totalAmount:parseFloat(totalAmount).toFixed(2)
+                                totalAmount:parseFloat(addTaxToTotalAmt).toFixed(2),
+                                totalTax:parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+                                 
                             }
                         },{new:true})
 
@@ -220,9 +232,9 @@ export const addProductToInvoice = async (req,res) => {
             // calculate discount
             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
                  
-         
+            const calculateTaxAmount = caluculateTax(productTotalPrice,findInvoiceProduct.taxRate)
 
-            const {discountAmount,subTotalAmount,totalAmount} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice)
+            const {discountAmount,subTotalAmount,addTaxToTotalAmt,taxAmountAfterUpdateQty} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice,calculateTaxAmount)
 
              
             const updatedQuantity =  await invoiceModel.findOneAndUpdate({_id:invoiceId,"products._id":findInvoiceProduct._id }, {
@@ -230,9 +242,11 @@ export const addProductToInvoice = async (req,res) => {
                                   "products.$.quantity":quantity,
                                   "products.$.total":productTotalPrice,
                                   "products.$.productDiscount":parseFloat(calculateDiscountAmount).toFixed(2),
+                                   "products.$.taxAmount":parseFloat(calculateTaxAmount).toFixed(2),
                                   totalDiscount:parseFloat(discountAmount).toFixed(2),
                                   subTotal:parseFloat(subTotalAmount).toFixed(2),
-                                  totalAmount:parseFloat(totalAmount).toFixed(2)
+                                  totalAmount:parseFloat(addTaxToTotalAmt).toFixed(2),
+                                  totalTax:parseFloat(taxAmountAfterUpdateQty).toFixed(2)
                                  }
                   },{new:true})
  
@@ -279,14 +293,16 @@ export const removeProductFromInvoice = async (req,res) => {
          const productDiscount = getProduct.productDiscount || 0;
          const newSubTotal = findInvoice.subTotal  + productDiscount - productTotal;
          const newTotalDiscount = findInvoice.totalDiscount  - productDiscount;
-         const newTotalAmount = findInvoice.totalAmount  + productDiscount - productTotal;
+         const newTotalAmount = findInvoice.totalAmount  + productDiscount - productTotal - getProduct.taxAmount;
+         const newTaxTotal =   findInvoice.totalTax - getProduct.taxAmount;
 
          const removeProduct = await invoiceModel.findByIdAndUpdate(invoiceId,{
                 $pull: { products: { _id: productsId } },
                 totalDiscount: parseFloat(newTotalDiscount).toFixed(2),
                 subTotal: parseFloat(newSubTotal).toFixed(2),
-                totalAmount: parseFloat(newTotalAmount).toFixed(2)
-                },{new:true});
+                totalAmount: parseFloat(newTotalAmount).toFixed(2),
+                totalTax: parseFloat(newTaxTotal).toFixed(2)
+                },{new:true}); 
 
          res.status(200).json({success:true,message:"Product removed successfully",data:removeProduct})
 

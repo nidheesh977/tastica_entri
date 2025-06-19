@@ -289,6 +289,11 @@ export const updateProductValidation = Joi.object({
          'number.base': 'Cost price must be a number',
          'number.empty': 'Cost price cannot be empty',
     }),
+
+    productTax:Joi.number().precision(2).min(0).message({
+         'number.base': 'Product tax must be a number',
+         'number.empty': 'Product tax cannot be empty',
+    }),
    
 })
 

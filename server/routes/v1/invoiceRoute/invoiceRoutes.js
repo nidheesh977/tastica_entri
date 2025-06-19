@@ -1,5 +1,5 @@
 import express from 'express'
-import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController.js';
+import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController/invoiceController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';

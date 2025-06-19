@@ -56,6 +56,11 @@ const productSchema = new mongoose.Schema({
         enum:['no','kg','lt','m'],
         default:'no'
     }, 
+    
+    productTax:{
+        type:Number,
+        default:0
+    },
 
     isActive:{
         type:Boolean,
