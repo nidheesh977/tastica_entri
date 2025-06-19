@@ -58,6 +58,7 @@ import { ListProductsStaff } from "../pages/staff/ListProductsStaff/ListProducts
 import { UploadProductsStaff } from "../pages/staff/UploadProductsStaffs/UploadProductsStaff";
 import { AddCustomerStaff } from "../pages/staff/AddCustomerStaff/AddCustomerStaff";
 import { ListCustomersStaff } from "../pages/staff/ListCustomersStaff/ListCustomersStaff";
+import { ShopPasswordReset } from "../pages/superAdmin/ShopResetPassword/ShopResetPassword";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -246,7 +247,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "product/view",
-            element: <ListProducts />,
+            element: <ListProductsStaff />,
           },
           {
             path: "category/view",
@@ -313,6 +314,10 @@ export const router = createBrowserRouter([
           {
             path: "create/shop",
             element: <CreateShop />,
+          },
+          {
+            path: "shop/reset/password/:shopId",
+            element: <ShopPasswordReset />,
           },
           {
             path: "create/staff",

@@ -17,7 +17,7 @@ export const OpenOrderCart = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const admin = useSelector((state) => state?.auth?.adminData);
-
+  const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
   const {
     singleInvoiceOpenOrder,
     makeCashPaymentOpenOrder,
@@ -166,7 +166,10 @@ export const OpenOrderCart = ({
         </div> */}
         <div className="flex justify-between items-center border px-2 py-2">
           <div>Products Discount</div>
-          <div>MVR{invoice?.totalDiscount || 0}</div>
+          <div>
+            {currency}
+            {invoice?.totalDiscount || 0}
+          </div>
         </div>
         {loyaltyPoints?.loyalityRate && (
           <div className="flex justify-between items-center border px-2 py-2">
@@ -199,7 +202,10 @@ export const OpenOrderCart = ({
         )}
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
-          <div>MVR{invoice?.totalAmount || 0}</div>
+          <div>
+            {currency}
+            {invoice?.totalAmount || 0}
+          </div>
         </div>
       </div>
 

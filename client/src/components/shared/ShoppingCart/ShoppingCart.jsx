@@ -7,13 +7,14 @@ import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
+import { useSelector } from "react-redux";
 
 export const ShoppingCart = ({
   addProductToInvoice,
   removeProductFromInvoice,
 }) => {
   const { customers, addCustomer } = useCustomers();
-
+  const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
   const {
     createInvoice,
     makeCashPayment,
@@ -257,7 +258,7 @@ export const ShoppingCart = ({
           </div> */}
           <div className="flex justify-between items-center border px-2 py-2">
             <div>Products Discount</div>
-            <div>MVR{invoice?.totalDiscount || 0}</div>
+            <div>{currency}{invoice?.totalDiscount || 0}</div>
           </div>
           {loyaltyPoints?.loyalityRate && (
             <>
@@ -292,7 +293,7 @@ export const ShoppingCart = ({
           )}
           <div className="flex justify-between items-center font-semibold border px-2 py-2">
             <div>Total</div>
-            <div>MVR{invoice?.totalAmount || 0}</div>
+            <div>{currency}{invoice?.totalAmount || 0}</div>
           </div>
         </div>
       )}

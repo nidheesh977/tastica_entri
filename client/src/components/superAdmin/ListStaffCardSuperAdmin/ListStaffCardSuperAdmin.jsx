@@ -20,7 +20,7 @@ export const ListStaffCardSuperAdmin = () => {
   const searchQuery = useSelector((state) => state?.search);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const superAdmin = useSelector((state)=> state?.auth?.superAdminData?.role)
   const staffData = shopStaffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
 
@@ -30,6 +30,7 @@ export const ListStaffCardSuperAdmin = () => {
       staff?.phoneNumber.toString().toLowerCase().includes(query)
     );
   });
+
 
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -159,7 +160,7 @@ export const ListStaffCardSuperAdmin = () => {
                           size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
-                        {staff?.role !== "admin" && (
+                        {superAdmin === "super-admin" && (
                           <MdLockReset
                             onClick={() =>
                               navigate(

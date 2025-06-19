@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 export const InvoiceDataCard = () => {
   const { id } = useParams();
   const { singleInvoice } = useInvoices();
-
+  const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
   useEffect(() => {
     if (id) {
       singleInvoice({ singleInvoiceId: id });
@@ -50,18 +50,24 @@ export const InvoiceDataCard = () => {
                 </td>
               </tr>
             ))}
-           
+
             <tr className="font-semibold py-4 border-t border-primary">
               <td className="border-r border-primary">Total Discount:</td>
               <td></td>
               <td></td>
-              <td className="border-l border-primary">{invoice?.totalDiscount}MVR</td>
+              <td className="border-l border-primary">
+                {invoice?.totalDiscount}
+                {currency}
+              </td>
             </tr>
             <tr className="font-semibold py-4 border-t border-r border-primary">
               <td className="border-r border-primary">Total:</td>
               <td></td>
               <td></td>
-              <td className="border-l border-primary">{invoice?.totalAmount}MVR</td>
+              <td className="border-l border-primary">
+                {invoice?.totalAmount}
+                {currency}
+              </td>
             </tr>
           </tbody>
         </table>

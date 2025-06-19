@@ -6,7 +6,7 @@ import { AlertBox } from "../AlertBox/AlertBox";
 import { useCategories } from "../../../hooks/useCategories";
 import { useSelector } from "react-redux";
 
-export const ListCardCategory = () => {
+export const ListCardCategory = ({ permissions }) => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
@@ -41,7 +41,10 @@ export const ListCardCategory = () => {
               <th className="border border-primary px-4 py-2">Category Name</th>
               <th className="border border-primary px-4 py-2">Description</th>
               <th className="border border-primary px-4 py-2">Discount</th>
-              <th className="border border-primary px-4 py-2">Action</th>
+              {(permissions?.includes("category_update") ||
+                permissions?.includes("category_delete")) && (
+                <th className="border border-primary px-4 py-2">Action</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -82,55 +85,62 @@ export const ListCardCategory = () => {
                   {category?.discountRate}
                   {/* )} */}
                 </td>
-                <td className="border border-primary px-4 py-2 text-center">
-                  <div className="flex justify-start items-center h-12 gap-2">
-                    {editId === category._id ? (
-                      <FaSave
-                        title="Save"
-                        size={20}
-                        onClick={() => {
-                          updateCategory({
-                            categoryId: category._id,
-                            categoryName: editCategoryName,
-                            description: editedDescription,
-                          });
-                          setEditId(null);
-                        }}
-                        className="text-primary hover:text-orange-600 cursor-pointer"
-                      />
-                    ) : (
-                      <>
-                        <FiEdit
-                          title="Edit"
+                {(permissions?.includes("category_update") ||
+                  permissions?.includes("category_delete")) && (
+                  <td className="border border-primary px-4 py-2 text-center">
+                    <div className="flex justify-start items-center h-12 gap-2">
+                      {editId === category._id ? (
+                        <FaSave
+                          title="Save"
                           size={20}
                           onClick={() => {
-                            setEditId(category._id);
-                            setEditCategoryName(category.categoryName);
-                            setEditedDescription(category.description);
-                            setEditedDiscount(category.discountRate);
+                            updateCategory({
+                              categoryId: category._id,
+                              categoryName: editCategoryName,
+                              description: editedDescription,
+                            });
+                            setEditId(null);
                           }}
                           className="text-primary hover:text-orange-600 cursor-pointer"
                         />
-                        <MdDelete
-                          title="Delete"
-                          size={22}
-                          onClick={() => setAlertMessage(category._id)}
-                          className="hover:text-orange-600 text-primary cursor-pointer"
+                      ) : (
+                        <>
+                          {permissions?.includes("category_update") && (
+                            <FiEdit
+                              title="Edit"
+                              size={20}
+                              onClick={() => {
+                                setEditId(category._id);
+                                setEditCategoryName(category.categoryName);
+                                setEditedDescription(category.description);
+                                setEditedDiscount(category.discountRate);
+                              }}
+                              className="text-primary hover:text-orange-600 cursor-pointer"
+                            />
+                          )}
+                          {permissions?.includes("category_delete") && (
+                            <MdDelete
+                              title="Delete"
+                              size={22}
+                              onClick={() => setAlertMessage(category._id)}
+                              className="hover:text-orange-600 text-primary cursor-pointer"
+                            />
+                          )}
+                        </>
+                      )}
+                      {alertMessage === category._id && (
+                        <AlertBox
+                          message="Do you want to delete this category?"
+                          onConfirm={() => {
+                            setAlertMessage(null);
+                            deleteCategory(category._id);
+                          }}
+                          onCancel={() => setAlertMessage(null)}
                         />
-                      </>
-                    )}
-                    {alertMessage === category._id && (
-                      <AlertBox
-                        message="Do you want to delete this category?"
-                        onConfirm={() => {
-                          setAlertMessage(null);
-                          deleteCategory(category._id);
-                        }}
-                        onCancel={() => setAlertMessage(null)}
-                      />
-                    )}
-                  </div>
-                </td>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
