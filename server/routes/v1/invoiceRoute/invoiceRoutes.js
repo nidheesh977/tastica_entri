@@ -7,7 +7,7 @@ import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification
 const invoiceRouter = express.Router()
 
 //  This route only admin
- invoiceRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin'),getFullInvoice);
+ invoiceRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole('admin', "staff"),getFullInvoice);
 
 invoiceRouter.post('/:customerId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),createNewInvoiceTab);
 invoiceRouter.post('/:invoiceId/products',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),addProductToInvoice);
