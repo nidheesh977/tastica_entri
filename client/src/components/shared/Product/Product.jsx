@@ -11,6 +11,7 @@ export const Product = ({ addProductToInvoice }) => {
   const searchQuery = useSelector((state) => state.search);
   const { invoice, singleInvoiceOpenOrder } = useInvoices();
   const { products } = useProducts();
+  const currency = useSelector((state)=> state?.auth?.shopData?.currencyCode)
   const existingCartProducts =
     invoice?.products || singleInvoiceOpenOrder?.products;
   const categoryProducts = useMemo(() => {
@@ -66,7 +67,7 @@ export const Product = ({ addProductToInvoice }) => {
             </div>
             <div>
               <p className="border-t border-black text-center font-bold py-1">
-                MVR{product.sellingPrice || product.costPrice}
+                {currency}{product.sellingPrice || product.costPrice}
               </p>
               <p className="border-t border-black text-center font-bold py-1">
                 Available Stock {product?.quantity} {product?.unit}

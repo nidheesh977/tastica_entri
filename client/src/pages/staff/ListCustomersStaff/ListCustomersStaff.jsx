@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 import { ListCardCustomer } from "../../../components/shared/ListCardCustomer/ListCardCustomer";
 
-export const ListCustomers = () => {
+export const ListCustomersStaff = () => {
   const permissions = useSelector(
-    (state) => state?.auth?.adminData?.permissions
+    (state) => state?.auth?.staffData?.permissions
   );
   return (
     <>

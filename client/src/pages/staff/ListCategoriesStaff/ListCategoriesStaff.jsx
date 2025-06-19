@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 import { ListCardCategory } from "../../../components/shared/ListCardCategory/ListCardCategory";
 
-export const ListCategories = () => {
+export const ListCategoriesStaff = () => {
   const permissions = useSelector(
-    (state) => state?.auth?.adminData?.permissions
+    (state) => state?.auth?.staffData?.permissions
   );
   return (
     <>

@@ -4,9 +4,9 @@ import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useProducts } from "../../../hooks/useProducts";
-import {useSelector} from 'react-redux'
+import { useSelector } from "react-redux";
 
-export const ListCardProduct = () => {
+export const ListCardProduct = ({ permissions }) => {
   const [editId, setEditId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedCategory, setEditedCategory] = useState("");
@@ -18,7 +18,7 @@ export const ListCardProduct = () => {
   const [alertMessage, setAlertMessage] = useState(null);
   const { products, updateProduct, deleteProduct } = useProducts();
 
-  const searchQuery = useSelector((state)=> state?.search)
+  const searchQuery = useSelector((state) => state?.search);
   const productData = products?.filter((product) => {
     const query = searchQuery.toLowerCase();
 
@@ -51,10 +51,15 @@ export const ListCardProduct = () => {
               <th className="border border-primary px-4 py-2">Category</th>
               <th className="border border-primary px-4 py-2">Quantity</th>
               <th className="border border-primary px-4 py-2">Cost Price</th>
-              <th className="border border-primary px-4 py-2">Cost Price Profit</th>
+              <th className="border border-primary px-4 py-2">
+                Cost Price Profit
+              </th>
               <th className="border border-primary px-4 py-2">Selling Price</th>
               <th className="border border-primary px-4 py-2">Discount</th>
-              <th className="border border-primary px-4 py-2">Action</th>
+              {(permissions?.includes("product_update") ||
+                permissions?.includes("product_delete")) && (
+                <th className="border border-primary px-4 py-2">Action</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -141,65 +146,73 @@ export const ListCardProduct = () => {
                     product?.discount
                   )}
                 </td>
-                <td className="border border-primary px-4 py-2 text-center">
-                  <div className="flex justify-start items-center h-12 gap-2">
-                    {editId === product._id ? (
-                      <FaSave
-                        title="Save"
-                        size={20}
-                        onClick={() => {
-                          updateProduct({
-                            productId: editId,
-                            productName: editedTitle,
-                            quantity: editedQuantity,
-                            costPrice: editedCostPrice,
-                            costPriceProfit: editedCostPriceProfit,
-                            sellingPrice: editedSellingPrice,
-                            discount: editedDiscount,
-                            category: editedCategory,
-                            
-                          });
-                          setEditId(null);
-                        }}
-                        className="text-primary hover:text-orange-600 cursor-pointer"
-                      />
-                    ) : (
-                      <>
-                        <FiEdit
-                          title="Edit"
+                {(permissions?.includes("product_update") ||
+                  permissions?.includes("product_delete")) && (
+                  <td className="border border-primary px-4 py-2 text-center">
+                    <div className="flex justify-start items-center h-12 gap-2">
+                      {editId === product._id ? (
+                        <FaSave
+                          title="Save"
                           size={20}
                           onClick={() => {
-                            setEditId(product?._id);
-                            setEditedTitle(product?.productName);
-                            setEditedQuantity(product?.quantity);
-                            setEditedCategory(product?.category?._id);
-                            setEditedSellingPrice(product?.sellingPrice);
-                            setEditedCostPrice(product?.costPrice);
-                            setEditedCostPriceProfit(product?.costPriceProfit);
-                            setEditedDiscount(product?.discount);
+                            updateProduct({
+                              productId: editId,
+                              productName: editedTitle,
+                              quantity: editedQuantity,
+                              costPrice: editedCostPrice,
+                              costPriceProfit: editedCostPriceProfit,
+                              sellingPrice: editedSellingPrice,
+                              discount: editedDiscount,
+                              category: editedCategory,
+                            });
+                            setEditId(null);
                           }}
                           className="text-primary hover:text-orange-600 cursor-pointer"
                         />
-                        <MdDelete
-                          title="Delete"
-                          size={22}
-                          onClick={() => setAlertMessage(product._id)}
-                          className="hover:text-orange-600 text-primary cursor-pointer"
+                      ) : (
+                        <>
+                          {permissions?.includes("product_update") && (
+                            <FiEdit
+                              title="Edit"
+                              size={20}
+                              onClick={() => {
+                                setEditId(product?._id);
+                                setEditedTitle(product?.productName);
+                                setEditedQuantity(product?.quantity);
+                                setEditedCategory(product?.category?._id);
+                                setEditedSellingPrice(product?.sellingPrice);
+                                setEditedCostPrice(product?.costPrice);
+                                setEditedCostPriceProfit(
+                                  product?.costPriceProfit
+                                );
+                                setEditedDiscount(product?.discount);
+                              }}
+                              className="text-primary hover:text-orange-600 cursor-pointer"
+                            />
+                          )}
+                          {permissions?.includes("product_delete") && (
+                            <MdDelete
+                              title="Delete"
+                              size={22}
+                              onClick={() => setAlertMessage(product._id)}
+                              className="hover:text-orange-600 text-primary cursor-pointer"
+                            />
+                          )}
+                        </>
+                      )}
+                      {alertMessage === product._id && (
+                        <AlertBox
+                          message="Do you want to delete this product?"
+                          onConfirm={() => {
+                            setAlertMessage(null);
+                            deleteProduct(product?._id);
+                          }}
+                          onCancel={() => setAlertMessage(null)}
                         />
-                      </>
-                    )}
-                    {alertMessage === product._id && (
-                      <AlertBox
-                        message="Do you want to delete this product?"
-                        onConfirm={() => {
-                          setAlertMessage(null);
-                          deleteProduct(product?._id);
-                        }}
-                        onCancel={() => setAlertMessage(null)}
-                      />
-                    )}
-                  </div>
-                </td>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

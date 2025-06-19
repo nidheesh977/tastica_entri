@@ -7,7 +7,7 @@ import { useCustomers } from "../../../hooks/useCustomers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export const ListCardCustomer = () => {
+export const ListCardCustomer = ({ permissions }) => {
   const [alertMessage, setAlertMessage] = useState(null);
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
@@ -92,22 +92,26 @@ export const ListCardCustomer = () => {
                       />
                     ) : (
                       <div className="flex gap-2 items-center mx-auto">
-                        <FiEdit
-                          title="Edit"
-                          size={20}
-                          onClick={() => {
-                            setEditId(customer?._id);
-                            setEditedName(customer?.customerName);
-                            setEditedMobile(customer?.phoneNumber);
-                          }}
-                          className="text-primary hover:text-orange-600 cursor-pointer"
-                        />
-                        <MdDelete
-                          title="Delete"
-                          size={22}
-                          onClick={() => setAlertMessage(customer?._id)}
-                          className="hover:text-orange-600 text-primary cursor-pointer"
-                        />
+                        {permissions?.includes("customer_update") && (
+                          <FiEdit
+                            title="Edit"
+                            size={20}
+                            onClick={() => {
+                              setEditId(customer?._id);
+                              setEditedName(customer?.customerName);
+                              setEditedMobile(customer?.phoneNumber);
+                            }}
+                            className="text-primary hover:text-orange-600 cursor-pointer"
+                          />
+                        )}
+                        {permissions?.includes("customer_delete") && (
+                          <MdDelete
+                            title="Delete"
+                            size={22}
+                            onClick={() => setAlertMessage(customer?._id)}
+                            className="hover:text-orange-600 text-primary cursor-pointer"
+                          />
+                        )}
 
                         <MdEventNote
                           onClick={() => {

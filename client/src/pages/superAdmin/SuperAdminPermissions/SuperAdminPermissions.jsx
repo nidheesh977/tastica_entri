@@ -48,7 +48,7 @@ export const SuperAdminPermissions = () => {
     try {
       const response = await axiosInstance({
         method: "GET",
-        url: `/super-admin/staff/${id}/${shopId}`,
+        url: `/super-admin/staff/${id}`,
       });
       setPermissionData(response?.data?.data?.permissions);
 
