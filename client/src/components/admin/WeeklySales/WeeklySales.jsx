@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { useAdmins } from "../../../hooks/useAdmins";
+
 
 ChartJS.register(
   BarElement,
@@ -22,9 +22,9 @@ ChartJS.register(
 
 import {dark} from '../../../../utils/constants'
 
-export const WeeklySales = () => {
+export const WeeklySales = ({invoices}) => {
   const [chart, setChart] = useState(null);
-  const { invoices } = useAdmins();
+ 
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;

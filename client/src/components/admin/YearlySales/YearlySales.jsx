@@ -9,7 +9,6 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { useAdmins } from "../../../hooks/useAdmins";
 
 ChartJS.register(
   BarElement,
@@ -17,12 +16,11 @@ ChartJS.register(
   LinearScale,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
-import {light} from '../../../../utils/constants'
-export const YearlySales = () => {
+import { light } from "../../../../utils/constants";
+export const YearlySales = ({ invoices }) => {
   const [chart, setChart] = useState(null);
-  const { invoices } = useAdmins();
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -34,7 +32,7 @@ export const YearlySales = () => {
     }, {});
 
     const sortedYears = Object.keys(salesByYear).sort();
-    const totals = sortedYears.map(year => salesByYear[year]);
+    const totals = sortedYears.map((year) => salesByYear[year]);
 
     setChart({
       labels: sortedYears,
@@ -42,7 +40,7 @@ export const YearlySales = () => {
         {
           label: "Yearly Sales ₹",
           data: totals,
-          backgroundColor:`${light}`,
+          backgroundColor: `${light}`,
           borderColor: `${light}`,
           borderWidth: 1,
         },

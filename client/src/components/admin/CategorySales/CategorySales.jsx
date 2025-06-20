@@ -1,14 +1,12 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
-import { useAdmins } from "../../../hooks/useAdmins";
 import { dark, medium, light } from "../../../../utils/constants";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const CategorySales = () => {
+export const CategorySales = ({ invoices }) => {
   const [chartData, setChartData] = useState(null);
-  const { invoices } = useAdmins();
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;

@@ -334,7 +334,7 @@ export const ShoppingCart = ({
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
+          message={`Total payable amount: ${currency}${invoice?.totalAmount || 0}`}
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-export const ListCardInvoice = ({ invoices, customer }) => {
+export const ListCardInvoice = ({ invoices }) => {
   const searchQuery = useSelector((state) => state?.search);
 
   const invoicesData = invoices?.filter((invoice) => {
@@ -11,10 +11,24 @@ export const ListCardInvoice = ({ invoices, customer }) => {
       invoice?.invoiceNumber?.toString().toLowerCase().includes(query) ||
       invoice?.staff?.toLowerCase().includes(query) ||
       invoice?.customer?.customerName?.toLowerCase().includes(query) ||
-      invoice?.totalDiscount.toString().toLocaleLowerCase().includes(query) ||
-      invoice?.totalAmount.toString().toLocaleLowerCase().includes(query)
+      invoice?.customer?.phoneNumber?.toString().includes(query) ||
+      invoice?.totalDiscount?.toString().includes(query) ||
+      invoice?.totalAmount?.toString().includes(query)
     );
   });
+
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  };
+
+  const showCustomerColumn = invoices?.some(
+    (inv) => inv?.customer?.customerName
+  );
+  const showPhoneColumn = invoices?.some((inv) => inv?.customer?.phoneNumber);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -32,11 +46,14 @@ export const ListCardInvoice = ({ invoices, customer }) => {
               <th className="border border-primary px-4 py-2">
                 Invoice Number
               </th>
+              <th className="border border-primary px-4 py-2">Date</th>
               <th className="border border-primary px-4 py-2">Staff</th>
-              <th className="border border-primary px-4 py-2">Customer</th>
-              <th className="border border-primary px-4 py-2">
-                Total Discount
-              </th>
+              {showCustomerColumn && (
+                <th className="border border-primary px-4 py-2">Customer</th>
+              )}
+              {showPhoneColumn && (
+                <th className="border border-primary px-4 py-2">Mobile</th>
+              )}
               <th className="border border-primary px-4 py-2">Total Amount</th>
             </tr>
           </thead>
@@ -51,14 +68,23 @@ export const ListCardInvoice = ({ invoices, customer }) => {
                   </Link>
                 </td>
                 <td className="border border-primary px-4 py-2">
+                  {formatDate(invoice?.createdAt)}
+                </td>
+                <td className="border border-primary px-4 py-2">
                   {invoice?.staff}
                 </td>
-                <td className="border border-primary px-4 py-2">
-                  {customer || invoice?.customer?.customerName}
-                </td>
-                <td className="border border-primary px-4 py-2">
-                  {invoice?.totalDiscount}
-                </td>
+                {invoice?.customer?.customerName && (
+                  <td className="border border-primary px-4 py-2">
+                    {invoice?.customer?.customerName}
+                  </td>
+                )}
+
+                {invoice?.customer?.phoneNumber && (
+                  <td className="border border-primary px-4 py-2">
+                    {invoice?.customer?.phoneNumber}
+                  </td>
+                )}
+
                 <td className="border border-primary px-4 py-2">
                   {invoice?.totalAmount}
                 </td>
