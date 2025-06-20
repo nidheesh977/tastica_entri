@@ -108,12 +108,12 @@ export const AdminHeader = () => {
 
             <li
               className="hidden xl:block cursor-pointer rounded shadow-xl w-full   p-2"
-              title="Shopping Cart"
+              title="Back"
             >
               <FaArrowLeft
                 className="hover:text-orange-600 mx-auto"
                 size={20}
-                onClick={() => navigate(-1)}
+                onClick={() =>{location.pathname !== '/admin' && navigate(-1)}}
               />
             </li>
             <li

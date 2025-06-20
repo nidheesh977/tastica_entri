@@ -4,7 +4,7 @@ import { MdAdminPanelSettings, MdClose } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
 import { IoMenu } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
 import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
@@ -16,6 +16,7 @@ export const SuperAdminHeader = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const superAdminName = useSelector(
     (state) => state?.auth?.superAdminData?.userName
   );
@@ -82,12 +83,14 @@ export const SuperAdminHeader = () => {
             </li>
             <li
               className="hidden xl:block cursor-pointer rounded shadow-xl w-full   p-2"
-              title="Shopping Cart"
+              title="Back"
             >
               <FaArrowLeft
                 className="hover:text-orange-600 mx-auto"
                 size={20}
-                onClick={() => navigate(-1)}
+                onClick={() => {
+                  location.pathname !== "/super/admin" && navigate(-1);
+                }}
               />
             </li>
 
