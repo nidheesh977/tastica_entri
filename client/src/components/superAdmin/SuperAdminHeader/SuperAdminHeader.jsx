@@ -10,6 +10,7 @@ import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { removeSuperAdminData } from "../../../redux/features/authSlice";
+import { FaArrowLeft } from "react-icons/fa";
 
 export const SuperAdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -78,6 +79,16 @@ export const SuperAdminHeader = () => {
                   onClick={() => dispatch(saveSearchQuery(""))}
                 />
               )}
+            </li>
+            <li
+              className="hidden xl:block cursor-pointer rounded shadow-xl w-full   p-2"
+              title="Shopping Cart"
+            >
+              <FaArrowLeft
+                className="hover:text-orange-600 mx-auto"
+                size={20}
+                onClick={() => navigate(-1)}
+              />
             </li>
 
             <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">

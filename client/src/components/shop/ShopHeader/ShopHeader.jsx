@@ -56,16 +56,19 @@ export const ShopHeader = () => {
             </span>
           )}
 
-          {location.pathname !== "/" && location.pathname !== "/shop" && (
-            <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
-              <FaArrowLeft
-                onClick={() => navigate("/")}
-                className="hover:text-orange-600 mx-auto"
-                size={20}
-                title="Back"
-              />
-            </span>
-          )}
+          {location.pathname !== "/" &&
+            location.pathname !== "/shop" &&
+            location.pathname !== "/shop/admin/login" &&
+            location.pathname !== "/shop/staff/login" && (
+              <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
+                <FaArrowLeft
+                  onClick={() => navigate("/")}
+                  className="hover:text-orange-600 mx-auto"
+                  size={20}
+                  title="Back"
+                />
+              </span>
+            )}
 
           {shopname && (
             <FaHome

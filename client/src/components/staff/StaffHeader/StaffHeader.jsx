@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdReceipt, MdShoppingCart, MdClose, MdRefresh } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserTie, FaRegStickyNote, FaPlus } from "react-icons/fa";
+import {
+  FaUserTie,
+  FaRegStickyNote,
+  FaPlus,
+  FaArrowLeft,
+} from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveSearchQuery } from "../../../redux/features/searchSlice";
@@ -60,7 +65,10 @@ export const StaffHeader = () => {
             />
             {(location.pathname === "/staff" ||
               location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <span className="rounded-md shadow-xl items-center p-2 w-full" onClick={()=>clearInvoice()}>
+              <span
+                className="rounded-md shadow-xl items-center p-2 w-full"
+                onClick={() => clearInvoice()}
+              >
                 <MdRefresh
                   className=" hover:text-orange-600 mx-auto"
                   size={20}
@@ -95,6 +103,16 @@ export const StaffHeader = () => {
                   onClick={() => dispatch(saveSearchQuery(""))}
                 />
               )}
+            </li>
+            <li
+              className="hidden xl:block cursor-pointer rounded shadow-xl w-full   p-2"
+              title="Shopping Cart"
+            >
+              <FaArrowLeft
+                className="hover:text-orange-600 mx-auto"
+                size={20}
+                onClick={() => navigate(-1)}
+              />
             </li>
 
             <li
