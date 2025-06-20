@@ -4,6 +4,7 @@ import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
+import { monthBaseTotal } from '../../../controller/dashboardController/dashboardController.js';
 
 
 const superAdminRouter = express.Router();
@@ -33,6 +34,10 @@ superAdminRouter.patch('/staff/:id/permissions',userVerifyToken,checkUserRole("s
 superAdminRouter.delete('/staff/:id/permissions',userVerifyToken,checkUserRole("super-admin"),removePermissionFromStaff);
 superAdminRouter.get('/staff/:id',userVerifyToken,checkUserRole("super-admin"),getSingleStaff);
  
+
+// dashboard
+
+superAdminRouter.get('/dashboard/invoices/month',userVerifyToken,checkUserRole("super-admin"),monthBaseTotal);
  
 
 export default superAdminRouter

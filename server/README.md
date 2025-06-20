@@ -295,7 +295,14 @@
 **URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6`
 **URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6&day=10`
 
+-  get payment month total
+**method**`GET` <br>
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=cash&year=2025` 
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=internal-device&year=2025` 
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=digital&year=2025`
 
+use methods (all) get all the methods  
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=all&year=2025` 
 
 - ## super Admin  💼💼 <br>
 
@@ -370,6 +377,17 @@
 **method**`GET` <br>
 **URL**`/api/v1/super-admin/`
 
+- ## super admin dashboard  💼💼 <br>
+
+-  get payment month total
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=cash&year=2025` 
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=internal-device&year=2025` 
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=digital&year=2025`
+
+- use methods (all) get all the methods  
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=all&year=2025` 
+
 
 - ## password reset  💼💼 <br>
 
@@ -380,3 +398,10 @@
 -  reset password
 **method**`POST` <br>
 **URL**`/api/v1/password/reset/:token`
+
+
+- ## password reset  💼💼 <br>
+
+-  print invoice
+**method**`POST` <br>
+**URL**`/api/v1/print`

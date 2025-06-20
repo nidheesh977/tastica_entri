@@ -19,7 +19,7 @@ export const categoryFileUploader = async (req, res) => {
         const checkCategoryfile = getCategoryFile.includes("categories.csv")
 
         if(!checkCategoryfile){
-             fs.unlink(filePath, (err) => {
+             fs.promises.unlink(filePath, (err) => {
                                     if (err) console.error("Error deleting file:",);
                       });
             return res.status(400).json({ success: false, message: "This file is not categories file"});
@@ -112,7 +112,7 @@ export const categoryFileUploader = async (req, res) => {
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
                    
-                    fs.unlink(filePath, (err) => {
+                    fs.promises.unlink(filePath, (err) => {
                         if (err) console.error("Error deleting file:", err);
                     });
                 }
@@ -122,6 +122,7 @@ export const categoryFileUploader = async (req, res) => {
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

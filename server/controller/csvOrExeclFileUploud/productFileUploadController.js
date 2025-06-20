@@ -23,7 +23,7 @@ export const productsFileUploader = async (req, res) => {
         const checkproductfile = getProductFile.includes("products.csv")
 
         if(!checkproductfile){
-             fs.unlink(filePath, (err) => {
+             fs.promises.unlink(filePath, (err) => {
                         if (err) console.error("Error deleting file:",);
                       });
             return res.status(400).json({ success: false, message: "This file is not Products file"});
@@ -32,10 +32,10 @@ export const productsFileUploader = async (req, res) => {
 
            const products = [];
 
-        fs.createReadStream(filePath)
+      fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
-                        
+
 
                 products.push({
                     product_id: row.product_id,
@@ -48,79 +48,79 @@ export const productsFileUploader = async (req, res) => {
                     category: row.category,
                     countryName: row.countryName,
                     currencyCode: row.currencyCode,
-                    shop:row.shop,
-                    discountType:row.discountType,
-                    unit:row.units
+                    shop: row.shop,
+                    discountType: row.discountType,
+                    unit: row.units
                 });
             })
             .on('end', async () => {
                 try {
 
-                    for (const row of products){
+                    for (const row of products) {
 
-                        const findShop = await shopModel.findOne({shopName:row.shop.trim()});
-                        
-                        if(!findShop){
-                          return res.status(400).json({success:false,message:"shop is not found"})
+                        const findShop = await shopModel.findOne({ shopName: row.shop.trim() });
+
+                        if (!findShop) {
+                            return res.status(400).json({ success: false, message: "shop is not found" });
                         }
 
-                        const getCategory = await categoryModel.findOne({shop:findShop?._id,categoryName:row.category.trim()});
-                                  
+                        const getCategory = await categoryModel.findOne({ shop: findShop?._id, categoryName: row.category.trim() });
 
-                        if(!getCategory){
-                            return res.status(400).json({success:false,message:"Category is not found"})
+
+                        if (!getCategory) {
+                            return res.status(400).json({ success: false, message: "Category is not found" });
                         }
 
-                        let costProfitSum
+                        let costProfitSum;
 
-                        if(row.costPrice > 0){
-                        costProfitSum = row.costPrice * (row.costPriceProfit / 100)
+                        if (row.costPrice > 0) {
+                            costProfitSum = row.costPrice * (row.costPriceProfit / 100);
                         }
-                            
-                        let addCostPrice = row.costPrice === 0 ? row.costPrice : row.costPrice + costProfitSum
+
+                        let addCostPrice = row.costPrice === 0 ? row.costPrice : row.costPrice + costProfitSum;
 
                         let productId;
-                               
-                        do {
-                            productId = generateId("PROD")
-                            } while (await productModel.findOne({product_id:productId}));
-                               
 
-                        row["category"] = getCategory?._id
-                        row["shop"] = findShop?._id
-                        row["product_id"] = productId
-                        row["costPrice"] = addCostPrice
-                    } 
-                    
+                        do {
+                            productId = generateId("PROD");
+                        } while (await productModel.findOne({ product_id: productId }));
+
+
+                        row["category"] = getCategory?._id;
+                        row["shop"] = findShop?._id;
+                        row["product_id"] = productId;
+                        row["costPrice"] = addCostPrice;
+                    }
+
                     const files = products.map(row => ({
-                                           productName:row.productName,
-                                           shop:row.shop
-                                       }))
-                   
-                                      
+                        productName: row.productName,
+                        shop: row.shop
+                    }));
+
+
                     const existingDocs = await productModel.find({
-                                           productName: {$in:files.map(f => f.productName)},
-                                           shop: {$in:files.map(f => f.shop)}
-                                       })                       
-                   
-                   
-                                      
+                        productName: { $in: files.map(f => f.productName) },
+                        shop: { $in: files.map(f => f.shop) }
+                    });
+
+
+
                     const existingSet = new Set(
-                                           existingDocs.map(doc => `${doc.productName}::${doc.shop}`)
-                                            )                     
-                   
-                   
-                    const newFiles = products.filter(file => !existingSet.has(`${file.productName}::${file.shop}`))
-                   if (newFiles.length === 0) {
-                        return res.status(400).json({ 
+                        existingDocs.map(doc => `${doc.productName}::${doc.shop}`)
+                    );
+
+
+                    const newFiles = products.filter(file => !existingSet.has(`${file.productName}::${file.shop}`));
+                    if (newFiles.length === 0) {
+                        return res.status(400).json({
                             success: false,
                             message: "All products in the CSV file already exist",
                         });
                     }
 
-                    
 
-                    
+
+
                     await productModel.insertMany(newFiles);
 
                     res.status(200).json({
@@ -129,19 +129,19 @@ export const productsFileUploader = async (req, res) => {
                         addedProducts: newFiles.length,
                     });
 
-                    
+
                 } catch (error) {
-                    
+
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
-                   
-                    fs.unlink(filePath, (err) => {
-                        if (err) console.error("Error deleting file:",);
+
+                     fs.promises.unlink(filePath, (err) => {
+                        if (err) console.error("Error deleting file:");
                     });
                 }
-            }) 
+            })
             .on('error', (err) => {
-                
+
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
