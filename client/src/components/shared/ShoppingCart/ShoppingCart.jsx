@@ -1,5 +1,5 @@
-import { MdPersonAdd, MdRemoveShoppingCart } from "react-icons/md";
-import { FaSave, FaMoneyCheckAlt, FaTrash, FaPhoneSlash } from "react-icons/fa";
+import { MdPersonAdd, MdRemoveShoppingCart, MdNoCell } from "react-icons/md";
+import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
@@ -99,6 +99,9 @@ export const ShoppingCart = ({
     };
   }, []);
 
+ 
+  
+
   return (
     <div className="p-5 border">
       {!isNewCustomer && name === "" && (
@@ -119,7 +122,7 @@ export const ShoppingCart = ({
             className="cursor-pointer rounded-md shadow-xl flex items-center  p-2"
             title="Invoice Without Phone Number"
           >
-            <FaPhoneSlash
+            <MdNoCell
               className="hover:text-orange-600 mx-auto text-primary"
               size={18}
               onClick={() => {
@@ -208,6 +211,7 @@ export const ShoppingCart = ({
             </span>
             <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <>
+              <span>{product?.price} x </span>
                 {!product?.customProduct && (
                   <input
                     type="number"
@@ -230,7 +234,10 @@ export const ShoppingCart = ({
                 )}
 
                 {product?.customProduct && (
+                  
+                  
                   <span className="text-center w-12"> {product?.quantity}</span>
+                  
                 )}
                 <span>{product?.unit}</span>
               </>
@@ -334,7 +341,7 @@ export const ShoppingCart = ({
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
+          message={`Total payable amount: ${currency}${invoice?.totalAmount || 0}`}
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}

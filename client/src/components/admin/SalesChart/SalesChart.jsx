@@ -10,7 +10,6 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { useAdmins } from "../../../hooks/useAdmins";
 
 ChartJS.register(
   LineElement,
@@ -19,14 +18,12 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 import { dark } from "../../../../utils/constants";
 
-export const SalesChart = () => {
+export const SalesChart = ({ invoices }) => {
   const [chartData, setChartData] = useState(null);
-
-  const { invoices } = useAdmins();
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -39,7 +36,7 @@ export const SalesChart = () => {
       const date = new Date(createdAt);
 
       const monthYear = `${date.getFullYear()}-${String(
-        date.getMonth() + 1
+        date.getMonth() + 1,
       ).padStart(2, "0")}`;
 
       if (!salesByMonth[monthYear]) {

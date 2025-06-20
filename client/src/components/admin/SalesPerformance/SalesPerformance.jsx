@@ -15,7 +15,7 @@ export const SalesPerformance = () => {
     month,
     day,
     customMonth,
-    customYear
+    customYear,
   );
 
   const monthNames = [

@@ -113,7 +113,7 @@ export const AdminSideBar = () => {
              flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
             >
               <MdGroups />
-              Staffs
+              Staff
             </li>
             {permissions?.includes("customer_read") && (
               <li

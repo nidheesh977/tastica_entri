@@ -2,7 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdReceipt, MdShoppingCart, MdClose, MdRefresh } from "react-icons/md";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { CgMenuLeft } from "react-icons/cg";
-import { FaUserShield, FaRegStickyNote, FaPlus } from "react-icons/fa";
+import {
+  FaUserShield,
+  FaRegStickyNote,
+  FaPlus,
+  FaArrowLeft,
+} from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
@@ -101,6 +106,16 @@ export const AdminHeader = () => {
               )}
             </li>
 
+            <li
+              className="hidden xl:block cursor-pointer rounded shadow-xl w-full   p-2"
+              title="Back"
+            >
+              <FaArrowLeft
+                className="hover:text-orange-600 mx-auto"
+                size={20}
+                onClick={() =>{location.pathname !== '/admin' && navigate(-1)}}
+              />
+            </li>
             <li
               className="cursor-pointer rounded shadow-xl w-full   p-2"
               title="Shopping Cart"

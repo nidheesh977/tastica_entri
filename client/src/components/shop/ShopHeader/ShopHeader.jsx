@@ -55,19 +55,21 @@ export const ShopHeader = () => {
               />
             </span>
           )}
-          {[
-            "/super/admin/login",
-            "/super/admin/reset/password/send/mail",
-          ].includes(location.pathname) && (
-            <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
-              <FaArrowLeft
-                onClick={() => navigate(-1)}
-                className="hover:text-orange-600 mx-auto"
-                size={20}
-                title="Back"
-              />
-            </span>
-          )}
+
+          {location.pathname !== "/" &&
+            location.pathname !== "/shop" &&
+            location.pathname !== "/shop/admin/login" &&
+            location.pathname !== "/shop/staff/login" && (
+              <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
+                <FaArrowLeft
+                  onClick={() => navigate("/")}
+                  className="hover:text-orange-600 mx-auto"
+                  size={20}
+                  title="Back"
+                />
+              </span>
+            )}
+
           {shopname && (
             <FaHome
               className="cursor-pointer hover:text-orange-600"
