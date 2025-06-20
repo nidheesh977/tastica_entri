@@ -1,5 +1,5 @@
-import { MdPersonAdd, MdRemoveShoppingCart } from "react-icons/md";
-import { FaSave, FaMoneyCheckAlt, FaTrash, FaPhoneSlash } from "react-icons/fa";
+import { MdPersonAdd, MdRemoveShoppingCart, MdNoCell } from "react-icons/md";
+import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
@@ -119,7 +119,7 @@ export const ShoppingCart = ({
             className="cursor-pointer rounded-md shadow-xl flex items-center  p-2"
             title="Invoice Without Phone Number"
           >
-            <FaPhoneSlash
+            <MdNoCell
               className="hover:text-orange-600 mx-auto text-primary"
               size={18}
               onClick={() => {
