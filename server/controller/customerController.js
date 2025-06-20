@@ -16,7 +16,7 @@ export const createCustomer = async (req,res) => {
        const {customerName,phoneNumber} = value;
        const shopId = req.shop.id;
    
-       const customerExist =await customerModel.findOne({phoneNumber:phoneNumber});
+       const customerExist =await customerModel.findOne({shopId:shopId,phoneNumber:phoneNumber});
 
        if(customerExist){
         return res.status(400).json({success:false,message:"Customer already exist"})
