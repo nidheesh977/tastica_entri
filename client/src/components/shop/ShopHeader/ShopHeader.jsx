@@ -56,7 +56,7 @@ export const ShopHeader = () => {
             </span>
           )}
 
-          {location.pathname !== "/" && (
+          {location.pathname !== "/" && location.pathname !== "/shop" && (
             <span className=" cursor-pointer rounded-md shadow-xl w-full  p-2">
               <FaArrowLeft
                 onClick={() => navigate("/")}
