@@ -117,6 +117,7 @@ export const OpenOrderCart = ({
 
             <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <>
+               <span>{product?.price} x </span>
                 {!product?.customProduct && (
                   <input
                     type="number"

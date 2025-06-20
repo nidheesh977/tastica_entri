@@ -99,6 +99,9 @@ export const ShoppingCart = ({
     };
   }, []);
 
+ 
+  
+
   return (
     <div className="p-5 border">
       {!isNewCustomer && name === "" && (
@@ -208,6 +211,7 @@ export const ShoppingCart = ({
             </span>
             <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <>
+              <span>{product?.price} x </span>
                 {!product?.customProduct && (
                   <input
                     type="number"
@@ -230,7 +234,10 @@ export const ShoppingCart = ({
                 )}
 
                 {product?.customProduct && (
+                  
+                  
                   <span className="text-center w-12"> {product?.quantity}</span>
+                  
                 )}
                 <span>{product?.unit}</span>
               </>

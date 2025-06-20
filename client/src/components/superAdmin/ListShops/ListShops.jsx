@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
-import { HiShieldCheck } from "react-icons/hi";
 import { MdLockReset } from "react-icons/md";
 
 export const ListShopCard = () => {
@@ -129,14 +128,7 @@ export const ListShopCard = () => {
                           }}
                           className="text-primary hover:text-orange-600 cursor-pointer"
                         />
-                        <HiShieldCheck
-                          onClick={() =>
-                            navigate(`/admin/permissions/${shop?._id}`)
-                          }
-                          title="Permissions"
-                          size={22}
-                          className="hover:text-orange-600 text-primary cursor-pointer"
-                        />
+
                         <MdLockReset
                           onClick={() =>
                             navigate(
