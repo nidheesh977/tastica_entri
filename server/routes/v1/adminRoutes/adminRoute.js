@@ -30,6 +30,6 @@ adminRouter.get('/staff/:id/:shopId',shopVerifyToken,userVerifyToken,checkUserRo
  
 
 // admin dashboard
-adminRouter.get('/invoices/month',shopVerifyToken,userVerifyToken,checkUserRole('admin'),monthBaseTotal);
+adminRouter.get('/dashboard/invoices/month',shopVerifyToken,userVerifyToken,checkUserRole('admin'),monthBaseTotal);
 
 export default adminRouter;
