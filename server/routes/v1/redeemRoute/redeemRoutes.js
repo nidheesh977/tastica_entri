@@ -8,4 +8,4 @@ const redeemRouter = express.Router()
 
 redeemRouter.put('/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),addRedeemToInvoice)
 
-export default redeemRouter
+export default redeemRouter 

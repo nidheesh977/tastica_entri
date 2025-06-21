@@ -13,9 +13,10 @@ import customProductRouter from "./customProductRoute/customProductRoutes.js";
 import paymentRouter from "./paymentRoutes/paymentRoute.js";
 import loyalityRouter from './loyalityPointRoute/loyalityPointRoutes.js'
 import redeemRouter from "./redeemRoute/redeemRoutes.js";
-import dashBoardRouter from "./dashboardRoute/dashboardRoutes.js";
-// import taxRouter from "./taxRoute/taxRoutes.js";
+import adminDashBoardRouter from "./adminDashboardRoute/adminDashboardRoutes.js";
 import passwordResetRouter from "./passwordResetRoute/passwordResetRoute.js";
+import printRouter from "./thermalPrintRoute/thermalPrintRoutes.js";
+
 
 const v1Router = express.Router();
 
@@ -33,9 +34,9 @@ v1Router.use("/customer",customerRouter);
 v1Router.use("/super-admin",superAdminRouter);
 v1Router.use("/loyality",loyalityRouter);
 v1Router.use("/redeem",redeemRouter);
-v1Router.use("/dashboard",dashBoardRouter);
+v1Router.use("/admin/dashboard",adminDashBoardRouter);
 v1Router.use("/password",passwordResetRouter);
-// v1Router.use("/tax",taxRouter);
+v1Router.use("/print",printRouter);
 
 
 export default v1Router;

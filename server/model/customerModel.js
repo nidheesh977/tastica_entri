@@ -55,7 +55,6 @@ const customerSchema = new mongoose.Schema({
         }]
 },{ timestamps: true } )
 
-customerSchema.index({customerId:1,phoneNumber:1})
 
 const customerModel = mongoose.model('Customer',customerSchema);
 

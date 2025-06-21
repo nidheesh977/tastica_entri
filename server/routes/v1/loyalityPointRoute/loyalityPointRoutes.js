@@ -9,6 +9,6 @@ const loyalityRouter = express.Router()
 loyalityRouter.post('/',shopVerifyToken,userVerifyToken,checkUserRole("admin"),createLoyalityRate);
 loyalityRouter.patch('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),updateLoyalityRate);
 loyalityRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin"),deleteLoyalityPoint);
-loyalityRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getLoyalityRate);
+loyalityRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getLoyalityRate);
 
 export default loyalityRouter

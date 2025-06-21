@@ -35,15 +35,37 @@ import invoiceModel from "../../model/invoiceModel.js"
     export const monthBaseTotal = async (req,res) => {
       try{
 
-        const {id} = req.shop;
+        const id = req.query.shop || req.shop?.id ;
         
-        const date = new Date()
+        const {methods,year} = req.query; 
 
-        const month = date.getMonth()
-    
+        const nextYear = parseInt(year) + 1
+        
+         const startDate = new Date(parseInt(year) ,0,1);
+         const endDate = new Date(nextYear ,0,1)
+
+
+         let method;
+         let filedName;
+
+        if(methods === "cash"){
+        filedName = "paymentMethod"
+        method =  "cash"
+        }else if(methods === "digital"){
+        filedName = "paymentMethod"
+        method =  "digital"
+        }else if(methods === "internal-device"){
+        filedName = "paymentMethod"
+        method =  "internal-device"
+        }else{
+        filedName = "paymentStatus"
+        method =  "success"
+        }
+
+  
 
         const result = await invoiceModel.aggregate([
-            {$match:{shop:id,invoiceStatus:"paid",createdAt:{$gte:new Date(date.getFullYear(),month,1)}}},
+            {$match:{shop:id,invoiceStatus:"paid",[filedName]:method,createdAt:{$gte:startDate,$lt:endDate}}},
             {$group:{
                     _id:{month:{$month:"$createdAt"}},
                     totalAmount:{$sum:"$totalAmount"},
@@ -54,7 +76,8 @@ import invoiceModel from "../../model/invoiceModel.js"
                     _id:0,
                     month:"$_id.month",
                     roundedTotalAmount:{$round:["$totalAmount",2]},
-                     count:1
+                     count:1,
+                     methodType:method,
                 }},
 
                 {
@@ -65,6 +88,7 @@ import invoiceModel from "../../model/invoiceModel.js"
         
        res.status(200).json({success:true,message:"Data fetched successfully",data:result})
     }catch(error){
+        console.log(error)
          return res.status(500).json({success:false,message:"Internal server error"})
     }
     }

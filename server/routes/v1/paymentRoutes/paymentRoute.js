@@ -5,6 +5,7 @@ import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { internalDevicePayment } from '../../../controller/paymentControllers/internalDevicePayment.js';
+import { paymentRefund } from '../../../controller/paymentControllers/paymentRefundController.js';
 
 
 const paymentRouter = express.Router();
@@ -12,6 +13,8 @@ const paymentRouter = express.Router();
 
 paymentRouter.post('/cash/invoice/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),cashPayment);
 paymentRouter.post('/internal-device/invoice/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),internalDevicePayment);
+
+paymentRouter.put('/:id/invoice',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),paymentRefund);
 
 
 paymentRouter.post('/card/invoice/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),onlinePaymentStripe);

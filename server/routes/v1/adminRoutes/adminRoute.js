@@ -4,6 +4,7 @@ import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js'
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
+import { monthBaseTotal } from '../../../controller/dashboardController/dashboardController.js';
 
 
 
@@ -27,4 +28,8 @@ adminRouter.patch('/staff/:id/permissions',shopVerifyToken,userVerifyToken,check
 adminRouter.delete('/staff/:id/permissions',shopVerifyToken,userVerifyToken,checkUserRole("admin"),removePermissionFromStaff);
 adminRouter.get('/staff/:id/:shopId',shopVerifyToken,userVerifyToken,checkUserRole("admin"),getSingleStaff);
  
+
+// admin dashboard
+adminRouter.get('/invoices/month',shopVerifyToken,userVerifyToken,checkUserRole('admin'),monthBaseTotal);
+
 export default adminRouter;
