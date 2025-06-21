@@ -37,12 +37,14 @@ import invoiceModel from "../../model/invoiceModel.js"
 
         const id = req.query.shop || req.shop?.id ;
         
-        const {methods,year} = req.query; 
+        const {methods} = req.query; 
 
-        const nextYear = parseInt(year) + 1
+        const date =  new Date() 
+
+        const year = date.getFullYear()
         
          const startDate = new Date(parseInt(year) ,0,1);
-         const endDate = new Date(nextYear ,0,1)
+         const endDate = new Date(parseInt(year + 1),0,1)
 
 
          let method;
