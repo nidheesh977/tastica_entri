@@ -76,44 +76,50 @@ export const MonthlySales = ({ invoices }) => {
   }, [invoices]);
 
   return (
-    <div className="w-full h-[400px] border p-4 rounded shadow flex flex-col">
-      <div className="flex items-center justify-between mb-2">
+    <div className="w-full h-[332px] border p-4 rounded shadow flex flex-col">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="font-semibold text-sm md:text-base">Monthly Sales Trends:</h1>
         <div className="flex gap-3">
           <span
-            className={`cursor-pointer text-sm ${cash ? "border-b-2 border-black" : ""}`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              cash ? "border-b-2 border-black" : ""
+            }`}
             onClick={() => {
               setCash(true);
               setSwipe(false);
               setStripe(false);
             }}
           >
-            cash
+            Cash
           </span>
           <span
-            className={`cursor-pointer text-sm ${swipe ? "border-b-2 border-black" : ""}`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              swipe ? "border-b-2 border-black" : ""
+            }`}
             onClick={() => {
               setSwipe(true);
               setCash(false);
               setStripe(false);
             }}
           >
-            swipe
+            Swipe
           </span>
           <span
-            className={`cursor-pointer text-sm ${stripe ? "border-b-2 border-black" : ""}`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              stripe ? "border-b-2 border-black" : ""
+            }`}
             onClick={() => {
               setStripe(true);
               setSwipe(false);
               setCash(false);
             }}
           >
-            stripe
+            Stripe
           </span>
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 flex items-center justify-center px-2">
         {chart ? (
           <Bar
             data={chart}
