@@ -11,9 +11,12 @@ import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
 import { removeSuperAdminData } from "../../../redux/features/authSlice";
 import { FaArrowLeft } from "react-icons/fa";
+import { saveSelectedShopId } from "../../../redux/features/selectedShopSlice";
+import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 
 export const SuperAdminHeader = () => {
   const [open, setOpen] = useState(false);
+  const [shopId, setShopId] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,7 +24,7 @@ export const SuperAdminHeader = () => {
     (state) => state?.auth?.superAdminData?.userName
   );
   const searchQuery = useSelector((state) => state?.search);
-
+  const { shops } = useSuperAdmins();
   const handleLogout = async () => {
     try {
       await axiosInstance({
@@ -60,6 +63,31 @@ export const SuperAdminHeader = () => {
           </div>
         </div>
 
+        <div className="font-thin flex justify-center w-full">
+          <select
+            value={shopId}
+            onChange={(e) => {
+              const selectedValue = e.target.value;
+              setShopId(selectedValue);
+              dispatch(saveSelectedShopId(selectedValue));
+            }}
+            className=" rounded p-1 text-lg border xl:w-52 border-primary my-1  bg-tertiary text-primary shadow-2xl outline-none"
+          >
+            <option className="bg-white" value="">
+              Select a shop
+            </option>
+            {shops?.map((shop) => (
+              <option
+                className="bg-tertiary text-primary"
+                key={shop?._id}
+                value={shop?._id}
+              >
+                {shop?.shopName}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div
           className={`flex w-full md:w-auto md:block mt-2 md:mt-0 justify-end ${
             open ? "block" : "hidden"
@@ -94,7 +122,7 @@ export const SuperAdminHeader = () => {
               />
             </li>
 
-            <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
+            <li className="flex items-center w-full  rounded-md shadow-xl p-2 text-primary">
               {superAdminName && (
                 <p className="text-md w-24 mx-auto">{superAdminName}</p>
               )}

@@ -3,11 +3,10 @@ import { MdDelete, MdLockReset } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
-import { useDispatch, useSelector } from "react-redux";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
-import { saveSelectedShopId } from "../../../redux/features/selectedShopSlice";
 import { HiShieldCheck } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const ListStaffCardSuperAdmin = () => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -15,12 +14,12 @@ export const ListStaffCardSuperAdmin = () => {
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
-  const [shopId, setShopId] = useState("");
-  const { shops, shopStaffs, updateStaff, deleteStaff } = useSuperAdmins();
+
+  const { shopStaffs, updateStaff, deleteStaff } = useSuperAdmins();
   const searchQuery = useSelector((state) => state?.search);
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
-  const superAdmin = useSelector((state)=> state?.auth?.superAdminData?.role)
+  const superAdmin = useSelector((state) => state?.auth?.superAdminData?.role);
   const staffData = shopStaffs?.filter((staff) => {
     const query = searchQuery.toLowerCase();
 
@@ -31,35 +30,11 @@ export const ListStaffCardSuperAdmin = () => {
     );
   });
 
-
   return (
     <div className="w-full xl:w-auto text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
         <div className="flex justify-between items-center  font-thin text-start md:col-span-12 text-3xl my-6 text-primary">
           <div>Employees</div>
-
-          <select
-            value={shopId}
-            onChange={(e) => {
-              const selectedValue = e.target.value;
-              setShopId(selectedValue);
-              dispatch(saveSelectedShopId(selectedValue));
-            }}
-            className=" rounded p-2 text-lg border border-primary my-1  bg-tertiary text-primary shadow-2xl outline-primary"
-          >
-            <option className="bg-white" value="">
-              Select a shop
-            </option>
-            {shops?.map((shop) => (
-              <option
-                className="bg-tertiary text-primary"
-                key={shop?._id}
-                value={shop?._id}
-              >
-                {shop?.shopName}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 
