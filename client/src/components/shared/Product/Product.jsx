@@ -50,6 +50,7 @@ export const Product = ({ addProductToInvoice }) => {
         return (
           <div
             key={product._id}
+            title={product?.productName}
             onClick={() => {
               if (isDisabled) return;
               dispatch(saveSearchQuery(""));
