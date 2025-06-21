@@ -22,16 +22,24 @@ ChartJS.register(
 
 export const YearlySales = ({ invoices }) => {
   const [chart, setChart] = useState(null);
-  const [cash, setCash] = useState(true);
+  const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
   const [stripe, setStripe] = useState(false);
+  const [all, setAll] = useState(true);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
 
-    const salesByYear = invoices.reduce((acc, invoice) => {
+    const filteredInvoices = invoices.filter((invoice) => {
+      if (cash) return invoice.paymentMethod === "cash";
+      if (swipe) return invoice.paymentMethod === "swipe";
+      if (stripe) return invoice.paymentMethod === "stripe";
+      return true; // all
+    });
+
+    const salesByYear = filteredInvoices.reduce((acc, invoice) => {
       const year = new Date(invoice.createdAt).getFullYear();
-      acc[year] = (acc[year] || 0) + invoice.subTotal;
+      acc[year] = (acc[year] || 0) + (invoice.subTotal || 0);
       return acc;
     }, {});
 
@@ -50,15 +58,28 @@ export const YearlySales = ({ invoices }) => {
         },
       ],
     });
-  }, [invoices]);
+  }, [invoices, cash, swipe, stripe, all]);
 
   return (
-    <div className="w-full h-[332px] border p-4 rounded shadow flex flex-col">
+    <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-semibold text-sm md:text-base">
           Yearly Sales Trends:
         </h1>
         <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              all ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setAll(true);
+              setCash(false);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            All
+          </span>
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
               cash ? "border-b-2 border-black" : ""
@@ -67,6 +88,7 @@ export const YearlySales = ({ invoices }) => {
               setCash(true);
               setSwipe(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Cash
@@ -79,6 +101,7 @@ export const YearlySales = ({ invoices }) => {
               setSwipe(true);
               setCash(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Swipe
@@ -91,6 +114,7 @@ export const YearlySales = ({ invoices }) => {
               setStripe(true);
               setSwipe(false);
               setCash(false);
+              setAll(false);
             }}
           >
             Stripe
@@ -98,7 +122,7 @@ export const YearlySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-2">
+      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}

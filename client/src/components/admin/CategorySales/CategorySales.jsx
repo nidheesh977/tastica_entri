@@ -7,9 +7,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const CategorySales = ({ invoices }) => {
   const [chartData, setChartData] = useState(null);
-  const [cash, setCash] = useState(true);
+  const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
   const [stripe, setStripe] = useState(false);
+  const [all, setAll] = useState(true);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -42,12 +43,25 @@ export const CategorySales = ({ invoices }) => {
   }, [invoices]);
 
   return (
-    <div className="w-full h-[332px] shadow border rounded p-4 flex flex-col">
+    <div className="w-full h-full xl:h-[332px] shadow border rounded p-4 flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-semibold text-sm md:text-base">
           Category Sales Trends:
         </h1>
         <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              all ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setAll(true);
+              setCash(false);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            All
+          </span>
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
               cash ? "border-b-2 border-black" : ""
@@ -56,6 +70,7 @@ export const CategorySales = ({ invoices }) => {
               setCash(true);
               setSwipe(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Cash
@@ -68,6 +83,7 @@ export const CategorySales = ({ invoices }) => {
               setSwipe(true);
               setCash(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Swipe
@@ -80,6 +96,7 @@ export const CategorySales = ({ invoices }) => {
               setStripe(true);
               setSwipe(false);
               setCash(false);
+              setAll(false); // Fixed here
             }}
           >
             Stripe
@@ -87,7 +104,7 @@ export const CategorySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-2">
+      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chartData ? (
           <Doughnut
             data={chartData}

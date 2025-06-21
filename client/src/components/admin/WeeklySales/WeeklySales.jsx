@@ -22,9 +22,10 @@ ChartJS.register(
 
 export const WeeklySales = ({ invoices }) => {
   const [chart, setChart] = useState(null);
-  const [cash, setCash] = useState(true);
+  const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
   const [stripe, setStripe] = useState(false);
+  const [all, setAll] = useState(true);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -38,27 +39,32 @@ export const WeeklySales = ({ invoices }) => {
     invoices.forEach((invoice) => {
       const date = new Date(invoice.createdAt);
       if (date >= sevenDaysAgo && date <= now) {
-        const label = date.toLocaleDateString("en-IN", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-        });
+        const dayKey = date.toISOString().split("T")[0];
 
-        if (!dailyTotals[label]) {
-          dailyTotals[label] = 0;
+        if (!dailyTotals[dayKey]) {
+          dailyTotals[dayKey] = { date, amount: 0 };
         }
-        dailyTotals[label] += invoice.totalAmount || 0;
+
+        dailyTotals[dayKey].amount += invoice.totalAmount || 0;
       }
     });
 
-    const sortedLabels = Object.keys(dailyTotals).sort(
-      (a, b) => new Date(a) - new Date(b)
+    const sortedEntries = Object.entries(dailyTotals).sort(
+      (a, b) => new Date(a[1].date) - new Date(b[1].date)
     );
 
-    const data = sortedLabels.map((label) => dailyTotals[label]);
+    const labels = sortedEntries.map(([_, { date }]) =>
+      date.toLocaleDateString("en-IN", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      })
+    );
+
+    const data = sortedEntries.map(([_, { amount }]) => amount);
 
     setChart({
-      labels: sortedLabels,
+      labels,
       datasets: [
         {
           label: "Order Total ₹",
@@ -72,10 +78,25 @@ export const WeeklySales = ({ invoices }) => {
   }, [invoices]);
 
   return (
-    <div className="w-full h-[332px] border p-4 rounded shadow flex flex-col">
+    <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold text-sm md:text-base">Weekly Sales Trends:</h1>
+        <h1 className="font-semibold text-sm md:text-base">
+          Weekly Sales Trends:
+        </h1>
         <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              all ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setAll(true);
+              setCash(false);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            All
+          </span>
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
               cash ? "border-b-2 border-black" : ""
@@ -84,6 +105,7 @@ export const WeeklySales = ({ invoices }) => {
               setCash(true);
               setSwipe(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Cash
@@ -96,6 +118,7 @@ export const WeeklySales = ({ invoices }) => {
               setSwipe(true);
               setCash(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Swipe
@@ -108,6 +131,7 @@ export const WeeklySales = ({ invoices }) => {
               setStripe(true);
               setSwipe(false);
               setCash(false);
+              setAll(false);
             }}
           >
             Stripe
@@ -115,7 +139,7 @@ export const WeeklySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-2">
+      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}

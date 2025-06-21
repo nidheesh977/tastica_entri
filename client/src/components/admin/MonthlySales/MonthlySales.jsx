@@ -22,9 +22,10 @@ ChartJS.register(
 
 export const MonthlySales = ({ invoices }) => {
   const [chart, setChart] = useState(null);
-  const [cash, setCash] = useState(true);
+  const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
   const [stripe, setStripe] = useState(false);
+  const [all, setAll] = useState(true);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -33,6 +34,12 @@ export const MonthlySales = ({ invoices }) => {
 
     invoices.forEach((invoice) => {
       const date = new Date(invoice.createdAt);
+
+      // Optional: add filtering logic here if needed
+      if (cash && invoice.paymentMethod !== "cash") return;
+      if (swipe && invoice.paymentMethod !== "swipe") return;
+      if (stripe && invoice.paymentMethod !== "stripe") return;
+
       const month = date.toLocaleDateString("en-IN", {
         month: "long",
       });
@@ -44,18 +51,8 @@ export const MonthlySales = ({ invoices }) => {
     });
 
     const monthOrder = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
     ];
 
     const labels = monthOrder.filter((m) => monthlyTotals[m] !== undefined);
@@ -73,13 +70,28 @@ export const MonthlySales = ({ invoices }) => {
         },
       ],
     });
-  }, [invoices]);
+  }, [invoices, cash, swipe, stripe, all]);
 
   return (
-    <div className="w-full h-[332px] border p-4 rounded shadow flex flex-col">
+    <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold text-sm md:text-base">Monthly Sales Trends:</h1>
+        <h1 className="font-semibold text-sm md:text-base">
+          Monthly Sales Trends:
+        </h1>
         <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              all ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setAll(true);
+              setCash(false);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            All
+          </span>
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
               cash ? "border-b-2 border-black" : ""
@@ -88,6 +100,7 @@ export const MonthlySales = ({ invoices }) => {
               setCash(true);
               setSwipe(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Cash
@@ -100,6 +113,7 @@ export const MonthlySales = ({ invoices }) => {
               setSwipe(true);
               setCash(false);
               setStripe(false);
+              setAll(false);
             }}
           >
             Swipe
@@ -112,6 +126,7 @@ export const MonthlySales = ({ invoices }) => {
               setStripe(true);
               setSwipe(false);
               setCash(false);
+              setAll(false);
             }}
           >
             Stripe
@@ -119,7 +134,7 @@ export const MonthlySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center px-2">
+      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}
