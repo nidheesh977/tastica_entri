@@ -81,7 +81,9 @@ export const SalesPerformance = () => {
 
   return (
     <div className="border rounded shadow p-2 w-full h-full xl:h-[332px] flex flex-col gap-[3px] overflow-auto">
-      <h1 className="font-semibold text-base pb-1">Sales Performance:</h1>
+      <h1 className="font-semibold text-sm xl:text-base pb-1">
+        Sales Performance:
+      </h1>
 
       <div>
         <div

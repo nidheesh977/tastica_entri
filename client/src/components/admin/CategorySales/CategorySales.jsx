@@ -44,8 +44,11 @@ export const CategorySales = ({ invoices }) => {
 
   return (
     <div className="w-full h-full xl:h-[332px] shadow border rounded p-4 flex flex-col">
+      <h1 className="font-semibold text-sm  xl:hidden mb-2">
+          Category Sales Trends:
+        </h1>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold text-sm md:text-base">
+        <h1 className="hidden xl:block font-semibold ">
           Category Sales Trends:
         </h1>
         <div className="flex gap-3">
@@ -104,7 +107,7 @@ export const CategorySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
+      <div className="relative -z-40 w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chartData ? (
           <Doughnut
             data={chartData}

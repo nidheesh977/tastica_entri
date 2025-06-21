@@ -79,10 +79,11 @@ export const WeeklySales = ({ invoices }) => {
 
   return (
     <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
+      <h1 className="font-semibold text-sm xl:hidden mb-2">
+        Weekly Sales Trends:
+      </h1>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold text-sm md:text-base">
-          Weekly Sales Trends:
-        </h1>
+        <h1 className="font-semibold hidden xl:block">Weekly Sales Trends:</h1>
         <div className="flex gap-3">
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
@@ -139,7 +140,7 @@ export const WeeklySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="relative w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
+      <div className="relative -z-40  w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}
