@@ -56,14 +56,14 @@ export const Product = ({ addProductToInvoice }) => {
               dispatch(toggleQuantityHandler());
               addProductToInvoice({ productId: product._id, quantity: 1 });
             }}
-            className={`bg-tertiary w-full md:w-56 h-36 text-sm rounded border flex flex-col justify-between p-5 font-semibold ${
+            className={`bg-tertiary w-full md:w-56 h-28 text-sm rounded border flex flex-col justify-evenly p-2 font-semibold ${
               isDisabled
                 ? "border-gray-400 cursor-not-allowed opacity-50"
                 : "border-primary cursor-pointer hover:border-2"
             }`}
           >
-            <div className="h-10">
-              <h1 className="pb-4 font-bold">{product.productName}</h1>
+            <div >
+              <h1 className="text-center font-bold overflow-hidden">{product.productName}</h1>
             </div>
             <div>
               <p className="border-t border-black text-center font-bold py-1">

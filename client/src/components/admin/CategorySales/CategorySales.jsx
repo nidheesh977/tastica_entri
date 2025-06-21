@@ -7,6 +7,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const CategorySales = ({ invoices }) => {
   const [chartData, setChartData] = useState(null);
+  const [cash, setCash] = useState(true);
+  const [swipe, setSwipe] = useState(false);
+  const [stripe, setStripe] = useState(false);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -17,7 +20,6 @@ export const CategorySales = ({ invoices }) => {
       invoice.products?.forEach((product) => {
         const category = product.category || "Uncategorized";
         const amount = product.price * product.quantity;
-
         categoryTotals[category] = (categoryTotals[category] || 0) + amount;
       });
     });
@@ -31,8 +33,8 @@ export const CategorySales = ({ invoices }) => {
         {
           label: "Sales by Category ₹",
           data: values,
-          backgroundColor: [`${dark}`, `${medium}`, `${light}`],
-          borderColor: [`${dark}`, `${medium}`, `${light}`],
+          backgroundColor: [dark, medium, light],
+          borderColor: [dark, medium, light],
           borderWidth: 1,
         },
       ],
@@ -40,28 +42,65 @@ export const CategorySales = ({ invoices }) => {
   }, [invoices]);
 
   return (
-    <div className="w-full h-96 shadow border rounded p-10">
-      <h1 className="font-semibold">Category Sales Trends</h1>
-      {chartData ? (
-        <Doughnut
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                position: "top",
+    <div className="w-full h-[400px] shadow border rounded p-4 flex flex-col">
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-semibold text-sm md:text-base">Category Sales Trends:</h1>
+        <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm ${cash ? 'border-b-2 border-black' : ''}`}
+            onClick={() => {
+              setCash(true);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            cash
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${swipe ? 'border-b-2 border-black' : ''}`}
+            onClick={() => {
+              setSwipe(true);
+              setCash(false);
+              setStripe(false);
+            }}
+          >
+            swipe
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${stripe ? 'border-b-2 border-black' : ''}`}
+            onClick={() => {
+              setStripe(true);
+              setSwipe(false);
+              setCash(false);
+            }}
+          >
+            stripe
+          </span>
+        </div>
+      </div>
+
+      <div className="flex-1 flex justify-center items-center overflow-hidden">
+        {chartData ? (
+          <Doughnut
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+                title: {
+                  display: false,
+                },
               },
-              title: {
-                display: true,
-              },
-            },
-          }}
-          data={chartData}
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
+            }}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
     </div>
   );
 };

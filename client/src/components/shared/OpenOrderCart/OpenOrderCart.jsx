@@ -83,7 +83,7 @@ export const OpenOrderCart = ({
   };
 
   return (
-    <div className="p-5 border">
+    <div className="p-2 border">
       <div className="flex items-center justify-between w-full">
         <h1 className="font-bold flex gap-2 text-xl items-center">
           <MdShoppingCart className="text-primary" size={35} /> Cart
@@ -117,11 +117,14 @@ export const OpenOrderCart = ({
 
             <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
               <>
-               <span>{product?.price} x </span>
+                <div className="w-24 me-1 flex justify-between">
+                  <div>{product?.price}</div>
+                  <div>x</div>
+                </div>
                 {!product?.customProduct && (
                   <input
                     type="number"
-                    className="w-14 bg-tertiary text-center"
+                    className="w-12 bg-tertiary text-center"
                     value={quantities[product?.productId] ?? 1}
                     onChange={(e) => {
                       const newQty = e.target.value;
@@ -141,14 +144,14 @@ export const OpenOrderCart = ({
                 {product?.customProduct && (
                   <span className="text-center w-12"> {product?.quantity}</span>
                 )}
-                {product?.unit}
+                <span className="text-center w-10">{product?.unit}</span>
               </>
             </div>
 
             <span className="col-span-12 flex items-center gap-2 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0">
               {product?.price * product?.quantity}
             </span>
-            <span className="col-span-12 xl:col-span-1">
+            <span className="col-span-12 xl:col-span-1 flex justify-end">
               <FaTrash
                 title="Remove product"
                 className="text-primary hover:text-orange-600 cursor-pointer"

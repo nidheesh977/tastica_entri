@@ -10,7 +10,7 @@ export const StaffLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <header>{isStaff ? <StaffHeader /> : <ShopHeader />}</header>
-      <main className="flex-grow">
+      <main className="flex-grow pt-20 pb-16">
         <Outlet />
       </main>
       <footer>

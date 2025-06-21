@@ -38,7 +38,7 @@ export const SuperAdminHeader = () => {
   };
 
   return (
-    <nav className="w-full shadow-xl">
+    <nav className="w-full shadow-xl fixed bg-tertiary">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
         <div className="flex justify-between items-center">
           <div

@@ -10,7 +10,7 @@ export const AdminLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <header>{isAdmin ? <AdminHeader /> : <ShopHeader />}</header>
-      <main className="flex-grow">
+      <main className="flex-grow pt-20 pb-16">
         <Outlet />
       </main>
       <footer>

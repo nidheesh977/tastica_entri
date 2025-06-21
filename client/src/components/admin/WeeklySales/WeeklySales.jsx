@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-
+import { dark } from "../../../../utils/constants";
 
 ChartJS.register(
   BarElement,
@@ -20,11 +20,11 @@ ChartJS.register(
   Legend
 );
 
-import {dark} from '../../../../utils/constants'
-
-export const WeeklySales = ({invoices}) => {
+export const WeeklySales = ({ invoices }) => {
   const [chart, setChart] = useState(null);
- 
+  const [cash, setCash] = useState(true);
+  const [swipe, setSwipe] = useState(false);
+  const [stripe, setStripe] = useState(false);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -63,8 +63,8 @@ export const WeeklySales = ({invoices}) => {
         {
           label: "Order Total ₹",
           data,
-          backgroundColor: `${dark}`,
-          borderColor: `${dark}`,
+          backgroundColor: dark,
+          borderColor: dark,
           borderWidth: 1,
         },
       ],
@@ -72,13 +72,80 @@ export const WeeklySales = ({invoices}) => {
   }, [invoices]);
 
   return (
-    <div className="w-full h-full border p-4 rounded shadow">
-      <h1 className="font-semibold">Weekly Sales Trends</h1>
-      {chart ? (
-        <Bar data={chart} options={{ responsive: true }} />
-      ) : (
-        <p>Loading...</p>
-      )}
+    <div className="w-full h-[400px] border p-4 rounded shadow flex flex-col">
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-semibold text-sm md:text-base">Weekly Sales Trends:</h1>
+        <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm ${cash ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setCash(true);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            cash
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${swipe ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setSwipe(true);
+              setCash(false);
+              setStripe(false);
+            }}
+          >
+            swipe
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${stripe ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setStripe(true);
+              setSwipe(false);
+              setCash(false);
+            }}
+          >
+            stripe
+          </span>
+        </div>
+      </div>
+
+      <div className="flex-1">
+        {chart ? (
+          <Bar
+            data={chart}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                title: { display: false },
+              },
+              layout: {
+                padding: {
+                  top: 10,
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    font: { size: 10 },
+                  },
+                },
+                y: {
+                  ticks: {
+                    font: { size: 10 },
+                  },
+                },
+              },
+            }}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};

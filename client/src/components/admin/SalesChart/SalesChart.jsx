@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
+import { dark } from "../../../../utils/constants";
 
 ChartJS.register(
   LineElement,
@@ -18,12 +19,14 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
-import { dark } from "../../../../utils/constants";
 
 export const SalesChart = ({ invoices }) => {
   const [chartData, setChartData] = useState(null);
+  const [cash, setCash] = useState(true);
+  const [swipe, setSwipe] = useState(false);
+  const [stripe, setStripe] = useState(false);
 
   useEffect(() => {
     if (!invoices || invoices.length === 0) return;
@@ -34,10 +37,7 @@ export const SalesChart = ({ invoices }) => {
       if (!createdAt || totalAmount == null) return;
 
       const date = new Date(createdAt);
-
-      const monthYear = `${date.getFullYear()}-${String(
-        date.getMonth() + 1,
-      ).padStart(2, "0")}`;
+      const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
       if (!salesByMonth[monthYear]) {
         salesByMonth[monthYear] = 0;
@@ -65,8 +65,8 @@ export const SalesChart = ({ invoices }) => {
           label: "Monthly Sales ₹",
           data: sales,
           fill: false,
-          borderColor: `${dark}`,
-          backgroundColor: `${dark}`,
+          borderColor: dark,
+          backgroundColor: dark,
           tension: 0.4,
         },
       ],
@@ -74,23 +74,80 @@ export const SalesChart = ({ invoices }) => {
   }, [invoices]);
 
   return (
-    <div className="w-full p-2 md:h-96 md:p-10 lg:p-2 border rounded shadow">
-      <h1 className="font-semibold mb-4 lg:p-10">Monthly Sales</h1>
-      {chartData ? (
-        <Line
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { position: "top" },
-              title: { display: false },
-            },
-          }}
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
+    <div className="w-full h-[400px] border p-4 rounded shadow flex flex-col">
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-semibold text-sm md:text-base">Monthly Sales:</h1>
+        <div className="flex gap-3">
+          <span
+            className={`cursor-pointer text-sm ${cash ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setCash(true);
+              setSwipe(false);
+              setStripe(false);
+            }}
+          >
+            cash
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${swipe ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setSwipe(true);
+              setCash(false);
+              setStripe(false);
+            }}
+          >
+            swipe
+          </span>
+          <span
+            className={`cursor-pointer text-sm ${stripe ? "border-b-2 border-black" : ""}`}
+            onClick={() => {
+              setStripe(true);
+              setSwipe(false);
+              setCash(false);
+            }}
+          >
+            stripe
+          </span>
+        </div>
+      </div>
+
+      <div className="flex-1">
+        {chartData ? (
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top" },
+                title: { display: false },
+              },
+              layout: {
+                padding: {
+                  top: 10,
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    font: { size: 10 },
+                  },
+                },
+                y: {
+                  ticks: {
+                    font: { size: 10 },
+                  },
+                },
+              },
+            }}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
     </div>
   );
 };
