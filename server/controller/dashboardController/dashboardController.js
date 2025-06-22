@@ -47,6 +47,7 @@ import { paymentMethods } from "../../utils/aggregatePaymentMethod.js";
          const startDate = new Date(parseInt(year) ,0,1);
          const endDate = new Date(parseInt(year + 1),0,1)
 
+        
 
         const {method,fieldName} = paymentMethods(methods)
 
@@ -331,5 +332,45 @@ export const categorySale = async (req,res) => {
     }catch(error){
         console.log(error)
         return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
+
+
+export const daySaleForLineChart = async (req,res) => {
+    try{
+        const id = req.query.shop || req.shop?.id;
+
+           const now =  new Date() 
+
+
+         const startDate = new Date(now.getFullYear(),now.getMonth(),1);
+         const endDate = new Date(now.getFullYear(),now.getMonth() + 1,1)
+
+        const result = await invoiceModel.aggregate([
+            {$match:{shop:id,invoiceStatus:"paid",createdAt:{$gte:startDate,$lt:endDate}}},
+
+            {$group:{
+                _id:{dayOfMonth:{$dayOfMonth:"$createdAt"},
+                       month:{$month:"$createdAt"},
+                       year:{$year:"$createdAt"}},
+                      
+                 totalAmount:{$sum:"$totalAmount"},
+                 count:{$sum:1}
+            }},
+            {$project:{
+                 _id:0,
+                    day:"$_id.dayOfMonth",
+                    month:"$_id.month",
+                    year:"$_id.year",
+                     roundedTotalAmount:{$round:["$totalAmount",2]},
+                     count:1
+            }},
+            {$sort:{day:1}}
+        ])
+
+        res.status(200).json({success:true,message:"Data fetched successfully",data:result})
+    }catch(error){
+
+     return res.status(500).json({success:false,message:"Internal server error"})
     }
 }

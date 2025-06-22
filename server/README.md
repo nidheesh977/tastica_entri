@@ -324,6 +324,15 @@ use methods (all) get all the methods
 - use methods (all) get all the methods  
 **URL**`/api/v1/admin/dashboard/invoices/year?methods=all` 
 
+-  get total in categories
+**method**`GET` <br>
+**URL**`/api/v1/admin/dashboard/invoices/categories` 
+ 
+-  get total in days for line chart
+**method**`GET` <br>
+**URL**`/api/v1/admin/dashboard/invoices/days` 
+ 
+
 
 - ## super Admin  💼💼 <br>
 
@@ -439,6 +448,14 @@ use methods (all) get all the methods
 
 -end
 
+-  get total in categories
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/categories?shop=shopId` 
+ 
+-  get total in days for line chart
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/days?shop=shopId` 
+ 
 
 
 - ## password reset  💼💼 <br>

@@ -4,7 +4,7 @@ import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
-import { categorySale, monthBaseTotal, paymentMethodInvoice, weeklySale, yearBaseSale } from '../../../controller/dashboardController/dashboardController.js';
+import { categorySale, daySaleForLineChart, monthBaseTotal, paymentMethodInvoice, weeklySale, yearBaseSale } from '../../../controller/dashboardController/dashboardController.js';
 
 
 const superAdminRouter = express.Router();
@@ -40,6 +40,7 @@ superAdminRouter.get('/staff/:id',userVerifyToken,checkUserRole("super-admin"),g
 superAdminRouter.get('/dashboard/invoices/month',userVerifyToken,checkUserRole("super-admin"),monthBaseTotal);
 superAdminRouter.get('/dashboard/invoices/week',userVerifyToken,checkUserRole("super-admin"),weeklySale);
 superAdminRouter.get('/dashboard/invoices/year',userVerifyToken,checkUserRole("super-admin"),yearBaseSale);
+superAdminRouter.get('/dashboard/invoices/days',userVerifyToken,checkUserRole("super-admin"),daySaleForLineChart);
 superAdminRouter.get('/dashboard/invoices/payment-method',userVerifyToken,checkUserRole("super-admin"),paymentMethodInvoice);
 superAdminRouter.get('/dashboard/invoices/categories',userVerifyToken,checkUserRole("admin"),categorySale);
 
