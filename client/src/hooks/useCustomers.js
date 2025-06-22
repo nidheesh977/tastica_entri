@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useState } from "react";
-import { validateCustomerData } from "../../utils/validateCustomerData";
+import { validateCustomerData } from "../utils/validateCustomerData";
 
 export const useCustomers = () => {
   const queryClient = useQueryClient();

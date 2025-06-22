@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { dark } from "../../../../utils/constants";
+import { dark } from "../../../utils/constants";
 
 ChartJS.register(
   BarElement,
@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-export const WeeklySales = ({ invoices }) => {
+export const WeeklySales = ({ invoices, method }) => {
   const [chart, setChart] = useState(null);
   const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
@@ -28,46 +28,17 @@ export const WeeklySales = ({ invoices }) => {
   const [all, setAll] = useState(true);
 
   useEffect(() => {
-    if (!invoices || invoices.length === 0) return;
+    if (!invoices) return;
+    const limitedData = invoices.slice(-7);
 
-    const now = new Date();
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(now.getDate() - 6);
-
-    const dailyTotals = {};
-
-    invoices.forEach((invoice) => {
-      const date = new Date(invoice.createdAt);
-      if (date >= sevenDaysAgo && date <= now) {
-        const dayKey = date.toISOString().split("T")[0];
-
-        if (!dailyTotals[dayKey]) {
-          dailyTotals[dayKey] = { date, amount: 0 };
-        }
-
-        dailyTotals[dayKey].amount += invoice.totalAmount || 0;
-      }
-    });
-
-    const sortedEntries = Object.entries(dailyTotals).sort(
-      (a, b) => new Date(a[1].date) - new Date(b[1].date)
-    );
-
-    const labels = sortedEntries.map(([_, { date }]) =>
-      date.toLocaleDateString("en-IN", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      })
-    );
-
-    const data = sortedEntries.map(([_, { amount }]) => amount);
+    const labels = limitedData.map((item) => item.day);
+    const data = limitedData.map((item) => item.roundedTotalAmount);
 
     setChart({
       labels,
       datasets: [
         {
-          label: "Order Total ₹",
+          label: "Weekly Sales ₹",
           data,
           backgroundColor: dark,
           borderColor: dark,
@@ -94,6 +65,7 @@ export const WeeklySales = ({ invoices }) => {
               setCash(false);
               setSwipe(false);
               setStripe(false);
+              method("all");
             }}
           >
             All
@@ -107,6 +79,7 @@ export const WeeklySales = ({ invoices }) => {
               setSwipe(false);
               setStripe(false);
               setAll(false);
+              method("cash");
             }}
           >
             Cash
@@ -120,6 +93,7 @@ export const WeeklySales = ({ invoices }) => {
               setCash(false);
               setStripe(false);
               setAll(false);
+              method("internal-device");
             }}
           >
             Swipe
@@ -133,6 +107,7 @@ export const WeeklySales = ({ invoices }) => {
               setSwipe(false);
               setCash(false);
               setAll(false);
+              method("digital");
             }}
           >
             Stripe
@@ -140,7 +115,7 @@ export const WeeklySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="relative -z-40  w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
+      <div className="relative -z-40 w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}

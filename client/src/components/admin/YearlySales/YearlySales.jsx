@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { light } from "../../../../utils/constants";
+import { light } from "../../../utils/constants";
 
 ChartJS.register(
   BarElement,
@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-export const YearlySales = ({ invoices }) => {
+export const YearlySales = ({ invoices, method }) => {
   const [chart, setChart] = useState(null);
   const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
@@ -28,26 +28,23 @@ export const YearlySales = ({ invoices }) => {
   const [all, setAll] = useState(true);
 
   useEffect(() => {
-    if (!invoices || invoices.length === 0) return;
+    if (!invoices) return;
 
-    const filteredInvoices = invoices.filter((invoice) => {
-      if (cash) return invoice.paymentMethod === "cash";
-      if (swipe) return invoice.paymentMethod === "swipe";
-      if (stripe) return invoice.paymentMethod === "stripe";
-      return true; // all
+    const yearTotals = {};
+
+    invoices.forEach(({ year, roundedTotalAmount }) => {
+      if (!yearTotals[year]) {
+        yearTotals[year] = 0;
+      }
+      yearTotals[year] += roundedTotalAmount;
     });
 
-    const salesByYear = filteredInvoices.reduce((acc, invoice) => {
-      const year = new Date(invoice.createdAt).getFullYear();
-      acc[year] = (acc[year] || 0) + (invoice.subTotal || 0);
-      return acc;
-    }, {});
-
-    const sortedYears = Object.keys(salesByYear).sort();
-    const totals = sortedYears.map((year) => salesByYear[year]);
+    const sortedYears = Object.keys(yearTotals).sort();
+    const limitedYears = sortedYears.slice(0, 12);
+    const totals = limitedYears.map((year) => yearTotals[year]);
 
     setChart({
-      labels: sortedYears,
+      labels: limitedYears,
       datasets: [
         {
           label: "Yearly Sales ₹",
@@ -58,17 +55,15 @@ export const YearlySales = ({ invoices }) => {
         },
       ],
     });
-  }, [invoices, cash, swipe, stripe, all]);
+  }, [invoices]);
 
   return (
     <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <h1 className="font-semibold text-sm xl:hidden mb-2">
-          Yearly Sales Trends:
-        </h1>
+        Yearly Sales Trends:
+      </h1>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold hidden xl:block">
-          Yearly Sales Trends:
-        </h1>
+        <h1 className="font-semibold hidden xl:block">Yearly Sales Trends:</h1>
         <div className="flex gap-3">
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
@@ -79,6 +74,7 @@ export const YearlySales = ({ invoices }) => {
               setCash(false);
               setSwipe(false);
               setStripe(false);
+              method("all");
             }}
           >
             All
@@ -92,6 +88,7 @@ export const YearlySales = ({ invoices }) => {
               setSwipe(false);
               setStripe(false);
               setAll(false);
+              method("cash");
             }}
           >
             Cash
@@ -105,6 +102,7 @@ export const YearlySales = ({ invoices }) => {
               setCash(false);
               setStripe(false);
               setAll(false);
+              method("internal-device");
             }}
           >
             Swipe
@@ -118,6 +116,7 @@ export const YearlySales = ({ invoices }) => {
               setSwipe(false);
               setCash(false);
               setAll(false);
+              method("digital");
             }}
           >
             Stripe
@@ -125,7 +124,7 @@ export const YearlySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="relative -z-40  w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
+      <div className="relative -z-40 w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}

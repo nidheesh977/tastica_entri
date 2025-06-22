@@ -19,12 +19,11 @@ export const PaymentSuccess = () => {
 
   const paymentSuccess = async () => {
     try {
-      const response = await axiosInstance({
+      await axiosInstance({
         method: "PUT",
         url: `/payment/card/success/invoice/${id}`,
         withCredentials: true,
       });
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
