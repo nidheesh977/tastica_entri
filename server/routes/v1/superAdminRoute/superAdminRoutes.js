@@ -41,7 +41,7 @@ superAdminRouter.get('/dashboard/invoices/month',userVerifyToken,checkUserRole("
 superAdminRouter.get('/dashboard/invoices/week',userVerifyToken,checkUserRole("super-admin"),weeklySale);
 superAdminRouter.get('/dashboard/invoices/year',userVerifyToken,checkUserRole("super-admin"),yearBaseSale);
 superAdminRouter.get('/dashboard/invoices/payment-method',userVerifyToken,checkUserRole("super-admin"),paymentMethodInvoice);
-superAdminRouter.get('/dashboard/invoices/categories',userVerifyToken,checkUserRole("admin"),categorySale);
+superAdminRouter.get('/dashboard/invoices/categories',userVerifyToken,checkUserRole("super-admin"),categorySale);
 
 
 export default superAdminRouter
