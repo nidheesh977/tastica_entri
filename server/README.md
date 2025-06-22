@@ -289,20 +289,41 @@
 
 - ## Admin dashboard 💼 <br>
 
--  get payment method total
+-  get payment method total admin
 **method**`GET` <br>
-**URL**`/api/v1/dashboard/invoice/payment-method?year=2025` 
-**URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6`
-**URL**`/api/v1/dashboard/invoice/payment-method?year=2025&month=6&day=10`
+**URL**`/api/v1/admin/dashboard/invoices/payment-method?year=2025` 
+**URL**`/api/v1/admin/dashboard/invoices/payment-method?year=2025&month=6`
+**URL**`/api/v1/admin/dashboard/invoices/payment-method?year=2025&month=6&day=10`
 
--  get payment month total
+-  get payment month total admin
 **method**`GET` <br>
-**URL**`/api/v1/admin/dashboard/invoices/month?methods=cash&year=2025` 
-**URL**`/api/v1/admin/dashboard/invoices/month?methods=internal-device&year=2025` 
-**URL**`/api/v1/admin/dashboard/invoices/month?methods=digital&year=2025`
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=cash` 
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=internal-device` 
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=digital`
 
 use methods (all) get all the methods  
-**URL**`/api/v1/admin/dashboard/invoices/month?methods=all&year=2025` 
+**URL**`/api/v1/admin/dashboard/invoices/month?methods=all` 
+
+
+-  get payment week total admin
+**method**`GET` <br>
+**URL**`/api/v1/admin/dashboard/invoices/week?methods=cash` 
+**URL**`/api/v1/admin/dashboard/invoices/week?methods=internal-device` 
+**URL**`/api/v1/admin/dashboard/invoices/week?methods=digital`
+
+- use methods (all) get all the methods  
+**URL**`/api/v1/admin/dashboard/invoices/week?methods=all` 
+
+
+-  get payment year total admin
+**method**`GET` <br>
+**URL**`/api/v1/admin/dashboard/invoices/year?methods=cash` 
+**URL**`/api/v1/admin/dashboard/invoices/year?methods=internal-device` 
+**URL**`/api/v1/admin/dashboard/invoices/year?methods=digital`
+
+- use methods (all) get all the methods  
+**URL**`/api/v1/admin/dashboard/invoices/year?methods=all` 
+
 
 - ## super Admin  💼💼 <br>
 
@@ -381,12 +402,43 @@ use methods (all) get all the methods
 
 -  get payment month total
 **method**`GET` <br>
-**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=cash&year=2025` 
-**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=internal-device&year=2025` 
-**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=digital&year=2025`
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=cash` 
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=internal-device` 
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=digital`
 
 - use methods (all) get all the methods  
-**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=all&year=2025` 
+**URL**`/api/v1/super-admin/dashboard/invoices/month?shop=shopId&methods=all` 
+
+
+-  get payment week total
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/week?shop=shopId&methods=cash` 
+**URL**`/api/v1/super-admin/dashboard/invoices/week?shop=shopId&methods=internal-device` 
+**URL**`/api/v1/super-admin/dashboard/invoices/week?shop=shopId&methods=digital`
+
+- use methods (all) get all the methods  
+**URL**`/api/v1/super-admin/dashboard/invoices/week?shop=shopId&methods=all` 
+
+
+-  get payment year total
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/year?shop=shopId&methods=cash` 
+**URL**`/api/v1/super-admin/dashboard/invoices/year?shop=shopId&methods=internal-device` 
+**URL**`/api/v1/super-admin/dashboard/invoices/year?shop=shopId&methods=digital`
+
+- use methods (all) get all the methods  
+**URL**`/api/v1/super-admin/dashboard/invoices/year?shop=shopId&methods=all` 
+
+- start
+
+-  get payment methods total
+**method**`GET` <br>
+**URL**`/api/v1/super-admin/dashboard/invoices/payment-method?shop=shopId&year=2025` 
+**URL**`/api/v1/super-admin/dashboard/invoices/payment-method?shop=shopId&year=2025&month=6`
+**URL**`/api/v1/super-admin/dashboard/invoices/payment-method?shop=shopId&year=2025&month=6&day=10`
+
+-end
+
 
 
 - ## password reset  💼💼 <br>

@@ -4,7 +4,7 @@ import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js'
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
-import { monthBaseTotal } from '../../../controller/dashboardController/dashboardController.js';
+import { monthBaseTotal, paymentMethodInvoice, weeklySale, yearBaseSale } from '../../../controller/dashboardController/dashboardController.js';
 
 
 
@@ -30,6 +30,9 @@ adminRouter.get('/staff/:id/:shopId',shopVerifyToken,userVerifyToken,checkUserRo
  
 
 // admin dashboard
-adminRouter.get('/dashboard/invoices/month',shopVerifyToken,userVerifyToken,checkUserRole('admin'),monthBaseTotal);
+adminRouter.get('/dashboard/invoices/month',shopVerifyToken,userVerifyToken,checkUserRole("admin"),monthBaseTotal);
+adminRouter.get('/dashboard/invoices/week',shopVerifyToken,userVerifyToken,checkUserRole("admin"),weeklySale);
+adminRouter.get('/dashboard/invoices/year',shopVerifyToken,userVerifyToken,checkUserRole("admin"),yearBaseSale);
+adminRouter.get('/dashboard/invoices/payment-method',shopVerifyToken,userVerifyToken,checkUserRole("admin"),paymentMethodInvoice);
 
 export default adminRouter;

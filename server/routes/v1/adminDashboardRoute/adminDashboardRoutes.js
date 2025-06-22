@@ -10,7 +10,6 @@ const adminDashBoardRouter = express.Router();
 
 adminDashBoardRouter.get('/invoice/total',shopVerifyToken,userVerifyToken,checkUserRole('admin'),invoiceTotal);
 adminDashBoardRouter.get('/invoice/total/year',shopVerifyToken,userVerifyToken,checkUserRole('admin'),yearBaseSale);
-adminDashBoardRouter.get('/invoice/payment-method',shopVerifyToken,userVerifyToken,checkUserRole('admin'),paymentMethodInvoice);
 
 
 export default adminDashBoardRouter;
