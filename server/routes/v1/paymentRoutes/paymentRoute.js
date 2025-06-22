@@ -14,6 +14,7 @@ const paymentRouter = express.Router();
 paymentRouter.post('/cash/invoice/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),cashPayment);
 paymentRouter.post('/internal-device/invoice/:invoiceId',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),internalDevicePayment);
 
+// invoice refund
 paymentRouter.put('/:id/invoice',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),paymentRefund);
 
 

@@ -275,9 +275,6 @@ export const paymentMethodInvoice = async (req,res) =>{
                 },
           }],
 
-              
-
-// 
           }}
        
         ])   
@@ -291,6 +288,46 @@ export const paymentMethodInvoice = async (req,res) =>{
         
      res.status(200).json({success:true,message:"Data fetched successfully",data:data})
      
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
+
+
+export const categorySale = async (req,res) => {
+    try{
+
+           const id = req.query.shop || req.shop?.id;
+
+        const result = await invoiceModel.aggregate([
+            {$match:{shop:id,invoiceStatus:"paid"}},
+            {$unwind:"$products"},
+
+            {
+                $group:{
+                    _id:"$products.category",       
+                    totalAmount:{$sum:"$totalAmount"},
+                    count:{$sum:1}
+                }
+            },
+
+            {
+                $project:{
+                    _id:0,
+                    category:"$_id",
+                     roundedTotalAmount:{$round:["$totalAmount",2]},
+                     count:1
+                }
+            },
+
+            {$sort:{roundedTotalAmount:-1}},
+
+            {$limit:5}
+
+        ])
+
+         res.status(200).json({success:true,message:"Data fetched successfully",data:result})
     }catch(error){
         console.log(error)
         return res.status(500).json({success:false,message:"Internal server error"})

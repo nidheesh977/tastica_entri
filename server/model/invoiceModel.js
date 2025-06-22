@@ -51,7 +51,7 @@ const invoiceSchema = new mongoose.Schema({
 
    invoiceStatus:{
         type: String,
-        enum: ["newtab", "saved" , "paid"],
+        enum: ["newtab", "saved" , "paid","refunded"],
         default: "saved"
     },
 
@@ -67,6 +67,17 @@ const invoiceSchema = new mongoose.Schema({
       enum:["cash","digital","internal-device"],
       reqired:true,
       default:null,
+    },
+
+    refundType:{
+        type:String,
+        enum:["full","partial"],
+        default:null
+    },
+
+    refundedAmount:{
+        type:Number,
+        default:0
     },
 
     totalAmount:{
