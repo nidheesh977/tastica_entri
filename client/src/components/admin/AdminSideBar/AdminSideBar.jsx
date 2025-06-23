@@ -4,6 +4,7 @@ import {
   FaFileCsv,
   FaBoxOpen,
   FaUserTie,
+  FaFileInvoice
 } from "react-icons/fa";
 import { FiGift } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
