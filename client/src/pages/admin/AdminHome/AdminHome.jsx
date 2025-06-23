@@ -5,7 +5,7 @@ import { SalesPerformance } from "../../../components/admin/SalesPerformance/Sal
 import { YearlySales } from "../../../components/admin/YearlySales/YearlySales";
 import { SalesChart } from "../../../components/admin/SalesChart/SalesChart";
 import { useState } from "react";
-import { useDashboard } from "../../../hooks/useDashboard";
+import { useDashboardAdmin } from "../../../hooks/useDashboardAdmin";
 
 export const AdminHome = () => {
   const [selectedMethodMonth, setSelectedMethodMonth] = useState("all");
@@ -26,7 +26,7 @@ export const AdminHome = () => {
     monthSalesAdmin,
     yearSalesAdmin,
     monthSalesLineChartDataAdmin,
-  } = useDashboard({
+  } = useDashboardAdmin({
     selectedMethodMonth,
     selectedMethodWeek,
     selectedMethodYear,

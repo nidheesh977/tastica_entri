@@ -5,7 +5,7 @@ import { SalesPerformance } from "../../../components/admin/SalesPerformance/Sal
 import { YearlySales } from "../../../components/admin/YearlySales/YearlySales";
 import { SalesChart } from "../../../components/admin/SalesChart/SalesChart";
 import { useState } from "react";
-import { useDashboard } from "../../../hooks/useDashboard";
+import { useDashboardSuperAdmin } from "../../../hooks/useDashboardSuperAdmin";
 
 export const SuperAdminHome = () => {
   const [selectedMethodMonth, setSelectedMethodMonth] = useState("all");
@@ -18,15 +18,15 @@ export const SuperAdminHome = () => {
   const [customMonth, setCustomMonth] = useState("");
   const [day, setDay] = useState("");
   const {
-    categoriesSalesDataAdmin,
-    monthSalesBarChartDataAdmin,
-    weeklySalesBarChartDataAdmin,
-    yearlySalesBarChartDataAdmin,
-    dateSalesAdmin,
-    monthSalesAdmin,
-    yearSalesAdmin,
-    monthSalesLineChartDataAdmin,
-  } = useDashboard({
+    categoriesSalesDataSuperAdmin,
+    monthSalesBarChartDataSuperAdmin,
+    weeklySalesBarChartDataSuperAdmin,
+    yearlySalesBarChartDataSuperAdmin,
+    dateSalesSuperAdmin,
+    monthSalesSuperAdmin,
+    yearSalesSuperAdmin,
+    monthSalesLineChartDataSuperAdmin,
+  } = useDashboardSuperAdmin({
     selectedMethodMonth,
     selectedMethodWeek,
     selectedMethodYear,
@@ -41,7 +41,7 @@ export const SuperAdminHome = () => {
     <>
       <div className="p-2 gap-2 grid grid-cols-12">
         <div className="col-span-12 md:col-span-6  lg:col-span-4">
-          <CategorySales invoices={categoriesSalesDataAdmin} />
+          <CategorySales invoices={categoriesSalesDataSuperAdmin} />
         </div>
         <div className="col-span-12 md:col-span-6  lg:col-span-4">
           <SalesPerformance
@@ -54,30 +54,30 @@ export const SuperAdminHome = () => {
             setCustomMonth={setCustomMonth}
             setCustomYear={setCustomYear}
             setDay={setDay}
-            dateSales={dateSalesAdmin}
-            yearSales={yearSalesAdmin}
-            monthSales={monthSalesAdmin}
+            dateSales={dateSalesSuperAdmin}
+            yearSales={yearSalesSuperAdmin}
+            monthSales={monthSalesSuperAdmin}
           />
         </div>
         <div className="col-span-12 md:col-span-6  lg:col-span-4 ">
-          <SalesChart invoices={monthSalesLineChartDataAdmin} />
+          <SalesChart invoices={monthSalesLineChartDataSuperAdmin} />
         </div>
 
         <div className="col-span-12 md:col-span-6  lg:col-span-4">
           <WeeklySales
-            invoices={weeklySalesBarChartDataAdmin}
+            invoices={weeklySalesBarChartDataSuperAdmin}
             method={setSelectedMethodWeek}
           />
         </div>
         <div className="col-span-12 md:col-span-6  lg:col-span-4">
           <MonthlySales
-            invoices={monthSalesBarChartDataAdmin}
+            invoices={monthSalesBarChartDataSuperAdmin}
             method={setSelectedMethodMonth}
           />
         </div>
         <div className="col-span-12 md:col-span-6  lg:col-span-4">
           <YearlySales
-            invoices={yearlySalesBarChartDataAdmin}
+            invoices={yearlySalesBarChartDataSuperAdmin}
             method={setSelectedMethodYear}
           />
         </div>

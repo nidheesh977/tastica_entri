@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useSelector } from "react-redux";
 
-export const useDashboard = ({
+export const useDashboardAdmin = ({
   year,
   month,
   day,
@@ -14,7 +14,6 @@ export const useDashboard = ({
   selectedMethodYear,
 }) => {
   const admin = useSelector((state) => state?.auth?.adminData);
-  const superAdmin = useSelector((state) => state?.auth?.superAdminData);
 
   const { data: categoriesSalesDataAdmin } = useQuery({
     queryKey: ["categoriesSalesDataAdmin"],
@@ -68,7 +67,7 @@ export const useDashboard = ({
     queryKey: ["monthSales", year, customMonth],
     queryFn: async () => {
       const response = await axiosInstance.get(
-        `admin/dashboard/invoices/payment-method?year=${year}&month=${customMonth}`,
+        `/admin/dashboard/invoices/payment-method?year=${year}&month=${customMonth}`,
         { withCredentials: true }
       );
       return response?.data?.data;
@@ -166,6 +165,6 @@ export const useDashboard = ({
     weeklySalesBarChartDataAdmin,
     yearlySalesBarChartDataAdmin,
     categoriesSalesDataAdmin,
-    monthSalesLineChartDataAdmin
+    monthSalesLineChartDataAdmin,
   };
 };
