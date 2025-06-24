@@ -285,6 +285,16 @@ export const AdminSideBar = () => {
 
         <li
           onClick={() => {
+            handleSideBar("/admin/custom/invoice");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <FaFileInvoice />
+          Custom Invoice
+        </li>
+        <li
+          onClick={() => {
             handleSideBar("/admin/open/orders");
             dispatch(toggleSideBar());
           }}

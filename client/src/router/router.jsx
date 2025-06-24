@@ -190,6 +190,10 @@ export const router = createBrowserRouter([
             element: <InvoiceData />,
           },
           {
+            path: "custom/invoice",
+            element: <CustomInvoice />,
+          },
+          {
             path: "loyalty/points",
             element: <LoyaltyPoints />,
           },
