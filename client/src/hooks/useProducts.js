@@ -67,7 +67,9 @@ export const useProducts = () => {
       queryClient.invalidateQueries(["products"]);
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to delete product.");
+      toast.error(
+        error?.response?.data?.message || "Failed to delete product."
+      );
     },
   });
 
@@ -81,6 +83,8 @@ export const useProducts = () => {
       costPriceProfit,
       discount,
       category,
+      productTax,
+      loyaltyRate,
     }) => {
       const data = {
         productName,
@@ -90,6 +94,8 @@ export const useProducts = () => {
         sellingPrice,
         discount,
         category,
+        productTax,
+        loyaltyRate,
       };
 
       await axiosInstance({
@@ -105,7 +111,9 @@ export const useProducts = () => {
     },
 
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to update product.");
+      toast.error(
+        error?.response?.data?.message || "Failed to update product."
+      );
     },
   });
 

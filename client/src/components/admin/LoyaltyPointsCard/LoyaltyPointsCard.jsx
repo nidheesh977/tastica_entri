@@ -29,7 +29,7 @@ export const LoyaltyPointsCard = () => {
             />
             <button
               onClick={() => {
-                addLoyaltyPoints(loyaltyRate );
+                addLoyaltyPoints({loyaltyRate});
                 setLoyaltyRate("");
               }}
               className="p-4 w-26   bg-primary hover:opacity-90  text-white rounded"

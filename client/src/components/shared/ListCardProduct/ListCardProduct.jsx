@@ -15,10 +15,11 @@ export const ListCardProduct = ({ permissions }) => {
   const [editedCostPriceProfit, setEditedCostPriceProfit] = useState(null);
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
-  const [editedTax, setEditedTax] = useState(null)
+  const [editedTax, setEditedTax] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
-  const [loyaltyPoint, setLoyalityPoint] = useState(null);
+  const [editedLoyaltyRate, setEditedLoyaltyRate] = useState(null);
   const { products, updateProduct, deleteProduct } = useProducts();
+  const admin = useSelector((state) => state?.auth?.adminData);
 
   const searchQuery = useSelector((state) => state?.search);
   const productData = products?.filter((product) => {
@@ -151,27 +152,27 @@ export const ListCardProduct = ({ permissions }) => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === product._id ? (
+                  {editId === product._id && admin ? (
                     <input
-                      type="number"
+                      type="text"
                       value={editedTax}
                       onChange={(e) => setEditedTax(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    0
+                    product?.productTax
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {editId === product._id ? (
+                  {editId === product._id && admin ? (
                     <input
-                      type="number"
-                      value={editedTax}
-                      onChange={(e) => setEditedTax(e.target.value)}
+                      type="text"
+                      value={editedLoyaltyRate}
+                      onChange={(e) => setEditedLoyaltyRate(e.target.value)}
                       className="w-full rounded border p-1"
                     />
                   ) : (
-                    0
+                    product?.loyaltyRate
                   )}
                 </td>
                 {(permissions?.includes("product_update") ||
@@ -192,6 +193,8 @@ export const ListCardProduct = ({ permissions }) => {
                               sellingPrice: editedSellingPrice,
                               discount: editedDiscount,
                               category: editedCategory,
+                              productTax: editedTax,
+                              loyaltyRate: editedLoyaltyRate,
                             });
                             setEditId(null);
                           }}
@@ -214,6 +217,8 @@ export const ListCardProduct = ({ permissions }) => {
                                   product?.costPriceProfit
                                 );
                                 setEditedDiscount(product?.discount);
+                                setEditedTax(product?.productTax);
+                                setEditedLoyaltyRate(product?.loyaltyRate);
                               }}
                               className="text-primary hover:text-orange-600 cursor-pointer"
                             />

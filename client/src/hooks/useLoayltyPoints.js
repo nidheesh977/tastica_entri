@@ -4,12 +4,13 @@ import { axiosInstance } from "../config/axiosInstance";
 
 export const useLoyaltyPoints = () => {
   const { mutate: addLoyaltyPoints } = useMutation({
-    mutationFn: async (loyaltyRate) => {
+    mutationFn: async ({ loyaltyRate }) => {
+      const data = { loyaltyRate };
       await axiosInstance({
         method: "PUT",
         url: "/loyalty/products",
         withCredentials: true,
-        loyaltyRate,
+        data,
       });
     },
     onSuccess: () => {
