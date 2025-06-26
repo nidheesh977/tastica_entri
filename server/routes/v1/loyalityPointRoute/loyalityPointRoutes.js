@@ -1,5 +1,5 @@
 import express from 'express';
-import { createLoyalityRate, deleteLoyalityPoint, getLoyalityRate, updateLoyalityRate, loyaltyPointToProduct) from '../../../controller/loyalityPointController/loyalityPointController.js';
+import { createLoyalityRate, deleteLoyalityPoint, getLoyalityRate, updateLoyalityRate, loyaltyPointToProduct} from '../../../controller/loyalityPointController/loyalityPointController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
