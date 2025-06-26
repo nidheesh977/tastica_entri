@@ -50,7 +50,8 @@ export const productsFileUploader = async (req, res) => {
                     currencyCode: row.currencyCode,
                     shop: row.shop,
                     discountType: row.discountType,
-                    unit: row.units
+                    unit: row.units,
+                    isActive:row.isActive.toLowerCase()
                 });
             })
             .on('end', async () => {

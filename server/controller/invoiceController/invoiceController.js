@@ -110,10 +110,15 @@ export const addProductToInvoice = async (req,res) => {
            productExist = await customProductModel.findById(productId)
         }       
 
+          if(!productExist){
+             return res.status(400).json({success:false,message:"Product not found"})
+          }
+
         if(quantity > productExist.quantity ){
             return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
         }
 
+      
      
         // for get category discount
         const findCategory = await categoryModel.findOne({_id:productExist?.category})
@@ -151,7 +156,8 @@ export const addProductToInvoice = async (req,res) => {
             category:findCategory?.categoryName || "custom product",
             unit:productExist.unit,
             customProduct:productExist?.isCustomProduct || false,
-            taxRate:productExist?.productTax || 0
+            taxRate:productExist?.productTax || 0,
+            loyalityRate:productExist?.loyalityRate || 0
         } 
 
         

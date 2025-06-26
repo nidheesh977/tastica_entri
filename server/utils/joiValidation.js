@@ -294,6 +294,11 @@ export const updateProductValidation = Joi.object({
          'number.base': 'Product tax must be a number',
          'number.empty': 'Product tax cannot be empty',
     }),
+
+     loyalityRate:Joi.number().precision(2).min(0).message({
+         'number.base': 'Product loyality rate must be a number',
+         'number.empty': 'Product loyality rate cannot be empty',
+    }),
    
 })
 

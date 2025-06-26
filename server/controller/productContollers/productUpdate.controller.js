@@ -11,7 +11,7 @@ export const updateProduct = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category , productTax} = value;
+    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category , productTax , loyalityRate} = value;
 
     
 
@@ -51,7 +51,8 @@ export const updateProduct = async (req, res) => {
         discount,
         category,
         costPriceProfit:costPriceProfit,
-        productTax
+        productTax,
+        loyalityRate
       },
       { new: true }
     ); 
