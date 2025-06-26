@@ -66,7 +66,7 @@ const productSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     }, 
-   loyalityRate:{
+   loyaltyRate:{
       type:Number,
       default:0
    } 
