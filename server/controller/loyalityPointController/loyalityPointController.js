@@ -34,19 +34,19 @@ export const createLoyalityRate = async (req,res) =>{
  export const updateLoyalityRate = async (req,res) => {
     try{
         const {id} = req.params;
-        const {loyalityRate} = req.body;
+        const {loyaltyRate} = req.body;
 
         if(!id){
             return res.status(400).json({success:false,message:"Loyality point ID not get"})
         }
 
-        if(loyalityRate < 0){
+        if(loyaltyRate < 0){
             return res.status(400).json({success:false,message:"LoyalityRate cannot be negative"})
         }
 
-        const numToFixed = parseFloat(loyalityRate).toFixed(2);
+        const numToFixed = parseFloat(loyaltyRate).toFixed(2);
 
-        const updateLoyalityPoint = await loyalityPointModel.findByIdAndUpdate(id,{loyalityRate:numToFixed},{new:true});
+        const updateLoyalityPoint = await loyalityPointModel.findByIdAndUpdate(id,{loyaltyRate:numToFixed},{new:true});
 
         res.status(200).json({success:true,message:"Loyality data updated",data:updateLoyalityPoint})
     }catch(error){
@@ -135,7 +135,7 @@ export const loyaltyPointToProduct = async (req, res) => {
     try{
         
 
-        await productModel.updateMany({shop:shopId},{$set:{loyalityRate:strToNum}},{new:true})
+        await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum}},{new:true})
          
 
         res.status(200).json({success:true,message:"loyality rate updated"})
