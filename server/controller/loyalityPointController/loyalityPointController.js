@@ -117,19 +117,20 @@ export const loyaltyPointToProduct = async (req, res) => {
  export const loyalityToProduct = async (req,res) => {
 
         const shopId = req.shop.id;
-        const {rate} = req.body;
+        const {loyaltyRate} = req.body;
 
-        if(rate < 0){
+        if(loyaltyRate < 0){
             return res.status(400).json({success:false,message:"No negative value"})
         }
 
-        const matchNumber = rate.match(/\d+/g) 
+        
+        const matchNumber = loyaltyRate.match(/\d+/g) 
 
         if(!matchNumber){
              return res.status(400).json({success:false,message:"Enter only numbers"})
         }
 
-        const strToNum = parseFloat(rate)
+        const strToNum = parseFloat(loyaltyRate)
 
     try{
         
