@@ -65,7 +65,11 @@ const productSchema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:false
-    }
+    }, 
+   loyaltyRate:{
+      type:Number,
+      default:0
+   } 
 
 },{timestamps:true});
 
