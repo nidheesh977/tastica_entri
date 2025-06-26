@@ -34,7 +34,7 @@ const invoiceSchema = new mongoose.Schema({
             customProduct:{type:Boolean,default:false},
             taxRate:{type:Number,default:0},
             taxAmount:{type:Number,default:0},
-            loyalityRate:{type:Number,default:0}
+            loyaltyRate:{type:Number,default:0}
             
          }   
         ],

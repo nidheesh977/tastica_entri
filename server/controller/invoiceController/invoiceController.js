@@ -157,16 +157,14 @@ export const addProductToInvoice = async (req,res) => {
             unit:productExist.unit,
             customProduct:productExist?.isCustomProduct || false,
             taxRate:productExist?.productTax || 0,
-            loyalityRate:productExist?.loyalityRate || 0
+            loyaltyRate:productExist?.loyaltyRate || 0
         } 
 
-        
+         
 
  
      if(!findInvoiceProduct){ 
-
-       
-         
+   
          // calculate discount
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
 

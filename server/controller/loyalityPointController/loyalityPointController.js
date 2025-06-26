@@ -115,6 +115,6 @@ export const createLoyalityRate = async (req,res) =>{
         res.status(200).json({success:true,message:"loyality rate updated"})
         
     }catch(error){  
-         return res.status(500).json({success:false,message:"Internal server error",error:error})
+         return res.status(500).json({success:false,message:"Internal server error"})
     }
  }

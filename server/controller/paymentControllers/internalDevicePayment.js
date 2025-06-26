@@ -26,16 +26,18 @@ export const internalDevicePayment = async (req,res) => {
         let totalOfDiscount = 0  // total of the product discount
         let deductDiscountFromTotal = 0 // deduct discount from the total
         let addTax = 0  // if tax exist add tax to total
-        
-        let loyalityPointProduct = 0  // calculate product loyality rate 
-        
-        for (const item of findInvoice.products){
-                total += item.total 
-                totalOfDiscount += item.productDiscount
-                deductDiscountFromTotal = total - totalOfDiscount
-                addTax = deductDiscountFromTotal + item.taxAmount
-                loyalityPointProduct = addTax * item.loyalityRate
-        }
+        let loyaltyPointProduct = 0  // calculate product loyality rate 
+
+  for (const item of findInvoice.products){
+        if(item.customProduct != true){
+        total += item.total 
+        totalOfDiscount += item.productDiscount
+        deductDiscountFromTotal = total - totalOfDiscount
+        addTax = deductDiscountFromTotal + item.taxAmount
+         loyaltyPointProduct = addTax * item.loyaltyRate
+    } 
+  }
+
 
 
         if(findInvoice.paymentStatus === "success"){
@@ -89,7 +91,7 @@ export const internalDevicePayment = async (req,res) => {
     let date = new Date()
       const pointHistory = {
             action:"earn",
-            redeemOrEarn:Math.round(loyalityPointProduct),
+            redeemOrEarn:Math.round(loyaltyPointProduct),
             createdAt:date,
             invoice:invoiceId
       }
@@ -101,19 +103,25 @@ export const internalDevicePayment = async (req,res) => {
             invoice:invoiceId
       }
 
-         const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
+        //  const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
     
         if(findInvoice.redeemAmount > 0){
         
 
-          const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
-          let deductLoyality =  findCustomer.loyalityPoint - getpoints  + loyalityPointProduct
+        //   const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
 
-          let PointsToAmount = Math.round(deductLoyality) * findLoyalityRate?.loyalityRate || 0
+          let deductLoyalty =  findCustomer.loyalityPoint - findInvoice.redeemAmount  + loyaltyPointProduct
+
+        //   let PointsToAmount = Math.round(deductLoyality) * findLoyalityRate?.loyalityRate || 0
+
+        let PointsToAmount = deductLoyalty;
 
       await customerModel.findByIdAndUpdate(findCustomer._id,{
-            loyalityPoint:Math.round(deductLoyality),
-            pointAmount: parseFloat(PointsToAmount).toFixed(2),
+            loyalityPoint:Math.round(deductLoyalty),
+
+             //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
+
+                 pointAmount:Math.round(PointsToAmount),
                 $push:{
                     invoices:{$each:[invoiceInternalDevicePayment._id]},
                     loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
@@ -124,12 +132,18 @@ export const internalDevicePayment = async (req,res) => {
         } 
 
         else if(invoiceInternalDevicePayment){
-             let addLoyality =  findCustomer.loyalityPoint += loyalityPointProduct
-             let PointsToAmount = Math.round(addLoyality) * findLoyalityRate?.loyalityRate || 0
+            //  let addLoyality =  findCustomer.loyalityPoint += loyalityPointProduct
+
+              let addLoyalty =  findCustomer.loyalityPoint += loyaltyPointProduct;
+
+            //  let PointsToAmount = Math.round(addLoyality) * findLoyalityRate?.loyalityRate || 0
+
+             let PointsToAmount = addLoyalty;
 
            await customerModel.findByIdAndUpdate(findCustomer._id,{
-            loyalityPoint:Math.round(addLoyality),
-            pointAmount:parseFloat(PointsToAmount).toFixed(2),
+            loyalityPoint:Math.round(addLoyalty),
+           //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
+             pointAmount:Math.round(PointsToAmount),
                 $push:{
                     invoices:{$each:[invoiceInternalDevicePayment._id]},
                     loyalityPointHistory:{$each:[pointHistory]}

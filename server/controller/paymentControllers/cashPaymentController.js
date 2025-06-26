@@ -25,17 +25,23 @@ export const cashPayment = async (req,res) => {
   let totalOfDiscount = 0  // total of the product discount
   let deductDiscountFromTotal = 0 // deduct discount from the total
   let addTax = 0  // if tax exist add tax to total
-  let loyalityPointProduct = 0  // calculate product loyality rate 
+  let loyaltyPointProduct = 0  // calculate product loyality rate 
 
   for (const item of findInvoice.products){
-         total += item.total 
+    if(item.customProduct != true){
+        total += item.total 
         totalOfDiscount += item.productDiscount
         deductDiscountFromTotal = total - totalOfDiscount
         addTax = deductDiscountFromTotal + item.taxAmount
-         loyalityPointProduct = addTax * item.loyalityRate
-  }
+         loyaltyPointProduct = addTax * item.loyaltyRate
+    }   
+  } 
 
-       
+ console.log(total)
+ console.log(totalOfDiscount)
+ console.log(deductDiscountFromTotal)
+ console.log(addTax)
+ console.log(loyaltyPointProduct)
 
         if(findInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"});
@@ -87,7 +93,7 @@ export const cashPayment = async (req,res) => {
      let date = new Date()
        const pointHistory = {
              action:"earn",
-             redeemOrEarn:Math.round(loyalityPointProduct),
+             redeemOrEarn:Math.round(loyaltyPointProduct),
              createdAt:date,
              invoice:invoiceId
        }
@@ -99,19 +105,25 @@ export const cashPayment = async (req,res) => {
              invoice:invoiceId
          }
 
-        const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
+    
+
+        // const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
     
          if(findInvoice.redeemAmount > 0){
       
-          const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
-           let deductLoyality =  findCustomer.loyalityPoint - getpoints  + loyalityPointProduct  
-          
-           let PointsToAmount = Math.round(deductLoyality) * findLoyalityRate?.loyalityRate || 0
+        //   const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
 
+           let deductLoyalty =  findCustomer.loyalityPoint - findInvoice.redeemAmount  + loyaltyPointProduct  
+          
+        //    let PointsToAmount = Math.round(deductLoyality) * findLoyalityRate?.loyalityRate || 0
+          
+
+            let PointsToAmount = deductLoyalty;
 
          await customerModel.findByIdAndUpdate(findCustomer._id,{
-             loyalityPoint:Math.round(deductLoyality),
-             pointAmount:parseFloat(PointsToAmount).toFixed(2),
+             loyalityPoint:Math.round(deductLoyalty),
+            //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
+              pointAmount:Math.round(PointsToAmount),
                  $push:{
                      invoices:{$each:[invoiceCashPayment._id]},
                      loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
@@ -123,15 +135,18 @@ export const cashPayment = async (req,res) => {
 
          else if(invoiceCashPayment){
             //  add loylaity point to customer
-              let addLoyality =  findCustomer.loyalityPoint += loyalityPointProduct
+              let addLoyalty =  findCustomer.loyalityPoint += loyaltyPointProduct;
 
             // convert point to amount   
-              let PointsToAmount = Math.round(addLoyality) * findLoyalityRate?.loyalityRate || 0
+            //   let PointsToAmount = Math.round(addLoyality) * findLoyalityRate?.loyalityRate || 0
+            
+            let PointsToAmount = addLoyalty;
 
 
             await customerModel.findByIdAndUpdate(findCustomer._id,{
-             loyalityPoint:Math.round(addLoyality),
-             pointAmount:parseFloat(PointsToAmount).toFixed(2),
+             loyalityPoint:Math.round(addLoyalty),
+            //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
+             pointAmount:Math.round(PointsToAmount),
                  $push:{
                      invoices:{$each:[invoiceCashPayment._id]},
                      loyalityPointHistory:{$each:[pointHistory]}
@@ -144,6 +159,7 @@ export const cashPayment = async (req,res) => {
          }   
         
     }catch(error){
+        console.log(error)
         return res.status(500).json({success:false,message:"internal server error"})
     }
 }
