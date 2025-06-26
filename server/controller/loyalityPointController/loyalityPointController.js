@@ -88,30 +88,6 @@ export const createLoyalityRate = async (req,res) =>{
     }
  }
 
-export const loyaltyPointToProduct = async (req, res) => {
-    try{
-        const shopId = req.shop.id
-        const {loyaltyRate} = req.body
-
-        if(loyaltyRate < 0){
-            return res.status(400).json({success:false,message:"No enter negative value"})
-        }
-
-        const checkNumber = loyaltyRate.match(/\d+/g) 
-
-        if(checkNumber){
-            return res.status(400).json({success:false,message:"Enter number only"})
-        }
-
-        const strToNum = parseFloat(checkNumber) 
-
-         await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum}})
-
-         res.status(200).json({success:true, message:"Loyalty rate added successfully"}) 
-    } catch(error){
-        return res.status(500).json({success:false,message:"Internal server error"})
-    } 
-} 
 
 
  export const loyalityToProduct = async (req,res) => {
@@ -122,8 +98,7 @@ export const loyaltyPointToProduct = async (req, res) => {
         if(loyaltyRate < 0){
             return res.status(400).json({success:false,message:"No negative value"})
         }
-
-        
+       
         const matchNumber = loyaltyRate.match(/\d+/g) 
 
         if(!matchNumber){
@@ -134,13 +109,12 @@ export const loyaltyPointToProduct = async (req, res) => {
 
     try{
         
-
         await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum}},{new:true})
          
 
         res.status(200).json({success:true,message:"loyality rate updated"})
         
-    }catch(error){
-         return res.status(500).json({success:false,message:"Internal server error"})
+    }catch(error){  
+         return res.status(500).json({success:false,message:"Internal server error",error:error})
     }
  }
