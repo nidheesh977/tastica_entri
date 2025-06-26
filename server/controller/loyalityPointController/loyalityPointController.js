@@ -88,7 +88,7 @@ export const createLoyalityRate = async (req,res) =>{
     }
  }
 
-export const loyalityPointToProduct = async (req, res) => {
+export const loyaltyPointToProduct = async (req, res) => {
     try{
         const shopId = req.shop.id
         const {rate} = req.body
@@ -105,7 +105,7 @@ export const loyalityPointToProduct = async (req, res) => {
 
         const strToNum = parseFloat(checkNumber) 
 
-         await productModel.updateMany({shop:shopId},{$set:{loyalityRate:strToNum})
+         await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum})
     } catch(error){
         return res.status(500).json({success:false,message:"Internal server error"})
     } 
