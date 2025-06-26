@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
-import { dark, medium, light } from "../../../../utils/constants";
-import { useDashboard } from "../../../hooks/useDashboard";
+import { useEffect } from "react";
+import { dark, medium, light } from "../../../utils/constants";
 
-export const SalesPerformance = () => {
-  const [date, setDate] = useState("");
-  const [year, setYear] = useState(0);
-  const [customYear, setCustomYear] = useState(0);
-  const [month, setMonth] = useState("");
-  const [customMonth, setCustomMonth] = useState("");
-  const [day, setDay] = useState("");
-  const { dateSales, yearSales, monthSales } = useDashboard(
-    year,
-    month,
-    day,
-    customMonth,
-    customYear
-  );
-
+export const SalesPerformance = ({
+  date,
+  customMonth,
+  customYear,
+  setYear,
+  setDate,
+  setMonth,
+  setCustomMonth,
+  setCustomYear,
+  setDay,
+  dateSales,
+  yearSales,
+  monthSales,
+}) => {
   const monthNames = [
     "January",
     "February",
@@ -59,22 +57,44 @@ export const SalesPerformance = () => {
     return inputDate === today;
   };
 
-  const renderStats = (bgColor, sales, isMonthOrYear = false) => {
+  const renderStats = (bgColor, sales) => {
+    const methods = [
+      { key: "cash", label: "Cash" },
+      { key: "internal-device", label: "Swipe" },
+      { key: "digital", label: "Stripe" },
+    ];
+
+    const methodData = sales?.date?.paymentMethod || [];
+
     return (
       <div className="grid grid-cols-12 text-white">
-        {["Cash", "Swipe", "Stripe", "Total"].map((label, idx) => (
-          <div
-            key={label}
-            className="col-span-12 md:col-span-3 text-center font-semibold text-sm p-2 border"
-            style={{ background: bgColor }}
-          >
-            {label} MVR
-            <br />
-            {idx < 3
-              ? sales?.date?.paymentMethod?.[idx]?.roundedTotalAmount || 0
-              : sales?.date?.grandTotal?.roundedTotalAmount || 0}
-          </div>
-        ))}
+        {methods.map(({ key, label }) => {
+          const item = methodData.find(
+            (entry) => entry?.paymentType?.paymentMethod === key
+          );
+          const amount = item?.roundedTotalAmount || 0;
+
+          return (
+            <div
+              key={key}
+              className="col-span-12 md:col-span-3 text-center font-semibold text-sm p-2 border"
+              style={{ background: bgColor }}
+            >
+              {label} MVR
+              <br />
+              {amount}
+            </div>
+          );
+        })}
+
+        <div
+          className="col-span-12 md:col-span-3 text-center font-semibold text-sm p-2 border"
+          style={{ background: bgColor }}
+        >
+          Total MVR
+          <br />
+          {sales?.date?.grandTotal?.roundedTotalAmount || 0}
+        </div>
       </div>
     );
   };
@@ -116,7 +136,7 @@ export const SalesPerformance = () => {
             className="text-center border border-tertiary text-white bg-transparent w-20"
           />
         </div>
-        {renderStats(medium, monthSales, true)}
+        {renderStats(medium, monthSales)}
       </div>
 
       <div>
@@ -134,7 +154,7 @@ export const SalesPerformance = () => {
             className="text-center border border-tertiary text-white bg-transparent w-24"
           />
         </div>
-        {renderStats(light, yearSales, true)}
+        {renderStats(light, yearSales)}
       </div>
     </div>
   );

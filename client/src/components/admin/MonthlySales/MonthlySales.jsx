@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { medium } from "../../../../utils/constants";
+import { medium } from "../../../utils/constants";
 
 ChartJS.register(
   BarElement,
@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-export const MonthlySales = ({ invoices }) => {
+export const MonthlySales = ({ invoices, method }) => {
   const [chart, setChart] = useState(null);
   const [cash, setCash] = useState(false);
   const [swipe, setSwipe] = useState(false);
@@ -28,59 +28,44 @@ export const MonthlySales = ({ invoices }) => {
   const [all, setAll] = useState(true);
 
   useEffect(() => {
-    if (!invoices || invoices.length === 0) return;
+    if (!invoices) return;
 
     const monthlyTotals = {};
 
-    invoices.forEach((invoice) => {
-      const date = new Date(invoice.createdAt);
-
-      // Optional: add filtering logic here if needed
-      if (cash && invoice.paymentMethod !== "cash") return;
-      if (swipe && invoice.paymentMethod !== "swipe") return;
-      if (stripe && invoice.paymentMethod !== "stripe") return;
-
-      const month = date.toLocaleDateString("en-IN", {
-        month: "long",
-      });
-
+    invoices.forEach(({ month, roundedTotalAmount }) => {
       if (!monthlyTotals[month]) {
         monthlyTotals[month] = 0;
       }
-      monthlyTotals[month] += invoice.totalAmount || 0;
+      monthlyTotals[month] += roundedTotalAmount;
     });
 
-    const monthOrder = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-
-    const labels = monthOrder.filter((m) => monthlyTotals[m] !== undefined);
+    const labels = Object.keys(monthlyTotals);
     const data = labels.map((month) => monthlyTotals[month]);
 
+    const limitedLabels = labels.slice(0, 12);
+    const limitedData = data.slice(0, 12);
+
     setChart({
-      labels,
+      labels: limitedLabels,
       datasets: [
         {
           label: "Monthly Sales ₹",
-          data,
+          data: limitedData,
           backgroundColor: medium,
           borderColor: medium,
           borderWidth: 1,
         },
       ],
     });
-  }, [invoices, cash, swipe, stripe, all]);
+  }, [invoices]);
 
   return (
     <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <h1 className="font-semibold text-sm xl:hidden mb-2">
-          Monthly Sales Trends:
-        </h1>
+        Monthly Sales Trends:
+      </h1>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-semibold hidden xl:block">
-          Monthly Sales Trends:
-        </h1>
+        <h1 className="font-semibold hidden xl:block">Monthly Sales Trends:</h1>
         <div className="flex gap-3">
           <span
             className={`cursor-pointer text-sm px-2 pb-1 ${
@@ -91,6 +76,7 @@ export const MonthlySales = ({ invoices }) => {
               setCash(false);
               setSwipe(false);
               setStripe(false);
+              method("all");
             }}
           >
             All
@@ -104,6 +90,7 @@ export const MonthlySales = ({ invoices }) => {
               setSwipe(false);
               setStripe(false);
               setAll(false);
+              method("cash");
             }}
           >
             Cash
@@ -117,6 +104,7 @@ export const MonthlySales = ({ invoices }) => {
               setCash(false);
               setStripe(false);
               setAll(false);
+              method("internal-device");
             }}
           >
             Swipe
@@ -130,6 +118,7 @@ export const MonthlySales = ({ invoices }) => {
               setSwipe(false);
               setCash(false);
               setAll(false);
+              method("digital");
             }}
           >
             Stripe
@@ -137,7 +126,7 @@ export const MonthlySales = ({ invoices }) => {
         </div>
       </div>
 
-      <div className="relative -z-40  w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
+      <div className="relative -z-40 w-full h-60 px-2 py-4 flex-1 flex items-center justify-center">
         {chart ? (
           <Bar
             data={chart}
@@ -149,12 +138,7 @@ export const MonthlySales = ({ invoices }) => {
                 title: { display: false },
               },
               layout: {
-                padding: {
-                  top: 10,
-                  bottom: 10,
-                  left: 0,
-                  right: 0,
-                },
+                padding: { top: 10, bottom: 10, left: 0, right: 0 },
               },
               scales: {
                 x: {

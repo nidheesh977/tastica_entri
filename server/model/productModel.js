@@ -65,11 +65,19 @@ const productSchema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:false
+<<<<<<< HEAD
     },
     loyalityRate:{
         type:Number,
         default:0
     }
+=======
+    }, 
+   loyaltyRate:{
+      type:Number,
+      default:0
+   } 
+>>>>>>> e91f7d33f8e2c7a7e2cb8bd845d87b44ff66a9b6
 
 },{timestamps:true});
 

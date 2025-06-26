@@ -4,6 +4,7 @@ import {
   FaFileCsv,
   FaBoxOpen,
   FaUserTie,
+  FaFileInvoice
 } from "react-icons/fa";
 import { FiGift } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +42,7 @@ export const AdminSideBar = () => {
   return (
     <div
       className={`
-      fixed top-15 md:top-[99px]  left-0 h-[81%] md:h-[77%] xl:h-[81%] md:w-96 bg-tertiary backdrop-blur  shadow-2xl text-primary
+      fixed top-15 md:top-[77px]  left-0 h-[81%] md:h-[77%] xl:h-[83%] md:w-96 bg-tertiary backdrop-blur  shadow-2xl text-primary
       transform ${sidebar ? "translate-x-0" : "-translate-x-full"}
       transition-transform duration-300 ease-in-out
       z-50
@@ -282,6 +283,16 @@ export const AdminSideBar = () => {
           Invoices
         </li>
 
+        <li
+          onClick={() => {
+            handleSideBar("/admin/custom/invoice");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <FaFileInvoice />
+          Custom Invoice
+        </li>
         <li
           onClick={() => {
             handleSideBar("/admin/open/orders");

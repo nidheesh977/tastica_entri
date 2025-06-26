@@ -100,7 +100,7 @@ export const ShoppingCart = ({
   }, []);
 
   return (
-    <div className="p-2 border">
+    <div className="p-2 border h-[670px]">
       {!isNewCustomer && name === "" && (
         <div className="flex items-center justify-between gap-4 h-9">
           {!isNewCustomer && (

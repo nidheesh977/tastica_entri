@@ -59,6 +59,7 @@ import { UploadProductsStaff } from "../pages/staff/UploadProductsStaffs/UploadP
 import { AddCustomerStaff } from "../pages/staff/AddCustomerStaff/AddCustomerStaff";
 import { ListCustomersStaff } from "../pages/staff/ListCustomersStaff/ListCustomersStaff";
 import { ShopPasswordReset } from "../pages/superAdmin/ShopResetPassword/ShopResetPassword";
+import { CustomInvoice } from "../pages/admin/CustomInvoice/CustomInvoice";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -68,6 +69,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLoginPage /> },
+      // { path: "", element: <CustomInvoice /> },
 
       {
         path: "shop",
@@ -186,6 +188,10 @@ export const router = createBrowserRouter([
           {
             path: "invoice/data/:id",
             element: <InvoiceData />,
+          },
+          {
+            path: "custom/invoice",
+            element: <CustomInvoice />,
           },
           {
             path: "loyalty/points",

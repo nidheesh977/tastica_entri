@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { validateData } from "../../utils/validateData";
+import { validateData } from "../utils/validateData";
 import { useState } from "react";
 import { removeStaffData } from "../redux/features/authSlice";
 

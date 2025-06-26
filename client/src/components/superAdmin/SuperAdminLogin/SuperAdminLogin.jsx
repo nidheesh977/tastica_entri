@@ -36,7 +36,7 @@ export const SuperAdminLogin = () => {
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="my-20
+      className="md:my-10
           w-full md:w-[500px] py-10 md:pb-20 px-4 md:px-10 bg-tertiary text-primary shadow-2xl border rounded-lg"
     >
       <h1 className="text-3xl py-4 font-thin text-center text-primary ">

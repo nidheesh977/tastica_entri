@@ -83,7 +83,7 @@ export const OpenOrderCart = ({
   };
 
   return (
-    <div className="p-2 border">
+    <div className="p-2 border  h-[670px]">
       <div className="flex items-center justify-between w-full">
         <h1 className="font-bold flex gap-2 text-xl items-center">
           <MdShoppingCart className="text-primary" size={35} /> Cart

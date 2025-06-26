@@ -54,7 +54,7 @@ export const useSuperAdmins = () => {
 
       const response = await axiosInstance({
         method: "POST",
-        url: "/super-admin/create-employee",
+        url: "/super-admin/employees",
         withCredentials: true,
         data,
       });
@@ -90,7 +90,7 @@ export const useSuperAdmins = () => {
 
       await axiosInstance({
         method: "POST",
-        url: "/super-admin/create-shop",
+        url: "/super-admin/shops",
         withCredentials: true,
         data,
       });
