@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export const InvoiceDataCard = () => {
   const { id } = useParams();
   const { singleInvoice } = useInvoices();
+  const [discountAmount, setDiscountAmount] = useState(0);
   const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
   useEffect(() => {
     if (id) {
@@ -58,6 +59,18 @@ export const InvoiceDataCard = () => {
               <td className="border-l border-primary">
                 {invoice?.totalDiscount}
                 {currency}
+              </td>
+            </tr>
+            <tr className="font-semibold py-4 border-t border-r border-primary">
+              <td className="border-r border-primary">Refund:</td>
+              <td></td>
+              <td></td>
+              <td className="border-l border-primary">
+                <input
+                  type="text"
+                  value={discountAmount}
+                  onChange={(e) => setDiscountAmount(e.target.value)}
+                />
               </td>
             </tr>
             <tr className="font-semibold py-4 border-t border-r border-primary">
