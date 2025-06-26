@@ -15,7 +15,9 @@ export const ListCardProduct = ({ permissions }) => {
   const [editedCostPriceProfit, setEditedCostPriceProfit] = useState(null);
   const [editedSellingPrice, setEditedSellingPrice] = useState(null);
   const [editedDiscount, setEditedDiscount] = useState(null);
+  const [editedTax, setEditedTax] = useState(null)
   const [alertMessage, setAlertMessage] = useState(null);
+  const [loyaltyPoint, setLoyalityPoint] = useState(null);
   const { products, updateProduct, deleteProduct } = useProducts();
 
   const searchQuery = useSelector((state) => state?.search);
@@ -47,7 +49,7 @@ export const ListCardProduct = ({ permissions }) => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">ID</th>
-              <th className="border border-primary px-4 py-2">Title</th>
+              <th className="border border-primary px-20 py-2">Title</th>
               <th className="border border-primary px-4 py-2">Category</th>
               <th className="border border-primary px-4 py-2">Quantity</th>
               <th className="border border-primary px-4 py-2">Cost Price</th>
@@ -56,6 +58,8 @@ export const ListCardProduct = ({ permissions }) => {
               </th>
               <th className="border border-primary px-4 py-2">Selling Price</th>
               <th className="border border-primary px-4 py-2">Discount</th>
+              <th className="border border-primary px-8 py-2">Tax</th>
+              <th className="border border-primary px-4 py-2">Loyalty</th>
               {(permissions?.includes("product_update") ||
                 permissions?.includes("product_delete")) && (
                 <th className="border border-primary px-4 py-2">Action</th>
@@ -144,6 +148,30 @@ export const ListCardProduct = ({ permissions }) => {
                     />
                   ) : (
                     product?.discount
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedTax}
+                      onChange={(e) => setEditedTax(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    0
+                  )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="number"
+                      value={editedTax}
+                      onChange={(e) => setEditedTax(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    0
                   )}
                 </td>
                 {(permissions?.includes("product_update") ||
