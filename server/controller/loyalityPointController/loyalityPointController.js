@@ -91,13 +91,13 @@ export const createLoyalityRate = async (req,res) =>{
 export const loyaltyPointToProduct = async (req, res) => {
     try{
         const shopId = req.shop.id
-        const {rate} = req.body
+        const {loyaltyRate} = req.body
 
-        if(rate < 0){
+        if(loyaltyRate < 0){
             return res.status(400).json({success:false,message:"No enter negative value"})
         }
 
-        const checkNumber = rate.match(/\d+/g) 
+        const checkNumber = loyaltyRate.match(/\d+/g) 
 
         if(checkNumber){
             return res.status(400).json({success:false,message:"Enter number only"})
@@ -106,6 +106,8 @@ export const loyaltyPointToProduct = async (req, res) => {
         const strToNum = parseFloat(checkNumber) 
 
          await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum})
+
+         res.status(200).json({success:true, message:"Loyalty rate added successfully"}) 
     } catch(error){
         return res.status(500).json({success:false,message:"Internal server error"})
     } 
