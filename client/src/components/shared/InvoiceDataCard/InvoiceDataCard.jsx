@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export const InvoiceDataCard = () => {
   const { id } = useParams();
-  const { singleInvoice } = useInvoices();
+  const { singleInvoice, refund } = useInvoices();
   const [discountAmount, setDiscountAmount] = useState(0);
   const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
   useEffect(() => {
@@ -70,6 +70,16 @@ export const InvoiceDataCard = () => {
                   type="text"
                   value={discountAmount}
                   onChange={(e) => setDiscountAmount(e.target.value)}
+                  onBlur={() => {
+                    refund(
+                      { id: invoice?._id, amount: discountAmount },
+                      {
+                        onSuccess: () => {
+                          singleInvoice({ singleInvoiceId: invoice?._id });
+                        },
+                      },
+                    );
+                  }}
                 />
               </td>
             </tr>

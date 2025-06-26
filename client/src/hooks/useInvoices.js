@@ -56,7 +56,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to fetch customer invoice"
+        error?.response?.data?.message || "Failed to fetch customer invoice",
       );
     },
   });
@@ -98,7 +98,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to fetch saved invoice"
+        error?.response?.data?.message || "Failed to fetch saved invoice",
       );
     },
   });
@@ -161,7 +161,7 @@ export const useInvoices = (customerId = null) => {
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to add product to invoice"
+        error?.response?.data?.message || "Failed to add product to invoice",
       );
     },
   });
@@ -250,7 +250,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice"
+          "Failed to remove product from invoice",
       );
     },
   });
@@ -273,7 +273,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice"
+          "Failed to remove product from invoice",
       );
     },
   });
@@ -368,7 +368,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -390,7 +390,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
       );
 
       const session = await axiosInstance({
@@ -467,8 +467,26 @@ export const useInvoices = (customerId = null) => {
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to delete open order!"
+        error?.response?.data?.message || "Failed to delete open order!",
       );
+    },
+  });
+  const { mutate: refund } = useMutation({
+    mutationFn: async ({ id, amount }) => {
+      const data = { amount };
+      await axiosInstance({
+        method: "PUT",
+        url: `/payment/${id}/invoice`,
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["singleInvoice"]);
+      toast.success("Refund accepted");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to submit refund!");
     },
   });
 
@@ -494,5 +512,6 @@ export const useInvoices = (customerId = null) => {
     redeemPointsOpenOrder,
     deleteOpenOrder,
     clearInvoice,
+    refund,
   };
 };
