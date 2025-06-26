@@ -105,7 +105,7 @@ export const loyaltyPointToProduct = async (req, res) => {
 
         const strToNum = parseFloat(checkNumber) 
 
-         await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum})
+         await productModel.updateMany({shop:shopId},{$set:{loyaltyRate:strToNum}})
 
          res.status(200).json({success:true, message:"Loyalty rate added successfully"}) 
     } catch(error){
