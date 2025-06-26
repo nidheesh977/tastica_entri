@@ -36,8 +36,8 @@ export const OpenOrderCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
-  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
-  const [pointAmount, setPointAmount] = useState("");
+  // const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  // const [pointAmount, setPointAmount] = useState("");
 
   useEffect(() => {
     if (invoice?.products) {
@@ -54,11 +54,11 @@ export const OpenOrderCart = ({
       dispatch(saveSingleInvoiceOpenOrder(id));
     }
   }, [id, dispatch]);
-  useEffect(() => {
-    if (invoice?.customer?.pointAmount !== undefined) {
-      setPointAmount(invoice.customer.pointAmount);
-    }
-  }, [invoice]);
+  // useEffect(() => {
+  //   if (invoice?.customer?.pointAmount !== undefined) {
+  //     setPointAmount(invoice.customer.pointAmount);
+  //   }
+  // }, [invoice]);
 
   const handleCashPay = () => {
     setShowPayDialog(false);
@@ -175,7 +175,7 @@ export const OpenOrderCart = ({
             {invoice?.totalDiscount || 0}
           </div>
         </div>
-        {loyaltyPoints?.loyalityRate && (
+        {/* {loyaltyPoints?.loyalityRate && (
           <div className="flex justify-between items-center border px-2 py-2">
             <div>Discount</div>
             <p>{pointAmount}</p>
@@ -203,7 +203,7 @@ export const OpenOrderCart = ({
               </button>
             </div>
           </div>
-        )}
+        )} */}
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
           <div>

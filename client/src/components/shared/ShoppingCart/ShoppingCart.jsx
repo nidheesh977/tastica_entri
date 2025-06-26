@@ -37,8 +37,8 @@ export const ShoppingCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
-  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
-  const [pointAmount, setPointAmount] = useState("");
+  // const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  // const [pointAmount, setPointAmount] = useState("");
 
   useEffect(() => {
     if (searchQuery?.length === 7) {
@@ -51,7 +51,7 @@ export const ShoppingCart = ({
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
         setName(matchedCustomer.customerName);
         setMobile(matchedCustomer.phoneNumber);
-        setPointAmount(matchedCustomer?.pointAmount);
+        // setPointAmount(matchedCustomer?.pointAmount);
         setIsNewCustomer(false);
         createInvoice(matchedCustomer._id);
       } else if (!matchedCustomer) {
@@ -267,7 +267,7 @@ export const ShoppingCart = ({
               {invoice?.totalDiscount || 0}
             </div>
           </div>
-          {loyaltyPoints?.loyalityRate && (
+          {/* {loyaltyPoints?.loyalityRate && (
             <>
               {" "}
               <div className="flex justify-between items-center gap-2 border px-2 py-2">
@@ -297,7 +297,7 @@ export const ShoppingCart = ({
                 </div>
               </div>
             </>
-          )}
+          )} */}
           <div className="flex justify-between items-center font-semibold border px-2 py-2">
             <div>Total</div>
             <div>
