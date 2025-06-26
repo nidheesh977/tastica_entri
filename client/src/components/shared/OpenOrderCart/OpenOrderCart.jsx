@@ -7,7 +7,6 @@ import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveSingleInvoiceOpenOrder } from "../../../redux/features/singleInvoiceOpenOrderSlice";
-import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
 
 export const OpenOrderCart = ({
   addProductToInvoice,
@@ -27,8 +26,6 @@ export const OpenOrderCart = ({
     redeemPointsOpenOrder,
   } = useInvoices();
 
-  const { loyaltyPoints } = useLoyaltyPoints();
-
   const invoice = singleInvoiceOpenOrder;
 
   const products = invoice?.products;
@@ -36,8 +33,8 @@ export const OpenOrderCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
-  // const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
-  // const [pointAmount, setPointAmount] = useState("");
+  const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
+  const [pointAmount, setPointAmount] = useState("");
 
   useEffect(() => {
     if (invoice?.products) {
@@ -54,11 +51,11 @@ export const OpenOrderCart = ({
       dispatch(saveSingleInvoiceOpenOrder(id));
     }
   }, [id, dispatch]);
-  // useEffect(() => {
-  //   if (invoice?.customer?.pointAmount !== undefined) {
-  //     setPointAmount(invoice.customer.pointAmount);
-  //   }
-  // }, [invoice]);
+  useEffect(() => {
+    if (invoice?.customer?.pointAmount !== undefined) {
+      setPointAmount(invoice.customer.pointAmount);
+    }
+  }, [invoice]);
 
   const handleCashPay = () => {
     setShowPayDialog(false);
@@ -175,35 +172,35 @@ export const OpenOrderCart = ({
             {invoice?.totalDiscount || 0}
           </div>
         </div>
-        {/* {loyaltyPoints?.loyalityRate && (
-          <div className="flex justify-between items-center border px-2 py-2">
-            <div>Discount</div>
-            <p>{pointAmount}</p>
-            <div>
-              <input
-                className="outline-primary px-2 w-2/3 border "
-                type="text"
-                onChange={(e) => {
-                  setRedeemAmountAdd(e.target.value);
-                }}
-              />
-            </div>
-            <div>
-              <button
-                onClick={() => {
-                  redeemPointsOpenOrder({
-                    redeemAmountAdd,
-                    id,
-                  });
-                  setRedeemAmountAdd("");
-                }}
-                className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
-              >
-                Redeem
-              </button>
-            </div>
+
+        <div className="flex justify-between items-center border px-2 py-2">
+          <div>Discount</div>
+          <p>{pointAmount}</p>
+          <div>
+            <input
+              className="outline-primary px-2 w-2/3 border "
+              type="text"
+              onChange={(e) => {
+                setRedeemAmountAdd(e.target.value);
+              }}
+            />
           </div>
-        )} */}
+          <div>
+            <button
+              onClick={() => {
+                redeemPointsOpenOrder({
+                  redeemAmountAdd,
+                  id,
+                });
+                setRedeemAmountAdd("");
+              }}
+              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+            >
+              Redeem
+            </button>
+          </div>
+        </div>
+
         <div className="flex justify-between items-center font-semibold border px-2 py-2">
           <div>Total</div>
           <div>
