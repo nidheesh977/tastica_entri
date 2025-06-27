@@ -1,8 +1,9 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import shopModel from "../../model/shopModel.js"
 import { comparePassword } from "../../utils/comparePassword.js";
+import { generateStaffId } from "../../utils/generateStaffId.js";
 import { generateToken } from "../../utils/generateToken.js";
-import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, userLoginValidation, userSignupValidation, userUpdateValidation} from "../../utils/joiValidation.js"
+import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, adminAndSuperAdminLoginValidation, userSignupValidation, userUpdateValidation} from "../../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
 
 
@@ -10,7 +11,7 @@ import bcryptjs from 'bcryptjs'
 
     export const superAdminlogin = async (req, res) => {
       try {
-        const { error, value } = userLoginValidation.validate(req.body);
+        const { error, value } = adminAndSuperAdminLoginValidation.validate(req.body);
      
         if (error) {
           return res.status(400).json({ message: error.details[0].message });
@@ -319,6 +320,12 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
     return res.status(400).json({success:false,message:"Role is not get"})
      }
 
+     const findShop = await shopModel.findById(shopId);
+
+     if(!findShop){
+        return res.status(400).json({success:false,message:"Shop not found"})
+     }
+
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {
@@ -347,6 +354,17 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
        Permissions = ["product_read","category_read","customer_read"]
     }
 
+      let shopName = findShop.shopName
+      let sliceName = shopName.slice(0,3) || "STF"
+
+    
+      let staffId;
+               
+                do {
+                 staffId = generateStaffId(sliceName.toUpperCase())
+                   } while (await AdminStaffModel.findOne({staffId:staffId}));
+    
+
     const newUser = new AdminStaffModel({
       userName: userNameLowerCase,
       phoneNumber,
@@ -354,7 +372,8 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
       password: hashedPassword,
       shopId,
       role,
-      permissions:Permissions
+      permissions:Permissions,
+      staffId
     });
 
     const {password:pass,...userDate} = newUser._doc

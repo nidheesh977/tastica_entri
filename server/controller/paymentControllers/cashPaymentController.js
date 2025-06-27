@@ -37,11 +37,6 @@ export const cashPayment = async (req,res) => {
     }   
   } 
 
- console.log(total)
- console.log(totalOfDiscount)
- console.log(deductDiscountFromTotal)
- console.log(addTax)
- console.log(loyaltyPointProduct)
 
         if(findInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"});

@@ -1,13 +1,14 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import { comparePassword } from "../../utils/comparePassword.js";
-import {  userLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../../utils/joiValidation.js";
+import {  adminAndSuperAdminLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation,} from "../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../../utils/generateToken.js";
+import { generateStaffId } from "../../utils/generateStaffId.js";
 
 
 export const loginAdmin = async (req, res) => {
   try {
-    const { error, value } = userLoginValidation.validate(req.body);
+    const { error, value } = adminAndSuperAdminLoginValidation.validate(req.body);
  
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
@@ -15,6 +16,8 @@ export const loginAdmin = async (req, res) => {
 
     const { phoneNumber, password } = value;
     const {id} = req.shop;
+
+    
 
     const adminExist = await AdminStaffModel.findOne({shopId:id,phoneNumber:phoneNumber});
 
@@ -62,8 +65,9 @@ export const CreateEmployee = async (req, res) => {
     }
 
     const { userName, phoneNumber, email, password } = value;
-    const shopId = req.shop.id;
+    const {id,shopName} = req.shop;
 
+    console.log(req.shop)
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {
@@ -80,20 +84,32 @@ export const CreateEmployee = async (req, res) => {
 
     const userNameLowerCase = userName.toLowerCase();
 
+    const sliceName = shopName.slice(0,3)
+
+
+    
+
+     let staffId;
+           
+            do {
+             staffId = generateStaffId(sliceName.toUpperCase())
+               } while (await AdminStaffModel.findOne({staffId:staffId}));
+
+          
     const newUser = new AdminStaffModel({
       userName: userNameLowerCase,
       phoneNumber,
       email,
       password: hashedPassword,
-      shopId,
-      permissions:["product_read","category_read","customer_read"]
+      shopId:id,
+      permissions:["product_read","category_read","customer_read"],
+      staffId:staffId
       
     });
 
     await newUser.save();
     res.status(201).json({ success: true, message: "staff created successfully" });
   } catch (error) {
-    console.log(error)
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

@@ -84,7 +84,7 @@ export const shopLogin = async (req,res) => {
         const {password:pass,...shopData} = shopExist._doc
 
         // Generate token share datas likes shop id , country name , currency code 
-        const shopToken = generateToken({id:shopExist._id,role:"shop", countryName:shopExist.countryName, currencyCode:shopExist.currencyCode});
+        const shopToken = generateToken({id:shopExist._id,role:"shop",shopName:shopExist.shopName, countryName:shopExist.countryName, currencyCode:shopExist.currencyCode});
        
         // Store generate token above
         res.cookie("shopToken",shopToken,{httpOnly:true,

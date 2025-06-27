@@ -62,11 +62,24 @@ export const userUpdateValidation = Joi.object({
     
 })
 
-export const userLoginValidation = Joi.object({
+export const adminAndSuperAdminLoginValidation = Joi.object({
     phoneNumber: Joi.string().required().messages({
-        'string.required': 'Phone number is required',
-        'string.base': 'Phone number must be a string',
-        'string.empty': 'Phone number cannot be empty',
+        'string.required': 'Staff ID is required',
+        'string.base': 'Staff ID must be a string',
+        'string.empty': 'Staff ID cannot be empty',
+    
+    }),
+    password: Joi.string().required().messages({
+        'string.required': 'Password is required',
+        'string.empty': 'Password cannot be empty',
+    }),
+}) 
+
+export const staffLoginValidation = Joi.object({
+    staffId: Joi.string().required().messages({
+        'string.required': 'Staff ID is required',
+        'string.base': 'Staff ID must be a string',
+        'string.empty': 'Staff ID cannot be empty',
     
     }),
     password: Joi.string().required().messages({

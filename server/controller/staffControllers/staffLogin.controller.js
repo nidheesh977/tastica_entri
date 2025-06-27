@@ -1,20 +1,22 @@
 import AdminStaffModel from '../../model/adminAndStaffModel.js';
-import {userLoginValidation} from '../../utils/joiValidation.js';
+import {staffLoginValidation} from '../../utils/joiValidation.js';
 import { comparePassword } from '../../utils/comparePassword.js';
 import { generateToken } from '../../utils/generateToken.js';
 
 export const loginStaff = async (req,res) => {
     try{
-      const {error,value} = userLoginValidation.validate(req.body);
+      const {error,value} = staffLoginValidation.validate(req.body);
 
       if(error){
         return res.status(400).json({ message: error.details[0].message });
       }
 
-      const {phoneNumber,password} = value; 
+      const {staffId,password} = value; 
       const {id} = req.shop;
 
-      const userExist = await AdminStaffModel.findOne({shopId:id,phoneNumber:phoneNumber});
+      const staffIdToCap = staffId.toUpperCase()
+
+      const userExist = await AdminStaffModel.findOne({shopId:id,staffId:staffIdToCap});
 
       if(!userExist){
         return res.status(400).json({success:false,message:"User not found"})

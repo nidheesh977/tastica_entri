@@ -2,7 +2,7 @@ import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import resetTokenModel from "../../model/resetTokenModel.js";
 import { addPermissionValidation, resetPasswordValidation, resetSendEmailValidation, userPasswordValidation } from "../../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
-import { nodeMailerTransporter } from "../../utils/nodeMailerTransporter.js";
+import { nodeMailerTransporter } from "../../helpers/nodeMailerTransporter.js";
 import {v4 as uuidv4 } from "uuid"
 
 

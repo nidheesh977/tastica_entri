@@ -42,6 +42,11 @@ const staffPermissions = ["product_read","product_update","product_delete","prod
         type:[String],
         enum:staffPermissions,
         default:[]
+    },
+    staffId:{
+        type:String,
+        required:true,
+        unique:true
     }
     
    
