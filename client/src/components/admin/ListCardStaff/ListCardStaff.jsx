@@ -22,6 +22,7 @@ export const ListCardStaff = () => {
     const query = searchQuery.toLowerCase();
     return (
       staff?.userName?.toLowerCase().includes(query) ||
+      staff?.staffId?.toLowerCase().includes(query) ||
       staff?.email?.toLowerCase().includes(query) ||
       staff?.phoneNumber.toString().toLowerCase().includes(query)
     );
@@ -42,6 +43,7 @@ export const ListCardStaff = () => {
               <tr>
                 <th className="border border-primary px-4 py-2">No</th>
                 <th className="border border-primary px-4 py-2">Name</th>
+                <th className="border border-primary px-4 py-2">ID</th>
                 <th className="border border-primary px-4 py-2">Email</th>
                 <th className="border border-primary px-4 py-2">Mobile</th>
                 <th className="border border-primary px-4 py-2">Action</th>
@@ -64,6 +66,9 @@ export const ListCardStaff = () => {
                       ) : (
                         staff?.userName
                       )}
+                    </td>
+                    <td className="border border-primary px-4 py-2">
+                      {staff?.staffId}
                     </td>
                     <td className="border border-primary px-4 py-2">
                       {editId === staff?._id ? (
@@ -135,7 +140,11 @@ export const ListCardStaff = () => {
                                   className="hover:text-orange-600 text-primary cursor-pointer"
                                 />
                                 <MdLockReset
-                                onClick={()=> navigate(`/admin/staff/reset/password/${staff?._id}`)}
+                                  onClick={() =>
+                                    navigate(
+                                      `/admin/staff/reset/password/${staff?._id}`
+                                    )
+                                  }
                                   title="Reset Password"
                                   size={22}
                                   className="hover:text-orange-600 text-primary cursor-pointer"

@@ -10,14 +10,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export const StaffLogin = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [staffId, setStaffId] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const data = { phoneNumber, password };
+    const data = { staffId, password };
     try {
       const response = await axiosInstance({
         method: "POST",
@@ -46,10 +46,10 @@ export const StaffLogin = () => {
 
       <input
         type="text"
-        value={phoneNumber}
-        placeholder="Mobile"
+        value={staffId}
+        placeholder="ID"
         maxLength={7}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        onChange={(e) => setStaffId(e.target.value)}
         className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
       />
       <div className="relative w-full my-1">
@@ -79,7 +79,7 @@ export const StaffLogin = () => {
         className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
         onClick={() => {
           handleLogin();
-          setPhoneNumber("");
+          setStaffId("");
           setPassword("");
         }}
       >
