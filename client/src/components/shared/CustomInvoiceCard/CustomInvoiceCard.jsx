@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
+import { useSelector } from "react-redux";
 
-export const CustomInvoiceCard = () => {
+export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
+  const customInvoice = useSelector((state) => state?.customInvoice);
+
   const [rows, setRows] = useState([
     { title: "", quantity: "", price: 0, total: 0 },
   ]);
@@ -104,6 +107,15 @@ export const CustomInvoiceCard = () => {
   const totalAmount = rows
     .reduce((sum, row) => sum + parseFloat(row.total || 0), 0)
     .toFixed(2);
+
+  useEffect(() => {
+    createInvoice();
+    return () => {
+      if (customInvoice?.products.length === 0) {
+        deleteInvoice();
+      }
+    };
+  }, []);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">

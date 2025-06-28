@@ -10,6 +10,7 @@ import toggleCustomProductReducer from "./features/customProductSlice";
 import quantityReducer from "./features/quantitySlice";
 import selectedShopReducer from "./features/selectedShopSlice";
 import errorReducer from "./features/errorSlice";
+import customInvoiceReducer  from "./features/customInvoiceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +25,6 @@ export const store = configureStore({
     toggleQuantity: quantityReducer,
     selectedShopId: selectedShopReducer,
     error: errorReducer,
+    customInvoice: customInvoiceReducer,
   },
 });
