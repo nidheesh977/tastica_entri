@@ -27,6 +27,7 @@ export const useProducts = () => {
       category,
       discountType,
       unit,
+      barcodeNumber
     }) => {
       const data = {
         productName,
@@ -38,6 +39,7 @@ export const useProducts = () => {
         category,
         discountType,
         unit,
+        barcodeNumber
       };
       await axiosInstance({
         method: "POST",
@@ -85,6 +87,7 @@ export const useProducts = () => {
       category,
       productTax,
       loyaltyRate,
+      barcodeNumber
     }) => {
       const data = {
         productName,
@@ -96,6 +99,7 @@ export const useProducts = () => {
         category,
         productTax,
         loyaltyRate,
+        barcodeNumber
       };
 
       await axiosInstance({

@@ -16,6 +16,7 @@ export const AddProductCard = () => {
   const [category, setCategory] = useState("");
   const [discountType, setDiscountType] = useState("percentage");
   const [unit, setUnit] = useState("");
+  const [barcode, setBarcode] = useState("");
 
   return (
     <>
@@ -35,6 +36,13 @@ export const AddProductCard = () => {
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             placeholder="Product Name"
+            className="p-4 my-1  w-full  bg-white shadow outline-primary"
+          />
+          <input
+            type="text"
+            value={barcode}
+            onChange={(e) => setBarcode(e.target.value)}
+            placeholder="Barcode"
             className="p-4 my-1  w-full  bg-white shadow outline-primary"
           />
           <div className="flex items-center justify-between bg-white w-full shadow my-1">
@@ -178,6 +186,7 @@ export const AddProductCard = () => {
                 category,
                 discountType,
                 unit,
+                barcodeNumber: barcode
               });
               setProductName("");
               setQuantity("");
@@ -185,6 +194,7 @@ export const AddProductCard = () => {
               setCostPriceProfit("");
               setSellingPrice("");
               setDiscount("");
+              setBarcode("");
             }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">

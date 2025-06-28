@@ -18,6 +18,7 @@ export const ListCardProduct = ({ permissions }) => {
   const [editedTax, setEditedTax] = useState(null);
   const [alertMessage, setAlertMessage] = useState(null);
   const [editedLoyaltyRate, setEditedLoyaltyRate] = useState(null);
+  const [editedBarcode, setEditedBarcode] = useState("");
   const { products, updateProduct, deleteProduct } = useProducts();
   const admin = useSelector((state) => state?.auth?.adminData);
 
@@ -50,6 +51,7 @@ export const ListCardProduct = ({ permissions }) => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">ID</th>
+              <th className="border border-primary px-20 py-2">Barcode</th>
               <th className="border border-primary px-20 py-2">Title</th>
               <th className="border border-primary px-4 py-2">Category</th>
               <th className="border border-primary px-4 py-2">Quantity</th>
@@ -73,6 +75,18 @@ export const ListCardProduct = ({ permissions }) => {
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2">
                   {product?.product_id}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {editId === product._id ? (
+                    <input
+                      type="text"
+                      value={editedBarcode}
+                      onChange={(e) => setEditedBarcode(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    product?.barcodeNumber
+                  )}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === product?._id ? (
@@ -195,6 +209,7 @@ export const ListCardProduct = ({ permissions }) => {
                               category: editedCategory,
                               productTax: editedTax,
                               loyaltyRate: editedLoyaltyRate,
+                              barcodeNumber: editedBarcode,
                             });
                             setEditId(null);
                           }}
@@ -219,6 +234,7 @@ export const ListCardProduct = ({ permissions }) => {
                                 setEditedDiscount(product?.discount);
                                 setEditedTax(product?.productTax);
                                 setEditedLoyaltyRate(product?.loyaltyRate);
+                                setEditedBarcode(product?.barcodeNumber);
                               }}
                               className="text-primary hover:text-orange-600 cursor-pointer"
                             />
