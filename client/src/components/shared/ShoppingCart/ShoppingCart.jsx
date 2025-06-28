@@ -335,7 +335,7 @@ export const ShoppingCart = ({
 
       {showPrintBox && (
         <PrintDialogueBox
-          message={`Take printout?`}
+          message={`Proceed to print?`}
           onConfirm={handlePrintAndPay}
           onCancel={handleCancelPrint}
         />

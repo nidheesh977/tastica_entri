@@ -256,7 +256,7 @@ export const OpenOrderCart = ({
 
       {showPrintBox && (
         <PrintDialogueBox
-          message="Do you want to print the invoice?"
+          message="Proceed to print?"
           onConfirm={handlePrintAndPay}
           onCancel={handleCancelPrint}
         />
