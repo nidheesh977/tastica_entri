@@ -34,7 +34,8 @@ const invoiceSchema = new mongoose.Schema({
             customProduct:{type:Boolean,default:false},
             taxRate:{type:Number,default:0},
             taxAmount:{type:Number,default:0},
-            loyaltyRate:{type:Number,default:0}
+            loyaltyRate:{type:Number,default:0},
+            barcodeNumber:{type:String,default:null}
             
          }   
         ],
@@ -55,6 +56,12 @@ const invoiceSchema = new mongoose.Schema({
         enum: ["newtab", "saved" , "paid","refunded"],
         default: "saved"
     },
+
+   invoiceType:{
+    type:String,
+     enum: ["normal","custom",],
+        default: "normal"
+   },
 
     paymentStatus:{
         type:String,
@@ -106,6 +113,16 @@ const invoiceSchema = new mongoose.Schema({
     customer:{
         type:mongoose.Schema.Types.ObjectId,
             ref:"Customer", 
+            default:null
+    },
+
+    customInvoice:{
+       customerName:{type:String, default:null},
+       phoneNumber:{type:String, default:null},
+       address:{type:String, default:null},
+        email:{type:String,unique:true,default:null
+},
+      
     },
 
      isTaxActive:{

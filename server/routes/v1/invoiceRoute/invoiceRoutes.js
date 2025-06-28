@@ -3,6 +3,8 @@ import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js'
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { addProductToInvoice,removeProductFromInvoice, createNewInvoiceTab,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController/index.js';
+import { customInvoiceCreate, customInvoiceDelete } from '../../../controller/invoiceCustomController/invoiceCustomController.js';
+
 
 const invoiceRouter = express.Router()
 
@@ -20,6 +22,10 @@ invoiceRouter.delete('/status-saved/:id',shopVerifyToken,userVerifyToken,checkUs
 
 invoiceRouter.post('/',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),getInvoiceWithId)
 invoiceRouter.put('/:id/clear',shopVerifyToken,userVerifyToken,checkUserRole('admin','staff'),invoiceClear)
+
+
+invoiceRouter.post('/custom/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),customInvoiceCreate)
+invoiceRouter.delete('/custom/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),customInvoiceDelete)
 
  
   

@@ -38,15 +38,23 @@ export const addProductToInvoice = async (req,res) => {
         if(existInvoice.paymentStatus === "success"){
             return res.status(400).json({success:false,message:"Invoice already paid"})
         }
- 
+
+        let fieldName;
+       
+        if(productId.length === 24){
+            fieldName = "_id"
+        }else{
+            fieldName = "barcodeNumber"
+        }
+
         // This variable for the product was exist
         let productExist;
  
-         productExist = await productModel.findById(productId)
+         productExist = await productModel.findOne({[fieldName]:productId})
         
 
         if(!productExist){
-           productExist = await customProductModel.findById(productId)
+           productExist = await customProductModel.findOne({[fieldName]:productId})
         }       
 
           if(!productExist){
@@ -57,15 +65,15 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
         }
 
-      
+   
      
         // for get category discount
         const findCategory = await categoryModel.findOne({_id:productExist?.category})
         const getDiscount = findCategory?.discountRate || 0;
 
-        let findInvoiceProduct = existInvoice.products.find(item => item.productId.toString() === productId)
-        
-        
+        let findInvoiceProduct = existInvoice.products.find(item => item[fieldName]?.toString() === productId.toString())
+
+       
         let productPrice; 
 
         if(productExist?.costPrice > 0 ){
@@ -91,18 +99,19 @@ export const addProductToInvoice = async (req,res) => {
             discountFromCategory:parseFloat(getDiscount).toFixed(2),
             quantity:parseFloat(quantity).toFixed(2),
             discountType:productExist?.discountType || "percentage",
-            productId:productId,
+            productId:productExist._id,
             category:findCategory?.categoryName || "custom product",
             unit:productExist.unit,
             customProduct:productExist?.isCustomProduct || false,
             taxRate:productExist?.productTax || 0,
-            loyaltyRate:productExist?.loyaltyRate || 0
+            loyaltyRate:productExist?.loyaltyRate || 0,
+            barcodeNumber:productExist?.barcodeNumber || null
         } 
 
          
 
  
-     if(!findInvoiceProduct){ 
+     if(findInvoiceProduct === undefined){ 
    
          // calculate discount
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
@@ -134,7 +143,9 @@ export const addProductToInvoice = async (req,res) => {
   
          res.status(200).json({success:true,message:"product Added successfully",data:existInvoice})
       
-        }else if(findInvoiceProduct?.customProduct === true){
+        }
+        
+        else if(findInvoiceProduct?.customProduct === true){
             return res.status(400).json({success:false,message:"Custom product cannot be change quantity"})
         }
         // This condition for increase quantity than change values
@@ -197,7 +208,7 @@ export const addProductToInvoice = async (req,res) => {
         
    
     }catch(error){
-
+console.log(error)
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }

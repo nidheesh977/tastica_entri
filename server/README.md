@@ -474,8 +474,13 @@ use methods (all) get all the methods
 **URL**`/api/v1/password/reset/:token`
 
 
- ## password reset  💼💼 <br>
+ ## Custom invoice  💼💼 <br>
 
--  print invoice
+- Create custom invoice
 **method**`POST` <br>
-**URL**`/api/v1/print`
+**URL**`/api/v1/invoice/custom/create`
+
+- Delete custom invoice
+**method**`DELETE` <br>
+**URL**`/api/v1/invoice/custom/:id`
+

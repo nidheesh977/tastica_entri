@@ -44,7 +44,8 @@ export const createNewInvoiceTab = async (req,res) => {
             customer:customerId,
             shop:id,
             countryName,
-            currencyCode
+            currencyCode,
+            invoiceType:"normal"
         });
 
         await newInvoice.save();
@@ -53,7 +54,6 @@ export const createNewInvoiceTab = async (req,res) => {
 
         res.status(201).json({success:true,message:"Invoice created successfully",data:findInvoice})
     }catch(error){
-      
      return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
