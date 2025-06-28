@@ -484,3 +484,16 @@ use methods (all) get all the methods
 **method**`DELETE` <br>
 **URL**`/api/v1/invoice/custom/:id`
 
+
+- add product to custom invoice
+**method**`POST` <br>
+**URL**`/api/v1/invoice/custom/:id`
+
+
+- Remove product from custom invoice
+**method**`PUT` <br>
+**URL**`/api/v1/invoice/custom/:invoiceId/product/:productsId`
+
+-  custom invoice pay
+**method**`PUT` <br>
+**URL**`/api/v1/invoice/custom/:id/pay`

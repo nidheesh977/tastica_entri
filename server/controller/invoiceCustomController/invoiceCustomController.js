@@ -1,6 +1,8 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import invoiceModel from "../../model/invoiceModel.js"
+import productModel from "../../model/productModel.js";
 import { generateId } from "../../utils/generateId.js";
+import { customInvoiceCustomerValidation } from "../../utils/joiValidation.js";
 
 
 
@@ -32,7 +34,8 @@ export const customInvoiceCreate = async (req,res) => {
         countryName:countryName,
         currencyCode:currencyCode,
         shop:id,
-        invoiceType:"custom"
+        invoiceType:"custom",
+        invoiceStatus:"custom"
      })
 
         await newCustom.save()
@@ -58,5 +61,50 @@ export const customInvoiceDelete = async (req,res) => {
              res.status(200).json({success:true,message:"Invoice delete successfully"})
     }catch(error){
         return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
+
+export const payCustomInvoice = async (req,res) => {
+    try{
+
+        const {error,value} = customInvoiceCustomerValidation.validate(req.body)
+        if(error){
+            return res.status(400).json({success:false,message:error.details[0].message})
+        }
+        const {id} = req.params
+        const {userName,email,address,phoneNumber} = value;
+
+        const customInvoice = {
+            userName,
+            email,
+            address,
+            phoneNumber
+        }
+        const findInvoice = await invoiceModel.findById(id);
+
+        if(!findInvoice){
+            return res.status(400).json({success:false,message:"Invoice not found"})
+        }
+
+             let productQnt = findInvoice.products
+        
+                for (const item of productQnt){
+                   const {productId,quantity} = item;
+        
+                    await productModel.findByIdAndUpdate(productId,{
+                      $inc: {'quantity': -quantity}
+                   },{new:true})
+                
+                 }
+
+        await invoiceModel.findByIdAndUpdate(id,{
+            customInvoice,
+            invoiceStatus:"paid",
+            paymentStatus:"success"
+        })
+
+        res.status(200).json({success:true,message:"Custom invoice paid"})
+    }catch(error){
+   return res.status(500).json({success:false,message:"Internal server error"})
     }
 }
