@@ -65,14 +65,20 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Requested quantity exceeds available stock"})
         }
 
-   
+        let findProductInArr ;
+        if (fieldName === "_id"){
+            findProductInArr = "productId"
+        }else{
+            findProductInArr = "barcodeNumber"
+        }
      
         // for get category discount
         const findCategory = await categoryModel.findOne({_id:productExist?.category})
         const getDiscount = findCategory?.discountRate || 0;
 
-        let findInvoiceProduct = existInvoice.products.find(item => item[fieldName]?.toString() === productId.toString())
+        let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr].toString() === productId.toString())
 
+  
        
         let productPrice; 
 
@@ -111,7 +117,7 @@ export const addProductToInvoice = async (req,res) => {
          
 
  
-     if(findInvoiceProduct === undefined){ 
+     if(!findInvoiceProduct){ 
    
          // calculate discount
          const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
@@ -208,7 +214,6 @@ export const addProductToInvoice = async (req,res) => {
         
    
     }catch(error){
-console.log(error)
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }
