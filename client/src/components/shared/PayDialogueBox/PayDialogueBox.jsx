@@ -24,12 +24,18 @@ export const PayDialogueBox = ({
   };
 
   return (
-    <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-                    p-10 rounded-lg shadow-lg z-50 min-w-[500px] h-96 text-center bg-tertiary text-black">
+    <div
+      className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                    p-10 rounded-lg shadow-lg z-50 min-w-[500px] h-96 text-center bg-tertiary text-black"
+    >
       <div className="font-semibold flex flex-col gap-2">
-        <div className="border p-2 shadow">Subtotal: MVR{invoice?.subTotal || 0}</div>
+        <div className="border p-2 shadow">
+          Subtotal: MVR{invoice?.subTotal || 0}
+        </div>
         <div className="border p-2 shadow">Tax: MVR 0</div>
-        <div className="border p-2 shadow">Total: MVR{invoice?.totalAmount || 0}</div>
+        <div className="border p-2 shadow">
+          Total: MVR{invoice?.totalAmount || 0}
+        </div>
         <div className="border p-2 shadow">{message}</div>
 
         <div className="flex gap-2 items-center mt-2">
