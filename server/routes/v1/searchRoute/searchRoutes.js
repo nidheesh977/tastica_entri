@@ -1,5 +1,5 @@
 import express from 'express';
-import { searchCustomer, productFilter, searchProduct, staffFilter } from '../../../controller/searchController.js';
+import { searchCustomer, productFilter, searchProduct, staffFilter } from '../../../controller/searchController/searchController.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';

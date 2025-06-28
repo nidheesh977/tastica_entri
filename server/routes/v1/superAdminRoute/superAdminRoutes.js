@@ -1,8 +1,7 @@
 import express from 'express';
-import { checkSuperAdminLogin, CreateEmployeeBySuperAdmin, deleteStaffBySuperAdmin, getShops, getStaffsBySuperAdmin, logOutSuperAdmin, superAdminlogin, superAdminProfilePage, updateShopBySuperAdmin, updateShopPasswordBySuperAdmin, UpdateStaffBySuperAdmin, UpdateSuperAdmin} from '../../../controller/superAdminController/superAdminController.js';
-import { createShop } from '../../../controller/shopController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
+import {superAdminlogin,UpdateSuperAdmin,checkSuperAdminLogin,superAdminProfilePage,logOutSuperAdmin,createShop,updateShopBySuperAdmin,updateShopPasswordBySuperAdmin,getShops,CreateEmployeeBySuperAdmin,getStaffsBySuperAdmin,deleteStaffBySuperAdmin,UpdateStaffBySuperAdmin,deleteShop} from "../../../controller/superAdminController/index.js"
 import { addPermissionToStaff, getSingleStaff, removePermissionFromStaff, updateStaffPassword } from '../../../controller/commonController/commonController.js';
 import { categorySale, daySaleForLineChart, monthBaseTotal, paymentMethodInvoice, weeklySale, yearBaseSale } from '../../../controller/dashboardController/dashboardController.js';
 
@@ -21,6 +20,7 @@ superAdminRouter.post('/shops',userVerifyToken,checkUserRole("super-admin"),crea
 superAdminRouter.put('/shops/:id',userVerifyToken,checkUserRole("super-admin"),updateShopBySuperAdmin);
 superAdminRouter.patch('/shops/:id',userVerifyToken,checkUserRole("super-admin"),updateShopPasswordBySuperAdmin);
 superAdminRouter.get('/shops',userVerifyToken,checkUserRole("super-admin"),getShops);
+ superAdminRouter.delete('/shops/:id',userVerifyToken,checkUserRole("super-admin"),deleteShop);
  
 // This routes for staffs
 superAdminRouter.post('/employees',userVerifyToken,checkUserRole("super-admin"),CreateEmployeeBySuperAdmin);

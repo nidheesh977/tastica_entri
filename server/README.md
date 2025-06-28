@@ -110,6 +110,11 @@
   **method**`PUT`<br>
   **URL**`/api/v1/product/update/:id/`
 
+  - 📦🖋 add barcode to product<br>
+  **method**`PATCH`<br>
+  **URL**`/api/v1/product/:id/barcode`
+
+
 ## The routes for categories
 
 - ➕📂 create a new category<br>
@@ -287,7 +292,7 @@
 **URL**`/api/v1/loyality`
  
 
-- ## Admin dashboard 💼 <br>
+ ## Admin dashboard 💼 <br>
 
 -  get payment method total admin
 **method**`GET` <br>
@@ -334,7 +339,7 @@ use methods (all) get all the methods
  
 
 
-- ## super Admin  💼💼 <br>
+ ## super Admin  💼💼 <br>
 
 -  Login super admin
 **method**`POST` <br>
@@ -407,7 +412,7 @@ use methods (all) get all the methods
 **method**`GET` <br>
 **URL**`/api/v1/super-admin/`
 
-- ## super admin dashboard  💼💼 <br>
+ ## super admin dashboard  💼💼 <br>
 
 -  get payment month total
 **method**`GET` <br>
@@ -458,7 +463,7 @@ use methods (all) get all the methods
  
 
 
-- ## password reset  💼💼 <br>
+ ## password reset  💼💼 <br>
 
 -  send reset link
 **method**`POST` <br>
@@ -469,7 +474,7 @@ use methods (all) get all the methods
 **URL**`/api/v1/password/reset/:token`
 
 
-- ## password reset  💼💼 <br>
+ ## password reset  💼💼 <br>
 
 -  print invoice
 **method**`POST` <br>

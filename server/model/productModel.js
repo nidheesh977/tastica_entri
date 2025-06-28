@@ -70,6 +70,10 @@ const productSchema = new mongoose.Schema({
     loyaltyRate:{
         type:Number,
         default:0
+    },
+    barcodeNumber:{
+        type:String,
+        default:null
     }
 
     

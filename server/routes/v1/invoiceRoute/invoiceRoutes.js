@@ -1,8 +1,8 @@
 import express from 'express'
-import { addProductToInvoice, createNewInvoiceTab, removeProductFromInvoice,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController/invoiceController.js';
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
+import { addProductToInvoice,removeProductFromInvoice, createNewInvoiceTab,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController/index.js';
 
 const invoiceRouter = express.Router()
 

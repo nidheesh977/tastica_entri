@@ -51,7 +51,8 @@ export const productsFileUploader = async (req, res) => {
                     shop: row.shop,
                     discountType: row.discountType,
                     unit: row.units,
-                    isActive:row.isActive.toLowerCase()
+                    isActive:row.isActive.toLowerCase(),
+                    barcodeNumber:row.barcodeNumber
                 });
             })
             .on('end', async () => {
@@ -91,6 +92,7 @@ export const productsFileUploader = async (req, res) => {
                         row["shop"] = findShop?._id;
                         row["product_id"] = productId;
                         row["costPrice"] = addCostPrice;
+                        row["barcodeNumber"] = row.barcodeNumber === "" ? null : row.barcodeNumber
                     }
 
                     const files = products.map(row => ({

@@ -2,7 +2,7 @@ import productModel from "../../model/productModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js";
 
 
-export const createLoyalityRate = async (req,res) =>{
+export const createLoyaltyRate = async (req,res) =>{
     try{
         const {id,currencyCode,countryName} = req.shop;
         const {loyalityRate} = req.body
@@ -31,7 +31,7 @@ export const createLoyalityRate = async (req,res) =>{
     }
 }
 
- export const updateLoyalityRate = async (req,res) => {
+ export const updateLoyaltyRate = async (req,res) => {
     try{
         const {id} = req.params;
         const {loyaltyRate} = req.body;
@@ -54,7 +54,7 @@ export const createLoyalityRate = async (req,res) =>{
     }
  }
 
- export const deleteLoyalityPoint = async (req,res) => {
+ export const deleteLoyaltyPoint = async (req,res) => {
     try{
          const {id} = req.params;
 
@@ -72,7 +72,7 @@ export const createLoyalityRate = async (req,res) =>{
  }
 
 
- export const getLoyalityRate = async (req,res) => {
+ export const getLoyaltyRate = async (req,res) => {
     try{
         const shopId = req.shop.id
 
@@ -90,7 +90,7 @@ export const createLoyalityRate = async (req,res) =>{
 
 
 
- export const loyalityToProduct = async (req,res) => {
+ export const loyaltyToProduct = async (req,res) => {
 
         const shopId = req.shop.id;
         const {loyaltyRate} = req.body;

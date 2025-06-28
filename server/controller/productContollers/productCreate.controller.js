@@ -18,7 +18,8 @@ export const createProduct = async (req, res) => {
                 costPriceProfit, 
                 discount, 
                 category,
-                discountType } = value; 
+                discountType,
+                barcodeNumber} = value; 
           
         const {id,countryName,currencyCode} = req.shop;
    
@@ -69,7 +70,8 @@ export const createProduct = async (req, res) => {
             currencyCode,
             discountType,
             unit,
-            costPriceProfit:costPriceProfit
+            costPriceProfit:costPriceProfit,
+            barcodeNumber
         });
 
         await newProduct.save()

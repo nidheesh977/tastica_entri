@@ -98,7 +98,7 @@ import { paymentMethods } from "../../utils/aggregatePaymentMethod.js";
 
             const {methods} =req.query;
 
-            console.log(id)
+     
 
             const now = new Date()
 
@@ -146,7 +146,7 @@ import { paymentMethods } from "../../utils/aggregatePaymentMethod.js";
 
                   res.status(200).json({success:true,message:"Data fetched successfully",data:addDays})
         }catch(error){
-            console.log(error)
+          
             return res.status(500).json({success:false,message:"Internal server error"})
         }
     }
@@ -290,7 +290,7 @@ export const paymentMethodInvoice = async (req,res) =>{
      res.status(200).json({success:true,message:"Data fetched successfully",data:data})
      
     }catch(error){
-        console.log(error)
+      
         return res.status(500).json({success:false,message:"Internal server error"})
     }
 }
@@ -330,7 +330,7 @@ export const categorySale = async (req,res) => {
 
          res.status(200).json({success:true,message:"Data fetched successfully",data:result})
     }catch(error){
-        console.log(error)
+
         return res.status(500).json({success:false,message:"Internal server error"})
     }
 }

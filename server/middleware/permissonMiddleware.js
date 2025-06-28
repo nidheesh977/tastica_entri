@@ -11,7 +11,7 @@ export const checkPermission = (permission) => {
 
             next()
             }catch(error){
-                console.log()
+         
                 return res.status(400).json({success:false,message:"permission denied"})
             }
         }

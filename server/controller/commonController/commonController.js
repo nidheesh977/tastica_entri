@@ -80,7 +80,7 @@ export const sendResetLink = async (req,res) => {
           return res.status(400).json({ message: error.details[0].message });
         }
     
-    const {email} = value;
+    const {email,} = value;
 
     // Generate Token 
     const resetToken = uuidv4();
@@ -92,7 +92,7 @@ export const sendResetLink = async (req,res) => {
     if(!findUser){
       return res.status(400).json({success:false,message:"User not found"})
     }
-
+ 
 
     
      // To set Token expire time 5m 
@@ -143,7 +143,6 @@ export const sendResetLink = async (req,res) => {
    
     res.status(200).json({success:true,message:"Reset link send successfully"})
   }catch(error){
-    console.log(error)
     return res.status(500).json({success:false,message:"Internal server error"})
   }
 }

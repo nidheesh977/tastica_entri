@@ -1,5 +1,5 @@
-import customProductModel from '../model/customProductModel.js'
-import { newCustomProductValidation } from '../utils/joiValidation.js';
+import customProductModel from '../../model/customProductModel.js'
+import { newCustomProductValidation } from '../../utils/joiValidation.js';
 
 
 

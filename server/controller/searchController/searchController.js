@@ -1,6 +1,6 @@
-import AdminStaffModel from "../model/adminAndStaffModel.js";
-import customerModel from "../model/customerModel.js";
-import productModel from "../model/productModel.js";
+import AdminStaffModel from "../../model/adminAndStaffModel.js";
+import customerModel from "../../model/customerModel.js";
+import productModel from "../../model/productModel.js";
  
 
 export const searchProduct = async (req, res) => {

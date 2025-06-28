@@ -67,7 +67,6 @@ export const CreateEmployee = async (req, res) => {
     const { userName, phoneNumber, email, password } = value;
     const {id,shopName} = req.shop;
 
-    console.log(req.shop)
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {

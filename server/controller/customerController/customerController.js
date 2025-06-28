@@ -1,7 +1,7 @@
-import customerModel from "../model/customerModel.js";
-import { generateId } from "../utils/generateId.js";
-import { customerValidation } from "../utils/joiValidation.js";
-import loyalityPointModel from "../model/loyalityPointModel.js"
+import customerModel from "../../model/customerModel.js";
+import { generateId } from "../../utils/generateId.js";
+import { customerValidation } from "../../utils/joiValidation.js";
+
 
 export const createCustomer = async (req,res) => {
 
@@ -42,7 +42,7 @@ export const createCustomer = async (req,res) => {
        await newCustomer.save()
        res.status(201).json({success:true,message:"customer created successfully"});    
     }catch(error){
-      console.log(error)
+
        return res.status(500).json({success:false,message:"Internal Server Error"})
     }
 }

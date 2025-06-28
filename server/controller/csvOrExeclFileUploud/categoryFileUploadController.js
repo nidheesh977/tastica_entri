@@ -122,7 +122,7 @@ export const categoryFileUploader = async (req, res) => {
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
-        console.log(error)
+    
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

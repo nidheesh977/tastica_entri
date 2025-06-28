@@ -258,6 +258,10 @@ export const newProductValidation = Joi.object({
         'any.only': 'Unit must be one of the following values: no, kg, lt, m',
     }),
 
+      barcodeNumber:Joi.string().empty('').allow(null).default(null).messages({
+        'string.base': 'Barcode must be a string',
+    }),
+
     
 })
 
@@ -312,7 +316,11 @@ export const updateProductValidation = Joi.object({
          'number.base': 'Product loyality rate must be a number',
          'number.empty': 'Product loyality rate cannot be empty',
    
-    })
+    }),
+
+     barcodeNumber:Joi.string().empty('').allow(null).default(null).messages({
+        'string.base': 'Barcode must be a string',
+    }),
 
 })
 
@@ -430,8 +438,17 @@ export const resetPasswordValidation = Joi.object({
 
 export const addPermissionValidation = Joi.object({
       permission:Joi.string().valid("product_read","product_update","product_delete","product_create","category_read","category_update","category_delete","category_create","customer_read","customer_update","customer_delete","customer_create").messages({
-        'string.base': 'Unit must be a string',
-        'string.empty': 'Unit cannot be empty',
+        'string.base': 'Permission must be a string',
+        'string.empty': 'Permission cannot be empty',
         'any.only': 'This permission is not Valid',
+    }),
+}) 
+
+
+export const barcodeValidation = Joi.object({
+      barcode:Joi.string().required().messages({
+        'string.required': 'Barcode is required',
+        'string.base': 'Barcode must be a string',
+        'string.empty': 'Barcode cannot be empty',
     }),
 }) 

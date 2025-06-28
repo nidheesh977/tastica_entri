@@ -11,9 +11,8 @@ export const updateProduct = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { productName , quantity , costPrice ,  sellingPrice , costPriceProfit , discount , category , productTax, loyaltyRate} = value;
-
-    
+    const { productName , quantity , barcodeNumber, costPrice ,  sellingPrice , costPriceProfit , discount , category , productTax, loyaltyRate} = value;
+ 
 
     if (sellingPrice === 0 && costPrice === 0) {
       return res.status(400).json({success: false,message: "Selling price and cost price cannot be 0",});
@@ -52,7 +51,8 @@ export const updateProduct = async (req, res) => {
         category,
         costPriceProfit:costPriceProfit,
         productTax,
-        loyaltyRate
+        loyaltyRate,
+        barcodeNumber
       },
       { new: true }
     ); 
@@ -63,3 +63,4 @@ export const updateProduct = async (req, res) => {
     return res.status(500).json({ success: false, message: "internal server error" });
   }
 };
+ 
