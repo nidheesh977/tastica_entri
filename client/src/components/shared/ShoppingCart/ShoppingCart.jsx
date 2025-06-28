@@ -1,12 +1,17 @@
-import { MdPersonAdd, MdRemoveShoppingCart, MdNoCell } from "react-icons/md";
+import {
+  MdPersonAdd,
+  MdRemoveShoppingCart,
+  MdNoCell,
+  MdShoppingCart,
+} from "react-icons/md";
 import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useSelector } from "react-redux";
+import { PrintDialogueBox } from "../PrintDialogueBox/PrintDialogueBox";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -36,6 +41,8 @@ export const ShoppingCart = ({
   const [showPayDialog, setShowPayDialog] = useState(false);
   const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
   const [pointAmount, setPointAmount] = useState("");
+  const [showPrintBox, setShowPrintBox] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(null);
 
   useEffect(() => {
     if (searchQuery?.length === 7) {
@@ -70,23 +77,46 @@ export const ShoppingCart = ({
 
   const handleCashPay = () => {
     setShowPayDialog(false);
-    makeCashPayment();
-    resetBillingState();
+    setPaymentMethod(() => makeCashPayment);
+    setShowPrintBox(true);
   };
+
   const handleSwipePay = () => {
     setShowPayDialog(false);
-    makeSwipePayment();
-    resetBillingState();
+    setPaymentMethod(() => makeSwipePayment);
+    setShowPrintBox(true);
   };
 
   const handleStripePay = () => {
     setShowPayDialog(false);
-    makeOnlinePayment();
-    resetBillingState();
+    setPaymentMethod(() => makeOnlinePayment);
+    setShowPrintBox(true);
   };
 
   const handleCancel = () => {
     setShowPayDialog(false);
+  };
+
+  const handlePrintAndPay = () => {
+    setShowPrintBox(false);
+
+    const afterPrintHandler = () => {
+      paymentMethod?.();
+      resetBillingState();
+      window.removeEventListener("afterprint", afterPrintHandler);
+    };
+
+    window.addEventListener("afterprint", afterPrintHandler);
+
+    setTimeout(() => {
+      window.print();
+    }, 0);
+  };
+
+  const handleCancelPrint = () => {
+    setShowPrintBox(false);
+    paymentMethod?.();
+    resetBillingState();
   };
 
   useEffect(() => {
@@ -100,20 +130,18 @@ export const ShoppingCart = ({
     <div className="p-2 border h-[670px]">
       {!isNewCustomer && name === "" && (
         <div className="flex items-center justify-between gap-4 h-9">
-          {!isNewCustomer && (
-            <h1 className="font-bold flex gap-2 text-xl items-center">
-              <MdShoppingCart className="text-primary" size={35} /> Cart
-            </h1>
-          )}
+          <h1 className="font-bold flex gap-2 text-xl items-center">
+            <MdShoppingCart className="text-primary" size={35} /> Cart
+          </h1>
           <input
-            className="rounded shadow md:col-span-4 outline-primary h-10 p-5 w-full "
+            className="rounded shadow outline-primary h-10 p-5 w-full"
             type="text"
             placeholder="Phone Number"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <span
-            className="cursor-pointer rounded-md shadow-xl flex items-center  p-2"
+            className="cursor-pointer rounded-md shadow-xl flex items-center p-2"
             title="Invoice Without Phone Number"
           >
             <MdNoCell
@@ -130,9 +158,7 @@ export const ShoppingCart = ({
 
       {isNewCustomer && (
         <div className="flex flex-col gap-2 my-2 h-[214px]">
-          <div className="flex items-center justify-between my-2">
-            <p className="font-bold">Add New Customer</p>
-          </div>
+          <p className="font-bold my-2">Add New Customer</p>
           <input
             type="text"
             value={customerName}
@@ -140,7 +166,6 @@ export const ShoppingCart = ({
             placeholder="Full Name"
             className="rounded shadow outline-primary h-10 p-5"
           />
-
           <input
             type="text"
             value={phoneNumber}
@@ -150,18 +175,13 @@ export const ShoppingCart = ({
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
           />
-
           <button
             onClick={() => {
-              addCustomer({
-                customerName,
-                phoneNumber,
-              });
-
+              addCustomer({ customerName, phoneNumber });
               setCustomerName("");
               setPhoneNumber("");
             }}
-            className="bg-primary flex items-center justify-center gap-2  text-white py-2 px-2 rounded hover:bg-opacity-90"
+            className="bg-primary flex items-center justify-center gap-2 text-white py-2 px-2 rounded hover:bg-opacity-90"
           >
             <MdPersonAdd /> Add
           </button>
@@ -174,11 +194,9 @@ export const ShoppingCart = ({
             <MdShoppingCart className="text-primary" size={35} /> Cart
           </h1>
         )}
-        {!isNewCustomer && <div className="font-bold ">{name}</div>}
+        {!isNewCustomer && <div className="font-bold">{name}</div>}
         {!isNewCustomer && name !== "" && (
-          <div>
-            <p className="text-sm font-bold ">{mobile}</p>
-          </div>
+          <p className="text-sm font-bold">{mobile}</p>
         )}
       </div>
 
@@ -193,50 +211,45 @@ export const ShoppingCart = ({
                 message="Do you want to remove this product from the cart?"
                 onConfirm={() => {
                   setAlertMessage(null);
-
                   removeProductFromInvoice(product?._id);
                 }}
                 onCancel={() => setAlertMessage(null)}
               />
             )}
-            <span className=" col-span-12 xl:col-span-6 my-1 xl:my-0 text-center xl:text-start">
+            <span className="col-span-12 xl:col-span-6 text-center xl:text-start">
               <span className="me-2 font-semibold">{index + 1}.</span>
               {product?.productName}
             </span>
-            <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
-              <>
-                <div className="w-24 me-1 flex justify-between">
-                  <div>{product?.price}</div>
-                  <div>x</div>
-                </div>
-                {!product?.customProduct && (
-                  <input
-                    type="number"
-                    className="w-14 bg-tertiary text-center"
-                    value={quantities[product?.productId] ?? 1}
-                    onChange={(e) => {
-                      const newQty = e.target.value;
-                      setQuantities((prev) => ({
-                        ...prev,
-                        [product.productId]: newQty,
-                      }));
-                    }}
-                    onBlur={() =>
-                      addProductToInvoice({
-                        productId: product?.productId,
-                        quantity: quantities[product.productId] ?? "",
-                      })
-                    }
-                  />
-                )}
-
-                {product?.customProduct && (
-                  <span className="text-center w-12"> {product?.quantity}</span>
-                )}
-                <span className="text-center w-10">{product?.unit}</span>
-              </>
+            <div className="flex items-center col-span-12 xl:col-span-4 mx-auto xl:mx-0">
+              <div className="w-24 me-1 flex justify-between">
+                <div>{product?.price}</div>
+                <div>x</div>
+              </div>
+              {!product?.customProduct ? (
+                <input
+                  type="number"
+                  className="w-14 bg-tertiary text-center"
+                  value={quantities[product?.productId] ?? 1}
+                  onChange={(e) => {
+                    const newQty = e.target.value;
+                    setQuantities((prev) => ({
+                      ...prev,
+                      [product.productId]: newQty,
+                    }));
+                  }}
+                  onBlur={() =>
+                    addProductToInvoice({
+                      productId: product?.productId,
+                      quantity: quantities[product.productId] ?? "",
+                    })
+                  }
+                />
+              ) : (
+                <span className="text-center w-12"> {product?.quantity}</span>
+              )}
+              <span className="text-center w-10">{product?.unit}</span>
             </div>
-            <span className="flex items-center  gap-2 col-span-12 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0  ">
+            <span className="flex items-center gap-2 col-span-12 xl:col-span-1 text-right mx-auto xl:mx-0">
               {product?.price * product?.quantity}
             </span>
             <span className="col-span-12 xl:col-span-1 flex justify-end">
@@ -253,10 +266,6 @@ export const ShoppingCart = ({
 
       {!isNewCustomer && (
         <div className="mt-2 w-full font-bold">
-          {/* <div className="flex justify-between items-center border px-2 py-2">
-            <div>Subtotal</div>
-            <div>MVR{invoice?.subTotal || 0}</div>
-          </div> */}
           <div className="flex justify-between items-center border px-2 py-2">
             <div>Products Discount</div>
             <div>
@@ -264,37 +273,24 @@ export const ShoppingCart = ({
               {invoice?.totalDiscount || 0}
             </div>
           </div>
-
-          <>
-            {" "}
-            <div className="flex justify-between items-center gap-2 border px-2 py-2">
-              <div>Discount</div>
-              <p>{pointAmount}</p>
-
-              <div>
-                <input
-                  className="outline-primary px-2 w-2/3 border "
-                  type="text"
-                  onChange={(e) => {
-                    setRedeemAmountAdd(e.target.value);
-                  }}
-                />
-              </div>
-
-              <div>
-                <button
-                  onClick={() => {
-                    redeemPoints(redeemAmountAdd);
-                    setRedeemAmountAdd("");
-                  }}
-                  className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
-                >
-                  Redeem
-                </button>
-              </div>
-            </div>
-          </>
-
+          <div className="flex justify-between items-center gap-2 border px-2 py-2">
+            <div>Discount</div>
+            <p>{pointAmount}</p>
+            <input
+              className="outline-primary px-2 w-2/3 border"
+              type="text"
+              onChange={(e) => setRedeemAmountAdd(e.target.value)}
+            />
+            <button
+              onClick={() => {
+                redeemPoints(redeemAmountAdd);
+                setRedeemAmountAdd("");
+              }}
+              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+            >
+              Redeem
+            </button>
+          </div>
           <div className="flex justify-between items-center font-semibold border px-2 py-2">
             <div>Total</div>
             <div>
@@ -316,16 +312,14 @@ export const ShoppingCart = ({
           >
             <FaSave /> Save
           </button>
-
           <button
             className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
               invoice?.products?.length === 0
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-primary  hover:bg-opacity-90 "
+                : "bg-primary hover:bg-opacity-90"
             } text-white rounded-lg`}
             onClick={() => {
               if (invoice?.products?.length === 0) return;
-
               setShowPayDialog(true);
             }}
           >
@@ -337,6 +331,14 @@ export const ShoppingCart = ({
             {invoice?.products?.length === 0 ? "Cart Empty" : "Pay"}
           </button>
         </div>
+      )}
+
+      {showPrintBox && (
+        <PrintDialogueBox
+          message={`Proceed to print?`}
+          onConfirm={handlePrintAndPay}
+          onCancel={handleCancelPrint}
+        />
       )}
 
       {showPayDialog && (
