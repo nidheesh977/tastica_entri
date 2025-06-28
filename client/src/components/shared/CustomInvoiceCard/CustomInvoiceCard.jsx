@@ -8,6 +8,8 @@ export const CustomInvoiceCard = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const inputRefs = useRef({});
+  const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
 
   const { products } = useProducts();
 
@@ -109,6 +111,22 @@ export const CustomInvoiceCard = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
           Custom Invoice
         </h1>
+      </div>
+      <div className="md:w-1/2">
+        <input
+          type="text"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
+          placeholder="Name"
+          className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+        />
+        <textarea
+          type="text"
+          value={customerAddress}
+          onChange={(e) => setCustomerAddress(e.target.value)}
+          placeholder="Address"
+          className="p-4 my-1 border w-full  bg-white shadow outline-primary"
+        ></textarea>
       </div>
 
       <div className="overflow-auto h-96 pb-10">
