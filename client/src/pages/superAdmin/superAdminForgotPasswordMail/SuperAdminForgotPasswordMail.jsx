@@ -20,7 +20,7 @@ export const SuperAdminForgotPasswordMail = () => {
   };
   return (
     <div className="flex justify-center m-1">
-      <PasswordResetEmailCard handleEmail={handleEmailSendSuperAdmin} />
+      <PasswordResetEmailCard handleEmail={handleEmailSendSuperAdmin} role="super-admin" />
     </div>
   );
 };
