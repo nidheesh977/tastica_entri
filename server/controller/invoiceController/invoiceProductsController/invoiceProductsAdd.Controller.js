@@ -1,6 +1,6 @@
 import categoryModel from "../../../model/categoryModel.js";
 import customProductModel from "../../../model/customProductModel.js";
-import invoiceModel from "../../../model/invoiceModel.js";
+import invoiceModel, { checkObjectId } from "../../../model/invoiceModel.js";
 import productModel from "../../../model/productModel.js";
 import { calculateDiscount } from "../../../utils/calculateDiscount.js";
 import { calculateInvoiceTotal } from "../../../utils/calculateInvoice.js";
@@ -39,20 +39,23 @@ export const addProductToInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:"Invoice already paid"})
         }
 
+       
+
         let fieldName;
        
-        if(productId.length === 24){
+        if(checkObjectId(productId)){
             fieldName = "_id"
         }else{
             fieldName = "barcodeNumber"
         }
 
-        // This variable for the product was exist
+        // This variable for the product is exist
         let productExist;
  
+        
          productExist = await productModel.findOne({[fieldName]:productId})
         
-
+ 
         if(!productExist){
            productExist = await customProductModel.findOne({[fieldName]:productId})
         }       
@@ -214,6 +217,7 @@ export const addProductToInvoice = async (req,res) => {
         
    
     }catch(error){
+   
        return res.status(500).json({ success: false, message: 'Internal server error' });
     } 
 }
