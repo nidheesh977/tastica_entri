@@ -1,10 +1,12 @@
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { saveCustomInvoiceData } from "../redux/features/customInvoiceSlice";
 
 export const useCustomInvoice = () => {
   const invoiceId = useSelector((state) => state?.customInvoice?._id);
+  const dispatch = useDispatch();
 
   const { mutate: addProductToInvoice } = useMutation({
     mutationFn: async ({ productId, quantity }) => {
@@ -17,38 +19,39 @@ export const useCustomInvoice = () => {
       });
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(saveCustomInvoiceData(data))
       toast.success("Product added to custom invoice");
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to to add product!"
+        error?.response?.data?.message || "Failed to add product!"
       );
     },
   });
-  const { mutate: updateProductQuantity } = useMutation({
-    mutationFn: async ({ productId, quantity }) => {
-      const data = { productId, quantity };
+  const { mutate: removeProductFromInvoice } = useMutation({
+    mutationFn: async ({ productsId }) => {
+    
       const response = await axiosInstance({
         method: "PUT",
-        url: `/invoice/custom/${invoiceId}/product/${productId}`,
+        url: `/invoice/custom/${invoiceId}/product/${productsId}` ,
         withCredentials: true,
-        data,
+      
       });
       return response?.data?.data;
     },
     onSuccess: () => {
-      toast.success("Quantity updated.");
+      toast.success("Product removed successfully");
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to update quantity!"
+        error?.response?.data?.message || "Failed to remove product!"
       );
     },
   });
 
   return {
     addProductToInvoice,
-    updateProductQuantity,
+    removeProductFromInvoice
   };
 };

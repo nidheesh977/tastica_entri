@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
 import { useSelector } from "react-redux";
 import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
+import { FaTrash } from "react-icons/fa";
 
 export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
   const customInvoice = useSelector((state) => state?.customInvoice);
   const { products } = useProducts();
-  const { addProductToInvoice, updateProductQuantity } = useCustomInvoice();
+  const { addProductToInvoice, removeProductFromInvoice } = useCustomInvoice();
 
   const [rows, setRows] = useState([
     { title: "", quantity: "", price: 0, total: 0 },
@@ -28,10 +29,10 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       const table = document.getElementById("invoice-table");
-      if (table && !table.contains(event.target)) {
+      if (table && !table?.contains(event?.target)) {
         const lastIndex = rows.length - 1;
         const lastRow = rows[lastIndex];
-        if (!lastRow.title.trim() && !lastRow.quantity.trim()) {
+        if (!lastRow?.title.trim() && !lastRow?.quantity.trim()) {
           setRows(rows.slice(0, -1));
         }
       }
@@ -103,22 +104,10 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
       e.preventDefault();
       const { productId, quantity } = rows[index];
       if (productId && quantity.trim()) {
-        const existingProduct = customInvoice?.products?.find(
-          (item) => item.productId?._id === productId
-        );
-
-        if (existingProduct) {
-          updateProductQuantity({
-            productId,
-            quantity: parseFloat(quantity),
-          });
-        } else {
-          addProductToInvoice({
-            productId,
-            quantity: parseFloat(quantity),
-          });
-        }
-
+        addProductToInvoice({
+          productId,
+          quantity: parseFloat(quantity),
+        });
         setRows([...rows, { title: "", quantity: "", price: 0, total: 0 }]);
       }
     }
@@ -190,6 +179,7 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
               <th className="border border-primary px-4 py-2">Unit</th>
               <th className="border border-primary px-4 py-2">Price</th>
               <th className="border border-primary px-4 py-2">Total Price</th>
+              <th className="border border-primary px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -209,11 +199,11 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                     onKeyDown={(e) => handleKeyDown(e, index, "title")}
                   />
 
-                  {index === rows.length - 1 && suggestions.length > 0 && (
+                  {index === rows?.length - 1 && suggestions.length > 0 && (
                     <ul className="absolute z-10 bg-white border border-gray-300 mt-1 max-h-40 overflow-y-auto rounded shadow w-full">
                       {suggestions.map((item, i) => (
                         <li
-                          key={item._id}
+                          key={item?._id}
                           className={`px-3 py-1 cursor-pointer hover:bg-yellow-100 ${
                             i === highlightIndex ? "bg-yellow-200" : ""
                           }`}
@@ -240,8 +230,27 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                 </td>
 
                 <td className="border border-primary px-4 py-2">kg</td>
-                <td className="border border-primary px-4 py-2">{row.price}</td>
-                <td className="border border-primary px-4 py-2">{row.total}</td>
+                <td className="border border-primary px-4 py-2">
+                  {row?.price}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {row?.total}
+                </td>
+                <td className="border border-primary px-4 py-2 ">
+                  <FaTrash
+                    title="Remove product"
+                    className="text-primary hover:text-orange-600 cursor-pointer"
+                    size={12}
+                    onClick={() => {
+                      if (row.productId) {
+                        removeProductFromInvoice({ productsId: row.productId });
+                      }
+                      const updatedRows = [...rows];
+                      updatedRows.splice(index, 1);
+                      setRows(updatedRows);
+                    }}
+                  />
+                </td>
               </tr>
             ))}
             <tr>
