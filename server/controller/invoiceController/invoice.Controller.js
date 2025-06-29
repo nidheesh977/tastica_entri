@@ -61,7 +61,7 @@ export const createNewInvoiceTab = async (req,res) => {
 }
 
 
-// add product to invoice
+
 
 
         export const getInvoice = async (req,res) => {
@@ -196,7 +196,7 @@ export const createNewInvoiceTab = async (req,res) => {
             }
         }
 
-
+ 
         export const getInvoiceWithId = async (req,res) => {
             try{
                 const {id} = req.body;
