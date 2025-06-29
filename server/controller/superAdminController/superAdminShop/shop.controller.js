@@ -11,7 +11,7 @@ export const createShop = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { shopname, email, password } = value;
+    const { shopName, email, password ,countryName,currencyCode} = value;
 
     const shopExist = await shopModel.findOne({ email: email });
 
@@ -22,9 +22,12 @@ export const createShop = async (req, res) => {
     const hasedPassword = await bcryptjs.hash(password, 10);
 
     const newShop = new shopModel({
-      shopname,
+      shopName,
       email,
       password: hasedPassword,
+      countryName,
+      currencyCode,
+      role:"shop"
     });
 
     await newShop.save();
@@ -109,6 +112,7 @@ export const updateShopPasswordBySuperAdmin = async (req, res) => {
 
     res.status(200).json({success: true,message: "Shop password updated successfully", data: shopData,});
   } catch (error) {
+    console.log(error)
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

@@ -6,6 +6,8 @@ import { generateId } from '../../utils/generateId.js';
 
 export const createNewInvoiceTab = async (req,res) => {
     try{
+        
+
       const userId= req.user.id
       const {customerId} = req.params;
       const {id,countryName,currencyCode} = req.shop;  
@@ -131,13 +133,13 @@ export const createNewInvoiceTab = async (req,res) => {
                
                     
                 res.status(200).json({success:true,message:"Data fetched successFully",data:savedInvoice});
-                   
+                 
 
             }catch(error){
                   return res.status(500).json({success:false,message:"Internal server error",error})
             }
-        }
-
+        } 
+   
 
              export const deleteOpenOrder = async (req,res) => {
  

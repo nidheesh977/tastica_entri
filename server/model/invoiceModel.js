@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 
-export const convertStringToId = (id) => {
-    return new mongoose.Types.ObjectId(id)
+export const checkObjectId = (id) => {
+    return  mongoose.Types.ObjectId.isValid(id)
 }
 
 
