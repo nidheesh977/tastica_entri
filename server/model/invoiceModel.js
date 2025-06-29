@@ -120,7 +120,7 @@ const invoiceSchema = new mongoose.Schema({
        customerName:{type:String, default:null},
        phoneNumber:{type:String, default:null},
        address:{type:String, default:null},
-        email:{type:String,unique:true,default:null
+        email:{type:String,default:null
 },
       
     },
@@ -136,7 +136,7 @@ const invoiceSchema = new mongoose.Schema({
     
 },{timestamps:true})
 
-invoiceSchema.index({invoiceNumber:1})
+
 
  const invoiceModel = mongoose.model('Invoice', invoiceSchema);
 
