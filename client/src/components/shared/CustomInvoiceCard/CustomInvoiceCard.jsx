@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
 import { useSelector } from "react-redux";
+import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
 
 export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
   const customInvoice = useSelector((state) => state?.customInvoice);
+  const { products } = useProducts();
+  const { addProductToInvoice, updateProductQuantity } = useCustomInvoice();
 
   const [rows, setRows] = useState([
     { title: "", quantity: "", price: 0, total: 0 },
@@ -12,9 +15,9 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
   const [highlightIndex, setHighlightIndex] = useState(-1);
   const inputRefs = useRef({});
   const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
-
-  const { products } = useProducts();
 
   useEffect(() => {
     const lastIndex = rows.length - 1;
@@ -67,6 +70,7 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
     updated[index] = {
       ...updated[index],
       title: product.productName,
+      productId: product._id,
       price: price,
       quantity: "",
       total: 0,
@@ -97,8 +101,24 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
 
     if (field === "quantity" && e.key === "Enter") {
       e.preventDefault();
-      const { title, quantity } = rows[index];
-      if (title.trim() && quantity.trim()) {
+      const { productId, quantity } = rows[index];
+      if (productId && quantity.trim()) {
+        const existingProduct = customInvoice?.products?.find(
+          (item) => item.productId?._id === productId
+        );
+
+        if (existingProduct) {
+          updateProductQuantity({
+            productId,
+            quantity: parseFloat(quantity),
+          });
+        } else {
+          addProductToInvoice({
+            productId,
+            quantity: parseFloat(quantity),
+          });
+        }
+
         setRows([...rows, { title: "", quantity: "", price: 0, total: 0 }]);
       }
     }
@@ -119,26 +139,42 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
-      <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
+      <div className="flex flex-col md:flex-row justify-between mb-4">
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
           Custom Invoice
         </h1>
-      </div>
-      <div className="md:w-1/2">
-        <input
-          type="text"
-          value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
-          placeholder="Name"
-          className="p-4 my-1  w-full border  bg-white shadow outline-primary"
-        />
-        <textarea
-          type="text"
-          value={customerAddress}
-          onChange={(e) => setCustomerAddress(e.target.value)}
-          placeholder="Address"
-          className="p-4 my-1 border w-full  bg-white shadow outline-primary"
-        ></textarea>
+        <div className="md:w-1/2">
+          <div className="flex flex-wrap md:flex-nowrap">
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Name"
+              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+            />
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="Mobile"
+              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+            />
+          </div>
+          <textarea
+            type="text"
+            value={customerAddress}
+            onChange={(e) => setCustomerAddress(e.target.value)}
+            placeholder="Address"
+            className="p-4 my-1 border w-full  bg-white shadow outline-primary"
+          ></textarea>
+        </div>
       </div>
 
       <div className="overflow-auto h-96 pb-10">
