@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdEmail } from "react-icons/md";
 
-export const PasswordResetEmailCard = ({ handleEmail }) => {
+export const PasswordResetEmailCard = ({ handleEmail, role }) => {
   const [email, setEmail] = useState("");
   const [show, setShow] = useState(false);
   return (
@@ -28,7 +28,7 @@ export const PasswordResetEmailCard = ({ handleEmail }) => {
         <button
           className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
           onClick={() => {
-            handleEmail({email});
+            handleEmail({email, role});
             setShow(!show);
             setEmail("");
           }}

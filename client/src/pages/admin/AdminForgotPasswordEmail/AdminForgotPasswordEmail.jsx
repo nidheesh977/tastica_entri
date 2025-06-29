@@ -21,7 +21,7 @@ export const AdminForgotPasswordMail = () => {
 
   return (
     <div className="flex justify-center m-1">
-      <PasswordResetEmailCard handleEmail={handleEmailSendAdmin} />
+      <PasswordResetEmailCard handleEmail={handleEmailSendAdmin} role='admin' />
     </div>
   );
 };
