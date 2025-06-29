@@ -120,11 +120,11 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
   useEffect(() => {
     createInvoice();
     return () => {
-      if (customInvoice?.products.length === 0) {
+      if (customInvoice?.products?.length === 0) {
         deleteInvoice();
       }
     };
-  }, []);
+  }, [customInvoice]);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
