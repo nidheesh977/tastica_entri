@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
-import { useSelector } from "react-redux";
 import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
 import { FaTrash } from "react-icons/fa";
 
-export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
-  const customInvoice = useSelector((state) => state?.customInvoice);
+export const CustomInvoiceCard = () => {
+  const createdRef = useRef(false);
+  const invoiceIdRef = useRef(null);
+  const isEmptyInvoiceRef = useRef(false);
+
   const { products } = useProducts();
-  const { addProductToInvoice, removeProductFromInvoice } = useCustomInvoice();
+  const {
+    invoiceData,
+    addProductToInvoice,
+    removeProductFromInvoice,
+    createCustomInvoice,
+    deleteCustomInvoice,
+  } = useCustomInvoice();
 
   const [rows, setRows] = useState([
     { title: "", quantity: "", price: 0, total: 0 },
@@ -43,6 +51,10 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [rows]);
+
+  useEffect(() => {
+    isEmptyInvoiceRef.current = invoiceData?.products?.length === 0;
+  }, [invoiceData]);
 
   const handleChange = (index, field, value) => {
     const newRows = [...rows];
@@ -104,7 +116,7 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
       e.preventDefault();
       const { productId, quantity } = rows[index];
       if (productId && quantity.trim()) {
-        addProductToInvoice({
+        addProductToInvoice.mutate({
           productId,
           quantity: parseFloat(quantity),
         });
@@ -118,13 +130,35 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
     .toFixed(2);
 
   useEffect(() => {
-    createInvoice();
-    return () => {
-      if (customInvoice?.products?.length === 0) {
-        deleteInvoice();
+    let isMounted = true;
+
+    const create = async () => {
+      try {
+        const invoice = await createCustomInvoice.mutateAsync();
+        if (isMounted && invoice?._id) {
+          invoiceIdRef.current = invoice._id;
+          createdRef.current = true;
+        } else {
+          console.error("Invoice creation failed: no _id returned", invoice);
+        }
+      } catch (error) {
+        console.error("Failed to create invoice:", error);
       }
     };
-  }, [customInvoice]);
+
+    create();
+
+    return () => {
+      isMounted = false;
+      if (
+        createdRef.current &&
+        invoiceIdRef.current &&
+        isEmptyInvoiceRef.current
+      ) {
+        deleteCustomInvoice.mutate(invoiceIdRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
@@ -139,21 +173,21 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Name"
-              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+              className="p-4 my-1 w-full border bg-white shadow outline-primary"
             />
             <input
               type="text"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="Mobile"
-              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+              className="p-4 my-1 w-full border bg-white shadow outline-primary"
             />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              className="p-4 my-1  w-full border  bg-white shadow outline-primary"
+              className="p-4 my-1 w-full border bg-white shadow outline-primary"
             />
           </div>
           <textarea
@@ -161,7 +195,7 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
             value={customerAddress}
             onChange={(e) => setCustomerAddress(e.target.value)}
             placeholder="Address"
-            className="p-4 my-1 border w-full  bg-white shadow outline-primary"
+            className="p-4 my-1 border w-full bg-white shadow outline-primary"
           ></textarea>
         </div>
       </div>
@@ -186,7 +220,6 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
             {rows.map((row, index) => (
               <tr className="border-t border-primary" key={index}>
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
-
                 <td className="border border-primary px-4 py-2 relative">
                   <input
                     className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
@@ -198,7 +231,6 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                     }
                     onKeyDown={(e) => handleKeyDown(e, index, "title")}
                   />
-
                   {index === rows?.length - 1 && suggestions.length > 0 && (
                     <ul className="absolute z-10 bg-white border border-gray-300 mt-1 max-h-40 overflow-y-auto rounded shadow w-full">
                       {suggestions.map((item, i) => (
@@ -215,7 +247,6 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                     </ul>
                   )}
                 </td>
-
                 <td className="border border-primary px-4 py-2">
                   <input
                     className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
@@ -228,7 +259,6 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                     onKeyDown={(e) => handleKeyDown(e, index, "quantity")}
                   />
                 </td>
-
                 <td className="border border-primary px-4 py-2">kg</td>
                 <td className="border border-primary px-4 py-2">
                   {row?.price}
@@ -236,14 +266,16 @@ export const CustomInvoiceCard = ({ createInvoice, deleteInvoice }) => {
                 <td className="border border-primary px-4 py-2">
                   {row?.total}
                 </td>
-                <td className="border border-primary px-4 py-2 ">
+                <td className="border border-primary px-4 py-2">
                   <FaTrash
                     title="Remove product"
                     className="text-primary hover:text-orange-600 cursor-pointer"
                     size={12}
                     onClick={() => {
                       if (row.productId) {
-                        removeProductFromInvoice({ productsId: row.productId });
+                        removeProductFromInvoice.mutate({
+                          productsId: row.productId,
+                        });
                       }
                       const updatedRows = [...rows];
                       updatedRows.splice(index, 1);

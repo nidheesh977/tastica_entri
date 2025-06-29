@@ -1,14 +1,13 @@
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
-import { useDispatch, useSelector } from "react-redux";
-import { saveCustomInvoiceData } from "../redux/features/customInvoiceSlice";
+import { useState } from "react";
 
 export const useCustomInvoice = () => {
-  const invoiceId = useSelector((state) => state?.customInvoice?._id);
-  const dispatch = useDispatch();
+  const [invoiceData, setInvoiceData] = useState(null);
+  const invoiceId = invoiceData?._id;
 
-  const { mutate: addProductToInvoice } = useMutation({
+  const addProductToInvoice = useMutation({
     mutationFn: async ({ productId, quantity }) => {
       const data = { productId, quantity };
       const response = await axiosInstance({
@@ -20,23 +19,20 @@ export const useCustomInvoice = () => {
       return response?.data?.data;
     },
     onSuccess: (data) => {
-      dispatch(saveCustomInvoiceData(data))
+      setInvoiceData(data);
       toast.success("Product added to custom invoice");
     },
     onError: (error) => {
-      toast.error(
-        error?.response?.data?.message || "Failed to add product!"
-      );
+      toast.error(error?.response?.data?.message || "Failed to add product!");
     },
   });
-  const { mutate: removeProductFromInvoice } = useMutation({
+
+  const removeProductFromInvoice = useMutation({
     mutationFn: async ({ productsId }) => {
-    
       const response = await axiosInstance({
         method: "PUT",
-        url: `/invoice/custom/${invoiceId}/product/${productsId}` ,
+        url: `/invoice/custom/${invoiceId}/product/${productsId}`,
         withCredentials: true,
-      
       });
       return response?.data?.data;
     },
@@ -50,8 +46,55 @@ export const useCustomInvoice = () => {
     },
   });
 
+  const createCustomInvoice = useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance({
+        method: "POST",
+        url: "/invoice/custom/create",
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      if (data?._id) {
+        setInvoiceData(data);
+        toast.success("Invoice created successfully");
+      } else {
+        toast.error("Invoice creation failed: no ID returned");
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to create invoice!"
+      );
+    },
+  });
+
+  const deleteCustomInvoice = useMutation({
+    mutationFn: async (id) => {
+      const response = await axiosInstance({
+        method: "DELETE",
+        url: `/invoice/custom/${id}`,
+        withCredentials: true,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: () => {
+      setInvoiceData(null);
+      toast.success("Invoice deleted successfully!");
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete invoice!"
+      );
+    },
+  });
+
   return {
+    invoiceData,
     addProductToInvoice,
-    removeProductFromInvoice
+    removeProductFromInvoice,
+    createCustomInvoice,
+    deleteCustomInvoice,
   };
 };
