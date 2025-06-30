@@ -6,7 +6,7 @@ import { validateData } from "../utils/validateData";
 import { useState } from "react";
 import { removeStaffData } from "../redux/features/authSlice";
 
-export const useAdmins = () => {
+export const useAdmins = (status) => {
   const dispatch = useDispatch();
 
   const queryClient = useQueryClient();
@@ -113,15 +113,23 @@ export const useAdmins = () => {
   });
 
   const { data: invoices } = useQuery({
-    queryKey: ["invoices"],
+    queryKey: ["invoices", status],
 
     queryFn: async () => {
       const response = await axiosInstance({
         method: "GET",
-        url: "/invoice",
+        url: `/invoice?status=${status}`,
         withCredentials: true,
       });
+      console.log("Full response:", response); // ✅ log full response
+  console.log("Data returned:", response?.data?.data); // ✅ log only data
+
       return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["invoices", status]);
+      console.log(data);
+      
     },
 
     onError: (error) => {

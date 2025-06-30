@@ -36,8 +36,10 @@ export const useCustomInvoice = () => {
       });
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Product removed successfully");
+      setInvoiceData(data)
+      
     },
     onError: (error) => {
       toast.error(
