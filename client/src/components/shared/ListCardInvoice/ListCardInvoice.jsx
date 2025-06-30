@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export const ListCardInvoice = ({ invoices }) => {
   const searchQuery = useSelector((state) => state?.search);
+  const [all, setAll] = useState(false);
+  const [cash, setCash] = useState();
+  const [swipe, setSwipe] = useState(false);
+  const [stripe, setStripe] = useState(false);
+  const [method] = useState(false);
 
   const invoicesData = invoices?.filter((invoice) => {
     const query = searchQuery.toLowerCase();
@@ -36,6 +42,64 @@ export const ListCardInvoice = ({ invoices }) => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
           Invoices
         </h1>
+        <div className="flex items-center lg:gap-3">
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              all ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setAll(true);
+              setCash(false);
+              setSwipe(false);
+              setStripe(false);
+              method("all");
+            }}
+          >
+            All
+          </span>
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              cash ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setCash(true);
+              setSwipe(false);
+              setStripe(false);
+              setAll(false);
+              method("cash");
+            }}
+          >
+            Cash
+          </span>
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              swipe ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setSwipe(true);
+              setCash(false);
+              setStripe(false);
+              setAll(false);
+              method("internal-device");
+            }}
+          >
+            Swipe
+          </span>
+          <span
+            className={`cursor-pointer text-sm px-2 pb-1 ${
+              stripe ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => {
+              setStripe(true);
+              setSwipe(false);
+              setCash(false);
+              setAll(false);
+              method("digital");
+            }}
+          >
+            Stripe
+          </span>
+        </div>
       </div>
 
       <div className="overflow-auto h-96 pb-10">

@@ -125,10 +125,6 @@ export const CustomInvoiceCard = () => {
     }
   };
 
-  const totalAmount = rows
-    .reduce((sum, row) => sum + parseFloat(row.total || 0), 0)
-    .toFixed(2);
-
   useEffect(() => {
     let isMounted = true;
 
@@ -290,10 +286,21 @@ export const CustomInvoiceCard = () => {
                 colSpan={5}
                 className="text-right font-semibold px-4 py-2 border border-primary"
               >
+                Discount
+              </td>
+              <td className="border border-primary px-4 py-2 font-semibold">
+                {invoiceData?.totalDiscount}
+              </td>
+            </tr>
+            <tr>
+              <td
+                colSpan={5}
+                className="text-right font-semibold px-4 py-2 border border-primary"
+              >
                 Total Amount
               </td>
               <td className="border border-primary px-4 py-2 font-semibold">
-                {totalAmount}
+                {invoiceData?.totalAmount}
               </td>
             </tr>
           </tbody>
