@@ -107,7 +107,7 @@ export const useCustomInvoice = () => {
 
       return response?.data?.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Customer data added successfully");
     },
 
