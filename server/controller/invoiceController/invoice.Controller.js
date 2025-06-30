@@ -225,13 +225,11 @@ export const createNewInvoiceTab = async (req,res) => {
                 const shopId = req.shop.id; 
                 const {status} = req.query;
 
-                console.log(status)
-
                  if(!shopId){
                     return res.status(400).json({success:false,message:"Shop ID is not get"});
                 }
 
-                const fullInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:"paid"}).populate("customer").populate("products");
+                const fullInvoice = await invoiceModel.find({shop:shopId,invoiceStatus:status}).populate("customer").populate("products");
 
                 res.status(200).json({success:true,message:"Data fetched Successfully",data:fullInvoice})
             }catch(error){

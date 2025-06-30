@@ -54,11 +54,15 @@ export const productsFileUploader = async (req, res) => {
                     isActive:row.isActive.toLowerCase(),
                     barcodeNumber:row.barcodeNumber
                 });
+
+                
             })
             .on('end', async () => {
                 try {
 
                     for (const row of products) {
+
+                        console.log(row)
 
                         const findShop = await shopModel.findOne({ shopName: row.shop.trim() });
 
@@ -66,9 +70,10 @@ export const productsFileUploader = async (req, res) => {
                             return res.status(400).json({ success: false, message: "shop is not found" });
                         }
 
+                        console.log(findShop)
                         const getCategory = await categoryModel.findOne({ shop: findShop?._id, categoryName: row.category.trim() });
 
-
+  console.log(getCategory)
                         if (!getCategory) {
                             return res.status(400).json({ success: false, message: "Category is not found" });
                         }
@@ -134,7 +139,7 @@ export const productsFileUploader = async (req, res) => {
 
 
                 } catch (error) {
-
+     
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
 
@@ -148,7 +153,7 @@ export const productsFileUploader = async (req, res) => {
                 res.status(500).json({ success: false, message: "Error processing file" });
             });
     } catch (error) {
-        
+
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
