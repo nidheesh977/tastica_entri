@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
 import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
-import { FaTrash } from "react-icons/fa";
+import {  FaTrash } from "react-icons/fa";
+import { MdPrint} from "react-icons/md";
 
 export const CustomInvoiceCard = () => {
   const createdRef = useRef(false);
@@ -159,8 +160,8 @@ export const CustomInvoiceCard = () => {
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="flex flex-col md:flex-row justify-between mb-4">
-        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
-          Custom Invoice
+        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary flex items-center gap-10">
+          Custom Invoice  <MdPrint onClick={()=> window.print()} title='print' className="hover:text-orange-400 cursor-pointer"/>
         </h1>
         <div className="md:w-1/2">
           <div className="flex flex-wrap md:flex-nowrap">
@@ -305,6 +306,7 @@ export const CustomInvoiceCard = () => {
             </tr>
           </tbody>
         </table>
+       
       </div>
     </div>
   );
