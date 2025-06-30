@@ -223,6 +223,9 @@ export const createNewInvoiceTab = async (req,res) => {
             try{
 
                 const shopId = req.shop.id; 
+                const {status} = req.query;
+
+                console.log(status)
 
                  if(!shopId){
                     return res.status(400).json({success:false,message:"Shop ID is not get"});

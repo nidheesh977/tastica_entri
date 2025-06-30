@@ -3,7 +3,7 @@ import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js'
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
 import { addProductToInvoice,removeProductFromInvoice, createNewInvoiceTab,getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear} from '../../../controller/invoiceController/index.js';
-import { customInvoiceCreate, customInvoiceDelete, payCustomInvoice } from '../../../controller/invoiceCustomController/invoiceCustomController.js';
+import { addCustomerDetailToCustomInvoice, customInvoiceCreate, customInvoiceDelete } from '../../../controller/invoiceCustomController/invoiceCustomController.js';
 
 
 const invoiceRouter = express.Router()
@@ -26,7 +26,7 @@ invoiceRouter.put('/:id/clear',shopVerifyToken,userVerifyToken,checkUserRole('ad
 
 invoiceRouter.post('/custom/create',shopVerifyToken,userVerifyToken,checkUserRole('admin'),customInvoiceCreate)
 invoiceRouter.delete('/custom/:id',shopVerifyToken,userVerifyToken,checkUserRole('admin'),customInvoiceDelete)
-invoiceRouter.put('/custom/:id/pay',shopVerifyToken,userVerifyToken,checkUserRole('admin'),payCustomInvoice)
+invoiceRouter.put('/custom/:id/customer',shopVerifyToken,userVerifyToken,checkUserRole('admin'),addCustomerDetailToCustomInvoice)
 
 // This endpoint from add invoice controller
 invoiceRouter.post('/custom/:invoiceId/product',shopVerifyToken,userVerifyToken,checkUserRole('admin'),addProductToInvoice)

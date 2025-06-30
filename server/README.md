@@ -496,4 +496,4 @@ use methods (all) get all the methods
 
 -  custom invoice pay
 **method**`PUT` <br>
-**URL**`/api/v1/invoice/custom/:id/pay`
+**URL**`/api/v1/invoice/custom/:id/customer`

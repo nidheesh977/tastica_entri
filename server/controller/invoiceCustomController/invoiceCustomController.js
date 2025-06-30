@@ -55,6 +55,7 @@ export const customInvoiceDelete = async (req,res) => {
             if(!id){
                 return res.status(400).json({success:false,message:"Internal server error"})
             };
+    
 
              await invoiceModel.findByIdAndDelete(id)
 
@@ -64,17 +65,18 @@ export const customInvoiceDelete = async (req,res) => {
     }
 }
 
-export const payCustomInvoice = async (req,res) => {
+export const addCustomerDetailToCustomInvoice = async (req,res) => {
     try{
 
         const {error,value} = customInvoiceCustomerValidation.validate(req.body)
+
         if(error){
             return res.status(400).json({success:false,message:error.details[0].message})
         }
         const {id} = req.params
         const {userName,email,address,phoneNumber} = value;
 
-        const customInvoice = {
+        const customerDetailsCustom = {
             userName,
             email,
             address,
@@ -85,25 +87,13 @@ export const payCustomInvoice = async (req,res) => {
         if(!findInvoice){
             return res.status(400).json({success:false,message:"Invoice not found"})
         }
-
-             let productQnt = findInvoice.products
-        
-                for (const item of productQnt){
-                   const {productId,quantity} = item;
-        
-                    await productModel.findByIdAndUpdate(productId,{
-                      $inc: {'quantity': -quantity}
-                   },{new:true})
-                
-                 }
+  
 
         await invoiceModel.findByIdAndUpdate(id,{
-            customInvoice,
-            invoiceStatus:"paid",
-            paymentStatus:"success"
+            customerDetailsCustom,
         })
 
-        res.status(200).json({success:true,message:"Custom invoice paid"})
+        res.status(200).json({success:true,message:"Details added successfully"})
     }catch(error){
    return res.status(500).json({success:false,message:"Internal server error"})
     }

@@ -419,6 +419,10 @@ export const resetSendEmailValidation = Joi.object({
         'string.email': 'Email must be a valid email address',
 
     }),
+    role:Joi.string().required().messages({
+        'string.required': 'Password is required',
+        'string.base': 'Password must be a string',
+    })
 })
 
 

@@ -7,6 +7,7 @@ export const paymentRefund = async (req,res) => {
       const {id} =  req.params;
       const {amount} = req.body;
 
+   
       
       if(!id){
         return res.status(400).json({success:false,message:"Invoice ID is missing"})
@@ -16,29 +17,35 @@ export const paymentRefund = async (req,res) => {
 
       const totalAmount = invoiceExist.totalAmount;
 
+
+
       let refundType;
       let invoiceStatus;
       let paymentStatus;
 
 
-      if(amount < 0){
+      if(parseFloat(amount) < 0){
          return res.status(400).json({success:false,message:"Invalid amount"})
-      }else if(amount > totalAmount){
+      }else if (parseFloat(amount) === 0){
+         refundType = null
+        invoiceStatus = "paid" 
+        paymentStatus = "success"
+      }else if(parseFloat(amount) > totalAmount){
         return res.status(400).json({success:false,message:"Exceeds balance"})
-      }else if(amount === totalAmount){
+      }else if(parseFloat(amount) === totalAmount){
         refundType = "full"
         invoiceStatus = "refunded"
         paymentStatus = "refunded"
-      }else if(amount < totalAmount){
+      }else if(parseFloat(amount) < totalAmount){
         refundType = "partial"
         invoiceStatus = "paid" 
         paymentStatus = "success"
       }
 
-      let refundDeductTotal = refundType === "partial" ? totalAmount - amount : amount
+      let refundDeductTotal = refundType === "partial" ? totalAmount - parseFloat(amount) : parseFloat(amount)
 
       const updateInvoice = await invoiceModel.findByIdAndUpdate(id,{
-          refundedAmount:amount,
+          refundedAmount:parseFloat(amount),
           refundType,
           paymentStatus,
           invoiceStatus,

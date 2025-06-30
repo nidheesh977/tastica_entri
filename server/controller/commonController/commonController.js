@@ -80,13 +80,13 @@ export const sendResetLink = async (req,res) => {
           return res.status(400).json({ message: error.details[0].message });
         }
     
-    const {email,} = value;
+    const {email,role} = value;
 
     // Generate Token 
     const resetToken = uuidv4();
 
     // Check user exist
-    const findUser = await AdminStaffModel.findOne({email:email})
+    const findUser = await AdminStaffModel.findOne({email:email,role:role})
 
 
     if(!findUser){

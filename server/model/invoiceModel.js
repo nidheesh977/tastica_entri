@@ -116,7 +116,7 @@ const invoiceSchema = new mongoose.Schema({
             default:null
     },
 
-    customInvoice:{
+    customerDetailsCustom:{
        customerName:{type:String, default:null},
        phoneNumber:{type:String, default:null},
        address:{type:String, default:null},
