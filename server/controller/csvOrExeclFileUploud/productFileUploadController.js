@@ -62,18 +62,18 @@ export const productsFileUploader = async (req, res) => {
 
                     for (const row of products) {
 
-                        console.log(row)
+                        
 
                         const findShop = await shopModel.findOne({ shopName: row.shop.trim() });
 
                         if (!findShop) {
-                            return res.status(400).json({ success: false, message: "shop is not found" });
+                            return res.status(400).json({ success: false, message: `${row.shop.trim()} shop is not found` });
                         }
 
-                        console.log(findShop)
+                        
                         const getCategory = await categoryModel.findOne({ shop: findShop?._id, categoryName: row.category.trim() });
 
-  console.log(getCategory)
+
                         if (!getCategory) {
                             return res.status(400).json({ success: false, message: "Category is not found" });
                         }
