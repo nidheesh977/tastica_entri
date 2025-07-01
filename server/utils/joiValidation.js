@@ -142,6 +142,12 @@ export const shopSignupValidtaion = Joi.object({
         'string.max': 'Password must be at most 20 characters long',
         'string.pattern.base': 'Password must contain only letters, numbers or characters',
     }),
+     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits ',
+    }),
 })
 
 export const shopUpdateValidtaion = Joi.object({
@@ -424,7 +430,7 @@ export const resetSendEmailValidation = Joi.object({
         'string.base': 'Password must be a string',
     })
 })
-
+ 
 
 export const resetPasswordValidation = Joi.object({
     
@@ -482,10 +488,10 @@ export const customInvoiceCustomerValidation = Joi.object({
         'string.email': 'Email must be a valid email address',
 
     }),
-    address: Joi.string().min(3).max(30).required().messages({
-        'string.required': 'Email is required',
-        'string.min': 'Username must be at least 3 characters long',
-        'string.max': 'Username must be at most 30 characters long', 
-        'string.empty': 'Username cannot be empty',
+    address: Joi.string().min(3).max(100).required().messages({
+        'string.required': 'Address is required',
+        'string.min': 'Address must be at least 3 characters long',
+        'string.max': 'Address must be at most 100 characters long', 
+        'string.empty': 'Address cannot be empty',
     }),
 }) 

@@ -10,7 +10,6 @@ const staffPermissions = ["product_read","product_update","product_delete","prod
     email:{
         type:String,
         required:true,
-        unique:true
     }, 
     password:{
         type:String,
@@ -23,7 +22,6 @@ const staffPermissions = ["product_read","product_update","product_delete","prod
     phoneNumber:{
         type:String,
         required:true,
-        unique:true
     },
     role:{
         type:String,

@@ -25,8 +25,13 @@ import mongoose from 'mongoose';
     role:{
         type:String,
         required:true
+    },
+    phoneNumber:{
+        type:String,
+        required:true,
+        unique:true
     }
- },{timestamps:true});
+ },{timestamps:true});  
 
  const shopModel = mongoose.model('Shop',shopSchema);
 

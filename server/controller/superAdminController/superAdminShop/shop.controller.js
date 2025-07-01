@@ -1,19 +1,22 @@
 import AdminStaffModel from "../../../model/adminAndStaffModel.js";
+import customerModel from "../../../model/customerModel.js";
 import shopModel from "../../../model/shopModel.js";
+import { generateId } from "../../../utils/generateId.js";
 import { shopSignupValidtaion,shopUpdateValidtaion,} from "../../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 
 export const createShop = async (req, res) => {
   try {
     const { error, value } = shopSignupValidtaion.validate(req.body);
+  
 
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { shopName, email, password ,countryName,currencyCode} = value;
+    const { shopName, email, password ,countryName,currencyCode,phoneNumber} = value;
 
-    const shopExist = await shopModel.findOne({ email: email });
+    const shopExist = await shopModel.findOne({ email:email });
 
     if (shopExist) {
       return res.status(400).json({ message: "Shop already exists" });
@@ -27,13 +30,33 @@ export const createShop = async (req, res) => {
       password: hasedPassword,
       countryName,
       currencyCode,
-      role:"shop"
+      role:"shop",
+      phoneNumber
     });
 
     await newShop.save();
 
+     let customerId;
+    
+          do {
+             customerId = generateId("CUS")
+          } while (await customerModel.findOne({customerId:customerId}));
+    
+          const lowerCaseCustomerName = newShop.shopName.toLowerCase()
+    
+           const newCustomer = new customerModel({
+            customerId,
+            customerName:lowerCaseCustomerName,
+            phoneNumber:newShop.phoneNumber,
+            shopId:newShop._id
+           })
+    
+           await newCustomer.save()
+
+
     res.status(201).json({ success: true, message: "Shop created successfully" });
   } catch (error) {
+  
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -112,7 +135,7 @@ export const updateShopPasswordBySuperAdmin = async (req, res) => {
 
     res.status(200).json({success: true,message: "Shop password updated successfully", data: shopData,});
   } catch (error) {
-    console.log(error)
+   
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
