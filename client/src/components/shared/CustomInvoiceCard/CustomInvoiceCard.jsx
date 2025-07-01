@@ -172,7 +172,7 @@ export const CustomInvoiceCard = () => {
           />
         </h1>
         <div className="md:w-1/2">
-        {!customerAdded && <p className="text-red-500 font-bold">Add customer details to continue.</p>}
+        {!customerAdded && <p className="text-red-500 font-bold pb-2">Add customer details to continue.</p>}
           <div
             className={` ${
               customerAdded ? "flex-col text-start" : "flex"
