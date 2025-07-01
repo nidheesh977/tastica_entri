@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useProducts } from "../../../hooks/useProducts";
 import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
 import { FaTrash } from "react-icons/fa";
+import { MdPersonAdd, MdPrint } from "react-icons/md";
 
 export const CustomInvoiceCard = () => {
   const createdRef = useRef(false);
@@ -15,6 +16,7 @@ export const CustomInvoiceCard = () => {
     removeProductFromInvoice,
     createCustomInvoice,
     deleteCustomInvoice,
+    createCustomerCustomInvoice,
   } = useCustomInvoice();
 
   const [rows, setRows] = useState([
@@ -27,8 +29,10 @@ export const CustomInvoiceCard = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
+  const [customerAdded, setCustomerAdded] = useState(false);
 
   useEffect(() => {
+    if (!customerAdded) return;
     const lastIndex = rows.length - 1;
     const input = inputRefs.current?.[`title-${lastIndex}`];
     if (input) input.focus();
@@ -159,40 +163,95 @@ export const CustomInvoiceCard = () => {
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="flex flex-col md:flex-row justify-between mb-4">
-        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
-          Custom Invoice
+        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary flex items-center gap-10">
+          Custom Invoice{" "}
+          <MdPrint
+            onClick={() => window.print()}
+            title="print"
+            className="hover:text-orange-400 cursor-pointer"
+          />
         </h1>
         <div className="md:w-1/2">
-          <div className="flex flex-wrap md:flex-nowrap">
-            <input
-              type="text"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Name"
-              className="p-4 my-1 w-full border bg-white shadow outline-primary"
-            />
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="Mobile"
-              className="p-4 my-1 w-full border bg-white shadow outline-primary"
-            />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="p-4 my-1 w-full border bg-white shadow outline-primary"
-            />
+        {!customerAdded && <p className="text-red-500 font-bold pb-2">Add customer details to continue.</p>}
+          <div
+            className={` ${
+              customerAdded ? "flex-col text-start" : "flex"
+            } flex-wrap md:flex-nowrap`}
+          >
+            {invoiceData?.customerDetailsCustom?.userName || customerAdded ? (
+              <p>{customerName}</p>
+            ) : (
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Name"
+                className="p-4 my-1 w-full border bg-white shadow outline-primary"
+              />
+            )}
+            {invoiceData?.customerDetailsCustom?.phoneNumber ||
+            customerAdded ? (
+              <p>{phoneNumber}</p>
+            ) : (
+              <input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Mobile"
+                className="p-4 my-1 w-full border bg-white shadow outline-primary"
+              />
+            )}
+            {invoiceData?.customerDetailsCustom?.email || customerAdded ? (
+              <p>{email}</p>
+            ) : (
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                className="p-4 my-1 w-full border bg-white shadow outline-primary"
+              />
+            )}
           </div>
-          <textarea
-            type="text"
-            value={customerAddress}
-            onChange={(e) => setCustomerAddress(e.target.value)}
-            placeholder="Address"
-            className="p-4 my-1 border w-full bg-white shadow outline-primary"
-          ></textarea>
+          {invoiceData?.customerDetailsCustom?.address || customerAdded ? (
+            <p className="text-start">{customerAddress}</p>
+          ) : (
+            <textarea
+              type="text"
+              value={customerAddress}
+              onChange={(e) => setCustomerAddress(e.target.value)}
+              placeholder="Address"
+              className="p-4 my-1 border w-full bg-white shadow outline-primary"
+            ></textarea>
+          )}
+          {!customerAdded && (
+            <button
+              className="bg-primary text-tertiary px-4 py-2 rounded hover:bg-opacity-90"
+              disabled={!rows}
+              onClick={() => {
+                createCustomerCustomInvoice.mutate(
+                  {
+                    userName: customerName,
+                    email: email,
+                    address: customerAddress,
+                    phoneNumber: phoneNumber,
+                  },
+                  {
+                    onSuccess: () => {
+                      setCustomerAdded(true);
+                      setRows([
+                        { title: "", quantity: "", price: 0, total: 0 },
+                      ]);
+                    },
+                  }
+                );
+              }}
+            >
+              <span className="flex items-center justify-center gap-2 font-semibold">
+                Add Customer <MdPersonAdd />
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -213,7 +272,7 @@ export const CustomInvoiceCard = () => {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {customerAdded && rows.map((row, index) => (
               <tr className="border-t border-primary" key={index}>
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2 relative">

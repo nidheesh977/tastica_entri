@@ -38,8 +38,7 @@ export const useCustomInvoice = () => {
     },
     onSuccess: (data) => {
       toast.success("Product removed successfully");
-      setInvoiceData(data)
-      
+      setInvoiceData(data);
     },
     onError: (error) => {
       toast.error(
@@ -91,6 +90,31 @@ export const useCustomInvoice = () => {
       );
     },
   });
+  const createCustomerCustomInvoice = useMutation({
+    mutationFn: async ({ userName, email, address, phoneNumber }) => {
+      const data = {
+        userName,
+        email,
+        address,
+        phoneNumber,
+      };
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/invoice/custom/${invoiceData?._id}/customer`,
+        withCredentials: true,
+        data,
+      });
+
+      return response?.data?.data;
+    },
+    onSuccess: () => {
+      toast.success("Customer data added successfully");
+    },
+
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to add customer!");
+    },
+  });
 
   return {
     invoiceData,
@@ -98,5 +122,6 @@ export const useCustomInvoice = () => {
     removeProductFromInvoice,
     createCustomInvoice,
     deleteCustomInvoice,
+    createCustomerCustomInvoice,
   };
 };
