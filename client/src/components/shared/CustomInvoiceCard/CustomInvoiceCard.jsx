@@ -29,9 +29,10 @@ export const CustomInvoiceCard = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
-  const [customerAdded, setCustomerAdded] = useState("");
+  const [customerAdded, setCustomerAdded] = useState(false);
 
   useEffect(() => {
+    if (!customerAdded) return;
     const lastIndex = rows.length - 1;
     const input = inputRefs.current?.[`title-${lastIndex}`];
     if (input) input.focus();
@@ -171,9 +172,10 @@ export const CustomInvoiceCard = () => {
           />
         </h1>
         <div className="md:w-1/2">
+        {!customerAdded && <p className="text-red-500 font-bold">Add customer details to continue.</p>}
           <div
             className={` ${
-              customerAdded ? "flex-col" : "flex"
+              customerAdded ? "flex-col text-start" : "flex"
             } flex-wrap md:flex-nowrap`}
           >
             {invoiceData?.customerDetailsCustom?.userName || customerAdded ? (
@@ -212,7 +214,7 @@ export const CustomInvoiceCard = () => {
             )}
           </div>
           {invoiceData?.customerDetailsCustom?.address || customerAdded ? (
-            <p>{customerAddress}</p>
+            <p className="text-start">{customerAddress}</p>
           ) : (
             <textarea
               type="text"
@@ -225,6 +227,7 @@ export const CustomInvoiceCard = () => {
           {!customerAdded && (
             <button
               className="bg-primary text-tertiary px-4 py-2 rounded hover:bg-opacity-90"
+              disabled={!rows}
               onClick={() => {
                 createCustomerCustomInvoice.mutate(
                   {
@@ -236,6 +239,9 @@ export const CustomInvoiceCard = () => {
                   {
                     onSuccess: () => {
                       setCustomerAdded(true);
+                      setRows([
+                        { title: "", quantity: "", price: 0, total: 0 },
+                      ]);
                     },
                   }
                 );
@@ -266,7 +272,7 @@ export const CustomInvoiceCard = () => {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {customerAdded && rows.map((row, index) => (
               <tr className="border-t border-primary" key={index}>
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
                 <td className="border border-primary px-4 py-2 relative">
