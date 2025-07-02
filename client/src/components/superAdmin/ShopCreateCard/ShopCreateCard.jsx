@@ -7,11 +7,13 @@ import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 export const ShopCreateCard = () => {
   const [shopName, setShopName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [countryName, setCountryName] = useState("");
   const [currencyCode, setCurrencyCode] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const { createShop } = useSuperAdmins();
+  const { createShop, addCustomer } = useSuperAdmins();
+
   return (
     <>
       <SuperAdminSideBar />
@@ -41,6 +43,16 @@ export const ShopCreateCard = () => {
               className="p-4 w-full bg-white outline-primary"
             />
           </div>
+          <div className="flex items-center justify-between bg-white w-full shadow mt-2 my-1">
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="Phone Number"
+              className="p-4 w-full bg-white outline-primary"
+            />
+          </div>
+
           <div className="flex items-center justify-between  w-full  my-1">
             <input
               type="text"
@@ -89,12 +101,15 @@ export const ShopCreateCard = () => {
                 currencyCode,
                 countryName,
                 password,
+                phoneNumber,
               });
+              addCustomer({ customerName: shopName, phoneNumber });
               setCountryName("");
               setCurrencyCode("");
               setPassword("");
               setEmail("");
               setShopName("");
+              setPhoneNumber("");
             }}
             className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
           >

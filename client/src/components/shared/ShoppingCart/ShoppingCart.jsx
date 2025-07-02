@@ -19,6 +19,7 @@ export const ShoppingCart = ({
 }) => {
   const { customers, addCustomer } = useCustomers();
   const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
+  const shop = useSelector((state)=> state?.auth?.shopData)
   const {
     createInvoice,
     makeCashPayment,
@@ -148,7 +149,7 @@ export const ShoppingCart = ({
               className="hover:text-orange-600 mx-auto text-primary"
               size={18}
               onClick={() => {
-                setSearchQuery("0000000");
+                setSearchQuery(shop?.phoneNumber);
                 setIsNewCustomer(false);
               }}
             />

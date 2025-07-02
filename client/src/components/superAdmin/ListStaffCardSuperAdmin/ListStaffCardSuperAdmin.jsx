@@ -44,6 +44,7 @@ export const ListStaffCardSuperAdmin = () => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">ID</th>
               <th className="border border-primary px-4 py-2">Role</th>
               <th className="border border-primary px-4 py-2">Email</th>
               <th className="border border-primary px-4 py-2">Mobile</th>
@@ -64,6 +65,9 @@ export const ListStaffCardSuperAdmin = () => {
                   ) : (
                     staff?.userName
                   )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {staff?.staffId}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {staff?.role}

@@ -43,6 +43,7 @@ export const ListShopCard = () => {
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Shop Name</th>
               <th className="border border-primary px-4 py-2">Email</th>
+              <th className="border border-primary px-4 py-2">Phone</th>
               <th className="border border-primary px-4 py-2">Country</th>
               <th className="border border-primary px-4 py-2">Currency</th>
               <th className="border border-primary px-4 py-2">Action</th>
@@ -73,6 +74,9 @@ export const ListShopCard = () => {
                   ) : (
                     shop?.email
                   )}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {shop?.phoneNumber}
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === shop?._id ? (
