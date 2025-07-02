@@ -12,7 +12,7 @@ export const ShopCreateCard = () => {
   const [currencyCode, setCurrencyCode] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const { createShop, addCustomer } = useSuperAdmins();
+  const { createShop } = useSuperAdmins();
 
   return (
     <>
@@ -103,7 +103,6 @@ export const ShopCreateCard = () => {
                 password,
                 phoneNumber,
               });
-              addCustomer({ customerName: shopName, phoneNumber });
               setCountryName("");
               setCurrencyCode("");
               setPassword("");

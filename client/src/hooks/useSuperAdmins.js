@@ -182,29 +182,6 @@ export const useSuperAdmins = () => {
       );
     },
   });
-  const { mutate: addCustomer } = useMutation({
-    mutationFn: async ({ customerName, phoneNumber }) => {
-      const data = {
-        customerName,
-        phoneNumber,
-      };
-      await axiosInstance({
-        method: "POST",
-        url: "/customer/create",
-        withCredentials: true,
-        data,
-      });
-    },
-    onSuccess: () => {
-      toast.success("Customer added successfully!");
-      queryClient.invalidateQueries(["customers"]);
-    },
-    onError: (error) => {
-      toast.error(
-        error?.response?.data?.message || "Failed to add new customer!"
-      );
-    },
-  });
 
   return {
     createShop,
@@ -214,6 +191,5 @@ export const useSuperAdmins = () => {
     createStaff,
     updateStaff,
     deleteStaff,
-    addCustomer
   };
 };
