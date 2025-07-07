@@ -123,8 +123,8 @@ export const addProductToInvoice = async (req,res) => {
      if(!findInvoiceProduct){ 
    
          // calculate discount
-         const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory))
-
+         const totalDiscountAmount = calculateDiscount(addProduct.total,addProduct.discountType,parseFloat(addProduct.discountFromProduct),parseFloat(addProduct.discountFromCategory),addProduct.quantity)
+ console.log(totalDiscountAmount)
          const calculateTaxAmount = caluculateTax(addProduct.total,addProduct.taxRate)
         //  add discount to Total discount
          const finalDiscountValue = existInvoice?.totalDiscount  + parseFloat(totalDiscountAmount);
@@ -133,7 +133,7 @@ export const addProductToInvoice = async (req,res) => {
          const subTotal =  existInvoice.subTotal +  productTotalPrice ;
 
          const addTax = existInvoice.totalTax + calculateTaxAmount;
-
+ 
           // substract discount from  total 
          const subTotalReduce = finalDiscountValue > 0 ? subTotal - totalDiscountAmount : subTotal;
 
@@ -162,8 +162,8 @@ export const addProductToInvoice = async (req,res) => {
  
            
              // calculate discount
-             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
-            
+             const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory,quantity)
+            console.log(calculateDiscountAmount)
              const calculateTaxAmount = caluculateTax(productTotalPrice,findInvoiceProduct.taxRate)
 
             const {discountAmount,subTotalAmount,addTaxToTotalAmt,taxAmountAfterUpdateQty} = calculateInvoiceTotal(calculateDiscountAmount,existInvoice,findInvoiceProduct,productTotalPrice,calculateTaxAmount)
@@ -191,7 +191,7 @@ export const addProductToInvoice = async (req,res) => {
 
         
             // calculate discount
-            const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory)
+            const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory,quantity)
                  
             const calculateTaxAmount = caluculateTax(productTotalPrice,findInvoiceProduct.taxRate)
 

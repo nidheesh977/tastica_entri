@@ -8,7 +8,7 @@ export const toDecimal = (value) => {
 }
 
 
-export const calculateDiscount = ( price,discountType,productDiscount,categoryDiscount) => {
+export const calculateDiscount = ( price,discountType,productDiscount,categoryDiscount,quantity) => {
 
    
 let discountAmount;
@@ -18,21 +18,21 @@ let discountAmount;
         let addcategory = price * (categoryDiscount / 100)
           discountAmount += addcategory
         }else if(discountType === "flat"){
-          discountAmount = productDiscount 
-        let addcategory = categoryDiscount
+          discountAmount = productDiscount * quantity 
+        let addcategory =  categoryDiscount * quantity 
           discountAmount += addcategory
         }    
     }else if(productDiscount > 0){
          if(discountType === "percentage"){
          discountAmount = price * (productDiscount / 100)   
         }else if(discountType === "flat"){
-          discountAmount = productDiscount     
+          discountAmount = productDiscount * quantity  
         }
     }else if(categoryDiscount > 0){
          if(discountType === "percentage"){     
          discountAmount = price * (categoryDiscount / 100)
         }else if(discountType === "flat"){
-        discountAmount = categoryDiscount 
+        discountAmount = categoryDiscount * quantity
         }
     }else if(productDiscount === 0 && categoryDiscount === 0 ){
         if(discountType === "percentage"){
