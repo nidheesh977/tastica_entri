@@ -46,7 +46,7 @@ export const ShoppingCart = ({
   const [paymentMethod, setPaymentMethod] = useState(null);
 
   useEffect(() => {
-    if (searchQuery?.length === 7) {
+    if (searchQuery?.length === shop?.phoneNumber) {
       const matchedCustomer = customers?.find(
         (customer) =>
           customer?.phoneNumber?.toString().toLowerCase() ===
