@@ -180,7 +180,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
                 },
                 
             },{new:true})
-               res.status(200).json({success:true,message:"Stripe payment successfully"})
+               res.status(200).json({success:true,message:"Stripe payment successfully",data:invoiceDigitalPayment})
         } 
 
         else if(invoiceDigitalPayment){
@@ -202,7 +202,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
                 
             },{new:true})
 
-                 res.status(200).json({success:true,message:"Stripe payment successfully"})
+                 res.status(200).json({success:true,message:"Stripe payment successfully",data:invoiceDigitalPayment})
             
         }
         

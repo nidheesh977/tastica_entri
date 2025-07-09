@@ -40,8 +40,10 @@ export const shopLogin = async (req,res) => {
         // Hide password before pass to frontend
         const {password:pass,...shopData} = shopExist._doc
 
+        let expireTime="1d"
+
         // Generate token share datas likes shop id , country name , currency code 
-        const shopToken = generateToken({id:shopExist._id,role:"shop",shopName:shopExist.shopName, countryName:shopExist.countryName, currencyCode:shopExist.currencyCode});
+        const shopToken = generateToken({id:shopExist._id,role:"shop",shopName:shopExist.shopName, countryName:shopExist.countryName, currencyCode:shopExist.currencyCode},expireTime);
        
         // Store generate token above
         res.cookie("shopToken",shopToken,{httpOnly:true,

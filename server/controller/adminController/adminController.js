@@ -36,9 +36,11 @@ export const loginAdmin = async (req, res) => {
     if (adminExist.role !== "admin") {
       return res.status(400).json({ success: false, message: "You are not an admin" });
     }
+
+    let expireTime="1d"
  
     // generate token
-    const adminToken = generateToken({id: adminExist._id,role:adminExist.role,email:adminExist.email,permissions:adminExist.permissions});
+    const adminToken = generateToken({id: adminExist._id,role:adminExist.role,email:adminExist.email,permissions:adminExist.permissions},expireTime);
 
     const { password: pass, ...adminData } = adminExist._doc;
 

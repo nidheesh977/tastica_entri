@@ -1,7 +1,10 @@
 import customerModel from "../../model/customerModel.js";
+import walletModels from "../../model/walletModel.js";
 import { generateId } from "../../utils/generateId.js";
 import { customerValidation } from "../../utils/joiValidation.js";
+import bwipjs from "bwip-js"
 
+const {walletModel} = walletModels;
 
 export const createCustomer = async (req,res) => {
 
@@ -40,12 +43,18 @@ export const createCustomer = async (req,res) => {
        })
 
        await newCustomer.save()
+
+        const newWallet =  walletModel({
+            customerId:newCustomer._id
+        })
+
+        await newWallet.save()
        res.status(201).json({success:true,message:"customer created successfully"});    
     }catch(error){
-
+      console.log(error)
        return res.status(500).json({success:false,message:"Internal Server Error"})
     }
-}
+} 
 
  export const updateCustomer = async (req,res) => {
     try{
@@ -126,5 +135,38 @@ export const getSingleCustomer = async (req,res) => {
 
    }catch(error){
     return res.status(500).json({success:false,message:"Internal Server Error"})
+   }
+}
+
+
+export const generateBarcodeImage = async (req,res) => {
+   try{
+      const {customerId} = req.params;
+
+      if(!customerId){
+         return res.status(400).json({success:false,message:"Customer ID not get"})
+      }
+
+      const findCustomer = await customerModel.findById(customerId);
+
+      if(!findCustomer){
+         return res.status(400).json({success:false,message:"Customer not found"})
+      }
+
+      const png = await bwipjs.toBuffer({
+          bcid:'code128',
+          text:findCustomer.customerId,
+          scale:4,
+          height:12,
+          includetext:false,
+          textalign:"center"
+      })
+
+      res.writeHead(200,{'Content-Type':'image/png'});
+      res.end(png)
+
+   }catch(error){
+      console.log(error)
+       return res.status(500).json({success:false,message:"Internal Server Error"})
    }
 }

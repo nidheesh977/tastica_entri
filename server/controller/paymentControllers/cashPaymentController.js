@@ -125,7 +125,7 @@ export const cashPayment = async (req,res) => {
                  },
                 
              },{new:true})
-                res.status(200).json({success:true,message:"Cash payment successfully"})
+                res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
          } 
 
          else if(invoiceCashPayment){
@@ -149,7 +149,7 @@ export const cashPayment = async (req,res) => {
                 
              },{new:true})
 
-             res.status(200).json({success:true,message:"Cash payment successfully",})
+             res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
             
          }   
         
