@@ -2,9 +2,9 @@ import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js"
 import productModel from "../../model/productModel.js";
-import walletModel from "../../model/walletModel.js";
+import walletModels from "../../model/walletModel.js";
 
-
+const {walletModel} = walletModels;
 
 
 
@@ -82,8 +82,9 @@ export const cashPayment = async (req,res) => {
            },{new:true})
         
          }
+         
 
-         const addAmount = await walletModel.findOneAndUpdate({customerId:invoiceCashPayment._id},{$inc:{balance:amount}},{new:true}).populate("customerId","customerName")
+        
 
 
          // add loyality points to customer
@@ -120,15 +121,20 @@ export const cashPayment = async (req,res) => {
             let PointsToAmount = deductLoyalty;
 
          await customerModel.findByIdAndUpdate(findCustomer._id,{
-             loyalityPoint:Math.round(deductLoyalty),
+             loyalityPoint:parseFloat(deductLoyalty).toFixed(2),
             //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
-              pointAmount:Math.round(PointsToAmount),
+              pointAmount:parseFloat(PointsToAmount).toFixed(2),
                  $push:{
                      invoices:{$each:[invoiceCashPayment._id]},
                      loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
                  },
                 
              },{new:true})
+
+
+              await walletModel.findOneAndUpdate({customerId:invoiceCashPayment.customer},{$inc:{balance:-parseFloat(deductLoyalty).toFixed(2)}},{new:true}).populate("customerId","customerName")
+
+
                 res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
          } 
 
@@ -152,6 +158,8 @@ export const cashPayment = async (req,res) => {
                 },
                 
              },{new:true})
+
+             await walletModel.findOneAndUpdate({customerId:invoiceCashPayment.customer},{$inc:{balance:Math.round(loyaltyPointProduct)}},{new:true}).populate("customerId","customerName")
 
              res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
             
