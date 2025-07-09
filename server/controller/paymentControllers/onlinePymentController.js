@@ -120,7 +120,7 @@ export const OnlinePaymentSuccess = async (req,res) => {
             paymentStatus:"success",
             paymentMethod:"digital",
             invoiceStatus:"paid"
-        },{new:true})
+        },{new:true}).populate("customer","customerName phoneNumber");
 
       
          // reduce quantity from products
