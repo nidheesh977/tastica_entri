@@ -39,13 +39,13 @@ export const productsFileUploader = async (req, res) => {
 
                 products.push({
                     product_id: row.product_id,
-                    productName: row.productName.trim(),
+                    productName: row.productName.trim().toLowerCase(),
                     quantity: Number(row.quantity),
                     costPrice: Number(row.costPrice),
                     costPriceProfit: Number(row.costPriceProfit),
                     sellingPrice: Number(row.sellingPrice),
                     discount: Number(row.discount),
-                    category: row.category,
+                    category: row.category.toLowerCase(),
                     countryName: row.countryName,
                     currencyCode: row.currencyCode,
                     shop: row.shop,

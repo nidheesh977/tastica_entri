@@ -15,6 +15,7 @@ import loyaltyRouter from './loyaltyPointRoute/loyaltyPointRoutes.js'
 import redeemRouter from "./redeemRoute/redeemRoutes.js";
 import adminDashBoardRouter from "./adminDashboardRoute/adminDashboardRoutes.js";
 import passwordResetRouter from "./passwordResetRoute/passwordResetRoute.js";
+import walletRouter from "./walletRoute/walletRoutes.js";
 
 
 
@@ -36,6 +37,7 @@ v1Router.use("/loyalty",loyaltyRouter);
 v1Router.use("/redeem",redeemRouter);
 v1Router.use("/admin/dashboard",adminDashBoardRouter);
 v1Router.use("/password",passwordResetRouter);
+v1Router.use("/wallet",walletRouter);
 
 
 

@@ -128,7 +128,7 @@ export const internalDevicePayment = async (req,res) => {
                 },
                 
             },{new:true})
-               res.status(200).json({success:true,message:"Device payment successfully"})
+               res.status(200).json({success:true,message:"Device payment successfully",data:invoiceInternalDevicePayment})
         } 
 
         else if(invoiceInternalDevicePayment){
@@ -151,7 +151,7 @@ export const internalDevicePayment = async (req,res) => {
                 
             },{new:true})
 
-                 res.status(200).json({success:true,message:"Device payment successfully"})
+                 res.status(200).json({success:true,message:"Device payment successfully",data:invoiceInternalDevicePayment})
             
         }
         

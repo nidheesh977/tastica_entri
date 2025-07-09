@@ -34,7 +34,7 @@ export const categoryFileUploader = async (req, res) => {
 
                 categories.push({
                     category_id:row.category_id,
-                    categoryName: row.categoryName.trim(),
+                    categoryName: row.categoryName.trim().toLowerCase(),
                     description: row.description,
                     discountRate: row.discountRate,
                     shop:row.shop,
