@@ -2,6 +2,7 @@ import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js"
 import productModel from "../../model/productModel.js";
+import walletModel from "../../model/walletModel.js";
 
 
 
@@ -81,6 +82,9 @@ export const cashPayment = async (req,res) => {
            },{new:true})
         
          }
+
+         const addAmount = await walletModel.findOneAndUpdate({customerId:invoiceCashPayment._id},{$inc:{balance:amount}},{new:true}).populate("customerId","customerName")
+
 
          // add loyality points to customer
 
