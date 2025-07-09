@@ -87,10 +87,14 @@ export const rechargeWallet = async (req,res) => {
             return res.status(400).json({success:false,message:"Wallet not found"})
         }
 
-       const addAmount = await walletModel.findByIdAndUpdate(findWallet._id,{$inc:{balance:amount}},{new:true}).populate("customerId","customerName")
+        const parseNumber = parseFloat(amount).toFixed(2)
+
+       const addAmount = await walletModel.findByIdAndUpdate(findWallet._id,{$inc:{balance:parseNumber}},{new:true}).populate("customerId","customerName");
+
+       await customerModel.findByIdAndUpdate(customerId,{$inc:{loyalityPoint:parseNumber,pointAmount:parseNumber}})
 
         res.clearCookie("walletToken").status(200).json({success:true,message:"Wallet recharge successfully",data:addAmount})
     }catch(error){
-         return res.status(500).json({success:false,message:"Internal dserver error"})
+         return res.status(500).json({success:false,message:"Internal server error"})
     }
 }
