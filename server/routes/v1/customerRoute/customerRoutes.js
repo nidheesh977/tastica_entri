@@ -9,9 +9,9 @@ import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 const customerRouter = express.Router();
 
 customerRouter.post('/barcode/:customerId/image',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),generateBarcodeImage);
-// customerRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),createCustomer);
-// customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_read"),getCustomer);
-// customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_update"),updateCustomer);
-// customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_delete"),deleteCustomer);
-// customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getSingleCustomer);
+customerRouter.post('/create',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),createCustomer);
+customerRouter.get('/',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_read"),getCustomer);
+customerRouter.put('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_update"),updateCustomer);
+customerRouter.delete('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),checkPermission("customer_delete"),deleteCustomer);
+customerRouter.get('/:id',shopVerifyToken,userVerifyToken,checkUserRole("admin","staff"),getSingleCustomer);
 export default customerRouter; 
