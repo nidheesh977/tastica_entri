@@ -66,7 +66,7 @@ export const walletLog = async (req,res) => {
 export const rechargeWallet = async (req,res) => {
     try{
         const {customerId} = req.wallet;
-
+        const staffId = req.user.id; 
         const {amount} = req.body;
 
         if(parseFloat(amount) < 0){
@@ -92,6 +92,15 @@ export const rechargeWallet = async (req,res) => {
        const addAmount = await walletModel.findByIdAndUpdate(findWallet._id,{$inc:{balance:parseNumber}},{new:true}).populate("customerId","customerName");
 
        await customerModel.findByIdAndUpdate(customerId,{$inc:{loyalityPoint:parseNumber,pointAmount:parseNumber}})
+
+       const newTransaction = walletTransactionModel({
+         customerId:customerId,
+         staffId:staffId,
+         amount:amount,
+         type:"credit"
+       });
+
+       await newTransaction.save()
 
         res.clearCookie("walletToken").status(200).json({success:true,message:"Wallet recharge successfully",data:addAmount})
     }catch(error){

@@ -58,7 +58,7 @@ export const internalDevicePayment = async (req,res) => {
             paymentStatus:"success",
            paymentMethod:"internal-device",
            invoiceStatus:"paid"
-        },{new:true})
+        },{new:true}).populate("customer","customerName phoneNumber");
 
         if(!invoiceInternalDevicePayment){
             await invoiceModel.findByIdAndUpdate(invoiceId,{

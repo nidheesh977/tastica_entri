@@ -57,7 +57,7 @@ export const cashPayment = async (req,res) => {
              paymentStatus:"success",
              paymentMethod:"cash",
              invoiceStatus:"paid"
-         },{new:true})
+         },{new:true}).populate("customer","customerName phoneNumber");
 
          if(!invoiceCashPayment){
              await invoiceModel.findByIdAndUpdate(invoiceId,{
