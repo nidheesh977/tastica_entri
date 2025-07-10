@@ -40,7 +40,7 @@ export const customInvoiceCreate = async (req,res) => {
 
         await newCustom.save()
 
-        res.status(201).json({success:true,message:"Invoice created successfully",data:newCustom})
+        res.status(201).json({success:true,message:"Custom invoice created successfully",data:newCustom})
 
     }catch(error){
      return res.status(500).json({success:false,message:"Internal server error"})
@@ -89,11 +89,11 @@ export const addCustomerDetailToCustomInvoice = async (req,res) => {
         }
   
 
-        await invoiceModel.findByIdAndUpdate(id,{
+     const addCustomer = await invoiceModel.findByIdAndUpdate(id,{
             customerDetailsCustom,
-        })
+        },{new:true})
 
-        res.status(200).json({success:true,message:"Details added successfully"})
+        res.status(200).json({success:true,message:"Details added successfully",data:addCustomer})
     }catch(error){
    return res.status(500).json({success:false,message:"Internal server error"})
     }
