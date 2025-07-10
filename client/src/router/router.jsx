@@ -64,6 +64,7 @@ import ThermalPrinterInvoice from "../components/shared/ThermalPrinterInvoice/Th
 import { PaymentSuccessCash } from "../pages/shared/PaymentSuccessCash/PaymentSuccessCash";
 import { PaymentSuccessSwipe } from "../pages/shared/PaymentSuccessSwipe/PaymentSuccessSwipe";
 import { RechargeWallet } from "../pages/shared/RechargeWallet/RechargeWallet";
+import { PrintBarcode } from "../pages/shared/PrintBarcode/PrintBarcode";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -73,7 +74,6 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "", element: <ShopLoginPage /> },
-      // { path: "", element: <CustomInvoice /> },
 
       {
         path: "shop",
@@ -225,6 +225,10 @@ export const router = createBrowserRouter([
           {
             path: "recharge/wallet",
             element: <RechargeWallet />,
+          },
+          {
+            path: "print/barcode/:customerId",
+            element: <PrintBarcode />,
           },
           {
             path: "permissions/:id",

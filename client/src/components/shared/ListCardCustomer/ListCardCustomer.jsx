@@ -5,7 +5,7 @@ import { FiEdit } from "react-icons/fi";
 import { AlertBox } from "../../shared/AlertBox/AlertBox";
 import { useCustomers } from "../../../hooks/useCustomers";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const ListCardCustomer = ({ permissions }) => {
   const [alertMessage, setAlertMessage] = useState(null);
@@ -39,6 +39,7 @@ export const ListCardCustomer = ({ permissions }) => {
             <tr>
               <th className="border border-primary px-4 py-2">No</th>
               <th className="border border-primary px-4 py-2">Name</th>
+              <th className="border border-primary px-4 py-2">ID</th>
               <th className="border border-primary px-4 py-2">Mobile</th>
               <th className="border border-primary px-4 py-2">Points</th>
               <th className="border border-primary px-4 py-2">Action</th>
@@ -58,6 +59,11 @@ export const ListCardCustomer = ({ permissions }) => {
                   ) : (
                     customer?.customerName
                   )}
+                </td>
+                <td className="border border-primary px-4 py-2 hover:text-primary">
+            <Link to={`/admin/print/barcode/${customer?._id}`}>
+            {customer?.customerId}
+            </Link>
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === customer?._id ? (
