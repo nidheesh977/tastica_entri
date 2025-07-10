@@ -514,3 +514,10 @@ use methods (all) get all the methods
 **method**`PUT` <br>
 **URL**`/api/v1/customer/barcode/:customerId/image`
 
+ - Wallet get
+**method**`GET` <br>
+**URL**`/api/v1/wallet`
+
+- Get Wallet recharge Transaction 
+**method**`GET`<br>
+**URL**`/api/v1/wallet/:customerId`

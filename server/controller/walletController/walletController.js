@@ -107,3 +107,27 @@ export const rechargeWallet = async (req,res) => {
          return res.status(500).json({success:false,message:"Internal server error"})
     }
 }
+
+
+export const getWalletData = async (req,res) => {
+    try{
+        const getWallet = await walletModel.find({}).lean().sort({createdAt:-1}).populate({path:"customerId",select:"customerName phoneNumber"})
+
+        res.status(200).json({success:true,message:"Data fetch successfully",data:getWallet})
+    }catch(error){
+         return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
+
+export const getWalletTransaction = async (req,res) => {
+    try{
+
+        const id = req.params.customerId;
+
+        const getTransactions = await walletTransactionModel.find({customerId:id}).lean().sort({createdAt:-1}).populate({path:"customerId",select:"customerName phoneNumber"}).populate({path:"staffId",select:"userName role"});
+       
+         res.status(200).json({success:true,message:"Data fetch successfully",data:getTransactions})
+    }catch(error){
+         return res.status(500).json({success:false,message:"Internal server error"})
+    }
+}
