@@ -4,7 +4,7 @@ import {
   FaFileCsv,
   FaBoxOpen,
   FaUserTie,
-  FaFileInvoice
+  FaFileInvoice,
 } from "react-icons/fa";
 import { FiGift } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import {
   MdReceipt,
   MdEventNote,
   MdDashboard,
+  MdPayment,
 } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -312,6 +313,16 @@ export const AdminSideBar = () => {
         >
           <FiGift />
           Manage Loyalty Points
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/admin/recharge/wallet");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdPayment />
+          Recharge Card
         </li>
       </ul>
     </div>
