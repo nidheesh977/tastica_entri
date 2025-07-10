@@ -74,10 +74,10 @@ export const addCustomerDetailToCustomInvoice = async (req,res) => {
             return res.status(400).json({success:false,message:error.details[0].message})
         }
         const {id} = req.params
-        const {userName,email,address,phoneNumber} = value;
+        const {customerName,email,address,phoneNumber} = value;
 
         const customerDetailsCustom = {
-            userName,
+            customerName,
             email,
             address,
             phoneNumber

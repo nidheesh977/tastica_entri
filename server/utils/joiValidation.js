@@ -465,7 +465,7 @@ export const barcodeValidation = Joi.object({
 
 
 export const customInvoiceCustomerValidation = Joi.object({
-      userName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
+      customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
         'string.required': 'Username is required',
         'string.base': 'Username must be a string',
         'string.empty': 'Username cannot be empty',
