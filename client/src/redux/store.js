@@ -11,6 +11,7 @@ import quantityReducer from "./features/quantitySlice";
 import selectedShopReducer from "./features/selectedShopSlice";
 import errorReducer from "./features/errorSlice";
 import customInvoiceReducer  from "./features/customInvoiceSlice";
+import  latestPaidInvoiceReducer  from "./features/latestPaidInvoiceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export const store = configureStore({
     selectedShopId: selectedShopReducer,
     error: errorReducer,
     customInvoice: customInvoiceReducer,
+    latestPaidInvoice: latestPaidInvoiceReducer
   },
 });

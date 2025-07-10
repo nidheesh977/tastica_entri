@@ -10,8 +10,10 @@ import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { useSelector } from "react-redux";
-import { PrintDialogueBox } from "../PrintDialogueBox/PrintDialogueBox";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { clearInvoiceData } from "../../../redux/features/invoiceSlice";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -19,7 +21,9 @@ export const ShoppingCart = ({
 }) => {
   const { customers, addCustomer } = useCustomers();
   const currency = useSelector((state) => state?.auth?.shopData?.currencyCode);
-  const shop = useSelector((state)=> state?.auth?.shopData)
+  const shop = useSelector((state) => state?.auth?.shopData);
+  const admin = useSelector((state) => state?.auth?.adminData);
+  const dispatch = useDispatch();
   const {
     createInvoice,
     makeCashPayment,
@@ -28,9 +32,11 @@ export const ShoppingCart = ({
     saveInvoice,
     redeemPoints,
     invoice,
+    clearInvoice,
   } = useInvoices();
 
-  const products = invoice?.products;
+  const products = invoice?.products || [];
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [name, setName] = useState("");
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -42,11 +48,36 @@ export const ShoppingCart = ({
   const [showPayDialog, setShowPayDialog] = useState(false);
   const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
   const [pointAmount, setPointAmount] = useState("");
-  const [showPrintBox, setShowPrintBox] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [invoiceCleared, setInvoiceCleared] = useState(false);
+  const [buffer, setBuffer] = useState("");
+  const [lastTime, setLastTime] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (searchQuery?.length === shop?.phoneNumber) {
+    const handleKeyDown = (e) => {
+      const now = new Date().getTime();
+      if (e.key === "Enter") {
+        if (buffer.length > 2) {
+         addProductToInvoice({ productId:buffer, quantity: 1 })
+        }
+        setBuffer("");
+        setLastTime(null);
+        return;
+      }
+      if (lastTime && now - lastTime > 100) {
+        setBuffer("");
+      }
+      setBuffer((prev) => prev + e.key);
+      setLastTime(now);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [buffer, lastTime]);
+
+  useEffect(() => {
+    if (invoiceCleared && searchQuery?.length === shop?.phoneNumber?.length) {
       const matchedCustomer = customers?.find(
         (customer) =>
           customer?.phoneNumber?.toString().toLowerCase() ===
@@ -64,7 +95,14 @@ export const ShoppingCart = ({
         setIsNewCustomer(true);
       }
     }
-  }, [searchQuery, customers, invoice]);
+  }, [
+    searchQuery,
+    customers,
+    invoice,
+    createInvoice,
+    shop?.phoneNumber,
+    invoiceCleared,
+  ]);
 
   const resetBillingState = () => {
     setCustomerName("");
@@ -73,58 +111,43 @@ export const ShoppingCart = ({
     setName("");
     setMobile("");
     setIsNewCustomer(false);
-    setQuantities("");
+    setQuantities({});
   };
 
   const handleCashPay = () => {
+    makeCashPayment();
     setShowPayDialog(false);
-    setPaymentMethod(() => makeCashPayment);
-    setShowPrintBox(true);
+    resetBillingState();
+
+    admin
+      ? navigate("/admin/payment/success/cash")
+      : navigate("/staff/payment/success/cash");
   };
 
   const handleSwipePay = () => {
+    makeSwipePayment();
     setShowPayDialog(false);
-    setPaymentMethod(() => makeSwipePayment);
-    setShowPrintBox(true);
+    resetBillingState();
+    admin
+      ? navigate("/admin/payment/success/swipe")
+      : navigate("/staff/payment/success/swipe");
   };
 
   const handleStripePay = () => {
+    makeOnlinePayment();
     setShowPayDialog(false);
-    setPaymentMethod(() => makeOnlinePayment);
-    setShowPrintBox(true);
-  };
-
-  const handleCancel = () => {
-    setShowPayDialog(false);
-  };
-
-  const handlePrintAndPay = () => {
-    setShowPrintBox(false);
-
-    const afterPrintHandler = () => {
-      paymentMethod?.();
-      resetBillingState();
-      window.removeEventListener("afterprint", afterPrintHandler);
-    };
-
-    window.addEventListener("afterprint", afterPrintHandler);
-
-    setTimeout(() => {
-      window.print();
-    }, 0);
-  };
-
-  const handleCancelPrint = () => {
-    setShowPrintBox(false);
-    paymentMethod?.();
     resetBillingState();
   };
 
   useEffect(() => {
-    return () => {
-      resetBillingState();
-      saveInvoice();
-    };
+    resetBillingState();
+    dispatch(clearInvoiceData());
+    clearInvoice(undefined, {
+      onSuccess: () => {
+        setInvoiceCleared(true);
+        queryClient.invalidateQueries(["invoice"]);
+      },
+    });
   }, []);
 
   return (
@@ -172,7 +195,7 @@ export const ShoppingCart = ({
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             onFocus={() => setPhoneNumber(searchQuery)}
-            maxLength={7}
+            maxLength={10}
             placeholder="Mobile"
             className="rounded shadow outline-primary h-10 p-5"
           />
@@ -189,20 +212,20 @@ export const ShoppingCart = ({
         </div>
       )}
 
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full mt-2">
         {!isNewCustomer && name && (
-          <h1 className="font-bold flex gap-2 text-xl items-center">
-            <MdShoppingCart className="text-primary" size={35} /> Cart
-          </h1>
-        )}
-        {!isNewCustomer && <div className="font-bold">{name}</div>}
-        {!isNewCustomer && name !== "" && (
-          <p className="text-sm font-bold">{mobile}</p>
+          <>
+            <h1 className="font-bold flex gap-2 text-xl items-center">
+              <MdShoppingCart className="text-primary" size={35} /> Cart
+            </h1>
+            <div className="font-bold">{name}</div>
+            <p className="text-sm font-bold">{mobile}</p>
+          </>
         )}
       </div>
 
       <ul className="flex flex-col mt-4 h-[382px] overflow-y-auto w-full">
-        {products?.map((product, index) => (
+        {products.map((product, index) => (
           <li
             key={product?.productId}
             className="grid grid-cols-12 border my-1 p-2 items-center"
@@ -230,7 +253,7 @@ export const ShoppingCart = ({
                 <input
                   type="number"
                   className="w-14 bg-tertiary text-center"
-                  value={quantities[product?.productId] ?? 1}
+                  value={quantities[product.productId] ?? product.quantity}
                   onChange={(e) => {
                     const newQty = e.target.value;
                     setQuantities((prev) => ({
@@ -241,12 +264,13 @@ export const ShoppingCart = ({
                   onBlur={() =>
                     addProductToInvoice({
                       productId: product?.productId,
-                      quantity: quantities[product.productId] ?? "",
+                      quantity:
+                        quantities[product.productId] ?? product.quantity,
                     })
                   }
                 />
               ) : (
-                <span className="text-center w-12"> {product?.quantity}</span>
+                <span className="text-center w-12">{product?.quantity}</span>
               )}
               <span className="text-center w-10">{product?.unit}</span>
             </div>
@@ -266,80 +290,72 @@ export const ShoppingCart = ({
       </ul>
 
       {!isNewCustomer && (
-        <div className="mt-2 w-full font-bold">
-          <div className="flex justify-between items-center border px-2 py-2">
-            <div>Products Discount</div>
-            <div>
-              {currency}
-              {invoice?.totalDiscount || 0}
+        <>
+          <div className="mt-2 w-full font-bold">
+            <div className="flex justify-between items-center border px-2 py-2">
+              <div>Products Discount</div>
+              <div>
+                {currency}
+                {invoice?.totalDiscount || 0}
+              </div>
+            </div>
+            <div className="flex justify-between items-center gap-2 border px-2 py-2">
+              <div>Discount</div>
+              <p>{pointAmount}</p>
+              <input
+                className="outline-primary px-2 w-2/3 border"
+                type="text"
+                onChange={(e) => setRedeemAmountAdd(e.target.value)}
+              />
+              <button
+                onClick={() => {
+                  redeemPoints(redeemAmountAdd);
+                  setRedeemAmountAdd("");
+                }}
+                className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
+              >
+                Redeem
+              </button>
+            </div>
+            <div className="flex justify-between items-center font-semibold border px-2 py-2">
+              <div>Total</div>
+              <div>
+                {currency}
+                {invoice?.totalAmount || 0}
+              </div>
             </div>
           </div>
-          <div className="flex justify-between items-center gap-2 border px-2 py-2">
-            <div>Discount</div>
-            <p>{pointAmount}</p>
-            <input
-              className="outline-primary px-2 w-2/3 border"
-              type="text"
-              onChange={(e) => setRedeemAmountAdd(e.target.value)}
-            />
+
+          <div className="flex gap-2 mt-2 justify-between">
             <button
+              className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
               onClick={() => {
-                redeemPoints(redeemAmountAdd);
-                setRedeemAmountAdd("");
+                saveInvoice();
+                resetBillingState();
               }}
-              className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
             >
-              Redeem
+              <FaSave /> Save
+            </button>
+            <button
+              className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
+                products.length === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary hover:bg-opacity-90"
+              } text-white rounded-lg`}
+              onClick={() => {
+                if (products.length === 0) return;
+                setShowPayDialog(true);
+              }}
+            >
+              {products.length === 0 ? (
+                <MdRemoveShoppingCart />
+              ) : (
+                <FaMoneyCheckAlt />
+              )}
+              {products.length === 0 ? "Cart Empty" : "Pay"}
             </button>
           </div>
-          <div className="flex justify-between items-center font-semibold border px-2 py-2">
-            <div>Total</div>
-            <div>
-              {currency}
-              {invoice?.totalAmount || 0}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!isNewCustomer && (
-        <div className="flex gap-2 mt-2 justify-between">
-          <button
-            className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
-            onClick={() => {
-              saveInvoice();
-              resetBillingState();
-            }}
-          >
-            <FaSave /> Save
-          </button>
-          <button
-            className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
-              invoice?.products?.length === 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-primary hover:bg-opacity-90"
-            } text-white rounded-lg`}
-            onClick={() => {
-              if (invoice?.products?.length === 0) return;
-              setShowPayDialog(true);
-            }}
-          >
-            {invoice?.products?.length === 0 ? (
-              <MdRemoveShoppingCart />
-            ) : (
-              <FaMoneyCheckAlt />
-            )}
-            {invoice?.products?.length === 0 ? "Cart Empty" : "Pay"}
-          </button>
-        </div>
-      )}
-
-      {showPrintBox && (
-        <PrintDialogueBox
-          message={`Proceed to print?`}
-          onConfirm={handlePrintAndPay}
-          onCancel={handleCancelPrint}
-        />
+        </>
       )}
 
       {showPayDialog && (
@@ -350,7 +366,7 @@ export const ShoppingCart = ({
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}
-          onCancel={handleCancel}
+          onCancel={() => setShowPayDialog(false)}
           invoice={invoice}
         />
       )}

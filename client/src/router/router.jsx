@@ -30,7 +30,7 @@ import { AddNewCustomProduct } from "../pages/shared/AddNewCustomProduct/AddNewC
 import { AddCustomProduct } from "../components/shared/AddCustomProduct/AddCustomProduct";
 import { UploadProductsCSV } from "../pages/admin/UploadProductsCSV/UploadProductsCSV";
 import { UploadCategoriesCSV } from "../pages/admin/UploadCategoriesCSV/UploadCategoriesCSV";
-import { PaymentSuccess } from "../pages/shared/PaymentSuccess/PaymentSuccess";
+import { PaymentSuccessStripe } from "../pages/shared/PaymentSuccessStripe/PaymentSuccessStripe";
 import { PaymentCancel } from "../pages/shared/PaymentCancel/PaymentCancel";
 import { InvoiceData } from "../pages/shared/InvoiceData/InvoiceData";
 import { ListCustomerInvoices } from "../pages/shared/ListCustomerInvoices/ListCustomerInvoices";
@@ -60,6 +60,9 @@ import { AddCustomerStaff } from "../pages/staff/AddCustomerStaff/AddCustomerSta
 import { ListCustomersStaff } from "../pages/staff/ListCustomersStaff/ListCustomersStaff";
 import { ShopPasswordReset } from "../pages/superAdmin/ShopResetPassword/ShopResetPassword";
 import { CustomInvoice } from "../pages/admin/CustomInvoice/CustomInvoice";
+import ThermalPrinterInvoice from "../components/shared/ThermalPrinterInvoice/ThermalPrinterInvoice";
+import { PaymentSuccessCash } from "../pages/shared/PaymentSuccessCash/PaymentSuccessCash";
+import { PaymentSuccessSwipe } from "../pages/shared/PaymentSuccessSwipe/PaymentSuccessSwipe";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -193,17 +196,30 @@ export const router = createBrowserRouter([
             path: "custom/invoice",
             element: <CustomInvoice />,
           },
+
           {
             path: "loyalty/points",
             element: <LoyaltyPoints />,
           },
           {
             path: "payment/success",
-            element: <PaymentSuccess />,
+            element: <PaymentSuccessStripe />,
+          },
+          {
+            path: "payment/success/cash",
+            element: <PaymentSuccessCash />,
+          },
+          {
+            path: "payment/success/swipe",
+            element: <PaymentSuccessSwipe />,
           },
           {
             path: "payment/cancel",
             element: <PaymentCancel />,
+          },
+          {
+            path: "print",
+            element: <ThermalPrinterInvoice />,
           },
           {
             path: "permissions/:id",
@@ -283,13 +299,26 @@ export const router = createBrowserRouter([
             path: "customer/view/invoice/:id",
             element: <ListCustomerInvoices />,
           },
+
           {
             path: "payment/success",
-            element: <PaymentSuccess />,
+            element: <PaymentSuccessStripe />,
+          },
+          {
+            path: "payment/success/cash",
+            element: <PaymentSuccessCash />,
+          },
+          {
+            path: "payment/success/swipe",
+            element: <PaymentSuccessSwipe />,
           },
           {
             path: "payment/cancel",
             element: <PaymentCancel />,
+          },
+          {
+            path: "print",
+            element: <ThermalPrinterInvoice />,
           },
         ],
       },

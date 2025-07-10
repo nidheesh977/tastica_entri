@@ -14,6 +14,7 @@ import {
 
 import { loadStripe } from "@stripe/stripe-js";
 import { clearSingleInvoiceOpenOrder } from "../redux/features/singleInvoiceOpenOrderSlice";
+import { saveLatestPaidInvoiceData } from "../redux/features/latestPaidInvoiceSlice";
 
 export const useInvoices = (customerId = null) => {
   const invoiceId = useSelector((state) => state?.invoice?._id);
@@ -56,7 +57,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to fetch customer invoice",
+        error?.response?.data?.message || "Failed to fetch customer invoice"
       );
     },
   });
@@ -98,7 +99,7 @@ export const useInvoices = (customerId = null) => {
 
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to fetch saved invoice",
+        error?.response?.data?.message || "Failed to fetch saved invoice"
       );
     },
   });
@@ -161,7 +162,7 @@ export const useInvoices = (customerId = null) => {
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to add product to invoice",
+        error?.response?.data?.message || "Failed to add product to invoice"
       );
     },
   });
@@ -250,7 +251,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice",
+          "Failed to remove product from invoice"
       );
     },
   });
@@ -273,7 +274,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice",
+          "Failed to remove product from invoice"
       );
     },
   });
@@ -288,8 +289,10 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Payment successful.");
+      dispatch(saveLatestPaidInvoiceData(data));
+
       queryClient.invalidateQueries(["savedInvoices"]);
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
       dispatch(clearInvoiceData());
@@ -309,8 +312,9 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Payment successful.");
+      dispatch(saveLatestPaidInvoiceData(data));
       queryClient.invalidateQueries(["savedInvoices"]);
       queryClient.invalidateQueries(["singleInvoiceOpenOrder"]);
       dispatch(clearInvoiceData());
@@ -330,8 +334,9 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Payment successful.");
+      dispatch(saveLatestPaidInvoiceData(data));
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
       dispatch(clearSingleInvoiceOpenOrder());
@@ -352,8 +357,9 @@ export const useInvoices = (customerId = null) => {
 
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Payment successful.");
+      dispatch(saveLatestPaidInvoiceData(data));
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
       dispatch(clearSingleInvoiceOpenOrder());
@@ -368,7 +374,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePayment } = useMutation({
     mutationFn: async () => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -381,7 +387,7 @@ export const useInvoices = (customerId = null) => {
       });
     },
     onSuccess: (data) => {
-      console.log(data);
+      dispatch(saveLatestPaidInvoiceData(data));
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Payment failed!");
@@ -390,7 +396,7 @@ export const useInvoices = (customerId = null) => {
   const { mutate: makeOnlinePaymentOpenOrder } = useMutation({
     mutationFn: async (id) => {
       const stripe = await loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
       );
 
       const session = await axiosInstance({
@@ -402,7 +408,8 @@ export const useInvoices = (customerId = null) => {
         sessionId: session.data.session.id,
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(saveLatestPaidInvoiceData(data));
       dispatch(clearInvoiceData());
       dispatch(clearSingleInvoice());
       dispatch(clearSingleInvoiceOpenOrder());
@@ -467,7 +474,7 @@ export const useInvoices = (customerId = null) => {
     },
     onError: (error) => {
       toast.error(
-        error?.response?.data?.message || "Failed to delete open order!",
+        error?.response?.data?.message || "Failed to delete open order!"
       );
     },
   });

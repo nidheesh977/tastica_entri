@@ -4,7 +4,6 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import { MdShoppingCart, MdRemoveShoppingCart } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
-import { PrintDialogueBox } from "../PrintDialogueBox/PrintDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveSingleInvoiceOpenOrder } from "../../../redux/features/singleInvoiceOpenOrderSlice";
@@ -25,6 +24,7 @@ export const OpenOrderCart = ({
     makeOnlinePaymentOpenOrder,
     saveInvoice,
     redeemPointsOpenOrder,
+    addProductToInvoiceOpenOrder,
   } = useInvoices();
 
   const invoice = singleInvoiceOpenOrder;
@@ -35,8 +35,31 @@ export const OpenOrderCart = ({
   const [showPayDialog, setShowPayDialog] = useState(false);
   const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
   const [pointAmount, setPointAmount] = useState("");
-  const [showPrintBox, setShowPrintBox] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [buffer, setBuffer] = useState("");
+  const [lastTime, setLastTime] = useState(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const now = new Date().getTime();
+      if (e.key === "Enter") {
+        if (buffer.length > 2) {
+          addProductToInvoiceOpenOrder({ productId: buffer, quantity: 1 });
+        }
+        setBuffer("");
+        setLastTime(null);
+        return;
+      }
+      if (lastTime && now - lastTime > 100) {
+        setBuffer("");
+      }
+      setBuffer((prev) => prev + e.key);
+      setLastTime(now);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [buffer, lastTime]);
 
   useEffect(() => {
     if (invoice?.products) {
@@ -60,45 +83,28 @@ export const OpenOrderCart = ({
     }
   }, [invoice]);
 
-  const handlePrintAndPay = () => {
-    setShowPrintBox(false);
-    const afterPrintHandler = () => {
-      paymentMethod?.();
-      window.removeEventListener("afterprint", afterPrintHandler);
-      navigate(admin ? "/admin/open/orders" : "/staff/open/orders");
-    };
-    window.addEventListener("afterprint", afterPrintHandler);
-    setTimeout(() => {
-      window.print();
-    }, 0);
-  };
-
-  const handleCancelPrint = () => {
-    setShowPrintBox(false);
-    paymentMethod?.();
-    navigate(admin ? "/admin/open/orders" : "/staff/open/orders");
-  };
-
   const handleCashPay = () => {
     setShowPayDialog(false);
-    setPaymentMethod(() => () => makeCashPaymentOpenOrder(id));
-    setShowPrintBox(true);
+    makeCashPaymentOpenOrder(id);
+    navigate(
+      admin ? "/admin/payment/success/cash" : "/staff/payment/success/cash"
+    );
   };
 
   const handleSwipePay = () => {
     setShowPayDialog(false);
-    setPaymentMethod(() => () => makeSwipePaymentOpenOrder(id));
-    setShowPrintBox(true);
+    makeSwipePaymentOpenOrder(id);
+    navigate(
+      admin ? "/admin/payment/success/swipe" : "/staff/payment/success/swipe"
+    );
   };
 
   const handleStripePay = () => {
     setShowPayDialog(false);
-    setPaymentMethod(() => () => makeOnlinePaymentOpenOrder(id));
-    setShowPrintBox(true);
-  };
-
-  const handleCancel = () => {
-    setShowPayDialog(false);
+    makeOnlinePaymentOpenOrder(id);
+    navigate(
+      admin ? "/admin/payment/success/online" : "/staff/payment/success/online"
+    );
   };
 
   return (
@@ -107,9 +113,9 @@ export const OpenOrderCart = ({
         <h1 className="font-bold flex gap-2 text-xl items-center">
           <MdShoppingCart className="text-primary" size={35} /> Cart
         </h1>
-        <div className="font-bold ">{invoice?.customer?.customerName}</div>
+        <div className="font-bold">{invoice?.customer?.customerName}</div>
         <div>
-          <p className="text-sm font-bold ">{invoice?.customer?.phoneNumber}</p>
+          <p className="text-sm font-bold">{invoice?.customer?.phoneNumber}</p>
         </div>
       </div>
 
@@ -129,11 +135,11 @@ export const OpenOrderCart = ({
                 onCancel={() => setAlertMessage(null)}
               />
             )}
-            <span className="col-span-12 xl:col-span-6 my-1 xl:my-0 text-center xl:text-start">
+            <span className="col-span-12 xl:col-span-6 text-center xl:text-start">
               <span className="me-2 font-semibold">{index + 1}.</span>
               {product?.productName}
             </span>
-            <div className="flex items-center col-span-12 xl:col-span-4 my-2 xl:my-0 mx-auto xl:mx-0">
+            <div className="flex items-center col-span-12 xl:col-span-4 mx-auto xl:mx-0">
               <div className="w-24 me-1 flex justify-between">
                 <div>{product?.price}</div>
                 <div>x</div>
@@ -158,11 +164,11 @@ export const OpenOrderCart = ({
                   }
                 />
               ) : (
-                <span className="text-center w-12"> {product?.quantity}</span>
+                <span className="text-center w-12">{product?.quantity}</span>
               )}
               <span className="text-center w-10">{product?.unit}</span>
             </div>
-            <span className="col-span-12 flex items-center gap-2 xl:col-span-1 mx-auto xl:mx-0 text-right my-2 xl:my-0">
+            <span className="col-span-12 flex items-center gap-2 xl:col-span-1 mx-auto xl:mx-0 text-right">
               {product?.price * product?.quantity}
             </span>
             <span className="col-span-12 xl:col-span-1 flex justify-end">
@@ -185,7 +191,7 @@ export const OpenOrderCart = ({
             {invoice?.totalDiscount || 0}
           </div>
         </div>
-        <div className="flex justify-between items-center border px-2 py-2">
+        <div className="flex justify-between items-center gap-2 border px-2 py-2">
           <div>Discount</div>
           <p>{pointAmount}</p>
           <input
@@ -249,16 +255,8 @@ export const OpenOrderCart = ({
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}
-          onCancel={handleCancel}
+          onCancel={() => setShowPayDialog(false)}
           invoice={invoice}
-        />
-      )}
-
-      {showPrintBox && (
-        <PrintDialogueBox
-          message="Proceed to print?"
-          onConfirm={handlePrintAndPay}
-          onCancel={handleCancelPrint}
         />
       )}
     </div>

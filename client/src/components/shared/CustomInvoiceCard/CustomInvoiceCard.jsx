@@ -3,12 +3,14 @@ import { useProducts } from "../../../hooks/useProducts";
 import { useCustomInvoice } from "../../../hooks/useCustomInvoice";
 import { FaTrash } from "react-icons/fa";
 import { MdPersonAdd, MdPrint } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const CustomInvoiceCard = () => {
   const createdRef = useRef(false);
   const invoiceIdRef = useRef(null);
   const isEmptyInvoiceRef = useRef(false);
-
+  const navigate = useNavigate();
   const { products } = useProducts();
   const {
     invoiceData,
@@ -30,6 +32,32 @@ export const CustomInvoiceCard = () => {
   const [email, setEmail] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [customerAdded, setCustomerAdded] = useState(false);
+  const phone = useSelector((state) => state?.auth?.shopData?.phoneNumber);
+  const [buffer, setBuffer] = useState("");
+  const [lastTime, setLastTime] = useState(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const now = new Date().getTime();
+      if (e.key === "Enter") {
+        if (buffer.length > 2) {
+          addProductToInvoice({ productId: buffer, quantity: 1 });
+        }
+        setBuffer("");
+        setLastTime(null);
+        return;
+      }
+      if (lastTime && now - lastTime > 100) {
+        setBuffer("");
+      }
+      setBuffer((prev) => prev + e.key);
+      setLastTime(now);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [buffer, lastTime]);
 
   useEffect(() => {
     if (!customerAdded) return;
@@ -166,13 +194,17 @@ export const CustomInvoiceCard = () => {
         <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary flex items-center gap-10">
           Custom Invoice{" "}
           <MdPrint
-            onClick={() => window.print()}
+            onClick={() => navigate("/admin/print")}
             title="print"
             className="hover:text-orange-400 cursor-pointer"
           />
         </h1>
         <div className="md:w-1/2">
-        {!customerAdded && <p className="text-red-500 font-bold pb-2">Add customer details to continue.</p>}
+          {!customerAdded && (
+            <p className="text-red-500 font-bold pb-2">
+              Add customer details to continue.
+            </p>
+          )}
           <div
             className={` ${
               customerAdded ? "flex-col text-start" : "flex"
@@ -183,6 +215,7 @@ export const CustomInvoiceCard = () => {
             ) : (
               <input
                 type="text"
+                maxLength={phone?.length}
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Name"
@@ -231,7 +264,7 @@ export const CustomInvoiceCard = () => {
               onClick={() => {
                 createCustomerCustomInvoice.mutate(
                   {
-                    userName: customerName,
+                    customerName,
                     email: email,
                     address: customerAddress,
                     phoneNumber: phoneNumber,
@@ -272,74 +305,79 @@ export const CustomInvoiceCard = () => {
             </tr>
           </thead>
           <tbody>
-            {customerAdded && rows.map((row, index) => (
-              <tr className="border-t border-primary" key={index}>
-                <td className="border border-primary px-4 py-2">{index + 1}</td>
-                <td className="border border-primary px-4 py-2 relative">
-                  <input
-                    className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    type="text"
-                    ref={(el) => (inputRefs.current[`title-${index}`] = el)}
-                    value={row.title}
-                    onChange={(e) =>
-                      handleChange(index, "title", e.target.value)
-                    }
-                    onKeyDown={(e) => handleKeyDown(e, index, "title")}
-                  />
-                  {index === rows?.length - 1 && suggestions.length > 0 && (
-                    <ul className="absolute z-10 bg-white border border-gray-300 mt-1 max-h-40 overflow-y-auto rounded shadow w-full">
-                      {suggestions.map((item, i) => (
-                        <li
-                          key={item?._id}
-                          className={`px-3 py-1 cursor-pointer hover:bg-yellow-100 ${
-                            i === highlightIndex ? "bg-yellow-200" : ""
-                          }`}
-                          onClick={() => handleProductSelect(index, item)}
-                        >
-                          {item.productName}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </td>
-                <td className="border border-primary px-4 py-2">
-                  <input
-                    className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    type="text"
-                    ref={(el) => (inputRefs.current[`quantity-${index}`] = el)}
-                    value={row.quantity}
-                    onChange={(e) =>
-                      handleChange(index, "quantity", e.target.value)
-                    }
-                    onKeyDown={(e) => handleKeyDown(e, index, "quantity")}
-                  />
-                </td>
-                <td className="border border-primary px-4 py-2">kg</td>
-                <td className="border border-primary px-4 py-2">
-                  {row?.price}
-                </td>
-                <td className="border border-primary px-4 py-2">
-                  {row?.total}
-                </td>
-                <td className="border border-primary px-4 py-2">
-                  <FaTrash
-                    title="Remove product"
-                    className="text-primary hover:text-orange-600 cursor-pointer"
-                    size={12}
-                    onClick={() => {
-                      if (row.productId) {
-                        removeProductFromInvoice.mutate({
-                          productsId: row.productId,
-                        });
+            {customerAdded &&
+              rows.map((row, index) => (
+                <tr className="border-t border-primary" key={index}>
+                  <td className="border border-primary px-4 py-2">
+                    {index + 1}
+                  </td>
+                  <td className="border border-primary px-4 py-2 relative">
+                    <input
+                      className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                      type="text"
+                      ref={(el) => (inputRefs.current[`title-${index}`] = el)}
+                      value={row.title}
+                      onChange={(e) =>
+                        handleChange(index, "title", e.target.value)
                       }
-                      const updatedRows = [...rows];
-                      updatedRows.splice(index, 1);
-                      setRows(updatedRows);
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
+                      onKeyDown={(e) => handleKeyDown(e, index, "title")}
+                    />
+                    {index === rows?.length - 1 && suggestions.length > 0 && (
+                      <ul className="absolute z-10 bg-white border border-gray-300 mt-1 max-h-40 overflow-y-auto rounded shadow w-full">
+                        {suggestions.map((item, i) => (
+                          <li
+                            key={item?._id}
+                            className={`px-3 py-1 cursor-pointer hover:bg-yellow-100 ${
+                              i === highlightIndex ? "bg-yellow-200" : ""
+                            }`}
+                            onClick={() => handleProductSelect(index, item)}
+                          >
+                            {item.productName}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                  <td className="border border-primary px-4 py-2">
+                    <input
+                      className="w-full py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                      type="text"
+                      ref={(el) =>
+                        (inputRefs.current[`quantity-${index}`] = el)
+                      }
+                      value={row.quantity}
+                      onChange={(e) =>
+                        handleChange(index, "quantity", e.target.value)
+                      }
+                      onKeyDown={(e) => handleKeyDown(e, index, "quantity")}
+                    />
+                  </td>
+                  <td className="border border-primary px-4 py-2">kg</td>
+                  <td className="border border-primary px-4 py-2">
+                    {row?.price}
+                  </td>
+                  <td className="border border-primary px-4 py-2">
+                    {row?.total}
+                  </td>
+                  <td className="border border-primary px-4 py-2">
+                    <FaTrash
+                      title="Remove product"
+                      className="text-primary hover:text-orange-600 cursor-pointer"
+                      size={12}
+                      onClick={() => {
+                        if (row.productId) {
+                          removeProductFromInvoice.mutate({
+                            productsId: row.productId,
+                          });
+                        }
+                        const updatedRows = [...rows];
+                        updatedRows.splice(index, 1);
+                        setRows(updatedRows);
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))}
             <tr>
               <td
                 colSpan={5}

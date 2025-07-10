@@ -2,10 +2,13 @@ import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance";
 import { useState } from "react";
+import {useDispatch} from 'react-redux'
+import {saveLatestPaidInvoiceData} from '../redux/features/latestPaidInvoiceSlice'
 
 export const useCustomInvoice = () => {
   const [invoiceData, setInvoiceData] = useState(null);
   const invoiceId = invoiceData?._id;
+  const dispatch = useDispatch();
 
   const addProductToInvoice = useMutation({
     mutationFn: async ({ productId, quantity }) => {
@@ -21,6 +24,8 @@ export const useCustomInvoice = () => {
     onSuccess: (data) => {
       setInvoiceData(data);
       toast.success("Product added to custom invoice");
+      dispatch(saveLatestPaidInvoiceData(data))
+      
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to add product!");
@@ -39,6 +44,7 @@ export const useCustomInvoice = () => {
     onSuccess: (data) => {
       toast.success("Product removed successfully");
       setInvoiceData(data);
+      dispatch(saveLatestPaidInvoiceData(data))
     },
     onError: (error) => {
       toast.error(
@@ -60,6 +66,7 @@ export const useCustomInvoice = () => {
       if (data?._id) {
         setInvoiceData(data);
         toast.success("Invoice created successfully");
+        dispatch(saveLatestPaidInvoiceData(data))
       } else {
         toast.error("Invoice creation failed: no ID returned");
       }
@@ -80,9 +87,10 @@ export const useCustomInvoice = () => {
       });
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setInvoiceData(null);
       toast.success("Invoice deleted successfully!");
+      dispatch(saveLatestPaidInvoiceData(data))
     },
     onError: (error) => {
       toast.error(
@@ -91,9 +99,9 @@ export const useCustomInvoice = () => {
     },
   });
   const createCustomerCustomInvoice = useMutation({
-    mutationFn: async ({ userName, email, address, phoneNumber }) => {
+    mutationFn: async ({ customerName, email, address, phoneNumber }) => {
       const data = {
-        userName,
+       customerName,
         email,
         address,
         phoneNumber,
@@ -107,8 +115,9 @@ export const useCustomInvoice = () => {
 
       return response?.data?.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Customer data added successfully");
+      dispatch(saveLatestPaidInvoiceData(data))
     },
 
     onError: (error) => {
