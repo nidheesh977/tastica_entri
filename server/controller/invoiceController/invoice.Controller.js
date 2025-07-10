@@ -52,7 +52,7 @@ export const createNewInvoiceTab = async (req,res) => {
 
         await newInvoice.save();
 
-        const findInvoice = await invoiceModel.findOne({_id:newInvoice._id}).populate('customer')
+        const findInvoice = await invoiceModel.findOne({_id:newInvoice._id}).populate({path:'customer', select:"-invoices"})
 
         res.status(201).json({success:true,message:"Invoice created successfully",data:findInvoice})
     }catch(error){
