@@ -63,6 +63,7 @@ import { CustomInvoice } from "../pages/admin/CustomInvoice/CustomInvoice";
 import ThermalPrinterInvoice from "../components/shared/ThermalPrinterInvoice/ThermalPrinterInvoice";
 import { PaymentSuccessCash } from "../pages/shared/PaymentSuccessCash/PaymentSuccessCash";
 import { PaymentSuccessSwipe } from "../pages/shared/PaymentSuccessSwipe/PaymentSuccessSwipe";
+import { RechargeWallet } from "../pages/shared/RechargeWallet/RechargeWallet";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -220,6 +221,10 @@ export const router = createBrowserRouter([
           {
             path: "print",
             element: <ThermalPrinterInvoice />,
+          },
+          {
+            path: "recharge/wallet",
+            element: <RechargeWallet />,
           },
           {
             path: "permissions/:id",
