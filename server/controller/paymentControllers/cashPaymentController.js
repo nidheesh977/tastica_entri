@@ -1,6 +1,7 @@
 import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
 import loyalityPointModel from "../../model/loyalityPointModel.js"
+import loyalityTransactionModel from "../../model/loyalityTransactionModel.js";
 import productModel from "../../model/productModel.js";
 import shopModel from "../../model/shopModel.js";
 import walletModels from "../../model/walletModel.js";
@@ -12,7 +13,7 @@ const {walletModel} = walletModels;
 export const cashPayment = async (req,res) => {
     try{
         const {invoiceId} = req.params;
-        
+        const staffId = req.user.id;
         
         
         if(!invoiceId){
@@ -71,6 +72,7 @@ export const cashPayment = async (req,res) => {
              await invoiceModel.findByIdAndUpdate(invoiceId,{
              paymentStatus:"failed",
              paymentMethod:"cash", 
+             invoiceStatus:"saved"
          },{new:true})
          }
 
@@ -90,30 +92,26 @@ export const cashPayment = async (req,res) => {
            },{new:true})
         
          }
-         
 
         
 
+          const transaction = [
+                {
+                customerId:findCustomer._id,
+                staffId:staffId,
+                points:Math.round(loyaltyPointProduct),
+                type:"EARNED"
+                },
+                {
+                customerId:findCustomer._id,
+                staffId:staffId,
+                amount:findInvoice.redeemAmount,
+                type:"REDEEMED"
+                }
+             ]
+         
 
-         // add loyality points to customer
-
-     
-     let date = new Date()
-       const pointHistory = {
-             action:"earn",
-             redeemOrEarn:Math.round(loyaltyPointProduct),
-             createdAt:date,
-             invoice:invoiceId
-       }
-
-        const pointRedeemHistory = {
-             action:"redeem",
-             redeemOrEarn:findInvoice.redeemAmount,
-             createdAt:date,
-             invoice:invoiceId
-         }
-
-    
+        
 
         // const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
     
@@ -129,21 +127,19 @@ export const cashPayment = async (req,res) => {
          let PointsToAmount = deductLoyalty;
 
          await customerModel.findByIdAndUpdate(findCustomer._id,{
-             loyalityPoint:parseFloat(deductLoyalty).toFixed(2),
+             loyalityPoint:Math.round(deductLoyalty),
             //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
-              pointAmount:parseFloat(PointsToAmount).toFixed(2),
-                 $push:{
-                     invoices:{$each:[invoiceCashPayment._id]},
-                     loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
-                 },
+              pointAmount:Math.round(PointsToAmount),
+                 $push:{invoices:{$each:[invoiceCashPayment._id]}},
                 
              },{new:true})
 
 
-              await walletModel.findOneAndUpdate({customerId:invoiceCashPayment.customer},{$inc:{balance:-parseFloat(deductLoyalty).toFixed(2)}},{new:true}).populate("customerId","customerName")
+              await walletModel.findOneAndUpdate({customerId:invoiceCashPayment.customer},{balance:Math.round(deductLoyalty)},{new:true}).populate("customerId","customerName")
 
+              await loyalityTransactionModel.insertMany(transaction)
 
-                res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
+              res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceCashPayment})
          } 
 
          else if(invoiceCashPayment && findShop.phoneNumber !== findCustomer.phoneNumber){
@@ -155,17 +151,23 @@ export const cashPayment = async (req,res) => {
             
             let PointsToAmount = addLoyalty;
 
-
+ 
             await customerModel.findByIdAndUpdate(findCustomer._id,{
              loyalityPoint:Math.round(addLoyalty),
             //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
              pointAmount:Math.round(PointsToAmount),
-                 $push:{
-                     invoices:{$each:[invoiceCashPayment._id]},
-                     loyalityPointHistory:{$each:[pointHistory]}
-                },
-                
-             },{new:true})
+                 $push:{ invoices:{$each:[invoiceCashPayment._id]}}
+            },{new:true})
+
+            const loyalityEarned = loyalityTransactionModel({
+                customerId:findCustomer._id,
+                staffId:staffId,
+                points:Math.round(loyaltyPointProduct),
+                type:"EARNED"
+            })
+ 
+            await loyalityEarned.save()
+           
 
              await walletModel.findOneAndUpdate({customerId:invoiceCashPayment.customer},{$inc:{balance:Math.round(loyaltyPointProduct)}},{new:true}).populate("customerId","customerName")
 
@@ -184,7 +186,7 @@ export const cashPayment = async (req,res) => {
          }  
         
     }catch(error){
-     console.log(error)
+   
         return res.status(500).json({success:false,message:"internal server error"})
     }
 }

@@ -16,6 +16,6 @@ const walletTransactionSchema = new mongoose.Schema({
 },{timestamps:true})
 
 const walletModel = mongoose.model("Wallet",walletSchema);
-const walletTransactionModel = mongoose.model("walletTransaction",walletTransactionSchema)
+const walletTransactionModel = mongoose.model("WalletTransaction",walletTransactionSchema)
 
-export default {walletModel,walletTransactionModel};
+export default {walletModel,walletTransactionModel}; 

@@ -40,7 +40,7 @@ export const walletLog = async (req,res) => {
             return res.status(400).json({success:false,message:"barcode cannot be empty"})
         }
 
-        const findCustomer = await customerModel.findOne({customerId:barcodeNumber});
+        const findCustomer = await customerModel.findOne({customerId:barcodeNumber}).select("_id customerName phoneNumber loyalityPoint");
 
         if(!findCustomer){
             return res.status(400).json({success:false,message:"User not found"})
@@ -55,7 +55,7 @@ export const walletLog = async (req,res) => {
             secure:process.env.NODE_ENV === 'production',
             sameSite:process.env.SAMESITE,
             path:'/',
-            maxAge: 10 * 60 * 1000}).status(200).json({success:true,message:"Wallet login successfully"})
+            maxAge: 10 * 60 * 1000}).status(200).json({success:true,message:"Wallet login successfully",data:findCustomer})
     
     }catch(error){
          return res.status(500).json({success:false,message:"Internal dserver error"})

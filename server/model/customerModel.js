@@ -39,15 +39,6 @@ const customerSchema = new mongoose.Schema({
         default:0
     },
 
-    loyalityPointHistory:{
-        type:[{
-              action:{type:String,enum:["earn","redeem"],default:null},
-              redeemOrEarn:{type:Number,default:0},
-              createdAt:{type:Date,default:Date.now},
-              invoice:{type:mongoose.Schema.Types.ObjectId,ref:"Invoice"},     
-        }],
-        default:[]
-    },
 
     invoices:[{
         type:mongoose.Schema.Types.ObjectId,

@@ -1,9 +1,12 @@
 import invoiceModel from "../../model/invoiceModel.js";
 import Stripe from 'stripe'
-import loyalityPointModel from "../../model/loyalityPointModel.js";
+import loyalityTransactionModel from "../../model/loyalityTransactionModel.js";
 import customerModel from "../../model/customerModel.js";
 import productModel from "../../model/productModel.js";
+import shopModel from "../../model/shopModel.js";
+import walletModels from "../../model/walletModel.js";
 
+const {walletModel} = walletModels;
 
 export const onlinePaymentStripe = async (req,res) => {
 
@@ -75,6 +78,7 @@ export const onlinePaymentStripe = async (req,res) => {
 export const OnlinePaymentSuccess = async (req,res) => {
     try{
         const {invoiceId} = req.params;
+        const staffId = req.user.id;
 
         if(!invoiceId){
             return res.status(400).json({success:false,message:'Invoice ID not get'});
@@ -103,7 +107,11 @@ export const OnlinePaymentSuccess = async (req,res) => {
              } 
         }
 
+        const findShop = await shopModel.findById(findInvoice.shop)
        
+               if(!findShop){
+                   return res.status(400).json({success:false,message:"Shop not found"})
+               }
 
 
         if(findInvoice.paymentStatus === "success"){
@@ -139,26 +147,28 @@ export const OnlinePaymentSuccess = async (req,res) => {
 
         // add loyality points to customer
 
-     
-    let date = new Date()
-      const pointHistory = {
-            action:"earn",
-            redeemOrEarn:Math.round(loyaltyPointProduct),
-            createdAt:date,
-            invoice:invoiceId
-      }
+          const transaction = [
+                {
+                customerId:findCustomer._id,
+                staffId:staffId,
+                points:Math.round(loyaltyPointProduct),
+                type:"EARNED"
+                },
+                {
+                customerId:findCustomer._id,
+                staffId:staffId,
+                amount:findInvoice.redeemAmount,
+                type:"REDEEMED"
+                }
+             ]
 
-       const pointRedeemHistory = {
-            action:"redeem",
-            redeemOrEarn:findInvoice.redeemAmount,
-            createdAt:date,
-            invoice:invoiceId
-      }
+     
+ 
 
     
         // const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
 
-        if(findInvoice.redeemAmount > 0){
+        if(findInvoice.redeemAmount > 0 && findShop.phoneNumber !== findCustomer.phoneNumber){
 
         //   const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
 
@@ -176,14 +186,17 @@ export const OnlinePaymentSuccess = async (req,res) => {
               pointAmount:Math.round(PointsToAmount),
                 $push:{
                     invoices:{$each:[invoiceDigitalPayment._id]},
-                    loyalityPointHistory:{$each:[pointRedeemHistory,pointHistory]}
                 },
                 
             },{new:true})
+
+             await walletModel.findOneAndUpdate({customerId:invoiceDigitalPayment.customer},{balance:Math.round(deductLoyalty)},{new:true}).populate("customerId","customerName")
+            
+             await loyalityTransactionModel.insertMany(transaction)
                res.status(200).json({success:true,message:"Stripe payment successfully",data:invoiceDigitalPayment})
         } 
 
-        else if(invoiceDigitalPayment){
+        else if(invoiceDigitalPayment && findShop.phoneNumber !== findCustomer.phoneNumber){
               //  let addLoyality =  findCustomer.loyalityPoint += loyalityPointProduct
 
               let addLoyalty =  findCustomer.loyalityPoint += loyaltyPointProduct;
@@ -197,18 +210,40 @@ export const OnlinePaymentSuccess = async (req,res) => {
                  pointAmount:Math.round(PointsToAmount),
                 $push:{
                     invoices:{$each:[invoiceDigitalPayment._id]},
-                    loyalityPointHistory:{$each:[pointHistory]}
                 },
                 
             },{new:true})
 
+                const loyalityEarned = loyalityTransactionModel({
+                            customerId:findCustomer._id,
+                            staffId:staffId,
+                            points:Math.round(loyaltyPointProduct),
+                            type:"EARNED"
+                        })
+             
+                await loyalityEarned.save()
+                       
+            
+                await walletModel.findOneAndUpdate({customerId:invoiceDigitalPayment.customer},{$inc:{balance:Math.round(loyaltyPointProduct)}},{new:true}).populate("customerId","customerName")
+            
+
                  res.status(200).json({success:true,message:"Stripe payment successfully",data:invoiceDigitalPayment})
             
-        }
+        }else{
+             await customerModel.findByIdAndUpdate(findCustomer._id,{
+             loyalityPoint:0,
+                 $push:{
+                     invoices:{$each:[invoiceDigitalPayment._id]},
+                },
+                
+             },{new:true})
+
+               res.status(200).json({success:true,message:"Cash payment successfully",data:invoiceDigitalPayment})
+         }  
         
  
     }catch(error){
-        
+        console.log(error)
         return res.status(500).json({success:false,message:"internal server error"})
     }
 }

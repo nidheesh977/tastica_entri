@@ -497,3 +497,20 @@ use methods (all) get all the methods
 -  custom invoice pay
 **method**`PUT` <br>
 **URL**`/api/v1/invoice/custom/:id/customer`
+
+
+ ## wallet  💰💰 <br>
+
+ - Wallet login 
+**method**`POST` <br>
+**URL**`/api/v1/wallet/login`
+
+
+ - Wallet recharge 
+**method**`PUT` <br>
+**URL**`/api/v1/wallet/recharge`
+ 
+ - Wallet barcode image generate 
+**method**`PUT` <br>
+**URL**`/api/v1/customer/barcode/:customerId/image`
+
