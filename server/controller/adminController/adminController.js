@@ -8,23 +8,28 @@ import { generateStaffId } from "../../utils/generateStaffId.js";
 
 export const loginAdmin = async (req, res) => {
   try {
+    // validate admin login data
     const { error, value } = adminAndSuperAdminLoginValidation.validate(req.body);
  
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
+    // Get user credentials
     const { phoneNumber, password } = value;
+
+    // Extract shop ID from request
     const {id} = req.shop;
 
     
-
+    // Check if admin exist
     const adminExist = await AdminStaffModel.findOne({shopId:id,phoneNumber:phoneNumber});
 
     if (!adminExist) {
       return res.status(400).json({ success: false, message: "User not found" });
     }
 
+    // Check password match
     const isPasswordCorrect = await comparePassword(password,adminExist.password);
 
     if (!isPasswordCorrect) {
@@ -32,18 +37,20 @@ export const loginAdmin = async (req, res) => {
     }
 
   
-
+    // Check if user is a admin
     if (adminExist.role !== "admin") {
       return res.status(400).json({ success: false, message: "You are not an admin" });
     }
 
     let expireTime="1d"
  
-    // generate token
+    // Generate token
     const adminToken = generateToken({id: adminExist._id,role:adminExist.role,email:adminExist.email,permissions:adminExist.permissions},expireTime);
 
+    // Remove password before sending user data
     const { password: pass, ...adminData } = adminExist._doc;
 
+    // Store token in cookie
     res.cookie("adminToken", adminToken, { 
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -56,47 +63,55 @@ export const loginAdmin = async (req, res) => {
   }
 };
 
-// CREATE NEW EMPLOYEE
 
+// CREATE NEW EMPLOYEE
 export const CreateEmployee = async (req, res) => {
   try {
+    // validate user data
     const { error, value } = userSignupValidation.validate(req.body);
 
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
 
+    //  Get user data
     const { userName, phoneNumber, email, password } = value;
+
+     // Extract shop ID and shop name from request
     const {id,shopName} = req.shop;
 
+    // Check if user exist
     const userAccountExists = await AdminStaffModel.findOne({ email: email });
 
     if (userAccountExists) {
       return res.status(400).json({ success: false, message: "staff already exists"});
     }
 
+    // Check if user phone number exist
     const userphoneNumberExists = await AdminStaffModel.findOne({phoneNumber: phoneNumber});
 
     if (userphoneNumberExists) {
       return res.status(400).json({ success: false, message: "Phone number already exists"});
     }
 
+    // Hash password
     const hashedPassword = await bcryptjs.hash(password, 10);
 
+    // User name to lower case
     const userNameLowerCase = userName.toLowerCase();
 
+    // Slice shop name for generating shop ID 
     const sliceName = shopName.slice(0,3)
 
-
-    
-
-     let staffId;
+    let staffId;
            
-            do {
-             staffId = generateStaffId(sliceName.toUpperCase())
-               } while (await AdminStaffModel.findOne({staffId:staffId}));
+    do {
+      // Generate random shop ID
+       staffId = generateStaffId(sliceName.toUpperCase());
+      // Check uniqueness in database  
+       } while (await AdminStaffModel.findOne({staffId:staffId}));
 
-          
+      // Create new user 
     const newUser = new AdminStaffModel({
       userName: userNameLowerCase,
       phoneNumber,
@@ -119,13 +134,19 @@ export const CreateEmployee = async (req, res) => {
 
 export const checkAdminLogin = async (req, res) => {
   try {
+    
+    // Get user data from request
     const userLogged = req.user;
 
+    // Deny access if not a admin
     if (userLogged.role !== "admin") {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
+    
+    // Get user data
     const adminExist = await AdminStaffModel.findById(userLogged.id);
 
+    // Remove password before sending user data
     const { password: pass, ...adminData } = adminExist._doc;
 
     res.status(200).json({success: true,message: "admin logged successfully",data:adminData});
@@ -138,12 +159,14 @@ export const checkAdminLogin = async (req, res) => {
 
 export const getStaffs = async (req, res) => {
   try {
+    // Get shop ID from request
     const shopId = req.shop.id;
 
     if (!shopId) { 
       return res.status(400).json({ success: false, message: "Shop ID is missing" });
     }
 
+    // Fetch user data for shop admin
     const fetchData = await AdminStaffModel.find({shopId:shopId, role:{$in:["admin","staff"]}}).select("-password").sort({role:1});
 
     res.status(200).json({success: true, message: "Data fetch successfully",data:fetchData});

@@ -36,12 +36,14 @@ export const superAdminlogin = async (req, res) => {
       return res.status(400).json({ success: false, message: "You are not an admin" });
     }
 
+    let expireTime="1d"
+
     // generate token
     const superAdminToken = generateToken({
       id: superAdminExist._id,
       role: superAdminExist.role,
       email: superAdminExist.email,
-    });
+    },expireTime);
 
     const { password: pass, ...superAdminData } = superAdminExist._doc;
 
@@ -54,6 +56,7 @@ export const superAdminlogin = async (req, res) => {
       }).status(200).json({success: true,message: "admin Login Successfully",data: superAdminData,});
 
   } catch (error) {
+     
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
@@ -132,6 +135,7 @@ export const UpdateSuperAdmin = async (req, res) => {
 
     res.status(200).json({success: true, message: "User data updated successfully", data:superAdminData});
   } catch (error) {
+   
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
