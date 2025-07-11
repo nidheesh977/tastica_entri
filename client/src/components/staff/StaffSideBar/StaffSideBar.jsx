@@ -1,7 +1,7 @@
 import { FaHome, FaUsers, FaFileCsv, FaBoxOpen } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { HiChevronDown } from "react-icons/hi";
-import { MdPersonAdd, MdCategory, MdReceipt } from "react-icons/md";
+import { MdPersonAdd, MdCategory, MdReceipt, MdPayment } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -213,6 +213,16 @@ export const StaffSideBar = () => {
         >
           <MdReceipt />
           Open Orders
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/staff/recharge/wallet");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdPayment />
+          Recharge Card
         </li>
       </ul>
     </div>

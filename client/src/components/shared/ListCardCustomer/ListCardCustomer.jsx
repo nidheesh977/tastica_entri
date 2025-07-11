@@ -15,6 +15,7 @@ export const ListCardCustomer = ({ permissions }) => {
   const searchQuery = useSelector((state) => state?.search);
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
   const navigate = useNavigate();
+  const admin = useSelector((state) => state?.auth?.adminData);
   const customerData = customers?.filter((customer) => {
     const query = searchQuery.toLowerCase();
 
@@ -61,9 +62,13 @@ export const ListCardCustomer = ({ permissions }) => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2 hover:text-primary">
-            <Link to={`/admin/print/barcode/${customer?._id}`}>
-            {customer?.customerId}
-            </Link>
+                  <Link
+                    to={`/${admin ? "admin" : "staff"}/print/barcode/${
+                      customer?._id
+                    }`}
+                  >
+                    {customer?.customerId}
+                  </Link>
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {editId === customer?._id ? (

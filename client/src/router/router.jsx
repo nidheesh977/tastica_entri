@@ -329,6 +329,14 @@ export const router = createBrowserRouter([
             path: "print",
             element: <ThermalPrinterInvoice />,
           },
+          {
+            path: "recharge/wallet",
+            element: <RechargeWallet />,
+          },
+          {
+            path: "print/barcode/:customerId",
+            element: <PrintBarcode />,
+          },
         ],
       },
     ],
