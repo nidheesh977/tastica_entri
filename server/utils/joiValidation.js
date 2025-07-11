@@ -64,9 +64,9 @@ export const userUpdateValidation = Joi.object({
 
 export const adminAndSuperAdminLoginValidation = Joi.object({
     phoneNumber: Joi.string().required().messages({
-        'string.required': 'Staff ID is required',
-        'string.base': 'Staff ID must be a string',
-        'string.empty': 'Staff ID cannot be empty',
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
     
     }),
     password: Joi.string().required().messages({

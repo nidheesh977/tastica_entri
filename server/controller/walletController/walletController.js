@@ -4,31 +4,6 @@ import { generateToken } from "../../utils/generateToken.js";
 
 const {walletModel,walletTransactionModel} = walletModels;
 
-export const createWallet = async (req,res) => {
-    try{
-        const {customerId} = req.params;
-
-        if(!customerId){
-            return res.status(400).json({success:false,message:"Customer ID not get"})
-        }
-
-        const findCustomer = await customerModel.findById(customerId)
-
-        if(!findCustomer){
-            return res.status(400).json({success:false,message:"Customer not found"})
-        }
-
-        const newWallet = await walletModel({
-            customerId:findCustomer._id
-        })
-
-        await newWallet.save()
-
-        res.status(200).json({success:true,message:"Wallet create successfully",data:newWallet})
-    }catch(error){
-        return res.status(500).json({success:false,message:"Internal server error"})
-    }
-}
 
 export const walletLog = async (req,res) => {
    

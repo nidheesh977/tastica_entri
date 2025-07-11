@@ -26,7 +26,7 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
     const { userName, phoneNumber, email, password } = value;
     const {shopId,role} = body;
 
-   
+   console.log(role)
 
     if(!shopId){
         return res.status(400).json({success:false,message:"Shop ID is not get"})
@@ -42,15 +42,20 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
         return res.status(400).json({success:false,message:"Shop not found"})
      }
 
+     const isAdminExist = await AdminStaffModel.findOne({shopId:shopId,role:role});
+
+
+     if(isAdminExist?.role === "admin"){
+      return res.status(400).json({success:false,message:"Admin already exist"})
+     }
+
+
     const userAccountExists = await AdminStaffModel.findOne({shopId:shopId, email:email });
 
     if (userAccountExists) {
-      return res.status(400).json({ success: false, message: "staff already exist"});
+      return res.status(400).json({ success: false, message: "Staff email already exist"});
     }
 
-    if (userAccountExists?.role === "admin"){
-      return res.status(400).json({ success: false, message: "admin already exist"});
-    } 
 
     const userphoneNumberExists = await AdminStaffModel.findOne({shopId:shopId,phoneNumber:phoneNumber});
 
@@ -97,6 +102,7 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
      await newUser.save();
     res.status(201).json({ success: true, message: "staff created successfully" ,data:userDate});
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
