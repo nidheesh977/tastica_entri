@@ -48,7 +48,6 @@ export const StaffLogin = () => {
         type="text"
         value={staffId}
         placeholder="ID"
-        maxLength={7}
         onChange={(e) => setStaffId(e.target.value)}
         className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
       />

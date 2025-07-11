@@ -47,7 +47,6 @@ export const AdminLogin = () => {
         type="text"
         value={phoneNumber}
         placeholder="Mobile"
-        maxLength={7}
         onChange={(e) => setPhoneNumber(e.target.value)}
         className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
       />

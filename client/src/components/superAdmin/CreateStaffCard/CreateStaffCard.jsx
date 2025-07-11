@@ -46,7 +46,6 @@ export const CreateStaffCard = () => {
       <input
         type="text"
         value={phoneNumber}
-        maxLength={7}
         onChange={(e) => setPhoneNumber(e.target.value)}
         placeholder="Mobile"
         className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
