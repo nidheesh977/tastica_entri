@@ -35,7 +35,7 @@ export const Barcode = () => {
     <div className="text-center mt-10">
       {barcodeUrl ? (
         <>
-          <img src={barcodeUrl} alt="Barcode" className="mx-auto mb-2" />
+          <img src={barcodeUrl} alt="Barcode" className="mx-auto mb-2 w-[200px] h-[70px]" />
         </>
       ) : (
         <p>Loading barcode...</p>
