@@ -26,7 +26,7 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
     const { userName, phoneNumber, email, password } = value;
     const {shopId,role} = body;
 
-   console.log(role)
+   
 
     if(!shopId){
         return res.status(400).json({success:false,message:"Shop ID is not get"})
@@ -102,7 +102,7 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
      await newUser.save();
     res.status(201).json({ success: true, message: "staff created successfully" ,data:userDate});
   } catch (error) {
-    console.log(error)
+  
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

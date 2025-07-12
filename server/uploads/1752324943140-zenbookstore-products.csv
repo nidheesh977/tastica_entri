@@ -1,0 +1,10 @@
+productName,quantity,costPrice,sellingPrice,discount,category,costPriceProfit,isActive,shop,units,discountType,barcodeNumber
+Fiction Novel,40,0,299,0,Personal Care,0,TRUE,tastica,no,percentage,
+Children? Picture Book,50,0,199,0,Electronics,0,TRUE,tastica,no,percentage,
+Academic Textbook,70,0,300,0,Personal Care,0,TRUE,tastica,no,percentage,
+Notebook Set,100,0,500,0,Electronics,0,TRUE,tastica,no,flat,X00284V92H
+Highlighter Pens,80,0,300,0,Personal Care,0,TRUE,tastica,no,percentage,
+Planner Diary 2025,60,0,299,0,Electronics,0,TRUE,tastica,no,percentage,
+Clip-on Book Light,50,0,499,0,Personal Care,0,TRUE,tastica,no,percentage,
+Book Lover Mug,200,0,200,0,Electronics,0,TRUE,tastica,no,percentage,361268835729
+erary Tote Bag,300,0,499,0,Electronics,0,TRUE,tastica,no,percentage,
