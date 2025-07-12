@@ -19,6 +19,8 @@ export const productsFileUploader = async (req, res) => {
      
         const shopId = req.shop.id;
 
+        const shopName = req.shop.shopName;
+
         const getProductFile = req.file.originalname
 
         const checkproductfile = getProductFile.includes("products.csv")
@@ -68,7 +70,7 @@ export const productsFileUploader = async (req, res) => {
                         const findShop = await shopModel.findOne({_id:shopId, shopName: row.shop.trim() });
 
                         if (!findShop) {
-                            return res.status(400).json({ success: false, message: `${row.shop.trim()} shop is not found` });
+                            return res.status(400).json({ success: false, message: `${shopName} shop is not found` });
                         }
 
                         
