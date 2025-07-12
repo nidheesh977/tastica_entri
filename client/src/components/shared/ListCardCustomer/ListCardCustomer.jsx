@@ -61,7 +61,7 @@ export const ListCardCustomer = ({ permissions }) => {
                     customer?.customerName
                   )}
                 </td>
-                <td className="border border-primary px-4 py-2 hover:text-primary">
+                <td className="border border-primary px-4 py-2 hover:text-primary" title="Click to view barcode">
                   <Link
                     to={`/${admin ? "admin" : "staff"}/print/barcode/${
                       customer?._id

@@ -35,7 +35,13 @@ export const Barcode = () => {
     <div className="text-center mt-10">
       {barcodeUrl ? (
         <>
-          <img src={barcodeUrl} alt="Barcode" className="mx-auto mb-2 w-[200px] h-[70px]" />
+          <img
+            src={barcodeUrl}
+            alt="Barcode"
+            title="Click to print"
+            className="mx-auto mb-2 w-[200px] h-[70px] cursor-pointer"
+            onClick={() => window.print()}
+          />
         </>
       ) : (
         <p>Loading barcode...</p>
