@@ -13,6 +13,10 @@ export const categoryFileUploader = async (req, res) => {
 
 
         const filePath = req.file.path;
+
+        const shopId = req.shop.id;
+
+        const shopName = req.shop.shopName;
        
         const getCategoryFile = req.file.originalname
 
@@ -36,7 +40,7 @@ export const categoryFileUploader = async (req, res) => {
                     category_id:row.category_id,
                     categoryName: row.categoryName.trim().toLowerCase(),
                     description: row.description,
-                    discountRate: row.discountRate,
+                    discountRate: Number(row.discountRate),
                     shop:row.shop,
                     countryName:row.countryName,
                     currencyCode:row.currencyCode
@@ -47,13 +51,13 @@ export const categoryFileUploader = async (req, res) => {
 
                     for (const row of categories){
 
-                        const findShop = await shopModel.findOne({shopName:row.shop});
+                        const findShop = await shopModel.findOne({_id:shopId,shopName:row.shop});
                       
                         
                         if(!findShop){
-                          return res.status(400).json({success:false,message:"shop is not found"})
+                          return res.status(400).json({success:false,message:`${shopName} shop is not found`})
                         }
- 
+  
                       
 
                           let categoryId;
@@ -66,6 +70,8 @@ export const categoryFileUploader = async (req, res) => {
                         const isDiscount = row.discountRate > 0 ? true : false;
 
                         row["shop"] = findShop?._id
+                        row["countryName"] = findShop?.countryName;
+                        row["currencyCode"] = findShop?.currencyCode;
                         row["isDiscount"] = isDiscount
                         row["category_id"] = categoryId
 

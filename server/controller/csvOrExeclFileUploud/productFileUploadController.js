@@ -17,6 +17,9 @@ export const productsFileUploader = async (req, res) => {
 
         const filePath = req.file.path;
      
+        const shopId = req.shop.id;
+
+        const shopName = req.shop.shopName;
 
         const getProductFile = req.file.originalname
 
@@ -48,7 +51,7 @@ export const productsFileUploader = async (req, res) => {
                     category: row.category.toLowerCase(),
                     countryName: row.countryName,
                     currencyCode: row.currencyCode,
-                    shop: row.shop,
+                    shop: row.shop.toLowerCase(),
                     discountType: row.discountType,
                     unit: row.units,
                     isActive:row.isActive.toLowerCase(),
@@ -64,10 +67,10 @@ export const productsFileUploader = async (req, res) => {
 
                         
 
-                        const findShop = await shopModel.findOne({ shopName: row.shop.trim() });
+                        const findShop = await shopModel.findOne({_id:shopId, shopName: row.shop.trim() });
 
                         if (!findShop) {
-                            return res.status(400).json({ success: false, message: `${row.shop.trim()} shop is not found` });
+                            return res.status(400).json({ success: false, message: `${shopName} shop is not found` });
                         }
 
                         
@@ -75,7 +78,7 @@ export const productsFileUploader = async (req, res) => {
 
 
                         if (!getCategory) {
-                            return res.status(400).json({ success: false, message: "Category is not found" });
+                            return res.status(400).json({ success: false, message: `${row.category.trim()} category is not found` });
                         }
 
                         let costProfitSum;
@@ -95,6 +98,8 @@ export const productsFileUploader = async (req, res) => {
 
                         row["category"] = getCategory?._id;
                         row["shop"] = findShop?._id;
+                        row["countryName"] = findShop?.countryName;
+                        row["currencyCode"] = findShop?.currencyCode;
                         row["product_id"] = productId;
                         row["costPrice"] = addCostPrice;
                         row["barcodeNumber"] = row.barcodeNumber === "" ? null : row.barcodeNumber

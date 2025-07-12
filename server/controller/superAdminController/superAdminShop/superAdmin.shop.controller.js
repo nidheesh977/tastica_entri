@@ -22,14 +22,18 @@ export const createShop = async (req, res) => {
       return res.status(400).json({ message: "Shop already exists" });
     }
 
+    const shopNameLowercase = shopName.trim().toLowerCase();
+
+    const currencyCodeUpperCase = currencyCode.trim().toUpperCase()
+
     const hasedPassword = await bcryptjs.hash(password, 10);
 
     const newShop = new shopModel({
-      shopName,
+      shopName:shopNameLowercase,
       email,
       password: hasedPassword,
       countryName,
-      currencyCode,
+      currencyCode:currencyCodeUpperCase,
       role:"shop",
       phoneNumber
     });
