@@ -496,6 +496,24 @@ export const useInvoices = (customerId = null) => {
       toast.error(error?.response?.data?.message || "Failed to submit refund!");
     },
   });
+  const { mutate: handleInvoiceDelete } = useMutation({
+    mutationFn: async ({ actions, invoiceId, archiveReason }) => {
+      const data = { actions, archiveReason };
+      await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${invoiceId}/toggle-archived`,
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["invoices"]);
+      toast.success("Success");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    },
+  });
 
   return {
     createInvoice,
@@ -520,5 +538,6 @@ export const useInvoices = (customerId = null) => {
     deleteOpenOrder,
     clearInvoice,
     refund,
+    handleInvoiceDelete,
   };
 };

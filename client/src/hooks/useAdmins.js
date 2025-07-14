@@ -121,15 +121,12 @@ export const useAdmins = (status) => {
         url: `/invoice?status=${status}`,
         withCredentials: true,
       });
-      console.log("Full response:", response); // ✅ log full response
-  console.log("Data returned:", response?.data?.data); // ✅ log only data
 
       return response?.data?.data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["invoices", status]);
       console.log(data);
-      
     },
 
     onError: (error) => {

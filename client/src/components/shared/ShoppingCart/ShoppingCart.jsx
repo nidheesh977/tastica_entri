@@ -58,7 +58,7 @@ export const ShoppingCart = ({
       const now = new Date().getTime();
       if (e.key === "Enter") {
         if (buffer.length > 2) {
-         addProductToInvoice({ productId:buffer, quantity: 1 })
+          addProductToInvoice({ productId: buffer, quantity: 1 });
         }
         setBuffer("");
         setLastTime(null);
@@ -305,11 +305,20 @@ export const ShoppingCart = ({
               <input
                 className="outline-primary px-2 w-2/3 border"
                 type="text"
-                onChange={(e) => setRedeemAmountAdd(e.target.value)}
+                onChange={(e) => {
+                  setRedeemAmountAdd(e.target.value);
+                }}
               />
               <button
                 onClick={() => {
-                  redeemPoints(redeemAmountAdd);
+                  const redeemAmountNum = Number(redeemAmountAdd);
+                  if (
+                    !isNaN(redeemAmountNum) &&
+                    redeemAmountNum > 0 &&
+                    redeemAmountNum <= invoice?.totalAmount
+                  ) {
+                    redeemPoints(redeemAmountNum);
+                  }
                   setRedeemAmountAdd("");
                 }}
                 className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
