@@ -54,7 +54,6 @@ export const productsFileUploader = async (req, res) => {
                     shop: row.shop.toLowerCase(),
                     discountType: row.discountType,
                     unit: row.units,
-                    isActive:row.isActive.toLowerCase(),
                     barcodeNumber:row.barcodeNumber
                 });
 

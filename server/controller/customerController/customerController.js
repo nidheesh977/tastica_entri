@@ -4,168 +4,169 @@ import { generateId } from "../../utils/generateId.js";
 import { customerValidation } from "../../utils/joiValidation.js";
 import bwipjs from "bwip-js"
 
-const {walletModel} = walletModels;
+const { walletModel } = walletModels;
 
-export const createCustomer = async (req,res) => {
+export const createCustomer = async (req, res) => {
 
-    const {error,value} = customerValidation.validate(req.body);
+   const { error, value } = customerValidation.validate(req.body);
 
-       if(error){
-        return res.status(400).json({ message: error.details[0].message });
-       }
+   if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+   }
 
-    try{
-      
-       const {customerName,phoneNumber} = value;
-       const shopId = req.shop.id;
-   
-       const customerExist =await customerModel.findOne({shopId:shopId,phoneNumber:phoneNumber});
+   try {
 
-       if(customerExist){
-        return res.status(400).json({success:false,message:"Customer already exist"})
-       }
+      const { customerName, phoneNumber } = value;
+      const shopId = req.shop.id;
 
-     
+      const customerExist = await customerModel.findOne({ shopId: shopId, phoneNumber: phoneNumber });
+
+      if (customerExist) {
+         return res.status(400).json({ success: false, message: "Customer already exist" })
+      }
+
+
       //  generating unique ID for customers 
       let customerId;
 
       do {
          customerId = generateId("CUS")
-      } while (await customerModel.findOne({customerId:customerId}));
+      } while (await customerModel.findOne({ customerId: customerId }));
 
       const lowerCaseCustomerName = customerName.toLowerCase()
 
-       const newCustomer = new customerModel({
-        customerId,
-        customerName:lowerCaseCustomerName,
-        phoneNumber,
-        shopId
-       })
+      const newCustomer = new customerModel({
+         customerId,
+         customerName: lowerCaseCustomerName,
+         phoneNumber,
+         shopId
+      })
 
-       await newCustomer.save()
+      await newCustomer.save()
 
-        const newWallet =  walletModel({
-            customerId:newCustomer._id
-        })
+      const newWallet = walletModel({
+         customerId: newCustomer._id,
+         shopId
+      })
 
-        await newWallet.save()
-       res.status(201).json({success:true,message:"customer created successfully"});    
-    }catch(error){
-   
-       return res.status(500).json({success:false,message:"Internal Server Error"})
-    }
-} 
+      await newWallet.save()
+      res.status(201).json({ success: true, message: "customer created successfully" });
+   } catch (error) {
 
- export const updateCustomer = async (req,res) => {
-    try{
-      const {error,value} = customerValidation.validate(req.body);
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
+   }
+}
 
-      if(error){
-       return res.status(400).json({ message: error.details[0].message });
+export const updateCustomer = async (req, res) => {
+   try {
+      const { error, value } = customerValidation.validate(req.body);
+
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
       }
 
-       const {id} = req.params;
-       const {customerName,phoneNumber} = value;
-
-       const customerFound = await customerModel.findById(id);
-       
-       if(!customerFound){
-        return res.status(404).json({success:false,message:"customer not found"});
-       }
-
-       await customerModel.findByIdAndUpdate(id,{
-          customerName,
-          phoneNumber
-         },{new:true})
-
-       res.status(200).json({success:true,message:"customer details updated successfully"})
-
-    }catch(error){
-      return res.status(500).json({success:false,message:"Internal Server Error"})
-    }
- }
-
- export const deleteCustomer = async (req,res) => {
-   try{
-
-      const {id} = req.params;
+      const { id } = req.params;
+      const { customerName, phoneNumber } = value;
 
       const customerFound = await customerModel.findById(id);
 
-      if(!customerFound){
-         return res.status(403).json({success:false,message:"User not found"})
+      if (!customerFound) {
+         return res.status(404).json({ success: false, message: "customer not found" });
+      }
+
+      await customerModel.findByIdAndUpdate(id, {
+         customerName,
+         phoneNumber
+      }, { new: true })
+
+      res.status(200).json({ success: true, message: "customer details updated successfully" })
+
+   } catch (error) {
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
+   }
+}
+
+export const deleteCustomer = async (req, res) => {
+   try {
+
+      const { id } = req.params;
+
+      const customerFound = await customerModel.findById(id);
+
+      if (!customerFound) {
+         return res.status(403).json({ success: false, message: "User not found" })
       }
 
       await customerModel.findByIdAndDelete(id);
 
-      res.status(200).json({success:true,message:"Customer delete successfully"})
+      res.status(200).json({ success: true, message: "Customer delete successfully" })
 
-   }catch(error){
-      return res.status(500).json({success:false,message:"Internal Server Error"})
+   } catch (error) {
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
    }
- }
+}
 
-export const getCustomer = async(req,res) => {
-   try{
+export const getCustomer = async (req, res) => {
+   try {
 
-       const shopId = req.shop.id
+      const shopId = req.shop.id
 
-       if(!shopId){
-         return res.status(400).json({success:false,message:"Shop ID is missing"})
-       }
+      if (!shopId) {
+         return res.status(400).json({ success: false, message: "Shop ID is missing" })
+      }
 
-       const fetchData = await customerModel.find({shopId:shopId}) 
- 
-       res.status(200).json({success:true,message:"Data fetch successfully",data:fetchData})
+      const fetchData = await customerModel.find({ shopId: shopId })
 
-   }catch(error){
-      return res.status(500).json({success:false,message:"Internal Server Error"})
+      res.status(200).json({ success: true, message: "Data fetch successfully", data: fetchData })
+
+   } catch (error) {
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
    }
 }
 
 
-export const getSingleCustomer = async (req,res) => {
-   try{
-     const {id} = req.params;
-     const shopId = req.shop.id;
+export const getSingleCustomer = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const shopId = req.shop.id;
 
-     const getCustomer = await customerModel.findOne({_id:id,shopId:shopId}).populate("invoices")
+      const getCustomer = await customerModel.findOne({ _id: id, shopId: shopId }).populate("invoices")
 
-     res.status(200).json({success:true,message:"Data fetched successfully", data:getCustomer});
+      res.status(200).json({ success: true, message: "Data fetched successfully", data: getCustomer });
 
-   }catch(error){
-    return res.status(500).json({success:false,message:"Internal Server Error"})
+   } catch (error) {
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
    }
 }
 
 
-export const generateBarcodeImage = async (req,res) => {
-   try{
-      const {customerId} = req.params;
+export const generateBarcodeImage = async (req, res) => {
+   try {
+      const { customerId } = req.params;
 
-      if(!customerId){
-         return res.status(400).json({success:false,message:"Customer ID not get"})
+      if (!customerId) {
+         return res.status(400).json({ success: false, message: "Customer ID not get" })
       }
 
       const findCustomer = await customerModel.findById(customerId);
 
-      if(!findCustomer){
-         return res.status(400).json({success:false,message:"Customer not found"})
+      if (!findCustomer) {
+         return res.status(400).json({ success: false, message: "Customer not found" })
       }
 
       const png = await bwipjs.toBuffer({
-          bcid:'code128',
-          text:findCustomer.customerId,
-          scale:4,
-          height:12,
-          includetext:false,
-          textalign:"center"
+         bcid: 'code128',
+         text: findCustomer.customerId,
+         scale: 4,
+         height: 12,
+         includetext: false,
+         textalign: "center"
       })
 
-      res.writeHead(200,{'Content-Type':'image/png'});
+      res.writeHead(200, { 'Content-Type': 'image/png' });
       res.end(png)
 
-   }catch(error){
-       return res.status(500).json({success:false,message:"Internal Server Error"})
+   } catch (error) {
+      return res.status(500).json({ success: false, message: "Internal Server Error" })
    }
 }
