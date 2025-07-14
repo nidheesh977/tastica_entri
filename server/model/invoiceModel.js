@@ -92,6 +92,16 @@ const invoiceSchema = new mongoose.Schema({
         default: 0
     },
 
+    productLoyaltyRedeemAmt: {
+        type: Number,
+        default: 0
+    },
+
+    walletLoyaltyRedeemAmt: {
+        type: Number,
+        default: 0
+    },
+
     totalAmount: {
         type: Number,
         default: 0.00

@@ -1,4 +1,5 @@
 import customerModel from "../../model/customerModel.js";
+import loyalityPointModel from "../../model/loyalityPointModel.js";
 import walletModels from "../../model/walletModel.js";
 import { generateToken } from "../../utils/generateToken.js";
 
@@ -66,16 +67,24 @@ export const rechargeWallet = async (req, res) => {
 
         const parseNumber = parseFloat(amount).toFixed(2)
 
-        const addAmount = await walletModel.findByIdAndUpdate(findWallet._id, { $inc: { balance: parseNumber } }, { new: true }).populate("customerId", "customerName");
+        const findLoyality = await loyalityPointModel.findOne({ shop: shopId })
 
-        await customerModel.findByIdAndUpdate(customerId, { $inc: { loyalityPoint: parseNumber, pointAmount: parseNumber } })
+        const amtToPoint = findLoyality.loyalityRate > 0 ? findLoyality.loyalityRate * parseNumber : parseNumber
+
+
+
+        const addAmount = await walletModel.findByIdAndUpdate(findWallet._id, { $inc: { walletLoyalityPoint: amtToPoint } }, { new: true }).populate("customerId", "customerName");
+
+        await customerModel.findByIdAndUpdate(customerId, { $inc: { walletLoyalityPoint: amtToPoint } })
 
         const newTransaction = walletTransactionModel({
             customerId: customerId,
             staffId: staffId,
             shopId: shopId,
             amount: amount,
-            type: "credit"
+            type: "credit",
+            amtToPoint: amtToPoint,
+            convertLoyalityRate: findLoyality?.loyalityRate || 0
         });
 
         await newTransaction.save()

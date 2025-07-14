@@ -3,50 +3,55 @@ import mongoose from "mongoose"
 
 
 const customerSchema = new mongoose.Schema({
-    customerId:{
-        type:String,
-        required:true,
-        unique:true,
-        index:true,
+    customerId: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
     },
-    customerName:{
-        type:String,
-        required:true,
-        index:true,
+    customerName: {
+        type: String,
+        required: true,
+        index: true,
     },
-    phoneNumber:{
-        type:String,
-        required:true,
-        unique:true,
-        index:true
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
     },
-    loyalityPoint:{
-        type:Number,
-        default:0
-    },
-    
-    shopId:{
-        type:mongoose.Schema.Types.ObjectId,
-         ref:"Shop", 
+    loyalityPoint: {
+        type: Number,
+        default: 0
     },
 
-    isActive:{
-        type:Boolean,
-        default:false
-    },
-    pointAmount:{
-        type:Number,
-        default:0
+    walletLoyaltyPoint: {
+        type: Number,
+        default: 0
     },
 
+    shopId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Shop",
+    },
 
-    invoices:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Invoice"
-        }]
-},{ timestamps: true } )
+    isActive: {
+        type: Boolean,
+        default: false
+    },
+    pointAmount: {
+        type: Number,
+        default: 0
+    },
 
 
-const customerModel = mongoose.model('Customer',customerSchema);
+    invoices: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Invoice"
+    }]
+}, { timestamps: true })
+
+
+const customerModel = mongoose.model('Customer', customerSchema);
 
 export default customerModel
