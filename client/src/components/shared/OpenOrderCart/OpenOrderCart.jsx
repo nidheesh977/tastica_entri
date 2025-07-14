@@ -201,8 +201,14 @@ export const OpenOrderCart = ({
           />
           <button
             onClick={() => {
-              redeemPointsOpenOrder({ redeemAmountAdd, id });
-              setRedeemAmountAdd("");
+              const redeemAmountNum = Number(redeemAmountAdd);
+              if (
+                !isNaN(redeemAmountNum) &&
+                redeemAmountNum > 0 &&
+                redeemAmountNum <= invoice?.totalAmount
+              ) {
+                redeemPointsOpenOrder({ redeemAmountAdd:redeemAmountNum, id });
+              }
             }}
             className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
           >
