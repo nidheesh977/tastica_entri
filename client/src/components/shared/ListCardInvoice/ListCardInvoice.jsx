@@ -1,12 +1,20 @@
 import { useState } from "react";
+import { MdDelete, MdRestoreFromTrash } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-export const ListCardInvoice = ({ invoices, setStatus }) => {
+export const ListCardInvoice = ({
+  invoices,
+  setStatus,
+  handleInvoiceDelete,
+}) => {
   const searchQuery = useSelector((state) => state?.search);
   const [paid, setPaid] = useState(true);
   const [refunded, setRefunded] = useState(false);
   const [custom, setCustom] = useState(false);
+  const [deleted, setDeleted] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [archiveReason, setArchiveReason] = useState("");
 
   const invoicesData = invoices?.filter((invoice) => {
     const query = searchQuery.toLowerCase();
@@ -50,6 +58,7 @@ export const ListCardInvoice = ({ invoices, setStatus }) => {
                 setPaid(true);
                 setRefunded(false);
                 setCustom(false);
+                setDeleted(false);
                 setStatus("paid");
               }}
             >
@@ -63,6 +72,7 @@ export const ListCardInvoice = ({ invoices, setStatus }) => {
                 setPaid(false);
                 setRefunded(true);
                 setCustom(false);
+                setDeleted(false);
                 setStatus("refunded");
               }}
             >
@@ -76,10 +86,25 @@ export const ListCardInvoice = ({ invoices, setStatus }) => {
                 setPaid(false);
                 setRefunded(false);
                 setCustom(true);
+                setDeleted(false);
                 setStatus("custom");
               }}
             >
               Custom
+            </span>
+            <span
+              className={`cursor-pointer text-sm px-2 pb-1 ${
+                deleted ? "border-b-2 border-black" : ""
+              }`}
+              onClick={() => {
+                setPaid(false);
+                setRefunded(false);
+                setCustom(false);
+                setDeleted(true);
+                setStatus("archived");
+              }}
+            >
+              Deleted
             </span>
           </div>
         )}
@@ -102,6 +127,7 @@ export const ListCardInvoice = ({ invoices, setStatus }) => {
                 <th className="border border-primary px-4 py-2">Mobile</th>
               )}
               <th className="border border-primary px-4 py-2">Total Amount</th>
+              <th className="border border-primary px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -134,6 +160,50 @@ export const ListCardInvoice = ({ invoices, setStatus }) => {
 
                 <td className="border border-primary px-4 py-2">
                   {invoice?.totalAmount}
+                </td>
+                <td className="border px-4 py-2">
+                  {editId === invoice?._id ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <textarea
+                        className="border rounded-md w-full border-primary outline-primary p-2"
+                        placeholder="Reason"
+                        onChange={(e) => setArchiveReason(e.target.value)}
+                      />
+                      <button
+                        onClick={() => {
+                          handleInvoiceDelete({
+                            actions: "archive",
+                            invoiceId: editId,
+                            archiveReason,
+                          });
+
+                          setEditId(null);
+                        }}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      >
+                        Confirm Delete
+                      </button>
+                    </div>
+                  ) : invoice?.invoiceStatus === "archived" ? (
+                    <MdRestoreFromTrash
+                      title="Restore"
+                      size={22}
+                      onClick={() => {
+                        handleInvoiceDelete({
+                          actions: "restore",
+                          invoiceId: invoice?._id,
+                        });
+                      }}
+                      className="hover:text-green-600 text-primary cursor-pointer"
+                    />
+                  ) : (
+                    <MdDelete
+                      title="Delete"
+                      size={22}
+                      onClick={() => setEditId(invoice?._id)}
+                      className="hover:text-orange-600 text-primary cursor-pointer"
+                    />
+                  )}
                 </td>
               </tr>
             ))}
