@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 export const checkObjectId = (id) => {
-    return  mongoose.Types.ObjectId.isValid(id)
+    return mongoose.Types.ObjectId.isValid(id)
 }
 
 
@@ -10,134 +10,139 @@ const invoiceSchema = new mongoose.Schema({
     invoiceNumber: {
         type: String,
         required: true,
-        
+
     },
     staff: {
-        type:String,
-        required:true 
+        type: String,
+        required: true
     },
 
     products: {
-        type:[
-         {
-            productName: {type:String,required:true},
-            quantity: {type:Number,default:0},
-            price:{type:Number,default:0},
-            total:{type:Number,default:0},
-            productId:{type:mongoose.Schema.Types.ObjectId,ref:"Product", },
-            productDiscount:{type:Number,default:0},
-            discountFromCategory:{type:Number,default: 0},
-            discountFromProduct:{type:Number,default:0},
-            discountType:{type:String,enum:["percentage","flat"],default:"percentage"},
-            category:{type:String,required:true},
-            unit:{type:String},
-            customProduct:{type:Boolean,default:false},
-            taxRate:{type:Number,default:0},
-            taxAmount:{type:Number,default:0},
-            loyaltyRate:{type:Number,default:0},
-            barcodeNumber:{type:String,default:null}
-            
-         }   
+        type: [
+            {
+                productName: { type: String, required: true },
+                quantity: { type: Number, default: 0 },
+                price: { type: Number, default: 0 },
+                total: { type: Number, default: 0 },
+                productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", },
+                productDiscount: { type: Number, default: 0 },
+                discountFromCategory: { type: Number, default: 0 },
+                discountFromProduct: { type: Number, default: 0 },
+                discountType: { type: String, enum: ["percentage", "flat"], default: "percentage" },
+                category: { type: String, required: true },
+                unit: { type: String },
+                customProduct: { type: Boolean, default: false },
+                taxRate: { type: Number, default: 0 },
+                taxAmount: { type: Number, default: 0 },
+                loyaltyRate: { type: Number, default: 0 },
+                barcodeNumber: { type: String, default: null }
+
+            }
         ],
-        default:[]
+        default: []
     },
 
-    totalDiscount:{
-        type:Number,
+    totalDiscount: {
+        type: Number,
         default: 0.00
     },
-    subTotal:{
-         type:Number,
-         default: 0.00
+    subTotal: {
+        type: Number,
+        default: 0.00
     },
 
-   invoiceStatus:{
+    invoiceStatus: {
         type: String,
-        enum: ["newtab","saved","paid","refunded","custom"],
+        enum: ["newtab", "saved", "paid", "refunded", "custom", "archived"],
         default: "saved"
     },
+    archiveReason: {
+        type: String,
+        default: null
+    },
 
-   invoiceType:{
-    type:String,
-     enum: ["normal","custom",],
+    invoiceType: {
+        type: String,
+        enum: ["normal", "custom",],
         default: "normal"
-   },
-
-    paymentStatus:{
-        type:String,
-        enum:["pending","success","failed","refunded"],
-        required:true,
-        default:"pending" 
     },
 
-    paymentMethod:{
-      type:String,
-      enum:["cash","digital","internal-device"],
-      reqired:true,
-      default:null,
+    paymentStatus: {
+        type: String,
+        enum: ["pending", "success", "failed", "refunded"],
+        required: true,
+        default: "pending"
     },
 
-    refundType:{
-        type:String,
-        enum:["full","partial"],
-        default:null
+    paymentMethod: {
+        type: String,
+        enum: ["cash", "digital", "internal-device"],
+        reqired: true,
+        default: null,
     },
 
-    refundedAmount:{
-        type:Number,
-        default:0
+    refundType: {
+        type: String,
+        enum: ["full", "partial"],
+        default: null
     },
 
-    totalAmount:{
-       type:Number,
+    refundedAmount: {
+        type: Number,
+        default: 0
+    },
+
+    totalAmount: {
+        type: Number,
         default: 0.00
     },
-     countryName:{
-        type:String,
-        required:true
+    countryName: {
+        type: String,
+        required: true
     },
-    currencyCode:{
-        type:String,
-        required:true
+    currencyCode: {
+        type: String,
+        required: true
     },
-     shop:{
-        type:String,
-        required:true
-    },
-
-    redeemAmount:{
-        type:Number,
-        default:0
+    shop: {
+        type: String,
+        required: true
     },
 
-    customer:{
-        type:mongoose.Schema.Types.ObjectId,
-            ref:"Customer", 
-            default:null
+    redeemAmount: {
+        type: Number,
+        default: 0
     },
 
-    customerDetailsCustom:{
-       customerName:{type:String, default:null},
-       phoneNumber:{type:String, default:null},
-       address:{type:String, default:null},
-        email:{type:String,default:null
-},
-      
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Customer",
+        default: null
     },
 
-     isTaxActive:{
-        type:Boolean,
-        default:false
+    customerDetailsCustom: {
+        customerName: { type: String, default: null },
+        phoneNumber: { type: String, default: null },
+        address: { type: String, default: null },
+        email: {
+            type: String, default: null
+        },
+
     },
-    totalTax:{
-        type:Number,
-        default:0
-    },   
-    
-},{timestamps:true})
+
+    isTaxActive: {
+        type: Boolean,
+        default: false
+    },
+    totalTax: {
+        type: Number,
+        default: 0
+    },
+
+}, { timestamps: true })
 
 
 
- const invoiceModel = mongoose.model('Invoice', invoiceSchema);
+const invoiceModel = mongoose.model('Invoice', invoiceSchema);
 
- export default invoiceModel;
+export default invoiceModel;

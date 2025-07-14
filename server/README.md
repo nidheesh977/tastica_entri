@@ -180,6 +180,11 @@
   **method**`POST`<br>
   **URL**`/api/v1/invoice/` id pass through req.body
 
+
+  - 📃 invoice soft delete <br>  
+  **method**`put`<br>
+  **URL**`/api/v1/invoice/:invoiceId/toggle-archived` 
+
 ## This route for admin
 
 - 🧑‍💼 "Get full invoice"<br>
