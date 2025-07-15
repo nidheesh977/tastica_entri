@@ -43,6 +43,7 @@ export const ListCardCustomer = ({ permissions }) => {
               <th className="border border-primary px-4 py-2">ID</th>
               <th className="border border-primary px-4 py-2">Mobile</th>
               <th className="border border-primary px-4 py-2">Points</th>
+              <th className="border border-primary px-4 py-2">Wallet</th>
               <th className="border border-primary px-4 py-2">Action</th>
             </tr>
           </thead>
@@ -83,6 +84,9 @@ export const ListCardCustomer = ({ permissions }) => {
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {customer?.loyalityPoint}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {customer?.pointAmount}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
