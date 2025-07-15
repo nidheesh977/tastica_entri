@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearInvoiceData } from "../../../redux/features/invoiceSlice";
+import { FiInfo } from "react-icons/fi";
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -87,7 +88,7 @@ export const ShoppingCart = ({
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
         setName(matchedCustomer.customerName);
         setMobile(matchedCustomer.phoneNumber);
-        setPointAmount(matchedCustomer?.pointAmount);
+        setPointAmount(matchedCustomer?.loyalityPoint + matchedCustomer?.walletLoyaltyPoint || 0);
         setIsNewCustomer(false);
         createInvoice(matchedCustomer._id);
       } else if (!matchedCustomer) {
@@ -300,7 +301,8 @@ export const ShoppingCart = ({
               </div>
             </div>
             <div className="flex justify-between items-center gap-2 border px-2 py-2">
-              <div>Discount</div>
+              <div className="flex items-center gap-1 hover:cursor-pointer">Discount <FiInfo className="hover:text-primary"
+              title="Wallet Amount + Loyalty Amount"/></div>
               <p>{pointAmount}</p>
               <input
                 className="outline-primary px-2 w-2/3 border"
