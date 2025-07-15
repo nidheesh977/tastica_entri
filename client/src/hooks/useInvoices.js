@@ -421,7 +421,9 @@ export const useInvoices = (customerId = null) => {
     },
   });
   const { mutate: redeemPoints } = useMutation({
-    mutationFn: async (redeemAmountAdd) => {
+    mutationFn: async ({redeemAmountAdd}) => {
+     
+      
       const data = { redeemAmountAdd };
       const response = await axiosInstance({
         method: "PUT",

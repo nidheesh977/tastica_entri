@@ -38,6 +38,8 @@ export const OpenOrderCart = ({
   const [pointAmount, setPointAmount] = useState("");
   const [buffer, setBuffer] = useState("");
   const [lastTime, setLastTime] = useState(null);
+  const [wallet, setWallet] = useState("");
+  const [loyalty, setLoyalty] = useState("");
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -84,6 +86,8 @@ export const OpenOrderCart = ({
         invoice.customer?.loyalityPoint +
           invoice.customer?.walletLoyaltyPoint || 0
       );
+      setWallet(invoice.customer?.walletLoyaltyPoint);
+      setLoyalty(invoice.customer?.loyalityPoint);
     }
   }, [invoice]);
 
@@ -110,6 +114,14 @@ export const OpenOrderCart = ({
       admin ? "/admin/payment/success/online" : "/staff/payment/success/online"
     );
   };
+
+  function getRedeemAmount(redeemAmountAdd, loyalty, wallet) {
+    const usedPoints = Math.min(redeemAmountAdd, loyalty);
+    const remaining = redeemAmountAdd - usedPoints;
+    const usedWallet = Math.min(remaining, wallet);
+
+    return usedPoints + usedWallet;
+  }
 
   return (
     <div className="p-2 border h-[670px]">
@@ -207,18 +219,27 @@ export const OpenOrderCart = ({
           <input
             className="outline-primary px-2 w-2/3 border"
             type="text"
+            value={redeemAmountAdd} 
             onChange={(e) => setRedeemAmountAdd(e.target.value)}
           />
           <button
             onClick={() => {
-              const redeemAmountNum = Number(redeemAmountAdd);
+              const redeemAmountNum = getRedeemAmount(
+                Number(redeemAmountAdd),
+                loyalty,
+                wallet
+              );
+
               if (
                 !isNaN(redeemAmountNum) &&
                 redeemAmountNum > 0 &&
                 redeemAmountNum <= invoice?.totalAmount
               ) {
                 redeemPointsOpenOrder({ redeemAmountAdd: redeemAmountNum, id });
+                setRedeemAmountAdd("");
               }
+
+              
             }}
             className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
           >

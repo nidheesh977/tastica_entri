@@ -52,6 +52,8 @@ export const ShoppingCart = ({
   const [invoiceCleared, setInvoiceCleared] = useState(false);
   const [buffer, setBuffer] = useState("");
   const [lastTime, setLastTime] = useState(null);
+  const [wallet, setWallet] = useState("");
+  const [loyalty, setLoyalty] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,7 +90,12 @@ export const ShoppingCart = ({
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
         setName(matchedCustomer.customerName);
         setMobile(matchedCustomer.phoneNumber);
-        setPointAmount(matchedCustomer?.loyalityPoint + matchedCustomer?.walletLoyaltyPoint || 0);
+        setPointAmount(
+          matchedCustomer?.loyalityPoint +
+            matchedCustomer?.walletLoyaltyPoint || 0
+        );
+        setWallet(matchedCustomer?.walletLoyaltyPoint);
+        setLoyalty(matchedCustomer?.loyalityPoint);
         setIsNewCustomer(false);
         createInvoice(matchedCustomer._id);
       } else if (!matchedCustomer) {
@@ -150,6 +157,17 @@ export const ShoppingCart = ({
       },
     });
   }, []);
+
+  function getRedeemAmount(redeemAmountAdd, loyalty, wallet) {
+    const usedPoints = Math.min(redeemAmountAdd, loyalty);
+    const remaining = redeemAmountAdd - usedPoints;
+    const usedWallet = Math.min(remaining, wallet);
+    console.log("redeemAmountAdd: ", redeemAmountAdd);
+    console.log("loyalty: ", loyalty);
+    console.log("Wallet: ", wallet);
+
+    return usedPoints + usedWallet;
+  }
 
   return (
     <div className="p-2 border h-[670px]">
@@ -301,27 +319,38 @@ export const ShoppingCart = ({
               </div>
             </div>
             <div className="flex justify-between items-center gap-2 border px-2 py-2">
-              <div className="flex items-center gap-1 hover:cursor-pointer">Discount <FiInfo className="hover:text-primary"
-              title="Wallet Amount + Loyalty Amount"/></div>
+              <div className="flex items-center gap-1 hover:cursor-pointer">
+                Discount{" "}
+                <FiInfo
+                  className="hover:text-primary"
+                  title="Wallet Amount + Loyalty Amount"
+                />
+              </div>
               <p>{pointAmount}</p>
               <input
                 className="outline-primary px-2 w-2/3 border"
                 type="text"
+                value={redeemAmountAdd}
                 onChange={(e) => {
                   setRedeemAmountAdd(e.target.value);
                 }}
               />
               <button
                 onClick={() => {
-                  const redeemAmountNum = Number(redeemAmountAdd);
+                  const redeemAmountNum = getRedeemAmount(
+                    Number(redeemAmountAdd),
+                    loyalty,
+                    wallet
+                  );
+
                   if (
                     !isNaN(redeemAmountNum) &&
                     redeemAmountNum > 0 &&
                     redeemAmountNum <= invoice?.totalAmount
                   ) {
-                    redeemPoints(redeemAmountNum);
+                    redeemPoints({ redeemAmountAdd: redeemAmountNum });
+                    setRedeemAmountAdd("");
                   }
-                  setRedeemAmountAdd("");
                 }}
                 className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
               >
