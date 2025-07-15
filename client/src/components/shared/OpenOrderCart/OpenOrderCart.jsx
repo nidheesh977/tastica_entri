@@ -7,6 +7,7 @@ import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveSingleInvoiceOpenOrder } from "../../../redux/features/singleInvoiceOpenOrderSlice";
+import { FiInfo } from "react-icons/fi";
 
 export const OpenOrderCart = ({
   addProductToInvoice,
@@ -78,8 +79,11 @@ export const OpenOrderCart = ({
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (invoice?.customer?.pointAmount !== undefined) {
-      setPointAmount(invoice.customer.pointAmount);
+    if (invoice?.customer?.loyalityPoint !== undefined) {
+      setPointAmount(
+        invoice.customer?.loyalityPoint +
+          invoice.customer?.walletLoyaltyPoint || 0
+      );
     }
   }, [invoice]);
 
@@ -192,7 +196,13 @@ export const OpenOrderCart = ({
           </div>
         </div>
         <div className="flex justify-between items-center gap-2 border px-2 py-2">
-          <div>Discount</div>
+          <div className="flex items-center gap-1 hover:cursor-pointer">
+            Discount{" "}
+            <FiInfo
+              className="hover:text-primary"
+              title="Wallet Amount + Loyalty Amount"
+            />
+          </div>
           <p>{pointAmount}</p>
           <input
             className="outline-primary px-2 w-2/3 border"
@@ -207,7 +217,7 @@ export const OpenOrderCart = ({
                 redeemAmountNum > 0 &&
                 redeemAmountNum <= invoice?.totalAmount
               ) {
-                redeemPointsOpenOrder({ redeemAmountAdd:redeemAmountNum, id });
+                redeemPointsOpenOrder({ redeemAmountAdd: redeemAmountNum, id });
               }
             }}
             className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
