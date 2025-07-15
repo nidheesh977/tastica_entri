@@ -83,10 +83,10 @@ export const ListCardCustomer = ({ permissions }) => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {customer?.loyalityPoint}
+                  {customer?.loyalityPoint || 0}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {customer?.pointAmount}
+                  {customer?.walletLoyaltyPoint || 0}
                 </td>
                 <td className="border border-primary px-4 py-2 text-center">
                   <div className="flex justify-start items-center h-12 gap-2">
