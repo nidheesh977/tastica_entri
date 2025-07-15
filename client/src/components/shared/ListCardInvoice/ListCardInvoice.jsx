@@ -120,6 +120,8 @@ export const ListCardInvoice = ({
               </th>
               <th className="border border-primary px-4 py-2">Date</th>
               <th className="border border-primary px-4 py-2">Staff</th>
+              <th className="border border-primary px-4 py-2">Reason</th>
+
               {showCustomerColumn && (
                 <th className="border border-primary px-4 py-2">Customer</th>
               )}
@@ -145,6 +147,9 @@ export const ListCardInvoice = ({
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {invoice?.staff}
+                </td>
+                <td className="border border-primary px-4 py-2">
+                  {invoice?.archiveReason || 'nill'}
                 </td>
                 {invoice?.customer?.customerName && (
                   <td className="border border-primary px-4 py-2">
