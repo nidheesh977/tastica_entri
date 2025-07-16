@@ -1,5 +1,6 @@
 import invoiceModel from '../../model/invoiceModel.js'
 import customerModel from '../../model/customerModel.js'
+import { loyalitCalcultaionInCart } from '../../helpers/loyalityPointCalcIncart.js';
 
 
 export const addRedeemToInvoice = async (req, res) => {
@@ -29,27 +30,14 @@ export const addRedeemToInvoice = async (req, res) => {
             return res.status(400).json({ success: false, message: "Redeem cannot be negative" })
         }
 
-        // const { walletLoyaltyPoint, loyalityPoint } = findCustomer;
 
-        // console.log(walletLoyaltyPoint, loyalityPoint)
 
-        // if (redeemAmountAdd <= loyalityPoint) {
 
-        //     await invoiceModel.findByIdAndUpdate(findInvoice._id, {
-        //         productLoyaltyRedeemAmt: redeemAmountAdd,
-        //         walletLoyaltyRedeemAmt: 0
-        //     }, { new: true })
+        console.log(redeemAmountAdd);
 
-        // } else if (redeemAmountAdd >= loyalityPoint) {
-        //     let takeExtraAmt = redeemAmountAdd - loyalityPoint;
 
-        //     await invoiceModel.findByIdAndUpdate(findInvoice._id, {
-        //         walletLoyaltyRedeemAmt: takeExtraAmt || 0
-        //     }, { new: true })
 
-        // }
 
-        // res.status(200).json({ success: true, message: "point added" })
 
         if (findInvoice.redeemAmount === redeemAmountAdd) {
             return res.status(400).json({ success: false, message: "This Amount Already Added" })
@@ -57,37 +45,43 @@ export const addRedeemToInvoice = async (req, res) => {
         else if (findInvoice.redeemAmount === 0) {
             const deductSubTotal = findInvoice.subTotal - redeemAmountAdd
             const deductTotalAmount = findInvoice.totalAmount - redeemAmountAdd
-
+            const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,
                 totalAmount: deductTotalAmount,
                 redeemAmount: redeemAmountAdd
             }, { new: true })
+
+            loyalitCalcultaionInCart(findInvoice._id, redeemAmountAdd, loyalityPoint)
 
             res.status(200).json({ success: true, message: "Redeem added successfully", data: updateInvoice })
         }
-        else if (redeemAmountAdd < findInvoice.redeemAmount) {
+        else if (redeemAmountAdd <= findInvoice.redeemAmount) {
 
             const deductSubTotal = findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd;
             const deductTotalAmount = findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd;
-
+            const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,
                 totalAmount: deductTotalAmount,
                 redeemAmount: redeemAmountAdd
             }, { new: true })
+
+            loyalitCalcultaionInCart(findInvoice._id, redeemAmountAdd, loyalityPoint)
 
             res.status(200).json({ success: true, message: "Redeem Updated", data: updateInvoice })
         } else if (redeemAmountAdd > findInvoice.redeemAmount) {
 
             const deductSubTotal = findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd;
             const deductTotalAmount = findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd;
-
+            const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,
                 totalAmount: deductTotalAmount,
                 redeemAmount: redeemAmountAdd
             }, { new: true });
+
+            loyalitCalcultaionInCart(findInvoice._id, redeemAmountAdd, loyalityPoint)
 
             res.status(200).json({ success: true, message: "Redeem Updated", data: updateInvoice })
         }
