@@ -72,11 +72,15 @@ export const ShoppingCart = ({
       }
       setBuffer((prev) => prev + e.key);
       setLastTime(now);
+      console.log(buffer);
+      
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
+   
+    
   }, [buffer, lastTime]);
 
   useEffect(() => {
