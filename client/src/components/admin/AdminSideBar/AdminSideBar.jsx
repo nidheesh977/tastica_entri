@@ -18,6 +18,7 @@ import {
   MdDashboard,
   MdPayment,
 } from "react-icons/md";
+import {BsFillPiggyBankFill} from 'react-icons/bs'
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -313,6 +314,16 @@ export const AdminSideBar = () => {
         >
           <FiGift />
           Manage Loyalty Points
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/admin/manage/recharge");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <BsFillPiggyBankFill />
+          Manage Recharge
         </li>
         <li
           onClick={() => {

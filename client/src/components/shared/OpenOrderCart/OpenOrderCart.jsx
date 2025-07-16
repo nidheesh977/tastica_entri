@@ -212,7 +212,7 @@ export const OpenOrderCart = ({
             Discount{" "}
             <FiInfo
               className="hover:text-primary"
-              title="Wallet Amount + Loyalty Amount"
+              title={`Loyalty Amount (${loyalty}) + Wallet Amount (${wallet})`}
             />
           </div>
           <p>{pointAmount}</p>
@@ -232,7 +232,7 @@ export const OpenOrderCart = ({
 
               if (
                 !isNaN(redeemAmountNum) &&
-                redeemAmountNum > 0 &&
+                redeemAmountNum >= 0 &&
                 redeemAmountNum <= invoice?.totalAmount
               ) {
                 redeemPointsOpenOrder({ redeemAmountAdd: redeemAmountNum, id });

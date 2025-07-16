@@ -65,6 +65,7 @@ import { PaymentSuccessCash } from "../pages/shared/PaymentSuccessCash/PaymentSu
 import { PaymentSuccessSwipe } from "../pages/shared/PaymentSuccessSwipe/PaymentSuccessSwipe";
 import { RechargeWallet } from "../pages/shared/RechargeWallet/RechargeWallet";
 import { PrintBarcode } from "../pages/shared/PrintBarcode/PrintBarcode";
+import { ManageRecharge } from "../pages/admin/ManageRecharge/ManageRecharge";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -233,6 +234,10 @@ export const router = createBrowserRouter([
           {
             path: "permissions/:id",
             element: <Permissions />,
+          },
+          {
+            path: "manage/recharge",
+            element: <ManageRecharge />,
           },
         ],
       },
