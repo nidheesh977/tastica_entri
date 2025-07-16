@@ -5,8 +5,9 @@ import customerModel from "../../model/customerModel.js";
 import productModel from "../../model/productModel.js";
 import shopModel from "../../model/shopModel.js";
 import walletModels from "../../model/walletModel.js";
+import { parseFloatDecimal } from "../../utils/parseFloatDecimal.js";
 
-const { walletModel } = walletModels;
+const { walletModel, walletTransactionModel } = walletModels;
 
 export const onlinePaymentStripe = async (req, res) => {
 
@@ -79,6 +80,7 @@ export const OnlinePaymentSuccess = async (req, res) => {
     try {
         const { invoiceId } = req.params;
         const staffId = req.user.id;
+        const shopId = req.shop.id;
 
         if (!invoiceId) {
             return res.status(400).json({ success: false, message: 'Invoice ID not get' });
@@ -124,6 +126,12 @@ export const OnlinePaymentSuccess = async (req, res) => {
             return res.status(400).json({ success: false, message: "Customer not found" })
         }
 
+        const findWallet = await walletModel.findOne({ shopId, customerId: findCustomer._id })
+
+        if (!findWallet) {
+            return res.status(400).json({ success: false, message: "Wallet not found" })
+        }
+
         const invoiceDigitalPayment = await invoiceModel.findByIdAndUpdate(invoiceId, {
             paymentStatus: "success",
             paymentMethod: "digital",
@@ -151,7 +159,7 @@ export const OnlinePaymentSuccess = async (req, res) => {
             {
                 customerId: findCustomer._id,
                 staffId: staffId,
-                points: Math.round(loyaltyPointProduct),
+                points: parseFloatDecimal(loyaltyPointProduct),
                 type: "EARNED"
             },
             {
@@ -164,50 +172,54 @@ export const OnlinePaymentSuccess = async (req, res) => {
 
 
 
-
-
-        // const findLoyalityRate = await loyalityPointModel.findOne({shop:findInvoice?.shop})
-
         if (findInvoice.redeemAmount > 0 && findShop.phoneNumber !== findCustomer.phoneNumber) {
 
-            //   const getpoints = findInvoice.redeemAmount / findLoyalityRate?.loyalityRate || 0
 
-            let deductLoyalty = findCustomer.loyalityPoint - findInvoice.redeemAmount + loyaltyPointProduct
+            const { productLoyaltyRedeemAmt, walletLoyaltyRedeemAmt } = findInvoice;
 
-            //   let PointsToAmount = Math.round(deductLoyality) * findLoyalityRate?.loyalityRate || 0
+            const loyalityDeduct = parseFloatDecimal(findCustomer.loyalityPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
 
+            const walletLoyalityDeductCustomer = parseFloatDecimal(walletLoyaltyRedeemAmt)
 
-            let PointsToAmount = deductLoyalty;
 
             await customerModel.findByIdAndUpdate(findCustomer._id, {
-                loyalityPoint: Math.round(deductLoyalty),
-                //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
-
-                pointAmount: Math.round(PointsToAmount),
+                loyalityPoint: loyalityDeduct,
+                $inc: { walletLoyaltyPoint: -walletLoyalityDeductCustomer },
                 $push: {
                     invoices: { $each: [invoiceDigitalPayment._id] },
                 },
 
             }, { new: true })
 
-            await walletModel.findOneAndUpdate({ customerId: invoiceDigitalPayment.customer }, { productLoyalityPoint: Math.round(deductLoyalty) }, { new: true }).populate("customerId", "customerName")
+
+
+            const ProductloyalityDeductInwallet = parseFloatDecimal(findWallet.productLoyaltyPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
+
+            await walletModel.findOneAndUpdate({ customerId: invoiceDigitalPayment.customer }, { $inc: { walletLoyaltyPoint: -walletLoyaltyRedeemAmt }, productLoyaltyPoint: ProductloyalityDeductInwallet }, { new: true }).populate("customerId", "customerName")
 
             await loyalityTransactionModel.insertMany(transaction)
+
+            if (walletLoyaltyRedeemAmt > 0) {
+                const newTransaction = walletTransactionModel({
+                    customerId: findCustomer._id,
+                    staffId: staffId,
+                    shopId: shopId,
+                    amount: walletLoyaltyRedeemAmt,
+                    type: "debit",
+                });
+
+                await newTransaction.save()
+            }
+
             res.status(200).json({ success: true, message: "Stripe payment successfully", data: invoiceDigitalPayment })
         }
 
         else if (invoiceDigitalPayment && findShop.phoneNumber !== findCustomer.phoneNumber) {
-            //  let addLoyality =  findCustomer.loyalityPoint += loyalityPointProduct
 
-            let addLoyalty = findCustomer.loyalityPoint += loyaltyPointProduct;
-            //  let PointsToAmount = Math.round(addLoyality) * findLoyalityRate?.loyalityRate || 0
-
-            let PointsToAmount = addLoyalty;
+            let addLoyalty = parseFloatDecimal(findCustomer.loyalityPoint += loyaltyPointProduct);
 
             await customerModel.findByIdAndUpdate(findCustomer._id, {
-                loyalityPoint: Math.round(addLoyalty),
-                //  pointAmount:parseFloat(PointsToAmount).toFixed(2),
-                pointAmount: Math.round(PointsToAmount),
+                loyalityPoint: addLoyalty,
                 $push: {
                     invoices: { $each: [invoiceDigitalPayment._id] },
                 },
@@ -217,14 +229,15 @@ export const OnlinePaymentSuccess = async (req, res) => {
             const loyalityEarned = loyalityTransactionModel({
                 customerId: findCustomer._id,
                 staffId: staffId,
-                points: Math.round(loyaltyPointProduct),
+                points: parseFloatDecimal(loyaltyPointProduct),
                 type: "EARNED"
             })
 
             await loyalityEarned.save()
 
+            const addProductLoyalty = parseFloatDecimal(loyaltyPointProduct);
 
-            await walletModel.findOneAndUpdate({ customerId: invoiceDigitalPayment.customer }, { $inc: { productLoyalityPoint: Math.round(loyaltyPointProduct) } }, { new: true }).populate("customerId", "customerName")
+            await walletModel.findOneAndUpdate({ shopId: shopId, customerId: invoiceDigitalPayment.customer }, { $inc: { productLoyaltyPoint: addProductLoyalty } }, { new: true }).populate("customerId", "customerName")
 
 
             res.status(200).json({ success: true, message: "Stripe payment successfully", data: invoiceDigitalPayment })
