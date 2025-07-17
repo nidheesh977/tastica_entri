@@ -33,18 +33,15 @@ export const addRedeemToInvoice = async (req, res) => {
 
 
 
-        console.log(redeemAmountAdd);
 
 
 
-
-
-        if (findInvoice.redeemAmount === redeemAmountAdd) {
+        if (findInvoice.redeemAmount === redeemAmountAdd && findInvoice.redeemAmount !== 0) {
             return res.status(400).json({ success: false, message: "This Amount Already Added" })
         }
         else if (findInvoice.redeemAmount === 0) {
-            const deductSubTotal = findInvoice.subTotal - redeemAmountAdd
-            const deductTotalAmount = findInvoice.totalAmount - redeemAmountAdd
+            const deductSubTotal = parseFloat(findInvoice.subTotal - redeemAmountAdd).toFixed(2)
+            const deductTotalAmount = parseFloat(findInvoice.totalAmount - redeemAmountAdd).toFixed(2)
             const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,
@@ -58,8 +55,8 @@ export const addRedeemToInvoice = async (req, res) => {
         }
         else if (redeemAmountAdd <= findInvoice.redeemAmount) {
 
-            const deductSubTotal = findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd;
-            const deductTotalAmount = findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd;
+            const deductSubTotal = parseFloat(findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd).toFixed(2);
+            const deductTotalAmount = parseFloat(findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd).toFixed(2);
             const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,
@@ -72,8 +69,8 @@ export const addRedeemToInvoice = async (req, res) => {
             res.status(200).json({ success: true, message: "Redeem Updated", data: updateInvoice })
         } else if (redeemAmountAdd > findInvoice.redeemAmount) {
 
-            const deductSubTotal = findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd;
-            const deductTotalAmount = findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd;
+            const deductSubTotal = parseFloat(findInvoice.subTotal + findInvoice.redeemAmount - redeemAmountAdd).toFixed(2);
+            const deductTotalAmount = parseFloat(findInvoice.totalAmount + findInvoice.redeemAmount - redeemAmountAdd).toFixed(2);
             const { loyalityPoint } = findCustomer;
             const updateInvoice = await invoiceModel.findByIdAndUpdate(findInvoice._id, {
                 subTotal: deductSubTotal,

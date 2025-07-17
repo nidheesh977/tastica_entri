@@ -2,7 +2,6 @@ import csv from 'csv-parser';
 import fs from 'fs';
 import productModel from '../../model/productModel.js';
 import categoryModel from '../../model/categoryModel.js';
-import shopModel from '../../model/shopModel.js';
 import { generateId } from '../../utils/generateId.js';
 
 export const productsFileUploader = async (req, res) => {
@@ -11,31 +10,33 @@ export const productsFileUploader = async (req, res) => {
             return res.status(400).json({ success: false, message: "No file uploaded" });
         }
 
-        if(req.file){
+        if (req.file) {
 
         }
 
         const filePath = req.file.path;
-     
+
         const shopId = req.shop.id;
 
-        const shopName = req.shop.shopName;
+        const countryName = req.shop.countryName;
+
+        const currencyCode = req.shop.currencyCode;
 
         const getProductFile = req.file.originalname
 
         const checkproductfile = getProductFile.includes("products.csv")
 
-        if(!checkproductfile){
-             fs.promises.unlink(filePath, (err) => {
-                        if (err) console.error("Error deleting file:",);
-                      });
-            return res.status(400).json({ success: false, message: "This file is not Products file"});
-           
+        if (!checkproductfile) {
+            fs.promises.unlink(filePath, (err) => {
+                if (err) console.error("Error deleting file:",);
+            });
+            return res.status(400).json({ success: false, message: "This file is not Products file" });
+
         }
 
-           const products = [];
+        const products = [];
 
-      fs.createReadStream(filePath)
+        fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
 
@@ -51,29 +52,22 @@ export const productsFileUploader = async (req, res) => {
                     category: row.category.toLowerCase(),
                     countryName: row.countryName,
                     currencyCode: row.currencyCode,
-                    shop: row.shop.toLowerCase(),
+                    shop: row.shop,
                     discountType: row.discountType,
                     unit: row.units,
-                    barcodeNumber:row.barcodeNumber
+                    barcodeNumber: row.barcodeNumber
                 });
 
-                
+
             })
             .on('end', async () => {
                 try {
 
                     for (const row of products) {
 
-                        
 
-                        const findShop = await shopModel.findOne({_id:shopId, shopName: row.shop.trim() });
 
-                        if (!findShop) {
-                            return res.status(400).json({ success: false, message: `${shopName} shop is not found` });
-                        }
-
-                        
-                        const getCategory = await categoryModel.findOne({ shop: findShop?._id, categoryName: row.category.trim() });
+                        const getCategory = await categoryModel.findOne({ shop: shopId, categoryName: row.category.trim() });
 
 
                         if (!getCategory) {
@@ -96,9 +90,9 @@ export const productsFileUploader = async (req, res) => {
 
 
                         row["category"] = getCategory?._id;
-                        row["shop"] = findShop?._id;
-                        row["countryName"] = findShop?.countryName;
-                        row["currencyCode"] = findShop?.currencyCode;
+                        row["shop"] = shopId;
+                        row["countryName"] = countryName;
+                        row["currencyCode"] = currencyCode;
                         row["product_id"] = productId;
                         row["costPrice"] = addCostPrice;
                         row["barcodeNumber"] = row.barcodeNumber === "" ? null : row.barcodeNumber
@@ -143,11 +137,11 @@ export const productsFileUploader = async (req, res) => {
 
 
                 } catch (error) {
-     
+
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {
 
-                     fs.promises.unlink(filePath, (err) => {
+                    fs.promises.unlink(filePath, (err) => {
                         if (err) console.error("Error deleting file:");
                     });
                 }
