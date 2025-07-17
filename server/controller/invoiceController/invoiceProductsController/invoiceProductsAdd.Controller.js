@@ -81,8 +81,7 @@ export const addProductToInvoice = async (req, res) => {
         const findCategory = await categoryModel.findOne({ _id: productExist?.category })
         const getDiscount = findCategory?.discountRate || 0;
 
-        let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr] === productId.toString())
-
+        let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr].toString() === productId.toString())
 
 
         let productPrice;
