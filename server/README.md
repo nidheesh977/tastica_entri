@@ -379,6 +379,10 @@ use methods (all) get all the methods
 **method**`PATCH` <br>
 **URL**`/api/v1/super-admin/shops/:id`
 
+- super admin  shop active or inactive
+**method**`PATCH` <br>
+**URL**`/api/v1/super-admin/shops/:id/active-toggle`
+
 - super admin create employee
 **method**`POST` <br>
 **URL**`/api/v1/super-admin/employees`
