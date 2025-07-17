@@ -5,7 +5,7 @@ import { BsFillPiggyBankFill } from "react-icons/bs";
 export const SetPointRecharge = () => {
   const [loyaltyRate, setLoyaltyRate] = useState("");
 
-  const { addLoyaltyPoints } = useLoyaltyPoints();
+  const {  setPointRecharge } = useLoyaltyPoints();
 
   return (
     <>
@@ -29,7 +29,7 @@ export const SetPointRecharge = () => {
             />
             <button
               onClick={() => {
-                addLoyaltyPoints({loyaltyRate});
+               setPointRecharge({loyalityRate:loyaltyRate});
                 setLoyaltyRate("");
               }}
               className="p-4 w-26   bg-primary hover:opacity-90  text-white rounded"

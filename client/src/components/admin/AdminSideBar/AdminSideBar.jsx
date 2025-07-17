@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
+import { BsFillPiggyBankFill } from "react-icons/bs";
 
 export const AdminSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
@@ -314,6 +315,16 @@ export const AdminSideBar = () => {
         >
           <FiGift />
           Manage Loyalty Points
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/admin/manage/recharge");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <BsFillPiggyBankFill />
+          Manage Recharge
         </li>
 
         <li
