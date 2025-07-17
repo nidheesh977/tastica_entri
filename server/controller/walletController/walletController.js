@@ -1,5 +1,5 @@
 import customerModel from "../../model/customerModel.js";
-import loyalityPointModel from "../../model/loyalityPointModel.js";
+import loyaltyPointModel from "../../model/loyaltyPointModel.js";
 import walletModels from "../../model/walletModel.js";
 import { generateToken } from "../../utils/generateToken.js";
 import { parseFloatDecimal } from "../../utils/parseFloatDecimal.js";
@@ -17,7 +17,7 @@ export const walletLog = async (req, res) => {
             return res.status(400).json({ success: false, message: "barcode cannot be empty" })
         }
 
-        const findCustomer = await customerModel.findOne({ customerId: barcodeNumber }).select("_id customerName phoneNumber loyalityPoint");
+        const findCustomer = await customerModel.findOne({ customerId: barcodeNumber }).select("_id customerName phoneNumber loyalityPoint walletLoyaltyPoint");
 
         if (!findCustomer) {
             return res.status(400).json({ success: false, message: "User not found" })
@@ -68,12 +68,9 @@ export const rechargeWallet = async (req, res) => {
 
         const parseNumber = parseFloat(parseFloat(amount).toFixed(2))
 
-        const findLoyality = await loyalityPointModel.findOne({ shop: shopId })
+        const findLoyalty = await loyaltyPointModel.findOne({ shop: shopId })
 
-        const amtToPoint = findLoyality.loyalityRate > 0 ? parseFloatDecimal(findLoyality.loyalityRate * parseNumber) : parseFloatDecimal(parseNumber)
-
-
-        console.log(amtToPoint);
+        const amtToPoint = findLoyalty?.loyaltyRate > 0 ? parseFloatDecimal(findLoyalty?.loyaltyRate * parseNumber) : parseFloatDecimal(parseNumber)
 
 
         const addAmount = await walletModel.findByIdAndUpdate(findWallet._id, { $inc: { walletLoyaltyPoint: amtToPoint } }, { new: true }).populate("customerId", "customerName");
@@ -87,7 +84,7 @@ export const rechargeWallet = async (req, res) => {
             amount: amount,
             type: "credit",
             amtToPoint: amtToPoint,
-            convertLoyalityRate: findLoyality?.loyalityRate || 0
+            convertloyaltyRate: findLoyalty?.loyaltyRate || 0
         });
 
         await newTransaction.save()
