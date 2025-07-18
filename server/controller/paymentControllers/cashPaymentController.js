@@ -33,7 +33,9 @@ export const cashPayment = async (req, res) => {
         let loyaltyPointProduct = 0  // calculate product loyality rate 
 
         for (const item of findInvoice.products) {
-            if (item.customProduct != true) {
+
+
+            if (item.customProduct != true && item.loyaltyRate > 0) {
                 total += item.total
                 totalOfDiscount += item.productDiscount
                 deductDiscountFromTotal = total - totalOfDiscount
@@ -41,6 +43,7 @@ export const cashPayment = async (req, res) => {
                 loyaltyPointProduct = addTax * item.loyaltyRate
             }
         }
+
 
         const findShop = await shopModel.findById(findInvoice.shop)
 

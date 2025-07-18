@@ -70,12 +70,12 @@ export const rechargeWallet = async (req, res) => {
 
         const findLoyalty = await loyaltyPointModel.findOne({ shop: shopId })
 
-        const amtToPoint = findLoyalty?.loyaltyRate > 0 ? parseFloatDecimal(findLoyalty?.loyaltyRate * parseNumber) : parseFloatDecimal(parseNumber)
+        const PointOrAmt = findLoyalty?.loyaltyRate > 0 ? parseFloatDecimal(findLoyalty?.loyaltyRate * parseNumber) : parseFloatDecimal(parseNumber)
 
 
-        const addAmount = await walletModel.findByIdAndUpdate(findWallet._id, { $inc: { walletLoyaltyPoint: amtToPoint } }, { new: true }).populate("customerId", "customerName");
+        const addAmount = await walletModel.findByIdAndUpdate(findWallet._id, { $inc: { walletLoyaltyPoint: PointOrAmt } }, { new: true }).populate("customerId", "customerName");
 
-        await customerModel.findByIdAndUpdate(customerId, { $inc: { walletLoyaltyPoint: amtToPoint } })
+        await customerModel.findByIdAndUpdate(customerId, { $inc: { walletLoyaltyPoint: PointOrAmt } })
 
         const newTransaction = walletTransactionModel({
             customerId: customerId,
@@ -83,7 +83,7 @@ export const rechargeWallet = async (req, res) => {
             shopId: shopId,
             amount: amount,
             type: "credit",
-            amtToPoint: amtToPoint,
+            amtToPoint: PointOrAmt,
             convertloyaltyRate: findLoyalty?.loyaltyRate || 0
         });
 

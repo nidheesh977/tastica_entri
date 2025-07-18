@@ -10,6 +10,8 @@ import { caluculateTax } from "../../../utils/productTaxCalculate.js";
 
 
 export const addProductToInvoice = async (req, res) => {
+
+
     try {
         const { invoiceId } = req.params;
         const { productId, quantity } = req.body;
@@ -19,6 +21,12 @@ export const addProductToInvoice = async (req, res) => {
         if (!invoiceId) {
             return res.status(400).json({ success: false, message: "Invoice ID not get" })
         }
+
+
+        if (invoiceId === "undefined") {
+            return res.status(400).json({ success: false, message: "Create invoice" })
+        }
+
 
 
         if (!productId) {
@@ -77,11 +85,22 @@ export const addProductToInvoice = async (req, res) => {
 
 
 
+
         // for get category discount
         const findCategory = await categoryModel.findOne({ _id: productExist?.category })
         const getDiscount = findCategory?.discountRate || 0;
 
         let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr].toString() === productId.toString())
+
+
+
+        const test = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
+
+        console.log(findInvoiceProduct?.quantity);
+
+        if (test && findInvoiceProduct?.quantity === quantity) {
+            return res.status(400).json({ success: false, message: "Product already added" })
+        }
 
 
         let productPrice;
@@ -122,6 +141,8 @@ export const addProductToInvoice = async (req, res) => {
 
 
         if (!findInvoiceProduct) {
+
+
 
             // calculate discount
             const totalDiscountAmount = calculateDiscount(addProduct.total, addProduct.discountType, parseFloat(addProduct.discountFromProduct), parseFloat(addProduct.discountFromCategory), addProduct.quantity)

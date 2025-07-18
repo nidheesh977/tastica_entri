@@ -31,7 +31,7 @@ export const internalDevicePayment = async (req, res) => {
     let addTax = 0  // if tax exist add tax to total
     let loyaltyPointProduct = 0  // calculate product loyality rate 
 
-    for (const item of findInvoice.products) {
+    for (const item of findInvoice.products && item.loyaltyRate > 0) {
       if (item.customProduct != true) {
         total += item.total
         totalOfDiscount += item.productDiscount

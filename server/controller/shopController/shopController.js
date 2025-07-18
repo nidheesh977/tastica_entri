@@ -30,7 +30,7 @@ export const shopLogin = async (req, res) => {
         }
 
         if (shopExist.isActive === false) {
-            return res.status(400).json({ success: false, message: "Shop is inactive . please contact admin" })
+            return res.status(400).json({ success: false, message: "Shop is inactive . contact authorities" })
         }
 
         // check if shop Password is Correct 
