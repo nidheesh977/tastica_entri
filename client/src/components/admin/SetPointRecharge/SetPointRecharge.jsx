@@ -14,8 +14,8 @@ export const SetPointRecharge = () => {
     deleteLoyaltyData,
   } = useLoyaltyPoints();
   useEffect(() => {
-    if (loyaltyData?.loyalityRate) {
-      setLoyaltyRate(loyaltyData.loyalityRate);
+    if (loyaltyData?.loyaltyRate) {
+      setLoyaltyRate(loyaltyData.loyaltyRate);
     }
   }, [loyaltyData]);
 
@@ -44,7 +44,7 @@ export const SetPointRecharge = () => {
               {!loyaltyData && (
                 <button
                   onClick={() => {
-                    setPointRecharge({ loyalityRate: loyaltyRate });
+                    setPointRecharge({ loyaltyRate});
                   }}
                   className="p-4 w-full  bg-primary hover:opacity-90  text-white rounded"
                 >

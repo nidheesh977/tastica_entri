@@ -29,8 +29,8 @@ export const useLoyaltyPoints = () => {
     },
   });
   const { mutate: setPointRecharge } = useMutation({
-    mutationFn: async ({ loyalityRate }) => {
-      const data = { loyalityRate };
+    mutationFn: async ({ loyaltyRate }) => {
+      const data = { loyaltyRate };
       await axiosInstance({
         method: "POST",
         url: "/loyalty",
