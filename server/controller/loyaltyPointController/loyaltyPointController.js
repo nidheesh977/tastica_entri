@@ -1,25 +1,25 @@
 import productModel from "../../model/productModel.js";
-import loyalityPointModel from "../../model/loyalityPointModel.js";
+import loyaltyPointModel from "../../model/loyaltyPointModel.js";
 
 
 export const createLoyaltyRate = async (req, res) => {
     try {
         const { id, currencyCode, countryName } = req.shop;
-        const { loyalityRate } = req.body
+        const { loyaltyRate } = req.body
 
-        const numToFixed = parseFloat(loyalityRate).toFixed(2);
+        const numToFixed = Number(parseFloat(loyaltyRate).toFixed(2));
 
-        const existLoyality = await loyalityPointModel.findOne({ shop: id });
+        const existLoyality = await loyaltyPointModel.findOne({ shop: id });
 
         if (existLoyality) {
             return res.status(400).json({ success: false, message: "Already exist" })
         }
 
-        const newRate = new loyalityPointModel({
+        const newRate = new loyaltyPointModel({
             shop: id,
             countryName: countryName,
             currencyCode: currencyCode,
-            loyalityRate: numToFixed
+            loyaltyRate: numToFixed
         });
 
         await newRate.save()
@@ -46,7 +46,7 @@ export const updateLoyaltyRate = async (req, res) => {
 
         const numToFixed = parseFloat(loyaltyRate).toFixed(2);
 
-        const updateLoyaltyPoint = await loyalityPointModel.findByIdAndUpdate(id, { loyaltyRate: numToFixed }, { new: true });
+        const updateLoyaltyPoint = await loyaltyPointModel.findByIdAndUpdate(id, { loyaltyRate: numToFixed }, { new: true });
 
         res.status(200).json({ success: true, message: "Loyality data updated", data: updateLoyaltyPoint })
     } catch (error) {
@@ -62,7 +62,7 @@ export const deleteLoyaltyPoint = async (req, res) => {
             return res.status(400).json({ success: false, message: "Loyality point ID not get" });
         }
 
-        const deleteLoyalityPoint = await loyalityPointModel.findByIdAndDelete(id);
+        const deleteLoyalityPoint = await loyaltyPointModel.findByIdAndDelete(id);
 
         res.status(200).json({ success: true, message: "Loyality data Deleted", data: deleteLoyalityPoint });
 
@@ -80,9 +80,9 @@ export const getLoyaltyRate = async (req, res) => {
             return res.status(400).json({ success: false, message: "Shop id is not get" });
         }
 
-        const findLoyalityRate = await loyalityPointModel.findOne({ shop: shopId })
+        const findloyaltyRate = await loyaltyPointModel.findOne({ shop: shopId })
 
-        res.status(200).json({ success: true, message: "Data fetched successfullty", data: findLoyalityRate })
+        res.status(200).json({ success: true, message: "Data fetched successfullty", data: findloyaltyRate })
     } catch (error) {
         return res.status(500).json({ success: false, message: "Internal server error" })
     }

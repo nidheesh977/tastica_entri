@@ -14,7 +14,7 @@ const walletTransactionSchema = new mongoose.Schema({
      shopId: { type: mongoose.Schema.Types.ObjectId, ref: "Shop" },
      amount: { type: Number, required: true },
      amtToPoint: { type: Number, default: 0 },
-     convertLoyalityRate: { type: Number, default: 0 },
+     convertloyaltyRate: { type: Number, default: 0 },
      type: { type: String, enum: ["credit", "debit"], required: true },
      balanceAfterTransaction: { type: Number, default: 0 },
      date: { type: Date, default: Date.now() }

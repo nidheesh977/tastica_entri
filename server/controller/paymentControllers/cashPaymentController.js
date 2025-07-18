@@ -1,7 +1,6 @@
 import customerModel from "../../model/customerModel.js";
 import invoiceModel from "../../model/invoiceModel.js";
-import loyalityPointModel from "../../model/loyalityPointModel.js"
-import loyalityTransactionModel from "../../model/loyalityTransactionModel.js";
+import loyaltyTransactionModel from "../../model/loyaltyTransactionModel.js";
 import productModel from "../../model/productModel.js";
 import shopModel from "../../model/shopModel.js";
 import walletModels from "../../model/walletModel.js";
@@ -63,11 +62,7 @@ export const cashPayment = async (req, res) => {
             return res.status(400).json({ success: false, message: "Customer not found" })
         }
 
-        const findWallet = await walletModel.findOne({ shopId, customerId: findCustomer._id })
 
-        if (!findWallet) {
-            return res.status(400).json({ success: false, message: "Wallet not found" })
-        }
 
         const invoiceCashPayment = await invoiceModel.findByIdAndUpdate(invoiceId, {
             paymentStatus: "success",
@@ -112,7 +107,7 @@ export const cashPayment = async (req, res) => {
             {
                 customerId: findCustomer._id,
                 staffId: staffId,
-                amount: findInvoice.redeemAmount,
+                amount: parseFloatDecimal(findInvoice.redeemAmount - findInvoice.walletLoyaltyRedeemAmt),
                 type: "REDEEMED"
             }
         ]
@@ -122,27 +117,27 @@ export const cashPayment = async (req, res) => {
         if (findInvoice.redeemAmount > 0 && findShop.phoneNumber !== findCustomer.phoneNumber) {
 
 
+
             const { productLoyaltyRedeemAmt, walletLoyaltyRedeemAmt } = findInvoice;
 
-            const loyalityDeduct = parseFloatDecimal(findCustomer.loyalityPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
+            const loyaltyDeduct = parseFloatDecimal(findCustomer.loyalityPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
 
-            const walletLoyalityDeductCustomer = parseFloatDecimal(walletLoyaltyRedeemAmt)
+            const walletLoyaltyDeduct = parseFloatDecimal(walletLoyaltyRedeemAmt)
 
             await customerModel.findByIdAndUpdate(findCustomer._id, {
-                loyalityPoint: loyalityDeduct,
-                $inc: { walletLoyaltyPoint: -walletLoyalityDeductCustomer },
+                loyalityPoint: loyaltyDeduct,
+                $inc: { walletLoyaltyPoint: -walletLoyaltyDeduct },
                 $push: { invoices: { $each: [invoiceCashPayment._id] } },
 
             }, { new: true })
 
+            const findWallet = await walletModel.findOne({ shopId: shopId, customerId: findCustomer._id })
 
+            const ProductLoyaltyDeductInwallet = parseFloatDecimal(findWallet.productLoyaltyPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
 
-            const ProductloyalityDeductInwallet = parseFloatDecimal(findWallet.productLoyaltyPoint - productLoyaltyRedeemAmt + loyaltyPointProduct)
+            await walletModel.findOneAndUpdate({ customerId: invoiceCashPayment.customer }, { $inc: { walletLoyaltyPoint: -walletLoyaltyDeduct }, productLoyaltyPoint: ProductLoyaltyDeductInwallet }, { new: true }).populate("customerId", "customerName")
 
-
-            await walletModel.findOneAndUpdate({ customerId: invoiceCashPayment.customer }, { $inc: { walletLoyaltyPoint: -walletLoyaltyRedeemAmt }, productLoyaltyPoint: ProductloyalityDeductInwallet }, { new: true }).populate("customerId", "customerName")
-
-            await loyalityTransactionModel.insertMany(transaction)
+            await loyaltyTransactionModel.insertMany(transaction)
 
             if (walletLoyaltyRedeemAmt > 0) {
                 const newTransaction = walletTransactionModel({
@@ -169,14 +164,14 @@ export const cashPayment = async (req, res) => {
                 $push: { invoices: { $each: [invoiceCashPayment._id] } }
             }, { new: true })
 
-            const loyalityEarned = loyalityTransactionModel({
+            const loyaltyEarned = loyaltyTransactionModel({
                 customerId: findCustomer._id,
                 staffId: staffId,
                 points: parseFloatDecimal(loyaltyPointProduct),
                 type: "EARNED"
             })
 
-            await loyalityEarned.save()
+            await loyaltyEarned.save()
 
             const addProductLoyalty = parseFloatDecimal(loyaltyPointProduct);
 
