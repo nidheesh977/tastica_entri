@@ -59,28 +59,37 @@ export const ShoppingCart = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       const now = new Date().getTime();
+      // if (e.key === "Enter") {
+      //   if (buffer.length > 2) {
+      //     addProductToInvoice({ productId: buffer, quantity: 1 });
+      //   }
+      //   setBuffer("");
+      //   setLastTime(null);
+      //   return;
+      // }
       if (e.key === "Enter") {
-        if (buffer.length > 2) {
-          addProductToInvoice({ productId: buffer, quantity: 1 });
+        const cleanedBuffer = buffer.replace(/shift/gi, "");
+        console.log(cleanedBuffer);
+        if (cleanedBuffer.length > 2) {
+          addProductToInvoice({ productId: cleanedBuffer, quantity: 1 });
         }
+        
         setBuffer("");
         setLastTime(null);
         return;
       }
+
       if (lastTime && now - lastTime > 100) {
         setBuffer("");
       }
       setBuffer((prev) => prev + e.key);
       setLastTime(now);
-      console.log(buffer);
       
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-   
-    
   }, [buffer, lastTime]);
 
   useEffect(() => {
@@ -250,7 +259,7 @@ export const ShoppingCart = ({
       <ul className="flex flex-col mt-4 h-[382px] overflow-y-auto w-full">
         {products.map((product, index) => (
           <li
-            key={product?.productId}
+            key={product?._id}
             className="grid grid-cols-12 border my-1 p-2 items-center"
           >
             {alertMessage === product._id && (

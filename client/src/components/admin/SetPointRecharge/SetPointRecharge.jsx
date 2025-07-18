@@ -1,11 +1,23 @@
 import { useState } from "react";
 import { useLoyaltyPoints } from "../../../hooks/useLoayltyPoints";
 import { BsFillPiggyBankFill } from "react-icons/bs";
+import { IoMdSync } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { useEffect } from "react";
 
 export const SetPointRecharge = () => {
   const [loyaltyRate, setLoyaltyRate] = useState("");
-
-  const {  setPointRecharge } = useLoyaltyPoints();
+  const {
+    setPointRecharge,
+    loyaltyData,
+    updateLoyaltyData,
+    deleteLoyaltyData,
+  } = useLoyaltyPoints();
+  useEffect(() => {
+    if (loyaltyData?.loyalityRate) {
+      setLoyaltyRate(loyaltyData.loyalityRate);
+    }
+  }, [loyaltyData]);
 
   return (
     <>
@@ -19,7 +31,7 @@ export const SetPointRecharge = () => {
             Set Loyalty Points To Wallet
           </h1>
 
-          <div className=" flex items-center gap-2">
+          <div className=" flex flex-col items-center gap-2">
             <input
               type="text"
               value={loyaltyRate}
@@ -27,18 +39,51 @@ export const SetPointRecharge = () => {
               placeholder="Loyalty Rate "
               className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
             />
-            <button
-              onClick={() => {
-               setPointRecharge({loyalityRate:loyaltyRate});
-                setLoyaltyRate("");
-              }}
-              className="p-4 w-26   bg-primary hover:opacity-90  text-white rounded"
-            >
-              <span className="flex items-center justify-center gap-1 font-semibold">
-                Submit
-               <BsFillPiggyBankFill />
-              </span>
-            </button>
+
+            <div className="flex justify-center gap-2 w-full">
+              {!loyaltyData && (
+                <button
+                  onClick={() => {
+                    setPointRecharge({ loyalityRate: loyaltyRate });
+                  }}
+                  className="p-4 w-full  bg-primary hover:opacity-90  text-white rounded"
+                >
+                  <span className="flex items-center justify-center gap-1 font-semibold">
+                    Submit
+                    <BsFillPiggyBankFill />
+                  </span>
+                </button>
+              )}
+
+              {loyaltyData && (
+                <button
+                  onClick={() => {
+                    updateLoyaltyData({ loyaltyRate, id: loyaltyData?._id });
+                  }}
+                  className="p-4 w-full   bg-secondary hover:opacity-90  text-white rounded"
+                >
+                  <span className="flex items-center justify-center gap-1 font-semibold">
+                    <IoMdSync size={20} />
+                    Update
+                  </span>
+                </button>
+              )}
+
+              {loyaltyData && (
+                <button
+                  onClick={() => {
+                    deleteLoyaltyData({ id: loyaltyData?._id });
+                    setLoyaltyRate("");
+                  }}
+                  className="p-4 w-full  bg-orange-600 hover:opacity-90 text-white rounded"
+                >
+                  <span className="flex items-center justify-center gap-1 font-semibold">
+                    <MdDelete size={20} />
+                    Delete
+                  </span>
+                </button>
+              )}
+            </div>
           </div>
         </form>
       </div>

@@ -44,14 +44,26 @@ export const OpenOrderCart = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       const now = new Date().getTime();
+      // if (e.key === "Enter") {
+      //   if (buffer.length > 2) {
+      //     addProductToInvoiceOpenOrder({ productId: buffer, quantity: 1 });
+      //   }
+      //   setBuffer("");
+      //   setLastTime(null);
+      //   return;
+      // }
       if (e.key === "Enter") {
-        if (buffer.length > 2) {
-          addProductToInvoiceOpenOrder({ productId: buffer, quantity: 1 });
+        const cleanedBuffer = buffer.replace(/shift/gi, "");
+        console.log(cleanedBuffer);
+        if (cleanedBuffer.length > 2) {
+          addProductToInvoiceOpenOrder({ productId: cleanedBuffer, quantity: 1 });
         }
+        
         setBuffer("");
         setLastTime(null);
         return;
       }
+      
       if (lastTime && now - lastTime > 100) {
         setBuffer("");
       }
