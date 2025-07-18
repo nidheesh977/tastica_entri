@@ -154,9 +154,7 @@ export const ListShopCard = () => {
                               })
                             }
                           />
-                          
                         ) : (
-
                           <FaToggleOff
                             title="Activate Shop"
                             size={24}
@@ -168,7 +166,6 @@ export const ListShopCard = () => {
                               });
                             }}
                           />
-                          
                         )}
                       </>
                     )}

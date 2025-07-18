@@ -56,14 +56,17 @@ export const OpenOrderCart = ({
         const cleanedBuffer = buffer.replace(/shift/gi, "");
         console.log(cleanedBuffer);
         if (cleanedBuffer.length > 2) {
-          addProductToInvoiceOpenOrder({ productId: cleanedBuffer, quantity: 1 });
+          addProductToInvoiceOpenOrder({
+            productId: cleanedBuffer,
+            quantity: 1,
+          });
         }
-        
+
         setBuffer("");
         setLastTime(null);
         return;
       }
-      
+
       if (lastTime && now - lastTime > 100) {
         setBuffer("");
       }
@@ -94,10 +97,19 @@ export const OpenOrderCart = ({
 
   useEffect(() => {
     if (invoice?.customer?.loyalityPoint !== undefined) {
+      // setPointAmount(
+      //   invoice.customer?.loyalityPoint +
+      //     invoice.customer?.walletLoyaltyPoint || 0
+      // );
       setPointAmount(
-        invoice.customer?.loyalityPoint +
-          invoice.customer?.walletLoyaltyPoint || 0
+        Number(
+          (
+            (invoice.customer?.loyalityPoint || 0) +
+            (invoice.customer?.walletLoyaltyPoint || 0)
+          ).toFixed(2)
+        )
       );
+
       setWallet(invoice.customer?.walletLoyaltyPoint);
       setLoyalty(invoice.customer?.loyalityPoint);
     }
@@ -231,7 +243,7 @@ export const OpenOrderCart = ({
           <input
             className="outline-primary px-2 w-2/3 border"
             type="text"
-            value={redeemAmountAdd} 
+            value={redeemAmountAdd}
             onChange={(e) => setRedeemAmountAdd(e.target.value)}
           />
           <button
@@ -250,8 +262,6 @@ export const OpenOrderCart = ({
                 redeemPointsOpenOrder({ redeemAmountAdd: redeemAmountNum, id });
                 setRedeemAmountAdd("");
               }
-
-              
             }}
             className="bg-primary text-white rounded p-1 text-sm hover:bg-opacity-90"
           >

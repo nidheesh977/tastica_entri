@@ -73,7 +73,7 @@ export const ShoppingCart = ({
         if (cleanedBuffer.length > 2) {
           addProductToInvoice({ productId: cleanedBuffer, quantity: 1 });
         }
-        
+
         setBuffer("");
         setLastTime(null);
         return;
@@ -84,7 +84,6 @@ export const ShoppingCart = ({
       }
       setBuffer((prev) => prev + e.key);
       setLastTime(now);
-      
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -103,10 +102,19 @@ export const ShoppingCart = ({
       if (matchedCustomer && matchedCustomer._id !== invoice?.customer?._id) {
         setName(matchedCustomer.customerName);
         setMobile(matchedCustomer.phoneNumber);
+        // setPointAmount(
+        //   matchedCustomer?.loyalityPoint +
+        //     matchedCustomer?.walletLoyaltyPoint || 0
+        // );
         setPointAmount(
-          matchedCustomer?.loyalityPoint +
-            matchedCustomer?.walletLoyaltyPoint || 0
+          Number(
+            (
+              (matchedCustomer?.loyalityPoint || 0) +
+              (matchedCustomer?.walletLoyaltyPoint || 0)
+            ).toFixed(2)
+          )
         );
+
         setWallet(matchedCustomer?.walletLoyaltyPoint);
         setLoyalty(matchedCustomer?.loyalityPoint);
         setIsNewCustomer(false);
