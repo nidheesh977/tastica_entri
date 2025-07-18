@@ -107,6 +107,30 @@ export const useSuperAdmins = () => {
       dispatch(removeStaffData());
     },
   });
+  const { mutate: activateShop } = useMutation({
+    mutationFn: async ({
+      shopId,
+      isActive
+    }) => {
+      const data ={isActive}
+
+      await axiosInstance({
+        method: "PATCH",
+        url: `/super-admin/shops/${shopId}/active-toggle`,
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Shop data updated successfully");
+      queryClient.invalidateQueries(["shops"]);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to update shop data!.");
+
+      dispatch(removeStaffData());
+    },
+  });
 
   const { mutate: updateStaff } = useMutation({
     mutationFn: async ({ staffId, userName, email, phoneNumber }) => {
@@ -191,5 +215,6 @@ export const useSuperAdmins = () => {
     createStaff,
     updateStaff,
     deleteStaff,
+    activateShop
   };
 };

@@ -7,15 +7,13 @@ import { FiEdit } from "react-icons/fi";
 import { MdLockReset } from "react-icons/md";
 
 export const ListShopCard = () => {
-  const { shops, updateShop } = useSuperAdmins();
+  const { shops, updateShop, activateShop } = useSuperAdmins();
 
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
   const [editedCountry, setEditedCountry] = useState("");
   const [editedCurrency, setEditedCurrency] = useState("");
-  const [shopActive, setShopActive] = useState(true);
-  const [shopId, setShopId] = useState("");
 
   const searchQuery = useSelector((state) => state?.search);
   const navigate = useNavigate();
@@ -144,26 +142,33 @@ export const ListShopCard = () => {
                           size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
-                        {shopActive && shopId === shop?._id ? (
+                        {shop?.isActive ? (
                           <FaToggleOn
                             title="Deactivate Shop"
                             size={24}
                             className="text-primary hover:text-orange-600 cursor-pointer"
-                            onClick={() => {
-                              setShopActive(!shopActive);
-                              setShopId(shop?._id);
-                            }}
+                            onClick={() =>
+                              activateShop({
+                                shopId: shop?._id,
+                                isActive: false,
+                              })
+                            }
                           />
+                          
                         ) : (
+
                           <FaToggleOff
                             title="Activate Shop"
                             size={24}
                             className="text-primary hover:text-orange-600 cursor-pointer"
                             onClick={() => {
-                              setShopActive(!shopActive);
-                              setShopId(shop?._id);
+                              activateShop({
+                                shopId: shop?._id,
+                                isActive: true,
+                              });
                             }}
                           />
+                          
                         )}
                       </>
                     )}
