@@ -54,7 +54,7 @@ export const onlinePaymentStripe = async (req, res) => {
                     product_data: {
                         name: "Payable Amount"
                     },
-                    unit_amount: totalAmount * 100
+                    unit_amount: Math.round(totalAmount * 100)
                 },
                 quantity: 1
             }],
@@ -67,6 +67,7 @@ export const onlinePaymentStripe = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error);
 
         res.status(500).json({ success: false, message: "Internal server error", error })
     }
