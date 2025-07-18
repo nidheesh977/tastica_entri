@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSave } from "react-icons/fa";
+import { FaSave, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { MdLockReset } from "react-icons/md";
 
@@ -14,6 +14,8 @@ export const ListShopCard = () => {
   const [editedEmail, setEditedEmail] = useState("");
   const [editedCountry, setEditedCountry] = useState("");
   const [editedCurrency, setEditedCurrency] = useState("");
+  const [shopActive, setShopActive] = useState(true);
+  const [shopId, setShopId] = useState("");
 
   const searchQuery = useSelector((state) => state?.search);
   const navigate = useNavigate();
@@ -132,7 +134,6 @@ export const ListShopCard = () => {
                           }}
                           className="text-primary hover:text-orange-600 cursor-pointer"
                         />
-
                         <MdLockReset
                           onClick={() =>
                             navigate(
@@ -143,6 +144,27 @@ export const ListShopCard = () => {
                           size={22}
                           className="hover:text-orange-600 text-primary cursor-pointer"
                         />
+                        {shopActive && shopId === shop?._id ? (
+                          <FaToggleOn
+                            title="Deactivate Shop"
+                            size={24}
+                            className="text-primary hover:text-orange-600 cursor-pointer"
+                            onClick={() => {
+                              setShopActive(!shopActive);
+                              setShopId(shop?._id);
+                            }}
+                          />
+                        ) : (
+                          <FaToggleOff
+                            title="Activate Shop"
+                            size={24}
+                            className="text-primary hover:text-orange-600 cursor-pointer"
+                            onClick={() => {
+                              setShopActive(!shopActive);
+                              setShopId(shop?._id);
+                            }}
+                          />
+                        )}
                       </>
                     )}
                   </div>
