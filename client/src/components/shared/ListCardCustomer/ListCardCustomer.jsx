@@ -12,6 +12,7 @@ export const ListCardCustomer = ({ permissions }) => {
   const [editId, setEditId] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedMobile, setEditedMobile] = useState("");
+  const [editedLoyaltyPoint, setEditedLoyaltyPoint] = useState("");
   const searchQuery = useSelector((state) => state?.search);
   const { customers, deleteCustomer, updateCustomer } = useCustomers();
   const navigate = useNavigate();
@@ -83,7 +84,16 @@ export const ListCardCustomer = ({ permissions }) => {
                   )}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {customer?.loyalityPoint || 0}
+                  {editId === customer?._id && admin ? (
+                    <input
+                      value={editedLoyaltyPoint}
+                      onChange={(e) => setEditedLoyaltyPoint(e.target.value)}
+                      className="w-full rounded border p-1"
+                    />
+                  ) : (
+                    customer?.loyalityPoint || 0
+                  )}
+                  
                 </td>
                 <td className="border border-primary px-4 py-2">
                   {customer?.walletLoyaltyPoint || 0}
@@ -99,6 +109,7 @@ export const ListCardCustomer = ({ permissions }) => {
                             customerId: customer?._id,
                             customerName: editedName,
                             phoneNumber: editedMobile,
+                            loyalityPoint: editedLoyaltyPoint
                           });
 
                           setEditId(null);
@@ -115,6 +126,7 @@ export const ListCardCustomer = ({ permissions }) => {
                               setEditId(customer?._id);
                               setEditedName(customer?.customerName);
                               setEditedMobile(customer?.phoneNumber);
+                              setEditedLoyaltyPoint(customer?.loyalityPoint)
                             }}
                             className="text-primary hover:text-orange-600 cursor-pointer"
                           />

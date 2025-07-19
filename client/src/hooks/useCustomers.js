@@ -61,10 +61,11 @@ export const useCustomers = () => {
   });
 
   const { mutate: updateCustomer } = useMutation({
-    mutationFn: async ({ customerId, customerName, phoneNumber }) => {
+    mutationFn: async ({ customerId, customerName, phoneNumber, loyalityPoint }) => {
       const data = {
         customerName,
         phoneNumber,
+        loyalityPoint
       };
       await axiosInstance({
         method: "PUT",
