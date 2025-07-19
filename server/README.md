@@ -185,6 +185,10 @@
   **method**`put`<br>
   **URL**`/api/v1/invoice/:invoiceId/toggle-archived` 
 
+    - 📃 add manual discount in invoice product<br>  
+  **method**`put`<br>
+  **URL**`/api/v1/invoice/:invoiceId/discount/product` 
+
 ## This route for admin
 
 - 🧑‍💼 "Get full invoice"<br>

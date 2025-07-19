@@ -96,7 +96,7 @@ export const addProductToInvoice = async (req, res) => {
 
         const test = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
 
-        console.log(findInvoiceProduct?.quantity);
+
 
         if (test && findInvoiceProduct?.quantity === quantity) {
             return res.status(400).json({ success: false, message: "Product already added" })
@@ -134,7 +134,8 @@ export const addProductToInvoice = async (req, res) => {
             customProduct: productExist?.isCustomProduct || false,
             taxRate: productExist?.productTax || 0,
             loyaltyRate: productExist?.loyaltyRate || 0,
-            barcodeNumber: productExist?.barcodeNumber || null
+            barcodeNumber: productExist?.barcodeNumber || null,
+            manualDiscount: 0
         }
 
 
@@ -239,7 +240,6 @@ export const addProductToInvoice = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

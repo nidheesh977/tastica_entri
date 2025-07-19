@@ -35,7 +35,8 @@ const invoiceSchema = new mongoose.Schema({
                 taxRate: { type: Number, default: 0 },
                 taxAmount: { type: Number, default: 0 },
                 loyaltyRate: { type: Number, default: 0 },
-                barcodeNumber: { type: String, default: null }
+                barcodeNumber: { type: String, default: null },
+                manualDiscount: { type: Number, default: 0 }
 
             }
         ],

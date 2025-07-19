@@ -257,6 +257,8 @@ export const getInvoiceWithId = async (req, res) => {
 }
 
 
+
+
 // This endpoint for admin
 export const getFullInvoice = async (req, res) => {
     try {

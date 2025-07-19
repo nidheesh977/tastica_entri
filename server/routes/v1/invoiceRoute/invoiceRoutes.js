@@ -2,7 +2,7 @@ import express from 'express'
 import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js';
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { shopVerifyToken } from '../../../middleware/shopCookieTokenVerification.js';
-import { addProductToInvoice, removeProductFromInvoice, softDeleteInvoice, createNewInvoiceTab, getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear } from '../../../controller/invoiceController/index.js';
+import { addProductToInvoice, removeProductFromInvoice, softDeleteInvoice, createNewInvoiceTab, getInvoice, getFullInvoice, invoiceSave, getInvoiceSaved, getInvoiceWithId, deleteOpenOrder, invoiceClear, addProductDiscountInPOS } from '../../../controller/invoiceController/index.js';
 import { addCustomerDetailToCustomInvoice, customInvoiceCreate, customInvoiceDelete } from '../../../controller/invoiceCustomController/invoiceCustomController.js';
 
 
@@ -25,6 +25,9 @@ invoiceRouter.put('/:invoiceId/toggle-archived', shopVerifyToken, userVerifyToke
 invoiceRouter.post('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getInvoiceWithId)
 invoiceRouter.put('/:id/clear', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), invoiceClear)
 
+
+// Add manual discount
+invoiceRouter.put('/:invoiceId/discount/product', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addProductDiscountInPOS)
 
 invoiceRouter.post('/custom/create', shopVerifyToken, userVerifyToken, checkUserRole('admin'), customInvoiceCreate)
 invoiceRouter.delete('/custom/:id', shopVerifyToken, userVerifyToken, checkUserRole('admin'), customInvoiceDelete)
