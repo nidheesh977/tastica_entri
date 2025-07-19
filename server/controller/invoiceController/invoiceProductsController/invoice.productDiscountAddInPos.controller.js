@@ -39,11 +39,12 @@ export const addProductDiscountInPOS = async (req, res) => {
         const findProducFromInvoice = findInvoice.products.find(item => item._id.toString() === productId.toString())
 
 
-        if (manualDiscount > findProducFromInvoice?.price) {
+
+        if (manualDiscount > findProducFromInvoice?.total) {
             return res.status(400).json({ success: false, message: "Too much discount" })
         }
 
-        const productPrice = findProducFromInvoice?.price;
+        const productPrice = findProducFromInvoice?.total;
 
         const deductProductPrice = productPrice - manualDiscountAmount;
 
