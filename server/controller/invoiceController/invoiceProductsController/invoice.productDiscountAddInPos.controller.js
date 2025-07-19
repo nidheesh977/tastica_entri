@@ -18,6 +18,7 @@ export const addProductDiscountInPOS = async (req, res) => {
             return res.status(400).json({ success: false, message: "Product Id not get" })
         };
 
+        console.log("hitted")
 
         const regex = /^\d+$/
 
@@ -35,7 +36,6 @@ export const addProductDiscountInPOS = async (req, res) => {
 
         const findInvoice = await invoiceModel.findById(invoiceId)
 
-
         const findProducFromInvoice = findInvoice.products.find(item => item._id.toString() === productId.toString())
 
 
@@ -44,39 +44,79 @@ export const addProductDiscountInPOS = async (req, res) => {
             return res.status(400).json({ success: false, message: "Too much discount" })
         }
 
-        const productPrice = findProducFromInvoice?.total;
-
-        const deductProductPrice = productPrice - manualDiscountAmount;
-
-
-        const calculateDiscountAmount = calculateDiscount(deductProductPrice, findProducFromInvoice.discountType, findProducFromInvoice.discountFromProduct, findProducFromInvoice.discountFromCategory, findProducFromInvoice.quantity)
-
-        const calculateTaxAmount = caluculateTax(deductProductPrice, findProducFromInvoice.taxRate)
-
-        const { discountAmount, subTotalAmount, addTaxToTotalAmt, taxAmountAfterUpdateQty } = calculateInvoiceTotal(calculateDiscountAmount, findInvoice, findProducFromInvoice, deductProductPrice, calculateTaxAmount)
 
 
 
-        const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findProducFromInvoice._id }, {
-            $set: {
-                "products.$.total": deductProductPrice,
-                "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
-                "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
-                "products.$.manualDiscount": parseFloat(manualDiscountAmount).toFixed(2),
-                totalDiscount: parseFloat(discountAmount).toFixed(2),
-                subTotal: parseFloat(subTotalAmount).toFixed(2),
-                totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
-                totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+        if (manualDiscountAmount > 0) {
 
-            }
-        }, { new: true })
+            const productPrice = findProducFromInvoice?.total;
+
+            const deductProductPrice = productPrice - manualDiscountAmount;
 
 
+            const calculateDiscountAmount = calculateDiscount(deductProductPrice, findProducFromInvoice.discountType, findProducFromInvoice.discountFromProduct, findProducFromInvoice.discountFromCategory, findProducFromInvoice.quantity)
+
+            const calculateTaxAmount = caluculateTax(deductProductPrice, findProducFromInvoice.taxRate)
+
+            const { discountAmount, subTotalAmount, addTaxToTotalAmt, taxAmountAfterUpdateQty } = calculateInvoiceTotal(calculateDiscountAmount, findInvoice, findProducFromInvoice, deductProductPrice, calculateTaxAmount)
 
 
-        res.status(200).json({ success: true, message: "Discount added successfully", data: updatedQuantity })
+            const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findProducFromInvoice._id }, {
+                $set: {
+                    "products.$.total": parseFloat(deductProductPrice).toFixed(2),
+                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
+                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
+                    "products.$.manualDiscount": parseFloat(manualDiscountAmount).toFixed(2),
+                    totalDiscount: parseFloat(discountAmount).toFixed(2),
+                    subTotal: parseFloat(subTotalAmount).toFixed(2),
+                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
+                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+
+                }
+            }, { new: true })
+
+            res.status(200).json({ success: true, message: "Discount added successfully", data: updatedQuantity })
+        }
+
+        else if (manualDiscountAmount === 0) {
+
+
+            const productPrice = findProducFromInvoice?.manualDiscount;
+
+            const addProductPrice = findProducFromInvoice.total + productPrice;
+
+
+            const calculateDiscountAmount = calculateDiscount(addProductPrice, findProducFromInvoice.discountType, findProducFromInvoice.discountFromProduct, findProducFromInvoice.discountFromCategory, findProducFromInvoice.quantity)
+
+            const calculateTaxAmount = caluculateTax(addProductPrice, findProducFromInvoice.taxRate)
+
+            const { discountAmount, subTotalAmount, addTaxToTotalAmt, taxAmountAfterUpdateQty } = calculateInvoiceTotal(calculateDiscountAmount, findInvoice, findProducFromInvoice, addProductPrice, calculateTaxAmount)
+
+
+            const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findProducFromInvoice._id }, {
+                $set: {
+                    "products.$.total": parseFloat(addProductPrice).toFixed(2),
+                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
+                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
+                    "products.$.manualDiscount": parseFloat(manualDiscountAmount).toFixed(2),
+                    totalDiscount: parseFloat(discountAmount).toFixed(2),
+                    subTotal: parseFloat(subTotalAmount).toFixed(2),
+                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
+                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+
+                }
+            }, { new: true })
+
+            res.status(200).json({ success: true, message: "Discount added successfully", data: updatedQuantity })
+        };
+
+
+
+
+
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+
+        return res.status(500).json({ success: false, message: "Internal server errort" })
     }
 }
