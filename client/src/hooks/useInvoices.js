@@ -421,9 +421,7 @@ export const useInvoices = (customerId = null) => {
     },
   });
   const { mutate: redeemPoints } = useMutation({
-    mutationFn: async ({redeemAmountAdd}) => {
-     
-      
+    mutationFn: async ({ redeemAmountAdd }) => {
       const data = { redeemAmountAdd };
       const response = await axiosInstance({
         method: "PUT",
@@ -516,6 +514,26 @@ export const useInvoices = (customerId = null) => {
       toast.error(error?.response?.data?.message || "Something went wrong!");
     },
   });
+  const { mutate: addDiscount } = useMutation({
+    mutationFn: async ({ productId, manualDiscount }) => {
+      const data = { productId, manualDiscount };
+      await axiosInstance({
+        method: "PUT",
+        url: `/invoice/${invoiceId}/discount/product`,
+        withCredentials: true,
+        data,
+      });
+    },
+    onSuccess: (data) => {
+      dispatch(saveInvoiceData(data));
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+      toast.success("Discount added");
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Failed to add discount!");
+    },
+  });
 
   return {
     createInvoice,
@@ -541,5 +559,6 @@ export const useInvoices = (customerId = null) => {
     clearInvoice,
     refund,
     handleInvoiceDelete,
+    addDiscount,
   };
 };
