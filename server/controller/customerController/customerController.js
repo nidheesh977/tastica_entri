@@ -1,7 +1,7 @@
 import customerModel from "../../model/customerModel.js";
 import walletModels from "../../model/walletModel.js";
 import { generateId } from "../../utils/generateId.js";
-import { customerValidation } from "../../utils/joiValidation.js";
+import { customerUpdateValidation, customerValidation } from "../../utils/joiValidation.js";
 import bwipjs from "bwip-js"
 
 const { walletModel } = walletModels;
@@ -59,14 +59,15 @@ export const createCustomer = async (req, res) => {
 
 export const updateCustomer = async (req, res) => {
    try {
-      const { error, value } = customerValidation.validate(req.body);
+      const { error, value } = customerUpdateValidation.validate(req.body);
 
       if (error) {
          return res.status(400).json({ message: error.details[0].message });
       }
 
       const { id } = req.params;
-      const { customerName, phoneNumber } = value;
+      const { role } = req.user;
+      const { customerName, phoneNumber, loyalityPoint } = value;
 
       const customerFound = await customerModel.findById(id);
 
@@ -74,9 +75,35 @@ export const updateCustomer = async (req, res) => {
          return res.status(404).json({ success: false, message: "customer not found" });
       }
 
+      let customerUpdatedData = {}
+      let customerWalletUpdatedData = {}
+
+      if (role === "admin") {
+
+         customerUpdatedData = { customerName, phoneNumber, loyalityPoint }
+         customerWalletUpdatedData = { productLoyaltyPoint: loyalityPoint }
+
+      } else {
+         customerUpdatedData = { customerName, phoneNumber }
+      };
+
+
+
+      Object.keys(customerUpdatedData).forEach((key) => {
+         if (customerUpdatedData[key] === undefined) delete customerUpdatedData[key]
+      });
+
+      Object.keys(customerWalletUpdatedData).forEach((key) => {
+         if (customerWalletUpdatedData[key] === undefined) delete customerWalletUpdatedData[key]
+      })
+
+
       await customerModel.findByIdAndUpdate(id, {
-         customerName,
-         phoneNumber
+         $set: customerUpdatedData
+      }, { new: true })
+
+      await walletModel.findOneAndUpdate({ customerId: id }, {
+         $set: customerWalletUpdatedData
       }, { new: true })
 
       res.status(200).json({ success: true, message: "customer details updated successfully" })

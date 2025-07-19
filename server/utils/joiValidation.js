@@ -386,6 +386,26 @@ export const customerValidation = Joi.object({
 })
 
 
+export const customerUpdateValidation = Joi.object({
+    customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).messages({
+        'string.base': 'User name must be a string',
+        'string.empty': 'User number cannot be empty',
+        'string.min': 'User name must be at least 3 characters long',
+        'string.max': 'User name must be at most 30 characters long',
+        'string.pattern.base': 'User name can contain only letters',
+    }),
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits ',
+    }),
+    loyalityPoint: Joi.number().precision(2).min(0).messages({
+        'number.base': 'Quanity must be a number',
+        'number.empty': 'Quanity cannot be empty',
+    })
+})
+
 export const newCustomProductValidation = Joi.object({
     productName: Joi.string().min(3).max(100).required().messages({
         'string.required': 'Product name is required',
