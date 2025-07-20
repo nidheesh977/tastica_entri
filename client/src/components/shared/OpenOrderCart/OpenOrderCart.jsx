@@ -1,7 +1,11 @@
 import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart, MdRemoveShoppingCart, MdLocalOffer } from "react-icons/md";
+import {
+  MdShoppingCart,
+  MdRemoveShoppingCart,
+  MdLocalOffer,
+} from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
@@ -179,8 +183,17 @@ export const OpenOrderCart = ({
               />
             )}
             <span className="col-span-12 xl:col-span-5 text-center xl:text-start">
-              <span className="me-2 font-semibold">{index + 1}.</span>
-             <span className="cursor-pointer" title={product?.productName}>{product?.productName}</span> 
+              <span className="col-span-12 xl:col-span-5">
+                <span className="flex items-center justify-center xl:justify-start">
+                  <span className="me-2 font-semibold">{index + 1}.</span>
+                  <span
+                    className="cursor-pointer inline-block w-32 overflow-hidden whitespace-nowrap text-ellipsis"
+                    title={product?.productName}
+                  >
+                    {product?.productName}
+                  </span>
+                </span>
+              </span>
             </span>
             {productId === product?._id ? (
               <>
