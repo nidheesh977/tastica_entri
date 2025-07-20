@@ -10,6 +10,7 @@ export const addRedeemToInvoice = async (req, res) => {
         const shopId = req.shop.id;
         const { redeemAmountAdd } = req.body;
 
+
         if (!invoiceId) {
             return res.staus(400).json({ success: false, message: "Invoice ID not get" })
         }
