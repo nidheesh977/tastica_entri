@@ -18,14 +18,14 @@ export const addProductDiscountInPOS = async (req, res) => {
             return res.status(400).json({ success: false, message: "Product Id not get" })
         };
 
-        console.log("hitted")
+
 
         const regex = /^\d+$/
 
         const isNumber = regex.test(Number(parseFloat(manualDiscount)))
 
         if (!isNumber) {
-            return res.status(400).json({ success: false, message: "This is not Number" })
+            return res.status(400).json({ success: false, message: "Enter valid  Number" })
         }
 
         if (manualDiscount < 0) {
@@ -45,13 +45,11 @@ export const addProductDiscountInPOS = async (req, res) => {
         }
 
 
-
-
         if (manualDiscountAmount > 0) {
 
             const productPrice = findProducFromInvoice?.total;
 
-            const deductProductPrice = productPrice - manualDiscountAmount;
+            const deductProductPrice = productPrice + findProducFromInvoice?.manualDiscount - manualDiscountAmount;
 
 
             const calculateDiscountAmount = calculateDiscount(deductProductPrice, findProducFromInvoice.discountType, findProducFromInvoice.discountFromProduct, findProducFromInvoice.discountFromCategory, findProducFromInvoice.quantity)
@@ -78,8 +76,9 @@ export const addProductDiscountInPOS = async (req, res) => {
             res.status(200).json({ success: true, message: "Discount added successfully", data: updatedQuantity })
         }
 
-        else if (manualDiscountAmount === 0) {
+        else if (manualDiscountAmount < findProducFromInvoice.manualDiscount) {
 
+            console.log("hitted bottom");
 
             const productPrice = findProducFromInvoice?.manualDiscount;
 
