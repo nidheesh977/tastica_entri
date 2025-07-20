@@ -285,8 +285,10 @@ export const ShoppingCart = ({
               />
             )}
             <span className="col-span-12 xl:col-span-5 text-center xl:text-start">
-              <span className="me-2 font-semibold">{index + 1}.</span>
-              {product?.productName}
+              <span className="me-2 font-semibold ">
+                {index + 1}.
+              </span>
+              <span className="cursor-pointer" title={product?.productName}>{product?.productName}</span>
             </span>
             {productId === product?._id ? (
               <>
@@ -354,7 +356,7 @@ export const ShoppingCart = ({
                   />
                   <span className="text-xs">
                     {product?.manualDiscount || ""}
-                    </span>
+                  </span>
                   <MdLocalOffer
                     size={12}
                     title="Discount"

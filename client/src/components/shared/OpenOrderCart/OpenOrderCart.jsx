@@ -1,7 +1,7 @@
 import { FaSave, FaMoneyCheckAlt, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useInvoices } from "../../../hooks/useInvoices";
-import { MdShoppingCart, MdRemoveShoppingCart } from "react-icons/md";
+import { MdShoppingCart, MdRemoveShoppingCart, MdLocalOffer } from "react-icons/md";
 import { AlertBox } from "../AlertBox/AlertBox";
 import { PayDialogueBox } from "../PayDialogueBox/PayDialogueBox";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,6 +26,7 @@ export const OpenOrderCart = ({
     saveInvoice,
     redeemPointsOpenOrder,
     addProductToInvoiceOpenOrder,
+    addDiscountOpenOrder,
   } = useInvoices();
 
   const invoice = singleInvoiceOpenOrder;
@@ -40,6 +41,8 @@ export const OpenOrderCart = ({
   const [lastTime, setLastTime] = useState(null);
   const [wallet, setWallet] = useState("");
   const [loyalty, setLoyalty] = useState("");
+  const [productId, setProductId] = useState("");
+  const [manualDiscount, setManualDiscount] = useState("");
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -175,50 +178,86 @@ export const OpenOrderCart = ({
                 onCancel={() => setAlertMessage(null)}
               />
             )}
-            <span className="col-span-12 xl:col-span-6 text-center xl:text-start">
+            <span className="col-span-12 xl:col-span-5 text-center xl:text-start">
               <span className="me-2 font-semibold">{index + 1}.</span>
-              {product?.productName}
+             <span className="cursor-pointer" title={product?.productName}>{product?.productName}</span> 
             </span>
-            <div className="flex items-center col-span-12 xl:col-span-4 mx-auto xl:mx-0">
-              <div className="w-24 me-1 flex justify-between">
-                <div>{product?.price}</div>
-                <div>x</div>
-              </div>
-              {!product?.customProduct ? (
-                <input
-                  type="number"
-                  className="w-12 bg-tertiary text-center"
-                  value={quantities[product?.productId] ?? 1}
-                  onChange={(e) => {
-                    const newQty = e.target.value;
-                    setQuantities((prev) => ({
-                      ...prev,
-                      [product.productId]: newQty,
-                    }));
-                  }}
-                  onBlur={() =>
-                    addProductToInvoice({
-                      productId: product?.productId,
-                      quantity: quantities[product.productId] ?? "",
-                    })
-                  }
-                />
-              ) : (
-                <span className="text-center w-12">{product?.quantity}</span>
-              )}
-              <span className="text-center w-10">{product?.unit}</span>
-            </div>
-            <span className="col-span-12 flex items-center gap-2 xl:col-span-1 mx-auto xl:mx-0 text-right">
-              {product?.price * product?.quantity}
-            </span>
-            <span className="col-span-12 xl:col-span-1 flex justify-end">
-              <FaTrash
-                title="Remove product"
-                className="text-primary hover:text-orange-600 cursor-pointer"
-                onClick={() => setAlertMessage(product._id)}
-                size={12}
-              />
-            </span>
+            {productId === product?._id ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    className="w-20 bg-tertiary text-center outline-primary border border-primary"
+                    onChange={(e) => setManualDiscount(e.target.value)}
+                  />
+                  <button
+                    onClick={() => {
+                      addDiscountOpenOrder({ productId, manualDiscount });
+                      setProductId("");
+                    }}
+                    className="px-2 bg-primary rounded  hover:bg-opacity-90 text-tertiary flex items-center gap-1"
+                  >
+                    <MdLocalOffer size={10} /> Add
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {" "}
+                <div className="flex items-center col-span-12 xl:col-span-4 mx-auto xl:mx-0">
+                  <div className="w-24 me-1 flex justify-between">
+                    <div>{product?.price}</div>
+                    <div>x</div>
+                  </div>
+                  {!product?.customProduct && !product?.manualDiscount ? (
+                    <input
+                      type="number"
+                      className="w-14 bg-tertiary text-center"
+                      value={quantities[product.productId] ?? product.quantity}
+                      onChange={(e) => {
+                        const newQty = e.target.value;
+                        setQuantities((prev) => ({
+                          ...prev,
+                          [product.productId]: newQty,
+                        }));
+                      }}
+                      onBlur={() =>
+                        addProductToInvoice({
+                          productId: product?.productId,
+                          quantity:
+                            quantities[product.productId] ?? product.quantity,
+                        })
+                      }
+                    />
+                  ) : (
+                    <span className="text-center w-12">
+                      {product?.quantity}
+                    </span>
+                  )}
+                  <span className="text-center w-10">{product?.unit}</span>
+                </div>
+                <span className="flex items-center gap-2 col-span-12 xl:col-span-1 text-right mx-auto xl:mx-0">
+                  {product?.price * product?.quantity}
+                </span>
+                <span className="col-span-12 xl:col-span-2 gap-2 flex justify-end">
+                  <FaTrash
+                    title="Remove product"
+                    className="text-primary hover:text-orange-600 cursor-pointer"
+                    onClick={() => setAlertMessage(product._id)}
+                    size={12}
+                  />
+                  <span className="text-xs">
+                    {product?.manualDiscount || ""}
+                  </span>
+                  <MdLocalOffer
+                    size={12}
+                    title="Discount"
+                    onClick={() => setProductId(product?._id)}
+                    className="text-primary hover:text-orange-600 cursor-pointer"
+                  />
+                </span>{" "}
+              </>
+            )}
           </li>
         ))}
       </ul>
