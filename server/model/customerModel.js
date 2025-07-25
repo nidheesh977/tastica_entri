@@ -30,6 +30,12 @@ const customerSchema = new mongoose.Schema({
         default: 0
     },
 
+    role: {
+        type: String,
+        enum: ["shop", "customer"],
+        default: "customer"
+    },
+
     shopId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Shop",

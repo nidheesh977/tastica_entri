@@ -69,7 +69,7 @@ export const addProductToInvoice = async (req, res) => {
         }
 
         if (!productExist) {
-            return res.status(400).json({ success: false, message: "Product not found" })
+            return res.status(404).json({ success: false, message: "Product not found" })
         }
 
         if (quantity > productExist.quantity) {
@@ -93,12 +93,11 @@ export const addProductToInvoice = async (req, res) => {
         let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr].toString() === productId.toString())
 
 
-
-        const test = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
-
+        const checkProductAlreadyExist = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
 
 
-        if (test && findInvoiceProduct?.quantity === quantity) {
+
+        if (checkProductAlreadyExist && findInvoiceProduct?.quantity === quantity) {
             return res.status(400).json({ success: false, message: "Product already added" })
         }
 

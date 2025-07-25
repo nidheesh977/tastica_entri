@@ -16,11 +16,11 @@ export const superAdminlogin = async (req, res) => {
     const { phoneNumber, password } = value;
 
     const superAdminExist = await AdminStaffModel.findOne({
-                            phoneNumber: phoneNumber,
-                         });
+      phoneNumber: phoneNumber,
+    });
 
     if (!superAdminExist) {
-      return res.status(400).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     const isPasswordCorrect = await comparePassword(
@@ -36,27 +36,27 @@ export const superAdminlogin = async (req, res) => {
       return res.status(400).json({ success: false, message: "You are not an admin" });
     }
 
-    let expireTime="1d"
+    let expireTime = "1d"
 
     // generate token
     const superAdminToken = generateToken({
       id: superAdminExist._id,
       role: superAdminExist.role,
       email: superAdminExist.email,
-    },expireTime);
+    }, expireTime);
 
     const { password: pass, ...superAdminData } = superAdminExist._doc;
 
     res.cookie("superAdminToken", superAdminToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.SAMESITE,
-        path: "/",
-        maxAge: 24 * 60 * 60 * 1000,
-      }).status(200).json({success: true,message: "admin Login Successfully",data: superAdminData,});
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.SAMESITE,
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
+    }).status(200).json({ success: true, message: "admin Login Successfully", data: superAdminData, });
 
   } catch (error) {
-     
+
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
@@ -73,7 +73,7 @@ export const checkSuperAdminLogin = async (req, res) => {
 
     const { password: pass, ...SuperAdminData } = superAdminExist._doc;
 
-    res.status(200).json({success: true,message: "staff is logged in",data: SuperAdminData});
+    res.status(200).json({ success: true, message: "staff is logged in", data: SuperAdminData });
 
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -93,7 +93,7 @@ export const superAdminProfilePage = async (req, res) => {
 
     const { password: pass, ...superAdminData } = getProfile._doc;
 
-    res.status(200).json({success: true, message: "Data fetched Successfully", data:superAdminData});
+    res.status(200).json({ success: true, message: "Data fetched Successfully", data: superAdminData });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
@@ -119,23 +119,23 @@ export const UpdateSuperAdmin = async (req, res) => {
     const ExistSuperAdmin = await AdminStaffModel.findById(id);
 
     if (!ExistSuperAdmin) {
-      return res.status(400).json({ success: true, message: "super admin not found" });
+      return res.status(404).json({ success: true, message: "super admin not found" });
     }
 
     const userNameLowerCase = userName.toLowerCase();
 
     const superAdminUpdated = await AdminStaffModel.findByIdAndUpdate(id,
-        {
+      {
         userName: userNameLowerCase,
         phoneNumber,
         email,
-      },{ new: true });
+      }, { new: true });
 
     const { password: pass, ...superAdminData } = superAdminUpdated._doc;
 
-    res.status(200).json({success: true, message: "User data updated successfully", data:superAdminData});
+    res.status(200).json({ success: true, message: "User data updated successfully", data: superAdminData });
   } catch (error) {
-   
+
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

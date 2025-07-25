@@ -3,7 +3,7 @@ import resetTokenModel from "../../model/resetTokenModel.js";
 import { addPermissionValidation, resetPasswordValidation, resetSendEmailValidation, userPasswordValidation } from "../../utils/joiValidation.js";
 import bcryptjs from 'bcryptjs'
 import { nodeMailerTransporter } from "../../helpers/nodeMailerTransporter.js";
-import {v4 as uuidv4 } from "uuid"
+import { v4 as uuidv4 } from "uuid"
 
 
 export const updateStaffPassword = async (req, res) => {
@@ -16,7 +16,7 @@ export const updateStaffPassword = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-   
+
     const { id } = req.params;
     const { password } = value;
 
@@ -28,16 +28,16 @@ export const updateStaffPassword = async (req, res) => {
     const userExist = await AdminStaffModel.findById(id);
 
     if (!userExist) {
-      return res.status(400).json({ success: true, message: "User not found" });
+      return res.status(404).json({ success: true, message: "User not found" });
     }
 
     // Hashing the password
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Update password
-    await AdminStaffModel.findByIdAndUpdate(id,{password: hashedPassword,},{ new: true });
+    await AdminStaffModel.findByIdAndUpdate(id, { password: hashedPassword, }, { new: true });
 
-    res.status(200).json({ success: true, message: "User password updated successfully"});
+    res.status(200).json({ success: true, message: "User password updated successfully" });
 
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -47,68 +47,68 @@ export const updateStaffPassword = async (req, res) => {
 
 // ------------------------------------------- Get single  staff ------------------------------------------------
 
-export const getSingleStaff = async (req,res) => {
+export const getSingleStaff = async (req, res) => {
 
-  try{
-     const {id} = req.params;
+  try {
+    const { id } = req.params;
 
-     if(!id){
-      return res.status(400).json({success:false,message:"Id is missing"});
-     }
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Id is missing" });
+    }
 
-     const staff = await AdminStaffModel.findById(id);
+    const staff = await AdminStaffModel.findById(id);
 
-     const {password:pass,...staffData} = staff._doc;
+    const { password: pass, ...staffData } = staff._doc;
 
-     res.status(200).json({success:true,message:"staff fetched successfully",data:staffData});
- 
-  }catch{
-     res.status(500).json({ success:false, message: "Internal Server Error"});
+    res.status(200).json({ success: true, message: "staff fetched successfully", data: staffData });
+
+  } catch {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 }
 
 
 // --------------------------------------------send otp for reset password--------------------------------------------------
-export const sendResetLink = async (req,res) => {
-  try{
+export const sendResetLink = async (req, res) => {
+  try {
 
     // Validate body data
-     const { error, value } = resetSendEmailValidation.validate(req.body);
-     
-     // Data error 
-        if (error) {
-          return res.status(400).json({ message: error.details[0].message });
-        }
-    
-    const {email,role} = value;
+    const { error, value } = resetSendEmailValidation.validate(req.body);
+
+    // Data error 
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const { email, role } = value;
 
     // Generate Token 
     const resetToken = uuidv4();
 
     // Check user exist
-    const findUser = await AdminStaffModel.findOne({email:email,role:role})
+    const findUser = await AdminStaffModel.findOne({ email: email, role: role })
 
 
-    if(!findUser){
-      return res.status(400).json({success:false,message:"User not found"})
+    if (!findUser) {
+      return res.status(404).json({ success: false, message: "User not found" })
     }
- 
 
-    
-     // To set Token expire time 5m 
-     const expireDate = new Date(Date.now() + 5 * 60 * 1000);
+
+
+    // To set Token expire time 5m 
+    const expireDate = new Date(Date.now() + 5 * 60 * 1000);
 
     // Create transporter for send email 
-      const transporter = nodeMailerTransporter()
+    const transporter = nodeMailerTransporter()
 
     // Delete existing Token of this user
-      await resetTokenModel.deleteMany({userId:findUser._id})
+    await resetTokenModel.deleteMany({ userId: findUser._id })
 
     //  create a new Token
-     const newOtp = new resetTokenModel({resetToken,expiresAt:expireDate,userId:findUser._id})
-     await newOtp.save()
+    const newOtp = new resetTokenModel({ resetToken, expiresAt: expireDate, userId: findUser._id })
+    await newOtp.save()
 
-    const roleBasedResetLink =  findUser.role === "super-admin" ? process.env.SUPER_ADMIN_PASSWORD_RESET_LINK : process.env.ADMIN_PASSWORD_RESET_LINK
+    const roleBasedResetLink = findUser.role === "super-admin" ? process.env.SUPER_ADMIN_PASSWORD_RESET_LINK : process.env.ADMIN_PASSWORD_RESET_LINK
 
     const resetLink = `${roleBasedResetLink}/${resetToken}`
 
@@ -131,19 +131,19 @@ export const sendResetLink = async (req,res) => {
                  © ${new Date().getFullYear()} zensettle ${findUser.role} panel. All rights reserved.
                   </p>
             </div>`
-     
+
     // send OTP to email
     await transporter.sendMail({
-      from:process.env.NODE_GMAIL_SENDER,
-      to:email,
-      subject:"Password Reset Request",
-      html:html
+      from: process.env.NODE_GMAIL_SENDER,
+      to: email,
+      subject: "Password Reset Request",
+      html: html
     })
-    
-   
-    res.status(200).json({success:true,message:"Reset link send successfully"})
-  }catch(error){
-    return res.status(500).json({success:false,message:"Internal server error"})
+
+
+    res.status(200).json({ success: true, message: "Reset link send successfully" })
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal server error" })
   }
 }
 
@@ -154,105 +154,105 @@ export const sendResetLink = async (req,res) => {
 
 export const resetPassword = async (req, res) => {
 
-    // Validate body data
-    const { error, value } = resetPasswordValidation.validate(req.body);
+  // Validate body data
+  const { error, value } = resetPasswordValidation.validate(req.body);
 
-   // Data error 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+  // Data error 
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
   try {
 
-    const { password} = value;
-    const {token} = req.params;
+    const { password } = value;
+    const { token } = req.params;
 
-    const resetToken = await resetTokenModel.findOne({resetToken:token})
+    const resetToken = await resetTokenModel.findOne({ resetToken: token })
 
-    
 
-    if(!resetToken || resetToken.expiresAt < new Date()){
-      await resetTokenModel.deleteMany({resetToken:token})
-      return res.status(400).json({success:false,message:"Invalid or expired reset link"})
+
+    if (!resetToken || resetToken.expiresAt < new Date()) {
+      await resetTokenModel.deleteMany({ resetToken: token })
+      return res.status(400).json({ success: false, message: "Invalid or expired reset link" })
     }
 
 
-    const user = await AdminStaffModel.findOne({_id:resetToken.userId})
+    const user = await AdminStaffModel.findOne({ _id: resetToken.userId })
 
 
-    if(!user){
-      return res.status(400).json({success:false,message:"User not found"})
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" })
     }
 
-    
-    user.password = await bcryptjs.hash(password,10)
+
+    user.password = await bcryptjs.hash(password, 10)
 
     await user.save()
 
-    await resetTokenModel.deleteMany({userId:user._id})
-  
-    res.status(200).json({ success: true, message: "User password updated successfully"});
+    await resetTokenModel.deleteMany({ userId: user._id })
+
+    res.status(200).json({ success: true, message: "User password updated successfully" });
 
   } catch (error) {
-  
+
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
 
-export const addPermissionToStaff = async (req,res) => {
+export const addPermissionToStaff = async (req, res) => {
 
-    const { error, value } = addPermissionValidation.validate(req.body);
+  const { error, value } = addPermissionValidation.validate(req.body);
 
-     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-  try{
-
- 
-  const {permission} = value;
-  const {id} = req.params;
- 
-
-  if(!id){
-     return res.status(400).json({success:false,message:"ID is missing"})
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
   }
 
-   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$addToSet:{permissions:permission}},{new:true})
+  try {
 
-  res.status(200).json({success:true,message:"permissions added successfully",data:addPermissions})
 
-  }catch(error){
-    return res.status(500).json({ success: false, message: "internal server error"});
+    const { permission } = value;
+    const { id } = req.params;
+
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID is missing" })
+    }
+
+    const addPermissions = await AdminStaffModel.findByIdAndUpdate(id, { $addToSet: { permissions: permission } }, { new: true })
+
+    res.status(200).json({ success: true, message: "permissions added successfully", data: addPermissions })
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "internal server error" });
   }
 }
 
 
-export const removePermissionFromStaff = async (req,res) => {
+export const removePermissionFromStaff = async (req, res) => {
 
-    const { error, value } = addPermissionValidation.validate(req.body);
+  const { error, value } = addPermissionValidation.validate(req.body);
 
-     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-  try{
-
- 
-  const {permission} = value;
-  const {id} = req.params;
- 
-
-  if(!id){
-     return res.status(400).json({success:false,message:"ID is missing"})
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
   }
 
-   const addPermissions = await AdminStaffModel.findByIdAndUpdate(id,{$pull:{permissions:permission}},{new:true})
+  try {
 
-  res.status(200).json({success:true,message:"permission remove successfully",data:addPermissions})
 
-  }catch(error){
-    return res.status(500).json({ success: false, message: "internal server error"});
+    const { permission } = value;
+    const { id } = req.params;
+
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID is missing" })
+    }
+
+    const addPermissions = await AdminStaffModel.findByIdAndUpdate(id, { $pull: { permissions: permission } }, { new: true })
+
+    res.status(200).json({ success: true, message: "permission remove successfully", data: addPermissions })
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "internal server error" });
   }
 }

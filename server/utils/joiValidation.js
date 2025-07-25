@@ -103,12 +103,13 @@ export const userPasswordValidation = Joi.object({
 
 export const shopSignupValidtaion = Joi.object({
 
-    shopName: Joi.string().min(3).max(30).required().messages({
+    shopName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
         'string.required': 'Shop name is required',
         'string.base': 'Shop name must be a string',
         'string.empty': 'Shop name cannot be empty',
         'string.min': 'Shop name must be at least 3 characters long',
         'string.max': 'Shop name must be at most 30 characters long',
+        'string.pattern.base': 'Shop name can contain only letters',
     }),
 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
@@ -152,12 +153,13 @@ export const shopSignupValidtaion = Joi.object({
 
 export const shopUpdateValidtaion = Joi.object({
 
-    shopName: Joi.string().min(3).max(30).required().messages({
+    shopName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
         'string.required': 'Shop name is required',
         'string.base': 'Shop name must be a string',
         'string.empty': 'Shop name cannot be empty',
         'string.min': 'Shop name must be at least 3 characters long',
         'string.max': 'Shop name must be at most 30 characters long',
+        'string.pattern.base': 'Shop name can contain only letters',
     }),
 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({

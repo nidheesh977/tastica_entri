@@ -26,7 +26,7 @@ export const shopLogin = async (req, res) => {
         const shopExist = await shopModel.findOne({ email: email });
 
         if (!shopExist) {
-            return res.status(400).json({ success: false, message: "Shop not found" });
+            return res.status(404).json({ success: false, message: "Shop not found" });
         }
 
         if (shopExist.isActive === false) {

@@ -18,13 +18,13 @@ export const addRedeemToInvoice = async (req, res) => {
         const findInvoice = await invoiceModel.findOne({ shop: shopId, _id: invoiceId })
 
         if (!findInvoice) {
-            return res.status(400).json({ success: false, message: "Invoice not found" })
+            return res.status(404).json({ success: false, message: "Invoice not found" })
         }
 
         const findCustomer = await customerModel.findById(findInvoice?.customer);
 
         if (!findCustomer) {
-            return res.status(400).json({ success: false, message: "Customer not found" });
+            return res.status(404).json({ success: false, message: "Customer not found" });
         }
 
         if (redeemAmountAdd < 0) {

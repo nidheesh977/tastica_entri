@@ -1,8 +1,9 @@
 import AdminStaffModel from "../../../model/adminAndStaffModel.js";
 import customerModel from "../../../model/customerModel.js";
 import shopModel from "../../../model/shopModel.js";
+import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter.js";
 import { generateId } from "../../../utils/generateId.js";
-import { shopSignupValidtaion, shopUpdateValidtaion, } from "../../../utils/joiValidation.js";
+import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, } from "../../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 
 export const createShop = async (req, res) => {
@@ -22,7 +23,7 @@ export const createShop = async (req, res) => {
       return res.status(400).json({ message: "Shop already exists" });
     }
 
-    const shopNameLowercase = shopName.trim().toLowerCase();
+    const shopNameLowercase = capitalizeFirstLetter(shopName);
 
     const currencyCodeUpperCase = currencyCode.trim().toUpperCase()
 
@@ -46,7 +47,8 @@ export const createShop = async (req, res) => {
       customerId = generateId("CUS")
     } while (await customerModel.findOne({ customerId: customerId }));
 
-    const lowerCaseCustomerName = newShop.shopName.toLowerCase()
+    const lowerCaseCustomerName = capitalizeFirstLetter(newShop.shopName);
+
 
     const newCustomer = new customerModel({
       customerId,
@@ -83,11 +85,13 @@ export const updateShopBySuperAdmin = async (req, res) => {
     const shopExist = await shopModel.findById(id);
 
     if (!shopExist) {
-      return res.status(400).json({ success: false, message: "Shop not found" });
+      return res.status(404).json({ success: false, message: "Shop not found" });
     }
 
+    const shopNameLowercase = capitalizeFirstLetter(shopName);
+
     const updatedShop = await shopModel.findByIdAndUpdate(id, {
-      shopName,
+      shopName: shopNameLowercase,
       email,
       countryName,
       currencyCode,
@@ -104,6 +108,7 @@ export const updateShopBySuperAdmin = async (req, res) => {
 };
 
 export const updateShopPasswordBySuperAdmin = async (req, res) => {
+
   const { error, value } = shopPasswordValidation.validate(req.body);
 
   // Data error
@@ -119,11 +124,13 @@ export const updateShopPasswordBySuperAdmin = async (req, res) => {
       return res.status(400).json({ success: false, message: "Id is missing" });
     }
 
+
+
     // Check user exist
     const shopExist = await shopModel.findById(id);
 
     if (!shopExist) {
-      return res.status(400).json({ success: true, message: "User not found" });
+      return res.status(404).json({ success: true, message: "User not found" });
     }
 
     // Hashing the password
@@ -194,7 +201,7 @@ export const toggleActiveOrInactive = async (req, res) => {
     const findShop = await shopModel.findById(id);
 
     if (!findShop) {
-      return res.status(400).json({ success: false, message: "Shop not found" })
+      return res.status(404).json({ success: false, message: "Shop not found" })
     }
 
     const shopActiveUpdate = await shopModel.findByIdAndUpdate(id, { isActive: isActive }, { new: true });

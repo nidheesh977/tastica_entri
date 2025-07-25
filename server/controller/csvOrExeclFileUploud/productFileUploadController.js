@@ -3,6 +3,7 @@ import fs from 'fs';
 import productModel from '../../model/productModel.js';
 import categoryModel from '../../model/categoryModel.js';
 import { generateId } from '../../utils/generateId.js';
+import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter.js';
 
 export const productsFileUploader = async (req, res) => {
     try {
@@ -43,7 +44,7 @@ export const productsFileUploader = async (req, res) => {
 
                 products.push({
                     product_id: row.product_id,
-                    productName: row.productName.trim().toLowerCase(),
+                    productName: row.productName,
                     quantity: Number(row.quantity),
                     costPrice: Number(row.costPrice),
                     costPriceProfit: Number(row.costPriceProfit),
@@ -65,13 +66,15 @@ export const productsFileUploader = async (req, res) => {
 
                     for (const row of products) {
 
+                        const cateogryNameLowercase = capitalizeFirstLetter(row.category)
+
+                        const getCategory = await categoryModel.findOne({ shop: shopId, categoryName: cateogryNameLowercase });
 
 
-                        const getCategory = await categoryModel.findOne({ shop: shopId, categoryName: row.category.trim() });
 
 
                         if (!getCategory) {
-                            return res.status(400).json({ success: false, message: `${row.category.trim()} category is not found` });
+                            return res.status(404).json({ success: false, message: `${row.category.trim()} category is not found` });
                         }
 
                         let costProfitSum;
@@ -88,7 +91,9 @@ export const productsFileUploader = async (req, res) => {
                             productId = generateId("PROD");
                         } while (await productModel.findOne({ product_id: productId }));
 
+                        const lowerCaseproductName = capitalizeFirstLetter(row.productName)
 
+                        row["productName"] = lowerCaseproductName;
                         row["category"] = getCategory?._id;
                         row["shop"] = shopId;
                         row["countryName"] = countryName;

@@ -1,5 +1,6 @@
 import customerModel from "../../model/customerModel.js";
 import walletModels from "../../model/walletModel.js";
+import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter.js";
 import { generateId } from "../../utils/generateId.js";
 import { customerUpdateValidation, customerValidation } from "../../utils/joiValidation.js";
 import bwipjs from "bwip-js"
@@ -33,7 +34,7 @@ export const createCustomer = async (req, res) => {
          customerId = generateId("CUS")
       } while (await customerModel.findOne({ customerId: customerId }));
 
-      const lowerCaseCustomerName = customerName.toLowerCase()
+      const lowerCaseCustomerName = capitalizeFirstLetter(customerName)
 
       const newCustomer = new customerModel({
          customerId,
@@ -75,16 +76,18 @@ export const updateCustomer = async (req, res) => {
          return res.status(404).json({ success: false, message: "customer not found" });
       }
 
+      const lowerCaseCustomerName = capitalizeFirstLetter(customerName)
+
       let customerUpdatedData = {}
       let customerWalletUpdatedData = {}
 
       if (role === "admin") {
 
-         customerUpdatedData = { customerName, phoneNumber, loyalityPoint }
+         customerUpdatedData = { customerName: lowerCaseCustomerName, phoneNumber, loyalityPoint }
          customerWalletUpdatedData = { productLoyaltyPoint: loyalityPoint }
 
       } else {
-         customerUpdatedData = { customerName, phoneNumber }
+         customerUpdatedData = { customerName: lowerCaseCustomerName, phoneNumber }
       };
 
 
@@ -118,11 +121,18 @@ export const deleteCustomer = async (req, res) => {
 
       const { id } = req.params;
 
-      const customerFound = await customerModel.findById(id);
+      const customerExist = await customerModel.findById(id);
 
-      if (!customerFound) {
-         return res.status(403).json({ success: false, message: "User not found" })
+
+      if (!customerExist) {
+         return res.status(404).json({ success: false, message: "Customer not found" })
       }
+
+
+      if ("shop" === customerExist?.role) {
+         return res.status(400).json({ success: false, message: "Cannot delete" })
+      }
+
 
       await customerModel.findByIdAndDelete(id);
 
@@ -178,7 +188,7 @@ export const generateBarcodeImage = async (req, res) => {
       const findCustomer = await customerModel.findById(customerId);
 
       if (!findCustomer) {
-         return res.status(400).json({ success: false, message: "Customer not found" })
+         return res.status(404).json({ success: false, message: "Customer not found" })
       }
 
       const png = await bwipjs.toBuffer({

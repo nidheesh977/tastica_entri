@@ -2,6 +2,7 @@ import csv from 'csv-parser';
 import fs from 'fs';
 import categoryModel from '../../model/categoryModel.js';
 import { generateId } from '../../utils/generateId.js';
+import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter.js';
 
 
 export const categoryFileUploader = async (req, res) => {
@@ -39,7 +40,7 @@ export const categoryFileUploader = async (req, res) => {
 
                 categories.push({
                     category_id: row.category_id,
-                    categoryName: row.categoryName.trim().toLowerCase(),
+                    categoryName: row.categoryName,
                     description: row.description,
                     discountRate: Number(row.discountRate),
                     shop: row.shop,
@@ -63,11 +64,14 @@ export const categoryFileUploader = async (req, res) => {
 
                         const isDiscount = row.discountRate > 0 ? true : false;
 
-                        row["shop"] = shopId
+                        const cateogryNameLowercase = capitalizeFirstLetter(row.categoryName);
+
+                        row["category_id"] = categoryId;
+                        row["categoryName"] = cateogryNameLowercase;
+                        row["shop"] = shopId;
                         row["countryName"] = countryName;
                         row["currencyCode"] = currencyCode;
-                        row["isDiscount"] = isDiscount
-                        row["category_id"] = categoryId
+                        row["isDiscount"] = isDiscount;
 
                     }
 

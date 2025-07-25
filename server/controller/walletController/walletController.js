@@ -20,7 +20,7 @@ export const walletLog = async (req, res) => {
         const findCustomer = await customerModel.findOne({ customerId: barcodeNumber }).select("_id customerName phoneNumber loyalityPoint walletLoyaltyPoint");
 
         if (!findCustomer) {
-            return res.status(400).json({ success: false, message: "User not found" })
+            return res.status(404).json({ success: false, message: "User not found" })
         }
 
         let expireTime = "10m"
@@ -63,7 +63,7 @@ export const rechargeWallet = async (req, res) => {
         const findWallet = await walletModel.findOne({ customerId: customerId })
 
         if (!findWallet) {
-            return res.status(400).json({ success: false, message: "Wallet not found" })
+            return res.status(404).json({ success: false, message: "Wallet not found" })
         }
 
         const parseNumber = parseFloat(parseFloat(amount).toFixed(2))

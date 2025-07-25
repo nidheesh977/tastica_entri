@@ -147,7 +147,7 @@ export const invoiceSave = async (req, res) => {
         const saveInvoice = await invoiceModel.findByIdAndUpdate(id, { invoiceStatus: "saved" }, { new: true });
 
         if (!saveInvoice) {
-            return res.status(400).json({ success: false, message: "Invoice not found" })
+            return res.status(404).json({ success: false, message: "Invoice not found" })
         }
 
         res.status(200).json({ success: true, message: "Invoice saved", data: saveInvoice })
@@ -247,7 +247,7 @@ export const getInvoiceWithId = async (req, res) => {
         const findInvoice = await invoiceModel.findById(id);
 
         if (!findInvoice) {
-            return res.status(400).json({ success: false, message: "Invoice not found" })
+            return res.status(404).json({ success: false, message: "Invoice not found" })
         };
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: findInvoice });

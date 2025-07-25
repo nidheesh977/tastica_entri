@@ -21,7 +21,7 @@ export const internalDevicePayment = async (req, res) => {
     const findInvoice = await invoiceModel.findById(invoiceId);
 
     if (!findInvoice) {
-      return res.status(400).json({ success: false, message: "Invoice not found" });
+      return res.status(404).json({ success: false, message: "Invoice not found" });
     }
 
 
@@ -45,7 +45,7 @@ export const internalDevicePayment = async (req, res) => {
     const findShop = await shopModel.findById(findInvoice.shop)
 
     if (!findShop) {
-      return res.status(400).json({ success: false, message: "Shop not found" })
+      return res.status(404).json({ success: false, message: "Shop not found" })
     }
 
 
@@ -60,7 +60,7 @@ export const internalDevicePayment = async (req, res) => {
     let findCustomer = await customerModel.findById(findInvoice.customer);
 
     if (!findCustomer) {
-      return res.status(400).json({ success: false, message: "Customer not found" })
+      return res.status(404).json({ success: false, message: "Customer not found" })
     }
 
 
