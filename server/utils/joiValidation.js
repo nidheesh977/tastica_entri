@@ -103,13 +103,13 @@ export const userPasswordValidation = Joi.object({
 
 export const shopSignupValidtaion = Joi.object({
 
-    shopName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
+    shopName: Joi.string().pattern(/^[a-zA-Z_()\- ]+$/).min(3).max(30).required().messages({
         'string.required': 'Shop name is required',
         'string.base': 'Shop name must be a string',
         'string.empty': 'Shop name cannot be empty',
         'string.min': 'Shop name must be at least 3 characters long',
         'string.max': 'Shop name must be at most 30 characters long',
-        'string.pattern.base': 'Shop name can contain only letters',
+        'string.pattern.base': 'Shop name Only letters and [ - ( ) _ ] allowed.'
     }),
 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
@@ -119,7 +119,7 @@ export const shopSignupValidtaion = Joi.object({
         'string.email': 'Email must be a valid email address',
     }),
 
-    countryName: Joi.string().pattern(/^[A-Z][a-zA-Z\s]+$/).min(3).max(20).required().messages({
+    countryName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(20).required().messages({
         'string.required': 'Country name is required',
         'string.base': 'Country name must be a string',
         'string.empty': 'Country name cannot be empty',
@@ -153,13 +153,13 @@ export const shopSignupValidtaion = Joi.object({
 
 export const shopUpdateValidtaion = Joi.object({
 
-    shopName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
+    shopName: Joi.string().pattern(/^[a-zA-Z_()\- ]+$/).min(3).max(30).required().messages({
         'string.required': 'Shop name is required',
         'string.base': 'Shop name must be a string',
         'string.empty': 'Shop name cannot be empty',
         'string.min': 'Shop name must be at least 3 characters long',
         'string.max': 'Shop name must be at most 30 characters long',
-        'string.pattern.base': 'Shop name can contain only letters',
+        'string.pattern.base': 'Shop name Only letters and [ - ( ) _ ] allowed.'
     }),
 
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
@@ -372,12 +372,12 @@ export const updateCategoryValidation = Joi.object({
 
 
 export const customerValidation = Joi.object({
-    customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).messages({
-        'string.base': 'User name must be a string',
-        'string.empty': 'User number cannot be empty',
-        'string.min': 'User name must be at least 3 characters long',
-        'string.max': 'User name must be at most 30 characters long',
-        'string.pattern.base': 'User name can contain only letters',
+    customerName: Joi.string().pattern(/^[a-zA-Z_()\- ]+$/).min(3).max(30).messages({
+        'string.base': 'Customer name must be a string',
+        'string.empty': 'Customer number cannot be empty',
+        'string.min': 'Customer name must be at least 3 characters long',
+        'string.max': 'Customer name must be at most 30 characters long',
+        'string.pattern.base': 'Customer name Only letters and [ - ( ) _ ] allowed.'
     }),
     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
@@ -389,12 +389,13 @@ export const customerValidation = Joi.object({
 
 
 export const customerUpdateValidation = Joi.object({
-    customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).messages({
-        'string.base': 'User name must be a string',
-        'string.empty': 'User number cannot be empty',
-        'string.min': 'User name must be at least 3 characters long',
-        'string.max': 'User name must be at most 30 characters long',
-        'string.pattern.base': 'User name can contain only letters',
+    customerName: Joi.string().pattern(/^[a-zA-Z_()\- ]+$/).min(3).max(30).messages({
+        'string.base': 'Customer name must be a string',
+        'string.empty': 'Customer number cannot be empty',
+        'string.min': 'Customer name must be at least 3 characters long',
+        'string.max': 'Customer name must be at most 30 characters long',
+        'string.pattern.base': 'Customer name can contain only letters',
+        'string.pattern.base': 'Customer name Only letters and [ - ( ) _ ] allowed.'
     }),
     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',

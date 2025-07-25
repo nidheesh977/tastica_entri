@@ -54,7 +54,8 @@ export const createShop = async (req, res) => {
       customerId,
       customerName: lowerCaseCustomerName,
       phoneNumber: newShop.phoneNumber,
-      shopId: newShop._id
+      shopId: newShop._id,
+      role: "shop"
     })
 
     await newCustomer.save()
@@ -68,6 +69,8 @@ export const createShop = async (req, res) => {
 };
 
 export const updateShopBySuperAdmin = async (req, res) => {
+
+
   const { error, value } = shopUpdateValidtaion.validate(req.body);
 
   if (error) {
@@ -77,6 +80,8 @@ export const updateShopBySuperAdmin = async (req, res) => {
   try {
     const { shopName, email, countryName, currencyCode } = value;
     const { id } = req.params;
+
+
 
     if (!id) {
       return res.status(400).json({ success: false, message: "Shop ID is missing" });
