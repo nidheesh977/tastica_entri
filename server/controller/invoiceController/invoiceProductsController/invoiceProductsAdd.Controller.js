@@ -4,6 +4,7 @@ import invoiceModel, { checkObjectId } from "../../../model/invoiceModel.js";
 import productModel from "../../../model/productModel.js";
 import { calculateDiscount } from "../../../utils/calculateDiscount.js";
 import { calculateInvoiceTotal } from "../../../utils/calculateInvoice.js";
+import { productPriceTotalCalculate } from "../../../utils/productPriceTotalCalculate.js";
 import { caluculateTax } from "../../../utils/productTaxCalculate.js";
 
 
@@ -88,35 +89,18 @@ export const addProductToInvoice = async (req, res) => {
 
         // for get category discount
         const findCategory = await categoryModel.findOne({ _id: productExist?.category })
+
         const getDiscount = findCategory?.discountRate || 0;
 
-        let findInvoiceProduct = existInvoice.products.find(item => item[findProductInArr].toString() === productId.toString())
+        let findInvoiceProduct = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
 
 
-        const checkProductAlreadyExist = existInvoice.products.some(item => item[findProductInArr].toString() === productId.toString())
-
-
-
-        if (checkProductAlreadyExist && findInvoiceProduct?.quantity === quantity) {
-            return res.status(400).json({ success: false, message: "Product already added" })
+        if (findInvoiceProduct) {
+            return res.status(400).json({ success: false, message: "This product already added" })
         }
 
 
-        let productPrice;
-
-        if (productExist?.costPrice > 0) {
-            productPrice = productExist?.costPrice
-        } else if (productExist?.sellingPrice > 0) {
-            productPrice = productExist?.sellingPrice
-        }
-
-        let productTotalPrice;
-
-        if (productExist?.costPrice > 0) {
-            productTotalPrice = productPrice * quantity
-        } else if (productExist?.sellingPrice > 0) {
-            productTotalPrice = productPrice * quantity
-        }
+        const { productPrice, productTotalPrice } = productPriceTotalCalculate(productExist, quantity)
 
 
         const addProduct = {
@@ -176,66 +160,7 @@ export const addProductToInvoice = async (req, res) => {
 
         }
 
-        else if (findInvoiceProduct?.customProduct === true) {
-            return res.status(400).json({ success: false, message: "Custom product cannot be change quantity" })
-        }
-        // This condition for increase quantity than change values
-        else if (quantity > findInvoiceProduct.quantity) {
 
-
-            // calculate discount
-            const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory, quantity)
-
-            const calculateTaxAmount = caluculateTax(productTotalPrice, findInvoiceProduct.taxRate)
-
-            const { discountAmount, subTotalAmount, addTaxToTotalAmt, taxAmountAfterUpdateQty } = calculateInvoiceTotal(calculateDiscountAmount, existInvoice, findInvoiceProduct, productTotalPrice, calculateTaxAmount)
-
-
-
-            const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findInvoiceProduct._id }, {
-                $set: {
-                    "products.$.quantity": quantity,
-                    "products.$.total": productTotalPrice,
-                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
-                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
-                    totalDiscount: parseFloat(discountAmount).toFixed(2),
-                    subTotal: parseFloat(subTotalAmount).toFixed(2),
-                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
-                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
-
-                }
-            }, { new: true })
-
-            res.status(200).json({ success: true, message: "Quantity Updated", data: updatedQuantity })
-        }
-
-        else if (quantity < findInvoiceProduct.quantity) {
-
-
-            // calculate discount
-            const calculateDiscountAmount = calculateDiscount(productTotalPrice, findInvoiceProduct.discountType, findInvoiceProduct.discountFromProduct, findInvoiceProduct.discountFromCategory, quantity)
-
-            const calculateTaxAmount = caluculateTax(productTotalPrice, findInvoiceProduct.taxRate)
-
-            const { discountAmount, subTotalAmount, addTaxToTotalAmt, taxAmountAfterUpdateQty } = calculateInvoiceTotal(calculateDiscountAmount, existInvoice, findInvoiceProduct, productTotalPrice, calculateTaxAmount)
-
-
-            const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findInvoiceProduct._id }, {
-                $set: {
-                    "products.$.quantity": quantity,
-                    "products.$.total": productTotalPrice,
-                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
-                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
-                    totalDiscount: parseFloat(discountAmount).toFixed(2),
-                    subTotal: parseFloat(subTotalAmount).toFixed(2),
-                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
-                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
-                }
-            }, { new: true })
-
-
-            return res.status(200).json({ success: true, message: "Quantity updated", data: updatedQuantity })
-        }
 
 
     } catch (error) {

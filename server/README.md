@@ -151,6 +151,11 @@
   **method:**`POST`<br>
   **URL:**`/api/v1/invoice/:invoiceId/products`
 
+  - 📃📦 update products quantity in invoice<br>
+  **method:**`PUT`<br>
+  **URL:**`/api/v1/invoice/:invoiceId/products/quantity`
+
+
 - 📃📦🗑 remove product from invoice<br>
   **method:**`PUT`<br>
   **URL:**`/api/v1/invoice/:invoiceId/product/:productsId`
