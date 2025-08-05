@@ -36,6 +36,7 @@ export const ShoppingCart = ({
     invoice,
     clearInvoice,
     addDiscount,
+    updateProductQuantity
   } = useInvoices();
 
   const products = invoice?.products || [];
@@ -337,7 +338,7 @@ export const ShoppingCart = ({
                         }));
                       }}
                       onBlur={() =>
-                        addProductToInvoice({
+                        updateProductQuantity({
                           productId: product?.productId,
                           quantity:
                             quantities[product.productId] ?? product.quantity,

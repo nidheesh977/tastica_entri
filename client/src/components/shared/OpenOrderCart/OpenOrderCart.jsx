@@ -29,7 +29,7 @@ export const OpenOrderCart = ({
     makeOnlinePaymentOpenOrder,
     saveInvoice,
     redeemPointsOpenOrder,
-    addProductToInvoiceOpenOrder,
+    updateProductQuantityOpenOrder,
     addDiscountOpenOrder,
   } = useInvoices();
 
@@ -63,7 +63,7 @@ export const OpenOrderCart = ({
         const cleanedBuffer = buffer.replace(/shift/gi, "");
         console.log(cleanedBuffer);
         if (cleanedBuffer.length > 2) {
-          addProductToInvoiceOpenOrder({
+          addProductToInvoice({
             productId: cleanedBuffer,
             quantity: 1,
           });
@@ -235,7 +235,7 @@ export const OpenOrderCart = ({
                         }));
                       }}
                       onBlur={() =>
-                        addProductToInvoice({
+                        updateProductQuantityOpenOrder({
                           productId: product?.productId,
                           quantity:
                             quantities[product.productId] ?? product.quantity,

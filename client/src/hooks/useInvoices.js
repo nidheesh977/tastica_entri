@@ -166,6 +166,58 @@ export const useInvoices = (customerId = null) => {
       );
     },
   });
+  const { mutate: updateProductQuantity } = useMutation({
+    mutationFn: async ({ productId, quantity }) => {
+      const data = {
+        productId,
+        quantity,
+      };
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/${invoiceId}/products/quantity`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Product quantity updated");
+      dispatch(saveInvoiceData(data));
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to update product quantity"
+      );
+    },
+  });
+  const { mutate: updateProductQuantityOpenOrder } = useMutation({
+    mutationFn: async ({ productId, quantity }) => {
+      const data = {
+        productId,
+        quantity,
+      };
+      const response = await axiosInstance({
+        method: "PUT",
+        url: `/${singleInvoiceId}/products/quantity`,
+        withCredentials: true,
+        data,
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Product quantity updated");
+      dispatch(saveInvoiceData(data));
+      queryClient.invalidateQueries(["invoice"]);
+      queryClient.invalidateQueries(["savedInvoices"]);
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "Failed to update product quantity"
+      );
+    },
+  });
   const { mutate: clearInvoice } = useMutation({
     mutationFn: async () => {
       const idToClear = invoiceId || singleInvoiceId;
@@ -580,6 +632,8 @@ export const useInvoices = (customerId = null) => {
     refund,
     handleInvoiceDelete,
     addDiscount,
-    addDiscountOpenOrder
+    addDiscountOpenOrder,
+    updateProductQuantity,
+    updateProductQuantityOpenOrder,
   };
 };
