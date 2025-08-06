@@ -8,6 +8,11 @@ export const paymentRefund = async (req, res) => {
     const { amount } = req.body;
 
 
+    const parseAmount = parseFloat(amount)
+
+    if (amount === "") {
+      return res.status(400).json({ success: false, message: "Amount cannot be empty" })
+    }
 
     if (!id) {
       return res.status(400).json({ success: false, message: "Invoice ID is missing" })
@@ -18,42 +23,58 @@ export const paymentRefund = async (req, res) => {
     const totalAmount = invoiceExist.totalAmount;
 
 
-
     let refundType;
     let invoiceStatus;
     let paymentStatus;
 
 
-    if (parseFloat(amount) < 0) {
+    if (parseAmount < 0) {
       return res.status(400).json({ success: false, message: "Invalid amount" })
-    } else if (parseFloat(amount) === 0) {
+    } else if (parseAmount === 0) {
       refundType = null
       invoiceStatus = "paid"
       paymentStatus = "success"
-    } else if (parseFloat(amount) > totalAmount) {
+    } else if (parseAmount > totalAmount) {
       return res.status(400).json({ success: false, message: "Exceeds balance" })
-    } else if (parseFloat(amount) === totalAmount) {
+    } else if (parseAmount === totalAmount) {
       refundType = "full"
       invoiceStatus = "refunded"
       paymentStatus = "refunded"
-    } else if (parseFloat(amount) < totalAmount) {
+    } else if (parseAmount < totalAmount) {
       refundType = "partial"
       invoiceStatus = "paid"
       paymentStatus = "success"
     }
 
-    let refundDeductTotal = refundType === "partial" ? totalAmount - parseFloat(amount) : parseFloat(amount)
 
-    const updateInvoice = await invoiceModel.findByIdAndUpdate(id, {
-      refundedAmount: parseFloat(amount),
-      refundType,
-      paymentStatus,
-      invoiceStatus,
-      totalAmount: refundDeductTotal
-    }, { new: true })
+    if (parseAmount === 0) {
+
+      let refundDeductTotal = invoiceExist.subTotal + invoiceExist.totalTax
+      const updateInvoice = await invoiceModel.findByIdAndUpdate(id, {
+        refundedAmount: parseAmount,
+        refundType,
+        paymentStatus,
+        invoiceStatus,
+        totalAmount: refundDeductTotal
+      }, { new: true })
+
+      res.status(200).json({ success: true, message: "Payment refunded successfully", data: updateInvoice });
+    } else {
+
+      let refundDeductTotal = totalAmount - parseAmount
+      const updateInvoice = await invoiceModel.findByIdAndUpdate(id, {
+        refundedAmount: parseAmount,
+        refundType,
+        paymentStatus,
+        invoiceStatus,
+        totalAmount: refundDeductTotal
+      }, { new: true })
+
+      res.status(200).json({ success: true, message: "Payment refunded successfully", data: updateInvoice });
+    }
 
 
-    res.status(200).json({ success: true, message: "Payment refunded successfully", data: updateInvoice });
+
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal server error" })
   }

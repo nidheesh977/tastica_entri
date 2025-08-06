@@ -126,8 +126,6 @@ export const addProductToInvoice = async (req, res) => {
 
         if (!findInvoiceProduct) {
 
-
-
             // calculate discount
             const totalDiscountAmount = calculateDiscount(addProduct.total, addProduct.discountType, parseFloat(addProduct.discountFromProduct), parseFloat(addProduct.discountFromCategory), addProduct.quantity)
 
