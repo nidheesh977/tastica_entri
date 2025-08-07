@@ -174,7 +174,7 @@ export const useInvoices = (customerId = null) => {
       };
       const response = await axiosInstance({
         method: "PUT",
-        url: `/${invoiceId}/products/quantity`,
+        url: `/invoice/${invoiceId}/products/quantity`,
         withCredentials: true,
         data,
       });
@@ -200,7 +200,7 @@ export const useInvoices = (customerId = null) => {
       };
       const response = await axiosInstance({
         method: "PUT",
-        url: `/${singleInvoiceId}/products/quantity`,
+        url: `/invoice/${singleInvoiceId}/products/quantity`,
         withCredentials: true,
         data,
       });
