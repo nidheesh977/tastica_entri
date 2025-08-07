@@ -129,6 +129,9 @@ export const ListCardInvoice = ({
                 <th className="border border-primary px-4 py-2">Mobile</th>
               )}
               <th className="border border-primary px-4 py-2">Total Amount</th>
+              <th className="border border-primary px-4 py-2">
+                Payment Method
+              </th>
               <th className="border border-primary px-4 py-2">Actions</th>
             </tr>
           </thead>
@@ -149,7 +152,7 @@ export const ListCardInvoice = ({
                   {invoice?.staff}
                 </td>
                 <td className="border border-primary px-4 py-2">
-                  {invoice?.archiveReason || 'nill'}
+                  {invoice?.archiveReason || "nill"}
                 </td>
                 {invoice?.customer?.customerName && (
                   <td className="border border-primary px-4 py-2">
@@ -163,6 +166,9 @@ export const ListCardInvoice = ({
                   </td>
                 )}
 
+                <td className="border border-primary px-4 py-2">
+                  {invoice?.paymentMethod}
+                </td>
                 <td className="border border-primary px-4 py-2">
                   {invoice?.totalAmount}
                 </td>
