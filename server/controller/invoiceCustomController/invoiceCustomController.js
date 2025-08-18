@@ -1,7 +1,7 @@
 import AdminStaffModel from "../../model/adminAndStaffModel.js";
 import invoiceModel from "../../model/invoiceModel.js"
 import productModel from "../../model/productModel.js";
-import { generateId } from "../../utils/generateId.js";
+import { generateInvoiceId } from "../../utils/generateId.js";
 import { customInvoiceCustomerValidation } from "../../utils/joiValidation.js";
 
 
@@ -21,12 +21,9 @@ export const customInvoiceCreate = async (req, res) => {
 
         const staffName = `${staffExist.userName} (${staffExist.role})`;
 
-        let invoiceId;
 
-        do {
-            invoiceId = generateId("INVO")
-        } while (await invoiceModel.findOne({ invoiceNumber: invoiceId }));
 
+        const invoiceId = await generateInvoiceId(id);
 
         const newCustom = await invoiceModel({
             invoiceNumber: invoiceId,

@@ -334,7 +334,7 @@ export const ShoppingCart = ({
                         const newQty = e.target.value;
                         setQuantities((prev) => ({
                           ...prev,
-                          [product.productId]: newQty,
+                          [product.productId]: Number(newQty),
                         }));
                       }}
                       onBlur={() =>
@@ -353,7 +353,7 @@ export const ShoppingCart = ({
                   <span className="text-center w-10">{product?.unit}</span>
                 </div>
                 <span className="flex items-center gap-2 col-span-12 xl:col-span-1 text-right mx-auto xl:mx-0">
-                  {product?.price * product?.quantity}
+                  {product?.total}
                 </span>
                 <span className="col-span-12 xl:col-span-2 gap-2 flex justify-end">
                   <FaTrash
@@ -447,11 +447,10 @@ export const ShoppingCart = ({
               <FaSave /> Save
             </button>
             <button
-              className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
-                products.length === 0
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-primary hover:bg-opacity-90"
-              } text-white rounded-lg`}
+              className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${products.length === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary hover:bg-opacity-90"
+                } text-white rounded-lg`}
               onClick={() => {
                 if (products.length === 0) return;
                 setShowPayDialog(true);
@@ -470,9 +469,8 @@ export const ShoppingCart = ({
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: ${currency}${
-            invoice?.totalAmount || 0
-          }`}
+          message={`Total payable amount: ${currency}${invoice?.totalAmount || 0
+            }`}
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}

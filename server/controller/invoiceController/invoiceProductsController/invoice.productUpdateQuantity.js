@@ -13,7 +13,6 @@ export const productQuantityUpdate = async (req, res) => {
         const { productId, quantity } = req.body;
 
 
-
         if (!invoiceId) {
             return res.status(400).json({ success: false, message: "Invoice ID not get" })
         }
@@ -32,6 +31,11 @@ export const productQuantityUpdate = async (req, res) => {
         if (!quantity) {
             return res.status(400).json({ success: false, message: "Quantity not get" })
         }
+
+        if (quantity < 0 || quantity === 0) {
+            return res.status(400).json({ success: false, message: "Please enter a valid quantity" })
+        }
+
 
         const existInvoice = await invoiceModel.findById(invoiceId);
 

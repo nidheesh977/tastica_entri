@@ -15,8 +15,7 @@ export const addProductToInvoice = async (req, res) => {
 
     try {
         const { invoiceId } = req.params;
-        const { productId, quantity } = req.body;
-
+        let { productId, quantity } = req.body;
 
 
         if (!invoiceId) {
@@ -36,6 +35,10 @@ export const addProductToInvoice = async (req, res) => {
 
         if (!quantity) {
             return res.status(400).json({ success: false, message: "Quantity not get" })
+        }
+
+        if (quantity < 0) {
+            return res.status(400).json({ success: false, message: "Please enter a valid quantity" })
         }
 
         const existInvoice = await invoiceModel.findById(invoiceId);
@@ -162,6 +165,8 @@ export const addProductToInvoice = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error);
+
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

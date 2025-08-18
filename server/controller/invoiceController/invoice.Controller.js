@@ -1,7 +1,7 @@
 import AdminStaffModel from '../../model/adminAndStaffModel.js';
 import customerModel from '../../model/customerModel.js';
 import invoiceModel from '../../model/invoiceModel.js';
-import { generateId } from '../../utils/generateId.js';
+import { generateInvoiceId } from '../../utils/generateId.js';
 import { invoiceSoftDeleteValidation } from '../../utils/joiValidation.js';
 
 
@@ -17,6 +17,8 @@ export const createNewInvoiceTab = async (req, res) => {
             return res.status(400).json({ success: false, message: "Staff ID is required" })
         }
 
+
+
         if (!customerId) {
             return res.status(400).json({ success: false, message: "customer ID is required" })
         }
@@ -27,6 +29,8 @@ export const createNewInvoiceTab = async (req, res) => {
             return res.status(400).json({ success: false, message: "Customer does not exist" })
         }
 
+
+
         const staffExist = await AdminStaffModel.findById(userId)
 
         if (!staffExist) {
@@ -35,11 +39,8 @@ export const createNewInvoiceTab = async (req, res) => {
 
         const staffName = `${staffExist.userName} (${staffExist.role})`;
 
-        let invoiceId;
 
-        do {
-            invoiceId = generateId("INVO")
-        } while (await invoiceModel.findOne({ invoiceNumber: invoiceId }));
+        const invoiceId = await generateInvoiceId(id);
 
         const newInvoice = invoiceModel({
             invoiceNumber: invoiceId,
@@ -53,10 +54,10 @@ export const createNewInvoiceTab = async (req, res) => {
 
         await newInvoice.save();
 
-        const findInvoice = await invoiceModel.findOne({ _id: newInvoice._id }).populate({ path: 'customer', select: "-invoices" })
-
-        res.status(201).json({ success: true, message: "Invoice created successfully", data: findInvoice })
+        res.status(201).json({ success: true, message: "Invoice created successfully", data: newInvoice })
     } catch (error) {
+        console.log(error);
+
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
@@ -68,7 +69,7 @@ export const createNewInvoiceTab = async (req, res) => {
 export const getInvoice = async (req, res) => {
     try {
         const { invoiceId } = req.params;
-        const shopId = req.shop.id;
+
 
         if (!invoiceId) {
             return res.status(400).json({ success: false, message: "Invoice ID not get" })
