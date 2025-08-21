@@ -1,8 +1,9 @@
 import csv from 'csv-parser';
 import fs from 'fs';
 import categoryModel from '../../model/categoryModel.js';
-import { generateId } from '../../utils/generateId.js';
+import { generateCategoryId } from '../../utils/generateId.js';
 import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter.js';
+import counterModel from '../../model/counterModel.js';
 
 
 export const categoryFileUploader = async (req, res) => {
@@ -33,6 +34,8 @@ export const categoryFileUploader = async (req, res) => {
 
         const categories = [];
 
+        let numberOfCategory = 0;
+
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
@@ -55,12 +58,9 @@ export const categoryFileUploader = async (req, res) => {
 
 
 
-                        let categoryId;
+                        numberOfCategory += 1
 
-                        do {
-                            categoryId = generateId("CATE")
-                        } while (await categoryModel.findOne({ category_id: categoryId }));
-
+                        let categoryId = await generateCategoryId(shopId)
 
                         const isDiscount = row.discountRate > 0 ? true : false;
 
@@ -99,6 +99,14 @@ export const categoryFileUploader = async (req, res) => {
 
 
                     if (newFiles.length === 0) {
+
+                        const counterName = "category"
+
+                        await counterModel.findOneAndUpdate(
+                            { shopId, counterName: counterName },
+                            { $inc: { seq: -numberOfCategory } },
+                            { new: true, upsert: true }
+                        )
                         return res.status(400).json({
                             success: false,
                             message: "All categories in the CSV file already exist",

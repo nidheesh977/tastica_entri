@@ -1,7 +1,7 @@
 import customerModel from "../../model/customerModel.js";
 import walletModels from "../../model/walletModel.js";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter.js";
-import { generateId } from "../../utils/generateId.js";
+import { generateCustomerId } from "../../utils/generateId.js";
 import { customerUpdateValidation, customerValidation } from "../../utils/joiValidation.js";
 import bwipjs from "bwip-js"
 
@@ -28,11 +28,7 @@ export const createCustomer = async (req, res) => {
 
 
       //  generating unique ID for customers 
-      let customerId;
-
-      do {
-         customerId = generateId("CUS")
-      } while (await customerModel.findOne({ customerId: customerId }));
+      let customerId = await generateCustomerId(shopId)
 
       const lowerCaseCustomerName = capitalizeFirstLetter(customerName)
 
@@ -122,6 +118,7 @@ export const deleteCustomer = async (req, res) => {
       const { id } = req.params;
 
       const customerExist = await customerModel.findById(id);
+
 
 
       if (!customerExist) {

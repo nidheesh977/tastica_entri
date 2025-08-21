@@ -2,7 +2,7 @@ import AdminStaffModel from "../../../model/adminAndStaffModel.js";
 import customerModel from "../../../model/customerModel.js";
 import shopModel from "../../../model/shopModel.js";
 import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter.js";
-import { generateId } from "../../../utils/generateId.js";
+import { generateCustomerId } from "../../../utils/generateId.js";
 import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, } from "../../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 
@@ -41,11 +41,8 @@ export const createShop = async (req, res) => {
 
     await newShop.save();
 
-    let customerId;
+    let customerId = await generateCustomerId(newShop._id)
 
-    do {
-      customerId = generateId("CUS")
-    } while (await customerModel.findOne({ customerId: customerId }));
 
     const lowerCaseCustomerName = capitalizeFirstLetter(newShop.shopName);
 
@@ -106,7 +103,7 @@ export const updateShopBySuperAdmin = async (req, res) => {
 
     const { password: pass, ...shopData } = updatedShop._doc;
 
-    res.status(200).json({ ss: true, message: "shop updated successfully", data: shopData });
+    res.status(200).json({ success: true, message: "shop updated successfully", data: shopData });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal server error" });
   }

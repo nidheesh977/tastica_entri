@@ -3,8 +3,9 @@ import { comparePassword } from "../../utils/comparePassword.js";
 import { adminAndSuperAdminLoginValidation, userPasswordValidation, userSignupValidation, userUpdateValidation, } from "../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../../utils/generateToken.js";
-import { generateStaffId } from "../../utils/generateStaffId.js";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter.js";
+import { generatedStaffId } from "../../utils/generateId.js";
+
 
 
 export const loginAdmin = async (req, res) => {
@@ -101,18 +102,9 @@ export const CreateEmployee = async (req, res) => {
     // User name to lower case
     const userNameLowerCase = capitalizeFirstLetter(userName);
 
-    console.log("hitted")
+    const sliceName = shopName.slice(0, 3).toUpperCase()
 
-    // Slice shop name for generating shop ID 
-    const sliceName = shopName.slice(0, 3)
-
-    let staffId;
-
-    do {
-      // Generate random shop ID
-      staffId = generateStaffId(sliceName.toUpperCase());
-      // Check uniqueness in database  
-    } while (await AdminStaffModel.findOne({ staffId: staffId }));
+    const staffId = await generatedStaffId(sliceName, id)
 
     // Create new user 
     const newUser = new AdminStaffModel({

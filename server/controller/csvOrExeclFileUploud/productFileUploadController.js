@@ -2,8 +2,9 @@ import csv from 'csv-parser';
 import fs from 'fs';
 import productModel from '../../model/productModel.js';
 import categoryModel from '../../model/categoryModel.js';
-import { generateId } from '../../utils/generateId.js';
+import { generateProductId } from '../../utils/generateId.js';
 import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter.js';
+import counterModel from '../../model/counterModel.js';
 
 export const productsFileUploader = async (req, res) => {
     try {
@@ -36,6 +37,8 @@ export const productsFileUploader = async (req, res) => {
         }
 
         const products = [];
+
+        let numberOfProduct = 0;
 
         fs.createReadStream(filePath)
             .pipe(csv())
@@ -71,11 +74,12 @@ export const productsFileUploader = async (req, res) => {
                         const getCategory = await categoryModel.findOne({ shop: shopId, categoryName: cateogryNameLowercase });
 
 
-
-
                         if (!getCategory) {
                             return res.status(404).json({ success: false, message: `${row.category.trim()} category is not found` });
                         }
+
+
+                        numberOfProduct += 1
 
                         let costProfitSum;
 
@@ -85,11 +89,7 @@ export const productsFileUploader = async (req, res) => {
 
                         let addCostPrice = row.costPrice === 0 ? row.costPrice : row.costPrice + costProfitSum;
 
-                        let productId;
-
-                        do {
-                            productId = generateId("PROD");
-                        } while (await productModel.findOne({ product_id: productId }));
+                        let productId = await generateProductId(shopId)
 
                         const lowerCaseproductName = capitalizeFirstLetter(row.productName)
 
@@ -102,6 +102,8 @@ export const productsFileUploader = async (req, res) => {
                         row["costPrice"] = addCostPrice;
                         row["barcodeNumber"] = row.barcodeNumber === "" ? null : row.barcodeNumber
                     }
+
+
 
                     const files = products.map(row => ({
                         productName: row.productName,
@@ -123,6 +125,15 @@ export const productsFileUploader = async (req, res) => {
 
                     const newFiles = products.filter(file => !existingSet.has(`${file.productName}::${file.shop}`));
                     if (newFiles.length === 0) {
+
+                        const counterName = "product"
+
+                        await counterModel.findOneAndUpdate(
+                            { shopId, counterName: counterName },
+                            { $inc: { seq: -numberOfProduct } },
+                            { new: true, upsert: true }
+                        )
+
                         return res.status(400).json({
                             success: false,
                             message: "All products in the CSV file already exist",
@@ -142,6 +153,7 @@ export const productsFileUploader = async (req, res) => {
 
 
                 } catch (error) {
+                    console.log(error);
 
                     res.status(500).json({ success: false, message: "Internal server error" });
                 } finally {

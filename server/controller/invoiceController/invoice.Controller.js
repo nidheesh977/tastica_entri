@@ -185,17 +185,22 @@ export const deleteOpenOrder = async (req, res) => {
 
     try {
 
+        const shopId = req.shop.id
         const { id } = req.params
 
         if (!id) {
             return res.status(400).json({ success: false, message: "Invoice ID is not get" });
         }
 
-        const findInvoice = await invoiceModel.findById(id)
+        const findInvoice = await invoiceModel.findOne({ shop: shopId, _id: id })
 
-        if (findInvoice.invoiceStatus === "paid") {
+
+
+        if (findInvoice?.invoiceStatus === "paid") {
             return res.status(400).json({ success: "false", message: "You cannot delete invoice its paid" })
         }
+
+
 
         await invoiceModel.findByIdAndDelete(id)
 
@@ -203,7 +208,9 @@ export const deleteOpenOrder = async (req, res) => {
         res.status(200).json({ success: true, message: "Invoice deleted successfully" })
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error", error })
+        console.log(error);
+
+        return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
 
@@ -271,7 +278,7 @@ export const getFullInvoice = async (req, res) => {
             return res.status(400).json({ success: false, message: "Shop ID is not get" });
         }
 
-        const fullInvoice = await invoiceModel.find({ shop: shopId, invoiceStatus: status }).populate("customer").populate("products");
+        const fullInvoice = await invoiceModel.find({ shop: shopId, invoiceStatus: status }).sort({ createdAt: 1 }).populate("customer").populate("products");
 
         res.status(200).json({ success: true, message: "Data fetched Successfully", data: fullInvoice })
     } catch (error) {

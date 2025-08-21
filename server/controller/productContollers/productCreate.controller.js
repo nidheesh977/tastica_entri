@@ -1,6 +1,6 @@
 import productModel from "../../model/productModel.js";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter.js";
-import { generateId } from "../../utils/generateId.js";
+import { generateProductId } from "../../utils/generateId.js";
 import { newProductValidation } from "../../utils/joiValidation.js";
 
 export const createProduct = async (req, res) => {
@@ -52,11 +52,8 @@ export const createProduct = async (req, res) => {
         const addCostPrice = costPrice === 0 ? costPrice : costPrice + costProfitSum
 
         //  generating unique ID for products
-        let productId;
+        let productId = await generateProductId(id)
 
-        do {
-            productId = generateId("PROD")
-        } while (await productModel.findOne({ product_id: productId }));
 
         const newProduct = new productModel({
             product_id: productId,

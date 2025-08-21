@@ -33,7 +33,7 @@ export const superAdminlogin = async (req, res) => {
     }
 
     if (superAdminExist.role !== "super-admin") {
-      return res.status(400).json({ success: false, message: "You are not an admin" });
+      return res.status(400).json({ success: false, message: "You are not an super-admin" });
     }
 
     let expireTime = "1d"

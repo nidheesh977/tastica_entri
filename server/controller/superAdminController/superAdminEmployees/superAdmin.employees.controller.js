@@ -1,6 +1,7 @@
 import AdminStaffModel from "../../../model/adminAndStaffModel.js";
 import shopModel from "../../../model/shopModel.js"
 import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter.js";
+import { generatedStaffId } from "../../../utils/generateId.js";
 import { generateStaffId } from "../../../utils/generateStaffId.js";
 import { userSignupValidation, userUpdateValidation } from "../../../utils/joiValidation.js"
 import bcryptjs from 'bcryptjs'
@@ -77,14 +78,11 @@ export const CreateEmployeeBySuperAdmin = async (req, res) => {
     }
 
     let shopName = findShop.shopName
-    let sliceName = shopName.slice(0, 3) || "STF"
+    let sliceName = shopName.slice(0, 3).toUpperCase() || "STF"
 
 
-    let staffId;
+    let staffId = await generatedStaffId(sliceName, shopId)
 
-    do {
-      staffId = generateStaffId(sliceName.toUpperCase())
-    } while (await AdminStaffModel.findOne({ staffId: staffId }));
 
 
     const newUser = new AdminStaffModel({
@@ -127,6 +125,7 @@ export const deleteStaffBySuperAdmin = async (req, res) => {
   try {
     const { id } = req.params;
 
+
     if (!id) {
       return res.status(400).json({ success: false, message: "Id is missing" });
     }
@@ -143,7 +142,7 @@ export const deleteStaffBySuperAdmin = async (req, res) => {
 
     await AdminStaffModel.findByIdAndDelete(id);
 
-    res.status(200).json({ success: true, message: "Staff deleted successfully" });
+    res.status(200).json({ success: true, message: "Stafff deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }

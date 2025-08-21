@@ -1,6 +1,6 @@
 import categoryModel from '../../model/categoryModel.js'
 import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter.js';
-import { generateId } from '../../utils/generateId.js';
+import { generateCategoryId } from '../../utils/generateId.js';
 import { updateCategoryValidation, newCategoryValidation } from '../../utils/joiValidation.js';
 
 // --------------------------------------- create category -----------------------------------------------------
@@ -36,12 +36,7 @@ export const createCategory = async (req, res) => {
         const isDiscount = discountRate > 0 ? true : false;
 
         //  generating unique ID for customers 
-        let categoryId;
-
-        do {
-            categoryId = generateId("CATE")
-        } while (await categoryModel.findOne({ category_id: categoryId }));
-
+        let categoryId = await generateCategoryId(id)
 
 
         const newCategory = await categoryModel.create({
