@@ -41,6 +41,7 @@ const categorySchema = new mongoose.Schema({
 
 },{timeStamps:true});
 
+categorySchema.index({ category_id:1, shop:1, createdAt:-1 })
 
 const categoryModel = mongoose.model('Category', categorySchema);
 

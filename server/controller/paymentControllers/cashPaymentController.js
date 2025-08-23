@@ -90,11 +90,20 @@ export const cashPayment = async (req, res) => {
         let productQnt = findInvoice.products
 
         for (const item of productQnt) {
-            const { productId, quantity } = item;
+            const { unit, productId, quantity } = item;
 
-            await productModel.findByIdAndUpdate(productId, {
-                $inc: { 'quantity': -quantity }
-            }, { new: true })
+            const checkUnitAndUpdateQty = unit === "kg" ? Number(parseFloat(quantity).toFixed(2)) : quantity
+
+
+            await productModel.findByIdAndUpdate(productId, [
+                {
+                    $set: { quantity: { $round: [{ $add: ["$quantity", -checkUnitAndUpdateQty] }, 2] } }
+                }
+            ], { new: true })
+
+            // await productModel.findByIdAndUpdate(productId, {
+            //     $inc: { 'quantity': -checkUnitAndUpdateQty }
+            // }, { new: true })
 
         }
 
@@ -195,6 +204,7 @@ export const cashPayment = async (req, res) => {
         }
 
     } catch (error) {
+
         return res.status(500).json({ success: false, message: "internal server error" })
     }
 }

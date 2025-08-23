@@ -9,7 +9,7 @@ const ThermalPrinterInvoice = () => {
   const [selectedPrinter, setSelectedPrinter] = useState("");
   const [isQzTrayConnected, setIsQzTrayConnected] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
-  const  shopName  = useSelector((state) => state?.auth?.shopData?.shopName);
+  const { shopName, phoneNumber } = useSelector((state) => state?.auth?.shopData);
 
   useEffect(() => {
     if (invoice && invoice.products?.length > 0) {
@@ -41,6 +41,12 @@ const ThermalPrinterInvoice = () => {
   const padLeft = (str, length) => String(str).padStart(length, " ");
 
   const generateFormattedInvoice = (data) => {
+
+
+
+
+    const splitStaffName = data?.staff?.split(" ")
+
     const MAX_LINE_LENGTH = 42;
     let out = "";
     let subtotal = 0,
@@ -54,7 +60,7 @@ const ThermalPrinterInvoice = () => {
 
     out += `Invoice No: ${data?.invoiceNumber}\n`;
     out += `Date: ${new Date(data?.createdAt).toLocaleString()}\n`;
-    out += `Staff: ${data?.staff}\n`;
+    out += `Staff: ${splitStaffName[0]}\n`;
 
     if (data?.customerDetailsCustom?.customerName) {
       out += `Customer: ${data?.customerDetailsCustom?.customerName}\n`;
@@ -71,9 +77,8 @@ const ThermalPrinterInvoice = () => {
       typeof data?.customer === "object" &&
       data?.customer?.customerName
     ) {
-      out += `Customer: ${data?.customer?.customerName}\n`;
-      if (data?.customer?.phoneNumber)
-        out += `Phone: ${data?.customer?.phoneNumber}\n`;
+      if (shopName != data.customer.customerName) out += `Customer: ${data?.customer?.customerName}\n`;
+      if (data?.customer?.phoneNumber && phoneNumber != data?.customer?.phoneNumber) out += `Phone: ${data?.customer?.phoneNumber}\n`;
     } else {
       out += `Customer: Guest\n`;
     }
@@ -143,10 +148,14 @@ const ThermalPrinterInvoice = () => {
         "\n";
     }
 
-    const total = subtotal - discount;
+    if (data?.redeemAmount) {
+      out += padRight("Redeem Amount:", summaryLabelWidth) +
+        padLeft(data.redeemAmount.toFixed(1), summaryValueWidth) + "\n"
+    }
+
     out +=
       padRight("Total Amount:", summaryLabelWidth) +
-      padLeft(`${data?.currencyCode} ${total.toFixed(1)}`, summaryValueWidth) +
+      padLeft(`${data?.currencyCode} ${data.totalAmount.toFixed(1)}`, summaryValueWidth) +
       "\n";
 
     out += `Payment Status: ${data?.paymentStatus?.toUpperCase()}\n`;
@@ -259,11 +268,10 @@ const ThermalPrinterInvoice = () => {
 
       {printMessage && (
         <div
-          className={`mt-4 p-3 text-sm rounded-md ${
-            printMessage.includes("✅")
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
+          className={`mt-4 p-3 text-sm rounded-md ${printMessage.includes("✅")
+            ? "bg-green-100 text-green-800"
+            : "bg-red-100 text-red-800"
+            }`}
         >
           {printMessage}
         </div>

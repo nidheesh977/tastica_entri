@@ -5,7 +5,7 @@ export const getAllProducts = async (req, res) => {
 
     const { id } = req.shop;
 
-    const getProducts = await productModel.find({ shop: id }).sort({ createdAt: -1 }).populate("category");
+    const getProducts = await productModel.find({ shop: id }).sort({ product_id: -1, createdAt: -1 }).populate("category");
 
     res.status(200).json({ success: true, message: "Product fetched successfully", data: getProducts });
   } catch {

@@ -152,7 +152,7 @@ const invoiceSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-
+invoiceSchema.index({ shop: 1, invoiceStatus: 1, createdAt: 1 })
 
 const invoiceModel = mongoose.model('Invoice', invoiceSchema);
 

@@ -11,7 +11,7 @@ export const Product = ({ addProductToInvoice }) => {
   const searchQuery = useSelector((state) => state.search);
   const { invoice, singleInvoiceOpenOrder } = useInvoices();
   const { products } = useProducts();
-  const currency = useSelector((state)=> state?.auth?.shopData?.currencyCode)
+  const currency = useSelector((state) => state?.auth?.shopData?.currencyCode)
   const existingCartProducts =
     invoice?.products || singleInvoiceOpenOrder?.products;
   const categoryProducts = useMemo(() => {
@@ -55,13 +55,14 @@ export const Product = ({ addProductToInvoice }) => {
               if (isDisabled) return;
               dispatch(saveSearchQuery(""));
               dispatch(toggleQuantityHandler());
-              addProductToInvoice({ productId: product._id, quantity: 1 });
+              addProductToInvoice({
+                productId: product._id, quantity: product.quantity > 0 && product.quantity < 1 ? 0.01 : 1
+              });
             }}
-            className={`bg-tertiary w-full md:w-56 h-28 text-sm rounded border flex flex-col justify-evenly p-2 font-semibold ${
-              isDisabled
-                ? "border-gray-400 cursor-not-allowed opacity-50"
-                : "border-primary cursor-pointer hover:border-2"
-            }`}
+            className={`bg-tertiary w-full md:w-56 h-28 text-sm rounded border flex flex-col justify-evenly p-2 font-semibold ${isDisabled
+              ? "border-gray-400 cursor-not-allowed opacity-50"
+              : "border-primary cursor-pointer hover:border-2"
+              }`}
           >
             <div >
               <h1 className="text-center font-bold overflow-hidden">{product.productName}</h1>
@@ -71,7 +72,7 @@ export const Product = ({ addProductToInvoice }) => {
                 {currency}{product.sellingPrice || product.costPrice}
               </p>
               <p className="border-t border-black text-center font-bold py-1">
-                Available Stock {product?.quantity} {product?.unit}
+                Available Stock {product?.quantity > 0 && product?.quantity < 1 && product?.unit === "kg" ? product?.quantity * 1000 : product?.quantity} {product?.quantity > 0 && product?.quantity < 1 && product.unit === "kg" ? "gm" : product?.unit}
               </p>
 
               {isDisabled && (

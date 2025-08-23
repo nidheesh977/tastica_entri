@@ -103,13 +103,13 @@ export const productQuantityUpdate = async (req, res) => {
             const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findInvoiceProduct._id }, {
                 $set: {
                     "products.$.quantity": quantity,
-                    "products.$.total": productTotalPrice,
-                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
-                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
-                    totalDiscount: parseFloat(discountAmount).toFixed(2),
-                    subTotal: parseFloat(subTotalAmount).toFixed(2),
-                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
-                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+                    "products.$.total": Number(parseFloat(productTotalPrice).toFixed(2)),
+                    "products.$.productDiscount": Number(parseFloat(calculateDiscountAmount).toFixed(2)),
+                    "products.$.taxAmount": Number(parseFloat(calculateTaxAmount).toFixed(2)),
+                    totalDiscount: Number(parseFloat(discountAmount).toFixed(2)),
+                    subTotal: Number(parseFloat(subTotalAmount).toFixed(2)),
+                    totalAmount: Number(parseFloat(addTaxToTotalAmt).toFixed(2)),
+                    totalTax: Number(parseFloat(taxAmountAfterUpdateQty).toFixed(2))
 
                 }
             }, { new: true })
@@ -131,13 +131,13 @@ export const productQuantityUpdate = async (req, res) => {
             const updatedQuantity = await invoiceModel.findOneAndUpdate({ _id: invoiceId, "products._id": findInvoiceProduct._id }, {
                 $set: {
                     "products.$.quantity": quantity,
-                    "products.$.total": productTotalPrice,
-                    "products.$.productDiscount": parseFloat(calculateDiscountAmount).toFixed(2),
-                    "products.$.taxAmount": parseFloat(calculateTaxAmount).toFixed(2),
-                    totalDiscount: parseFloat(discountAmount).toFixed(2),
-                    subTotal: parseFloat(subTotalAmount).toFixed(2),
-                    totalAmount: parseFloat(addTaxToTotalAmt).toFixed(2),
-                    totalTax: parseFloat(taxAmountAfterUpdateQty).toFixed(2)
+                    "products.$.total": Number(parseFloat(productTotalPrice).toFixed(2)),
+                    "products.$.productDiscount": Number(parseFloat(calculateDiscountAmount).toFixed(2)),
+                    "products.$.taxAmount": Number(parseFloat(calculateTaxAmount).toFixed(2)),
+                    totalDiscount: Number(parseFloat(discountAmount).toFixed(2)),
+                    subTotal: Number(parseFloat(subTotalAmount).toFixed(2)),
+                    totalAmount: Number(parseFloat(addTaxToTotalAmt).toFixed(2)),
+                    totalTax: Number(parseFloat(taxAmountAfterUpdateQty).toFixed(2))
                 }
             }, { new: true })
 

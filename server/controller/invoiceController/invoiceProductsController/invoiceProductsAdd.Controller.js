@@ -110,9 +110,9 @@ export const addProductToInvoice = async (req, res) => {
             productName: productExist?.productName,
             price: productPrice,
             total: productTotalPrice,
-            discountFromProduct: parseFloat(productExist?.discount || 0).toFixed(2),
-            discountFromCategory: parseFloat(getDiscount).toFixed(2),
-            quantity: parseFloat(quantity).toFixed(2),
+            discountFromProduct: Number(parseFloat(productExist?.discount || 0).toFixed(2)),
+            discountFromCategory: Number(parseFloat(getDiscount).toFixed(2)),
+            quantity: Number(parseFloat(quantity).toFixed(2)),
             discountType: productExist?.discountType || "percentage",
             productId: productExist._id,
             category: findCategory?.categoryName || "custom product",
@@ -148,12 +148,12 @@ export const addProductToInvoice = async (req, res) => {
 
             const addTaxToTotal = addTax > 0 ? TotalAmount + addTax : TotalAmount
 
-            const newObject = { ...addProduct, productDiscount: parseFloat(totalDiscountAmount).toFixed(2), taxAmount: calculateTaxAmount }
+            const newObject = { ...addProduct, productDiscount: Number(parseFloat(totalDiscountAmount).toFixed(2)), taxAmount: calculateTaxAmount }
             existInvoice.products.push(newObject);
-            existInvoice.set("totalDiscount", parseFloat(finalDiscountValue).toFixed(2))
-            existInvoice.set("subTotal", parseFloat(subTotalReduce).toFixed(2))
-            existInvoice.set("totalAmount", parseFloat(addTaxToTotal).toFixed(2))
-            existInvoice.set("totalTax", parseFloat(addTax).toFixed(2))
+            existInvoice.set("totalDiscount", Number(parseFloat(finalDiscountValue).toFixed(2)))
+            existInvoice.set("subTotal", Number(parseFloat(subTotalReduce).toFixed(2)))
+            existInvoice.set("totalAmount", Number(parseFloat(addTaxToTotal).toFixed(2)))
+            existInvoice.set("totalTax", Number(parseFloat(addTax).toFixed(2)))
 
             await existInvoice.save();
 
@@ -165,8 +165,6 @@ export const addProductToInvoice = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
-
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
