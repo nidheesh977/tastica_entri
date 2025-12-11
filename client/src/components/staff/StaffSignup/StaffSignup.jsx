@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdPersonAdd } from "react-icons/md";
 import { useAdmins } from "../../../hooks/useAdmins";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -10,7 +10,18 @@ export const StaffSignup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const { staffSignup } = useAdmins();
+  const { staffSignup, isSuccess, isPending } = useAdmins();
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      setUserName("");
+      setEmail("");
+      setPhoneNumber("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  }, [isSuccess])
+
 
   return (
     <form
@@ -27,7 +38,10 @@ export const StaffSignup = () => {
       <input
         type="text"
         value={userName}
-        onChange={(e) => setUserName(e.target.value)}
+        onChange={(e) => {
+          const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+          setUserName(updated)
+        }}
         placeholder="Full Name"
         className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
       />
@@ -41,7 +55,7 @@ export const StaffSignup = () => {
       />
 
       <input
-        type="text"
+        type="number"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
         placeholder="Mobile"
@@ -70,7 +84,8 @@ export const StaffSignup = () => {
       </div>
 
       <button
-        className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
+        disabled={isPending === true}
+        className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg disabled:opacity-85 disabled:cursor-not-allowed"
         onClick={() => {
           staffSignup({
             userName,
@@ -79,15 +94,11 @@ export const StaffSignup = () => {
             password,
             confirmPassword,
           });
-          setUserName("");
-          setEmail("");
-          setPhoneNumber("");
-          setPassword("");
-          setConfirmPassword("");
+
         }}
       >
         <span className="flex items-center justify-center gap-2 font-semibold">
-          Sign Up <MdPersonAdd />
+          {isPending ? "Loading.." : "Sign Up "}{isPending === false && <MdPersonAdd />}
         </span>
       </button>
     </form>

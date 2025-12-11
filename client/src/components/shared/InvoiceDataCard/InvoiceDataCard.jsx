@@ -57,8 +57,8 @@ export const InvoiceDataCard = () => {
               <td></td>
               <td></td>
               <td className="border-l border-primary">
-                {invoice?.totalDiscount}
-                {currency}
+                {invoice?.totalDiscount}  {currency}
+
               </td>
             </tr>
             <tr className="font-semibold py-4 border-t border-r border-primary">
@@ -88,8 +88,8 @@ export const InvoiceDataCard = () => {
               <td></td>
               <td></td>
               <td className="border-l border-primary">
-                {invoice?.totalAmount}
-                {currency}
+                {invoice?.totalAmount}    {currency}
+
               </td>
             </tr>
           </tbody>

@@ -69,7 +69,7 @@ export const Product = ({ addProductToInvoice }) => {
             </div>
             <div>
               <p className="border-t border-black text-center font-bold py-1">
-                {currency}{product.sellingPrice || product.costPrice}
+                {product.sellingPrice || product.costPrice}  {currency}
               </p>
               <p className="border-t border-black text-center font-bold py-1">
                 Available Stock {product?.quantity > 0 && product?.quantity < 1 && product?.unit === "kg" ? product?.quantity * 1000 : product?.quantity} {product?.quantity > 0 && product?.quantity < 1 && product.unit === "kg" ? "gm" : product?.unit}

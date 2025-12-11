@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdStorefront } from "react-icons/md";
 import { SuperAdminSideBar } from "../../superAdmin/SuperAdminSideBar/SuperAdminSideBar";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,7 +12,18 @@ export const ShopCreateCard = () => {
   const [currencyCode, setCurrencyCode] = useState("");
   const [password, setPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const { createShop } = useSuperAdmins();
+  const { createShop, isSuccess, isPending } = useSuperAdmins();
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      setCountryName("");
+      setCurrencyCode("");
+      setPassword("");
+      setEmail("");
+      setShopName("");
+      setPhoneNumber("");
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -30,7 +41,10 @@ export const ShopCreateCard = () => {
           <input
             type="text"
             value={shopName}
-            onChange={(e) => setShopName(e.target.value)}
+            onChange={(e) => {
+              const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+              setShopName(updated)
+            }}
             placeholder="Shop Name"
             className="p-4 my-1  w-full  bg-white shadow outline-primary"
           />
@@ -94,6 +108,7 @@ export const ShopCreateCard = () => {
           </div>
 
           <button
+            disabled={isPending === true}
             onClick={() => {
               createShop({
                 shopName,
@@ -103,17 +118,11 @@ export const ShopCreateCard = () => {
                 password,
                 phoneNumber,
               });
-              setCountryName("");
-              setCurrencyCode("");
-              setPassword("");
-              setEmail("");
-              setShopName("");
-              setPhoneNumber("");
             }}
-            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
+            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg  disabled:opacity-85 disabled:cursor-not-allowed"
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
-              Create Shop <MdStorefront />
+              {isPending ? "Loading.." : "Create Shop"}{isPending === false && <MdStorefront />}
             </span>
           </button>
         </form>

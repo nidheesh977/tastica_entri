@@ -26,9 +26,12 @@ export const createProduct = async (req, res) => {
 
 
 
-        const lowerCaseproductName = capitalizeFirstLetter(productName)
+        const wordCaps = capitalizeFirstLetter(productName)
 
-        const productExist = await productModel.findOne({ shop: id, productName: lowerCaseproductName })
+
+
+
+        const productExist = await productModel.findOne({ shop: id, productName: wordCaps })
 
         if (productExist) {
             return res.status(400).json({ success: false, message: "Product already exists" })
@@ -57,7 +60,7 @@ export const createProduct = async (req, res) => {
 
         const newProduct = new productModel({
             product_id: productId,
-            productName: lowerCaseproductName,
+            productName: wordCaps,
             quantity,
             costPrice: addCostPrice,
             sellingPrice: sellingPrice,

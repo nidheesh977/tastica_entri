@@ -64,10 +64,13 @@ export const categoryFileUploader = async (req, res) => {
 
                         const isDiscount = row.discountRate > 0 ? true : false;
 
-                        const cateogryNameLowercase = capitalizeFirstLetter(row.categoryName);
+                        const cateogryNameCapitalize = capitalizeFirstLetter(row.categoryName);
+
+                        const descriptionCapitalize = row.description.replace(/(?:^|\.)\s*\w/g, (char) => char.toUpperCase())
 
                         row["category_id"] = categoryId;
-                        row["categoryName"] = cateogryNameLowercase;
+                        row["categoryName"] = cateogryNameCapitalize;
+                        row["description"] = descriptionCapitalize;
                         row["shop"] = shopId;
                         row["countryName"] = countryName;
                         row["currencyCode"] = currencyCode;

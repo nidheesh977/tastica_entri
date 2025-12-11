@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBox } from "react-icons/fa";
 import { AdminSideBar } from "../../admin/AdminSideBar/AdminSideBar"
 import { useCategories } from "../../../hooks/useCategories";
 import { useProducts } from "../../../hooks/useProducts";
+import { useSelector } from "react-redux"
 
 export const AddProductCard = () => {
   const { categories } = useCategories();
-  const { addProduct } = useProducts();
+  const { addProduct, isSuccess, isPending } = useProducts();
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [costPrice, setCostPrice] = useState("");
@@ -17,6 +18,21 @@ export const AddProductCard = () => {
   const [discountType, setDiscountType] = useState("percentage");
   const [unit, setUnit] = useState("");
   const [barcode, setBarcode] = useState("");
+
+  const { shopData } = useSelector((state) => state.auth)
+
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      setProductName("");
+      setQuantity("");
+      setCostPrice("");
+      setCostPriceProfit("");
+      setSellingPrice("");
+      setDiscount("");
+      setBarcode("");
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -34,7 +50,10 @@ export const AddProductCard = () => {
           <input
             type="text"
             value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            onChange={(e) => {
+              const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+              setProductName(updated)
+            }}
             placeholder="Product Name"
             className="p-4 my-1  w-full  bg-white shadow outline-primary"
           />
@@ -141,13 +160,13 @@ export const AddProductCard = () => {
                 />
               </span>
               <span className="flex gap-1">
-                MVR
+                {shopData?.currencyCode}
                 <input
                   type="radio"
                   value='flat'
                   name="discountType"
                   className="accent-primary"
-                   checked={discountType === 'flat'}
+                  checked={discountType === 'flat'}
                   onChange={() => setDiscountType('flat')}
                 />
               </span>
@@ -174,7 +193,8 @@ export const AddProductCard = () => {
           </select>
 
           <button
-            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
+            disabled={isPending === true}
+            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg disabled:opacity-85 disabled:cursor-not-allowed"
             onClick={() => {
               addProduct({
                 productName,
@@ -188,17 +208,10 @@ export const AddProductCard = () => {
                 unit,
                 barcodeNumber: barcode
               });
-              setProductName("");
-              setQuantity("");
-              setCostPrice("");
-              setCostPriceProfit("");
-              setSellingPrice("");
-              setDiscount("");
-              setBarcode("");
             }}
           >
-            <span className="flex items-center justify-center gap-2 font-semibold">
-              Add Product <FaBox />
+            <span className="flex items-center justify-center gap-2 font-semibold" >
+              {isPending ? "Loading.." : "Add Product "}{isPending === false && < FaBox />}
             </span>
           </button>
         </form>

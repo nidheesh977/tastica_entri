@@ -16,7 +16,7 @@ export const useCategories = () => {
     },
   });
 
-  const { mutate: addCategory } = useMutation({
+  const { mutate: addCategory, isSuccess, isPending } = useMutation({
     mutationFn: async ({ categoryName, description, discountRate }) => {
       const data = { categoryName, description, discountRate };
       await axiosInstance({
@@ -83,5 +83,7 @@ export const useCategories = () => {
     addCategory,
     updateCategory,
     deleteCategory,
+    isSuccess,
+    isPending
   };
 };

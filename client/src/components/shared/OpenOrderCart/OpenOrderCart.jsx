@@ -341,11 +341,10 @@ export const OpenOrderCart = ({
         </button>
 
         <button
-          className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${
-            invoice?.products?.length === 0
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-primary hover:bg-opacity-90"
-          } text-white rounded-lg`}
+          className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${invoice?.products?.length === 0
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-primary hover:bg-opacity-90"
+            } text-white rounded-lg`}
           onClick={() => {
             if (invoice?.products?.length === 0) return;
             setShowPayDialog(true);
@@ -362,7 +361,7 @@ export const OpenOrderCart = ({
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: MVR${invoice?.totalAmount || 0}`}
+          message={`Total payable amount:  ${invoice?.totalAmount || 0}`}
           cashPay={handleCashPay}
           swipePay={handleSwipePay}
           stripePay={handleStripePay}

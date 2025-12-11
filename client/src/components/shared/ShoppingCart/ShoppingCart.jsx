@@ -26,6 +26,9 @@ export const ShoppingCart = ({
   const shop = useSelector((state) => state?.auth?.shopData);
   const admin = useSelector((state) => state?.auth?.adminData);
   const dispatch = useDispatch();
+
+
+
   const {
     createInvoice,
     makeCashPayment,
@@ -469,7 +472,7 @@ export const ShoppingCart = ({
 
       {showPayDialog && (
         <PayDialogueBox
-          message={`Total payable amount: ${currency}${invoice?.totalAmount || 0
+          message={`Total payable amount: ${invoice?.totalAmount || 0
             }`}
           cashPay={handleCashPay}
           swipePay={handleSwipePay}

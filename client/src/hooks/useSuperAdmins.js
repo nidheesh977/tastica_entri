@@ -34,7 +34,7 @@ export const useSuperAdmins = () => {
     },
   });
 
-  const { mutate: createStaff } = useMutation({
+  const { mutate: createStaff, isSuccess: addsuccess, isPending: staffAddPending } = useMutation({
     mutationFn: async ({
       userName,
       email,
@@ -72,7 +72,7 @@ export const useSuperAdmins = () => {
       dispatch(removeStaffData());
     },
   });
-  const { mutate: createShop } = useMutation({
+  const { mutate: createShop, isSuccess, isPending } = useMutation({
     mutationFn: async ({
       shopName,
       email,
@@ -112,7 +112,7 @@ export const useSuperAdmins = () => {
       shopId,
       isActive
     }) => {
-      const data ={isActive}
+      const data = { isActive }
 
       await axiosInstance({
         method: "PATCH",
@@ -215,6 +215,10 @@ export const useSuperAdmins = () => {
     createStaff,
     updateStaff,
     deleteStaff,
-    activateShop
+    activateShop,
+    isSuccess,
+    isPending,
+    addsuccess,
+    staffAddPending
   };
 };

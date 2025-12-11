@@ -17,7 +17,7 @@ export const useCustomers = () => {
     },
   });
 
-  const { mutate: addCustomer } = useMutation({
+  const { mutate: addCustomer, isSuccess, isPending } = useMutation({
     mutationFn: async ({ customerName, phoneNumber }) => {
       const data = {
         customerName,
@@ -85,5 +85,5 @@ export const useCustomers = () => {
     },
   });
 
-  return { customers: data, addCustomer, updateCustomer, deleteCustomer };
+  return { customers: data, addCustomer, updateCustomer, deleteCustomer, isSuccess, isPending };
 };

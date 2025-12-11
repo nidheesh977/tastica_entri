@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdPersonAdd } from "react-icons/md";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSuperAdmins } from "../../../hooks/useSuperAdmins";
@@ -13,7 +13,18 @@ export const CreateStaffCard = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
 
-  const { createStaff, shops } = useSuperAdmins();
+  const { createStaff, shops, addsuccess, staffAddPending } = useSuperAdmins();
+
+  useEffect(() => {
+    if (addsuccess === true) {
+      setUserName("");
+      setEmail("");
+      setPhoneNumber("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  }, [addsuccess])
+
 
   return (
     <form
@@ -30,7 +41,10 @@ export const CreateStaffCard = () => {
       <input
         type="text"
         value={userName}
-        onChange={(e) => setUserName(e.target.value)}
+        onChange={(e) => {
+          const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+          setUserName(updated)
+        }}
         placeholder="Full Name"
         className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
       />
@@ -115,7 +129,8 @@ export const CreateStaffCard = () => {
       </span>
 
       <button
-        className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg"
+        disabled={staffAddPending}
+        className="p-4  bg-primary mt-2 hover:opacity-90 w-full text-white rounded-lg disabled:opacity-85 disabled:cursor-not-allowed"
         onClick={() => {
           createStaff({
             userName,
@@ -126,15 +141,11 @@ export const CreateStaffCard = () => {
             shopId,
             role,
           });
-          setUserName("");
-          setEmail("");
-          setPhoneNumber("");
-          setPassword("");
-          setConfirmPassword("");
+
         }}
       >
         <span className="flex items-center justify-center gap-2 font-semibold">
-          Add <MdPersonAdd />
+          {staffAddPending ? "Loading.." : "Add "}{staffAddPending === false && <MdPersonAdd />}
         </span>
       </button>
     </form>

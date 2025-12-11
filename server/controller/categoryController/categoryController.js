@@ -88,7 +88,9 @@ export const updateCategory = async (req, res) => {
 
         const cateogryNameLowercase = capitalizeFirstLetter(categoryName);
 
-        const updatedCategory = await categoryModel.findByIdAndUpdate(id, { categoryName: cateogryNameLowercase, description }, { new: true })
+        const descriptionCapitalize = description.replace(/(?:^|\.)\s*\w/g, (char) => char.toUpperCase())
+
+        const updatedCategory = await categoryModel.findByIdAndUpdate(id, { categoryName: cateogryNameLowercase, description: descriptionCapitalize }, { new: true })
 
         res.status(200).json({ success: true, message: "Category updated successfully", data: updatedCategory });
     } catch (error) {

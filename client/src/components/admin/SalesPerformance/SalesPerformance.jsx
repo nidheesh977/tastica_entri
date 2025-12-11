@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { dark, medium, light } from "../../../utils/constants";
+import { useSelector } from "react-redux"
 
 export const SalesPerformance = ({
   date,
@@ -15,6 +16,14 @@ export const SalesPerformance = ({
   yearSales,
   monthSales,
 }) => {
+
+
+  const { shopData } = useSelector((state) => state.auth)
+
+
+
+
+
   const monthNames = [
     "January",
     "February",
@@ -80,7 +89,7 @@ export const SalesPerformance = ({
               className="col-span-12 md:col-span-3 text-center font-semibold text-sm p-2 border"
               style={{ background: bgColor }}
             >
-              {label} MVR
+              {label} {shopData?.currencyCode || ""}
               <br />
               {amount}
             </div>
@@ -91,7 +100,7 @@ export const SalesPerformance = ({
           className="col-span-12 md:col-span-3 text-center font-semibold text-sm p-2 border"
           style={{ background: bgColor }}
         >
-          Total MVR
+          Total {shopData?.currencyCode || ""}
           <br />
           {sales?.date?.grandTotal?.roundedTotalAmount || 0}
         </div>

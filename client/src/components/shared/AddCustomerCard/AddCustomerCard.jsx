@@ -1,12 +1,20 @@
 import { MdPersonAdd } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCustomers } from "../../../hooks/useCustomers";
 
 export const AddCustomerCard = () => {
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const { addCustomer } = useCustomers();
+  const { addCustomer, isSuccess, isPending } = useCustomers();
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      setCustomerName("");
+      setPhoneNumber("");
+    }
+  }, [isSuccess])
+
 
   return (
     <div className="flex justify-center my-2">
@@ -24,7 +32,10 @@ export const AddCustomerCard = () => {
           type="text"
           value={customerName}
           placeholder="Full Name"
-          onChange={(e) => setCustomerName(e.target.value)}
+          onChange={(e) => {
+            const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+            setCustomerName(updated)
+          }}
           className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
         />
 
@@ -38,11 +49,10 @@ export const AddCustomerCard = () => {
         />
 
         <button
-          className="p-4  bg-primary hover:opacity-90 my-2 w-full text-white rounded-lg"
+          disabled={isPending === true}
+          className="p-4  bg-primary hover:opacity-90 my-2 w-full text-white rounded-lg disabled:opacity-85 disabled:cursor-not-allowed"
           onClick={() => {
             addCustomer({ customerName, phoneNumber });
-            setCustomerName("");
-            setPhoneNumber("");
           }}
         >
           <span className="flex items-center justify-center gap-2 font-semibold">

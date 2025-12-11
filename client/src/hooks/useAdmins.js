@@ -24,7 +24,7 @@ export const useAdmins = (status) => {
     },
   });
 
-  const { mutate: staffSignup } = useMutation({
+  const { mutate: staffSignup, isSuccess, isPending } = useMutation({
     mutationFn: async ({ userName, email, phoneNumber, password }) => {
       const error = validateData(userName, email, phoneNumber, password);
 
@@ -46,7 +46,7 @@ export const useAdmins = (status) => {
     onSuccess: () => {
       toast.success("Signup success!");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to signup.");
 
       dispatch(removeStaffData());
@@ -141,5 +141,7 @@ export const useAdmins = (status) => {
     staffSignup,
     updateStaff,
     deleteStaff,
+    isSuccess,
+    isPending
   };
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiCategory } from "react-icons/bi";
 import { AdminSideBar } from "../../../components/admin/AdminSideBar/AdminSideBar";
 import { useCategories } from "../../../hooks/useCategories";
@@ -7,7 +7,17 @@ export const AddCategory = () => {
   const [categoryName, setCategoryName] = useState("");
   const [description, setDescription] = useState("");
   const [discountRate, setDiscountRate] = useState("");
-  const { addCategory } = useCategories();
+  const { addCategory, isPending, isSuccess } = useCategories();
+
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      setCategoryName("");
+      setDescription("");
+      setDiscountRate("");
+    }
+  }, [isSuccess])
+
 
   return (
     <>
@@ -25,7 +35,10 @@ export const AddCategory = () => {
           <input
             type="text"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(e) => {
+              const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+              setCategoryName(updated)
+            }}
             placeholder="Category"
             className="p-4 my-1  w-full  bg-white shadow-2xl outline-primary"
           />
@@ -33,7 +46,10 @@ export const AddCategory = () => {
           <textarea
             type="text"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              const updated = e.target.value.replace(/(?:^|\.)\s*\w/g, (char) => char.toUpperCase())
+              setDescription(updated)
+            }}
             placeholder="Description"
             className="p-4 my-1 w-full bg-white shadow-2xl outline-primary"
           />
@@ -47,16 +63,14 @@ export const AddCategory = () => {
           />
 
           <button
-            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg"
+            disabled={isPending === true}
+            className="p-4 my-4  bg-primary hover:opacity-90 w-full text-white rounded-lg disabled:opacity-85 disabled:cursor-not-allowed"
             onClick={() => {
               addCategory({ categoryName, description, discountRate });
-              setCategoryName("");
-              setDescription("");
-              setDiscountRate("");
             }}
           >
             <span className="flex items-center justify-center gap-2 font-semibold">
-              Add Category <BiCategory />
+              {isPending ? "Loading.." : "Add Category "}{isPending === false && <BiCategory />}
             </span>
           </button>
         </form>

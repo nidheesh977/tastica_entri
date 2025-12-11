@@ -52,6 +52,7 @@ export const loginAdmin = async (req, res) => {
     // Remove password before sending user data
     const { password: pass, ...adminData } = adminExist._doc;
 
+
     // Store token in cookie
     res.cookie("adminToken", adminToken, {
       httpOnly: true,

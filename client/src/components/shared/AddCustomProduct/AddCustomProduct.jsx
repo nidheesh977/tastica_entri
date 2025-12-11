@@ -32,7 +32,7 @@ export const AddCustomProduct = () => {
             }}
             className="absolute top-2 right-2 text-xl font-bold p-4 hover:text-orange-600"
           >
-          <FaTimes/>
+            <FaTimes />
           </button>
 
           <form onSubmit={(e) => e.preventDefault()} className="md:px-10 py-10">
@@ -43,7 +43,10 @@ export const AddCustomProduct = () => {
             <input
               type="text"
               value={productName}
-              onChange={(e) => setProductName(e.target.value)}
+              onChange={(e) => {
+                const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
+                setProductName(updated)
+              }}
               placeholder="Product Name"
               className="p-4 my-1 w-full bg-white shadow outline-primary"
             />
@@ -87,7 +90,7 @@ export const AddCustomProduct = () => {
                 addCustomProduct({ productName, quantity, unit, sellingPrice });
                 dispatch(toggleCustomProductHandler());
                 resetForm();
-                
+
               }}
             >
               <span className="flex items-center justify-center gap-2 font-semibold">

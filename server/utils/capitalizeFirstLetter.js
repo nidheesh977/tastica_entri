@@ -1,13 +1,8 @@
 
-export const capitalizeFirstLetter = (name) => {
+export const capitalizeFirstLetter = (words) => {
 
-    let userNameLowerCase = name.trim().toLowerCase()
+    const wordLettersCaps = words.replace(/\b\w/g, (char) => char.toUpperCase())
 
-    let splitUsername = userNameLowerCase.split("");
-
-    const firstLetterToUppercase = splitUsername[0].toUpperCase()
-
-    splitUsername[0] = firstLetterToUppercase
-
-    return splitUsername.join("")
+    return wordLettersCaps
 }
+

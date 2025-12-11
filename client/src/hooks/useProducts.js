@@ -16,7 +16,7 @@ export const useProducts = () => {
     },
   });
 
-  const { mutate: addProduct } = useMutation({
+  const { mutate: addProduct, isSuccess, isPending } = useMutation({
     mutationFn: async ({
       productName,
       quantity,
@@ -121,5 +121,5 @@ export const useProducts = () => {
     },
   });
 
-  return { products: data, addProduct, updateProduct, deleteProduct };
+  return { products: data, addProduct, updateProduct, deleteProduct, isSuccess, isPending };
 };
