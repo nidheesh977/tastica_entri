@@ -66,6 +66,11 @@ import { PaymentSuccessSwipe } from "../pages/shared/PaymentSuccessSwipe/Payment
 import { RechargeWallet } from "../pages/shared/RechargeWallet/RechargeWallet";
 import { PrintBarcode } from "../pages/shared/PrintBarcode/PrintBarcode";
 import { ManageRecharge } from "../pages/admin/ManageRecharge/ManageRecharge";
+import { ListCreditData } from "../pages/shared/ListCreditData/ListCreditData";
+import { CustomerCreditBook } from "../pages/shared/CustomerCreditBook/CustomerCreditBook";
+import { AdminDashBoardSalesPage } from "../pages/admin/AdminDashBoardStatusPage/AdminDashBoardSalesPage";
+import { ListCreditDataStaff } from "../pages/staff/ListCreditDataStaff/ListCreditDataStaff";
+import { CustomerCreditBookStaff } from "../pages/staff/CustomerCreditBookStaff/CustomerCreditBookStaff";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -115,6 +120,7 @@ export const router = createBrowserRouter([
         element: <ProtectedRouteAdmin />,
         children: [
           { path: "", element: <AdminHome /> },
+          { path: "sales", element: <AdminDashBoardSalesPage /> },
           {
             path: "shop/signup",
             element: <ShopSignupPage />,
@@ -239,6 +245,14 @@ export const router = createBrowserRouter([
             path: "manage/recharge",
             element: <ManageRecharge />,
           },
+          {
+            path: "credit/book",
+            element: <ListCreditData />,
+          },
+          {
+            path: "credit/book/data/:id",
+            element: <CustomerCreditBook />
+          }
         ],
       },
     ],
@@ -342,6 +356,14 @@ export const router = createBrowserRouter([
             path: "print/barcode/:customerId",
             element: <PrintBarcode />,
           },
+          {
+            path: "credit/book",
+            element: <ListCreditDataStaff />,
+          },
+          {
+            path: "credit/book/data/:id",
+            element: <CustomerCreditBookStaff />,
+          }
         ],
       },
     ],

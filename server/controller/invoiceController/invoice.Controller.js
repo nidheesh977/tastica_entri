@@ -278,7 +278,7 @@ export const getFullInvoice = async (req, res) => {
             return res.status(400).json({ success: false, message: "Shop ID is not get" });
         }
 
-        const fullInvoice = await invoiceModel.find({ shop: shopId, invoiceStatus: status }).sort({ createdAt: 1 }).populate("customer").populate("products");
+        const fullInvoice = await invoiceModel.find({ shop: shopId, invoiceStatus: status, }).sort({ createdAt: 1 }).populate("customer").populate("products");
 
         res.status(200).json({ success: true, message: "Data fetched Successfully", data: fullInvoice })
     } catch (error) {

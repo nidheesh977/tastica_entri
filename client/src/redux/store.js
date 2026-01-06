@@ -10,8 +10,10 @@ import toggleCustomProductReducer from "./features/customProductSlice";
 import quantityReducer from "./features/quantitySlice";
 import selectedShopReducer from "./features/selectedShopSlice";
 import errorReducer from "./features/errorSlice";
-import customInvoiceReducer  from "./features/customInvoiceSlice";
-import  latestPaidInvoiceReducer  from "./features/latestPaidInvoiceSlice";
+import customInvoiceReducer from "./features/customInvoiceSlice";
+import latestPaidInvoiceReducer from "./features/latestPaidInvoiceSlice";
+import creditBookReducer from "./features/creditSlice"
+import commonReducer from "./features/commonSlice"
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +29,8 @@ export const store = configureStore({
     selectedShopId: selectedShopReducer,
     error: errorReducer,
     customInvoice: customInvoiceReducer,
-    latestPaidInvoice: latestPaidInvoiceReducer
+    latestPaidInvoice: latestPaidInvoiceReducer,
+    credit: creditBookReducer,
+    common: commonReducer
   },
 });

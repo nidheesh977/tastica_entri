@@ -7,6 +7,7 @@ export const authSlice = createSlice({
     adminData: null,
     staffData: null,
     shopData: null,
+    permissions: []
   },
   reducers: {
     addSuperAdminData: (state, action) => {
@@ -33,6 +34,12 @@ export const authSlice = createSlice({
     removeShopData: (state) => {
       state.shopData = null;
     },
+    addAuthPermissions: (state, action) => {
+      state.permissions = action.payload
+    },
+    removeAuthPermissions: (state, action) => {
+      state.permissions = []
+    }
   },
 });
 
@@ -45,5 +52,7 @@ export const {
   removeStaffData,
   addShopData,
   removeShopData,
+  addAuthPermissions,
+  removeAuthPermissions
 } = authSlice.actions;
 export default authSlice.reducer;

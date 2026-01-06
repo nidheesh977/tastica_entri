@@ -27,6 +27,9 @@ export const MonthlySales = ({ invoices, method }) => {
   const [stripe, setStripe] = useState(false);
   const [all, setAll] = useState(true);
 
+
+
+
   useEffect(() => {
     if (!invoices) return;
 
@@ -59,6 +62,24 @@ export const MonthlySales = ({ invoices, method }) => {
     });
   }, [invoices]);
 
+  const options = {
+    Tooltip: {
+      enabled: true,
+      callBack: {
+        label: function (context) {
+          const label = context.label
+
+          if (label === "Monthly Sales ₹") {
+            return `₹ ${context.parsed.y.toLocaleString()}`;
+          }
+        }
+      }
+    }
+  }
+
+  console.log(options);
+
+
   return (
     <div className="w-full h-full xl:h-[332px] border p-4 rounded shadow flex flex-col">
       <h1 className="font-semibold text-sm xl:hidden mb-2">
@@ -68,9 +89,8 @@ export const MonthlySales = ({ invoices, method }) => {
         <h1 className="font-semibold hidden xl:block">Monthly Sales Trends:</h1>
         <div className="flex gap-3">
           <span
-            className={`cursor-pointer text-sm px-2 pb-1 ${
-              all ? "border-b-2 border-black" : ""
-            }`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${all ? "border-b-2 border-black" : ""
+              }`}
             onClick={() => {
               setAll(true);
               setCash(false);
@@ -82,9 +102,8 @@ export const MonthlySales = ({ invoices, method }) => {
             All
           </span>
           <span
-            className={`cursor-pointer text-sm px-2 pb-1 ${
-              cash ? "border-b-2 border-black" : ""
-            }`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${cash ? "border-b-2 border-black" : ""
+              }`}
             onClick={() => {
               setCash(true);
               setSwipe(false);
@@ -96,9 +115,8 @@ export const MonthlySales = ({ invoices, method }) => {
             Cash
           </span>
           <span
-            className={`cursor-pointer text-sm px-2 pb-1 ${
-              swipe ? "border-b-2 border-black" : ""
-            }`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${swipe ? "border-b-2 border-black" : ""
+              }`}
             onClick={() => {
               setSwipe(true);
               setCash(false);
@@ -110,9 +128,8 @@ export const MonthlySales = ({ invoices, method }) => {
             Swipe
           </span>
           <span
-            className={`cursor-pointer text-sm px-2 pb-1 ${
-              stripe ? "border-b-2 border-black" : ""
-            }`}
+            className={`cursor-pointer text-sm px-2 pb-1 ${stripe ? "border-b-2 border-black" : ""
+              }`}
             onClick={() => {
               setStripe(true);
               setSwipe(false);
@@ -137,6 +154,7 @@ export const MonthlySales = ({ invoices, method }) => {
                 legend: { display: false },
                 title: { display: false },
               },
+
               layout: {
                 padding: { top: 10, bottom: 10, left: 0, right: 0 },
               },

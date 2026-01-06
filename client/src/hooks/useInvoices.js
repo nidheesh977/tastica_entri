@@ -303,7 +303,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice"
+        "Failed to remove product from invoice"
       );
     },
   });
@@ -326,7 +326,7 @@ export const useInvoices = (customerId = null) => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to remove product from invoice"
+        "Failed to remove product from invoice"
       );
     },
   });

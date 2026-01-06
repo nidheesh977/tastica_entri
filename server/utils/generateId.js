@@ -85,3 +85,15 @@ export const generateCustomerId = async (shopId) => {
   )
   return `CUS${String(randomNumber).padStart(4, counter.seq)}`
 }
+
+
+export const generateCreditId = async (shopId) => {
+  const randomNumber = Math.floor(Math.random() * 1000);
+  const counterName = "credit"
+  const counter = await counterModel.findOneAndUpdate(
+    { shopId, counterName: counterName },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  )
+  return `CRED${String(counter.seq).padStart(4, "0")}`
+}

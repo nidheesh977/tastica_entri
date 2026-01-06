@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
@@ -6,6 +6,8 @@ import {
   addStaffData,
   removeShopData,
   removeStaffData,
+  addAuthPermissions,
+  removeAuthPermissions
 } from "../redux/features/authSlice";
 import { axiosInstance } from "../config/axiosInstance";
 import { StaffSideBar } from "../components/staff/StaffSideBar/StaffSideBar";
@@ -15,6 +17,8 @@ export const ProtectedRouteStaff = () => {
   const isShop = useSelector((state) => state?.auth?.shopData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const location = useLocation()
 
   const checkShop = async () => {
     if (isShop) return;
@@ -39,9 +43,11 @@ export const ProtectedRouteStaff = () => {
         url: "/staff/check-logged",
       });
       dispatch(addStaffData(response?.data?.data));
+      dispatch(addAuthPermissions(response?.data?.data?.permissions));
     } catch (error) {
       dispatch(removeStaffData());
       dispatch(storeError(error?.response?.data?.message));
+      dispatch(removeAuthPermissions());
       navigate("/shop/staff/login");
     }
   };

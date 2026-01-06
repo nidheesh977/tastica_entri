@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import {
   addAdminData,
   removeAdminData,
+  addAuthPermissions,
+  removeAuthPermissions
 } from "../../../redux/features/authSlice";
 
 export const AdminLogin = () => {
@@ -26,10 +28,12 @@ export const AdminLogin = () => {
       });
       toast.success("Login success");
       dispatch(addAdminData(response?.data?.data));
+      dispatch(addAuthPermissions(response?.data?.data?.permissions))
       navigate("/admin");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to login");
       dispatch(removeAdminData());
+      dispatch(removeAuthPermissions())
     }
   };
 

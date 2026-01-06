@@ -18,7 +18,7 @@ import {
   MdDashboard,
   MdPayment,
 } from "react-icons/md";
-
+import { BsCreditCard2Back } from "react-icons/bs";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,7 @@ import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
 import { BsFillPiggyBankFill } from "react-icons/bs";
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
 
 export const AdminSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
@@ -38,6 +39,9 @@ export const AdminSideBar = () => {
   const permissions = useSelector(
     (state) => state?.auth?.adminData?.permissions
   );
+
+  const { hasPermission } = usePermissionCheck()
+
   const handleSideBar = (route) => {
     navigate(route);
   };
@@ -63,9 +67,8 @@ export const AdminSideBar = () => {
           <FaHome />
           Home
           <HiChevronDown
-            className={`transform transition-transform duration-300 ${
-              home ? "rotate-180" : ""
-            }`}
+            className={`transform transition-transform duration-300 ${home ? "rotate-180" : ""
+              }`}
           />
         </li>
         {home && (
@@ -142,9 +145,8 @@ export const AdminSideBar = () => {
           <FaUserTie />
           Staff Management
           <HiChevronDown
-            className={`transform transition-transform duration-300 ${
-              staffManagement ? "rotate-180" : ""
-            }`}
+            className={`transform transition-transform duration-300 ${staffManagement ? "rotate-180" : ""
+              }`}
           />
         </li>
         {staffManagement && (
@@ -173,9 +175,8 @@ export const AdminSideBar = () => {
               <FaUsers />
               Customer Management
               <HiChevronDown
-                className={`transform transition-transform duration-300 ${
-                  customerManagement ? "rotate-180" : ""
-                }`}
+                className={`transform transition-transform duration-300 ${customerManagement ? "rotate-180" : ""
+                  }`}
               />
             </li>
 
@@ -202,9 +203,8 @@ export const AdminSideBar = () => {
           <FaBoxOpen />
           Product Management
           <HiChevronDown
-            className={`transform transition-transform duration-300  ${
-              productManagement ? "rotate-180" : ""
-            }`}
+            className={`transform transition-transform duration-300  ${productManagement ? "rotate-180" : ""
+              }`}
           />
         </li>
 
@@ -337,6 +337,16 @@ export const AdminSideBar = () => {
           <MdPayment />
           Recharge Card
         </li>
+        {hasPermission("credit_read") && (<li
+          onClick={() => {
+            handleSideBar("/admin/credit/book");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <BsCreditCard2Back />
+          Credit book
+        </li>)}
       </ul>
     </div>
   );

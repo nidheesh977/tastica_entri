@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import {
   addStaffData,
   removeStaffData,
+  addAuthPermissions,
+  removeAuthPermissions
 } from "../../../redux/features/authSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -27,10 +29,12 @@ export const StaffLogin = () => {
       });
       toast.success("Login success");
       dispatch(addStaffData(response?.data?.data));
+      dispatch(addAuthPermissions(response?.data?.data?.permissions))
       navigate("/staff");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to login");
       dispatch(removeStaffData());
+      dispatch(addAuthPermissions())
     }
   };
 

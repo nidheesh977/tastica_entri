@@ -42,6 +42,10 @@ export const ListCardInvoice = ({
   );
   const showPhoneColumn = invoices?.some((inv) => inv?.customer?.phoneNumber);
 
+  const showReason = invoices?.some((crd) => crd?.archiveReason)
+
+
+
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
@@ -51,9 +55,8 @@ export const ListCardInvoice = ({
         {setStatus && (
           <div className="flex items-center lg:gap-3">
             <span
-              className={`cursor-pointer text-sm px-2 pb-1 ${
-                paid ? "border-b-2 border-black" : ""
-              }`}
+              className={`cursor-pointer text-sm px-2 pb-1 ${paid ? "border-b-2 border-black" : ""
+                }`}
               onClick={() => {
                 setPaid(true);
                 setRefunded(false);
@@ -65,9 +68,8 @@ export const ListCardInvoice = ({
               Paid
             </span>
             <span
-              className={`cursor-pointer text-sm px-2 pb-1 ${
-                refunded ? "border-b-2 border-black" : ""
-              }`}
+              className={`cursor-pointer text-sm px-2 pb-1 ${refunded ? "border-b-2 border-black" : ""
+                }`}
               onClick={() => {
                 setPaid(false);
                 setRefunded(true);
@@ -79,9 +81,8 @@ export const ListCardInvoice = ({
               Refunded
             </span>
             <span
-              className={`cursor-pointer text-sm px-2 pb-1 ${
-                custom ? "border-b-2 border-black" : ""
-              }`}
+              className={`cursor-pointer text-sm px-2 pb-1 ${custom ? "border-b-2 border-black" : ""
+                }`}
               onClick={() => {
                 setPaid(false);
                 setRefunded(false);
@@ -93,9 +94,8 @@ export const ListCardInvoice = ({
               Custom
             </span>
             <span
-              className={`cursor-pointer text-sm px-2 pb-1 ${
-                deleted ? "border-b-2 border-black" : ""
-              }`}
+              className={`cursor-pointer text-sm px-2 pb-1 ${deleted ? "border-b-2 border-black" : ""
+                }`}
               onClick={() => {
                 setPaid(false);
                 setRefunded(false);
@@ -120,7 +120,7 @@ export const ListCardInvoice = ({
               </th>
               <th className="border border-primary px-4 py-2">Date</th>
               <th className="border border-primary px-4 py-2">Staff</th>
-              <th className="border border-primary px-4 py-2">Reason</th>
+              {showReason && <th className="border border-primary px-4 py-2">Reason</th>}
 
               {showCustomerColumn && (
                 <th className="border border-primary px-4 py-2">Customer</th>
@@ -131,6 +131,12 @@ export const ListCardInvoice = ({
               <th className="border border-primary px-4 py-2">
                 Payment Method
               </th>
+              <th className="border border-primary px-4 py-2">
+                Credit Amount
+              </th>
+              <th className="border border-primary px-4 py-2">
+                Partial Paid
+              </th>
               <th className="border border-primary px-4 py-2">Total Amount</th>
               <th className="border border-primary px-4 py-2">Actions</th>
             </tr>
@@ -139,40 +145,46 @@ export const ListCardInvoice = ({
             {invoicesData?.map((invoice, index) => (
               <tr key={invoice?._id} className="border-t border-primary">
                 <td className="border border-primary px-4 py-2">{index + 1}</td>
-                <td className="border border-primary px-4 py-2 hover:text-primary">
+                <td className="border border-primary px-4 py-2 text-sm hover:text-primary">
                   <Link to={`/admin/invoice/data/${invoice?._id}`}>
                     {" "}
                     {invoice?.invoiceNumber}
                   </Link>
                 </td>
-                <td className="border border-primary px-4 py-2">
+                <td className="border border-primary px-4 py-2 text-sm">
                   {formatDate(invoice?.createdAt)}
                 </td>
-                <td className="border border-primary px-4 py-2">
+                <td className="border border-primary px-4 py-2 text-sm">
                   {invoice?.staff}
                 </td>
-                <td className="border border-primary px-4 py-2">
+                {invoice?.archiveReason ? <td className="border border-primary px-4 py-2 text-sm">
                   {invoice?.archiveReason || "nill"}
-                </td>
+                </td> : ""}
                 {invoice?.customer?.customerName && (
-                  <td className="border border-primary px-4 py-2">
+                  <td className="border border-primary px-4 py-2 text-sm">
                     {invoice?.customer?.customerName}
                   </td>
                 )}
 
                 {invoice?.customer?.phoneNumber && (
-                  <td className="border border-primary px-4 py-2">
+                  <td className="border border-primary px-4 py-2 text-sm tracking-wider">
                     {invoice?.customer?.phoneNumber}
                   </td>
                 )}
 
-                <td className="border border-primary px-4 py-2">
+                <td className="border border-primary px-4 py-2 text-sm">
                   {invoice?.paymentMethod}
                 </td>
-                <td className="border border-primary px-4 py-2">
+                <td className={`${invoice?.creditAmount === 0 ? "bg-green-300" : "bg-red-300"} border text-center border-primary px-4 font-medium py-2 text-sm`}>
+                  {invoice?.creditAmount}
+                </td>
+                <td className={`${invoice?.creditAmount === 0 ? "bg-green-300" : "bg-blue-300"} border border-primary text-center font-medium  px-4 py-2 text-sm `}>
+                  {invoice?.creditAmount > 0 ? parseFloat(invoice?.totalAmount - invoice?.creditAmount).toFixed("1") : invoice?.creditAmount}
+                </td>
+                <td className={`${invoice?.creditAmount === 0 ? "bg-green-300" : "bg-gray-300"} border border-primary text-center font-medium px-4 py-2 text-sm tabular-nums`}>
                   {invoice?.totalAmount}
                 </td>
-                <td className="border px-4 py-2">
+                <td className="border border-primary px-4 py-2">
                   {editId === invoice?._id ? (
                     <div className="flex flex-col items-center gap-2">
                       <textarea

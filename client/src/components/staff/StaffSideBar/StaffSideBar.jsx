@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
+import { BsCreditCard2Back } from "react-icons/bs";
 
 export const StaffSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
@@ -44,9 +45,8 @@ export const StaffSideBar = () => {
           <FaHome />
           Home
           <HiChevronDown
-            className={`transform transition-transform duration-300 ${
-              home ? "rotate-180" : ""
-            }`}
+            className={`transform transition-transform duration-300 ${home ? "rotate-180" : ""
+              }`}
           />
         </li>
         {home && (
@@ -102,9 +102,8 @@ export const StaffSideBar = () => {
               <FaUsers />
               Customer Management
               <HiChevronDown
-                className={`transform transition-transform duration-300 ${
-                  customerManagement ? "rotate-180" : ""
-                }`}
+                className={`transform transition-transform duration-300 ${customerManagement ? "rotate-180" : ""
+                  }`}
               />
             </li>
 
@@ -132,9 +131,8 @@ export const StaffSideBar = () => {
           <FaBoxOpen />
           Product Management
           <HiChevronDown
-            className={`transform transition-transform duration-300  ${
-              productManagement ? "rotate-180" : ""
-            }`}
+            className={`transform transition-transform duration-300  ${productManagement ? "rotate-180" : ""
+              }`}
           />
         </li>
 
@@ -223,6 +221,16 @@ export const StaffSideBar = () => {
         >
           <MdPayment />
           Recharge Card
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/staff/credit/book");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <BsCreditCard2Back />
+          Credit book
         </li>
       </ul>
     </div>

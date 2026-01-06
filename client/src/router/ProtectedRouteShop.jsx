@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../config/axiosInstance";
 import { addShopData, removeShopData } from "../redux/features/authSlice";
-import {storeError} from '../redux/features/errorSlice'
+import { storeError } from '../redux/features/errorSlice'
 
 export const ProtectedRouteShop = () => {
   const isShop = useSelector((state) => state?.auth?.shopData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const location = useLocation()
 
   const checkShop = async () => {
     if (isShop) return;
@@ -27,7 +29,7 @@ export const ProtectedRouteShop = () => {
 
   useEffect(() => {
     checkShop();
-  });
+  }, []);
 
   return <Outlet />;
 };

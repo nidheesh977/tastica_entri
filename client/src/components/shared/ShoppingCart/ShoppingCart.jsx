@@ -16,6 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { clearInvoiceData } from "../../../redux/features/invoiceSlice";
 import { FiInfo } from "react-icons/fi";
+import { CreditDialogBox } from "../CreditDialogbox/CreditDialogBox";
+import { addBackgroundBlur } from "../../../redux/features/commonSlice"
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
+
+
 
 export const ShoppingCart = ({
   addProductToInvoice,
@@ -42,6 +47,11 @@ export const ShoppingCart = ({
     updateProductQuantity
   } = useInvoices();
 
+  // permission custom hook
+
+  const { hasPermission } = usePermissionCheck()
+
+
   const products = invoice?.products || [];
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,6 +63,7 @@ export const ShoppingCart = ({
   const [quantities, setQuantities] = useState({});
   const [alertMessage, setAlertMessage] = useState(null);
   const [showPayDialog, setShowPayDialog] = useState(false);
+  const [showCreditDialog, setShowCreditDialog] = useState(false);
   const [redeemAmountAdd, setRedeemAmountAdd] = useState("");
   const [pointAmount, setPointAmount] = useState("");
   const [invoiceCleared, setInvoiceCleared] = useState(false);
@@ -62,7 +73,21 @@ export const ShoppingCart = ({
   const [loyalty, setLoyalty] = useState("");
   const [productId, setProductId] = useState("");
   const [manualDiscount, setManualDiscount] = useState("");
+  const [isPay, setIsPay] = useState(false)
+
   const navigate = useNavigate();
+
+  const handleToggle = () => {
+    setIsPay((prev) => prev !== true)
+  }
+
+  const handleOpenCreditDialog = () => {
+    setShowCreditDialog(true)
+    dispatch(addBackgroundBlur(true))
+
+  }
+
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -272,7 +297,7 @@ export const ShoppingCart = ({
         )}
       </div>
 
-      <ul className="flex flex-col mt-4 h-[382px] overflow-y-auto w-full">
+      <ul className="flex flex-col mt-4 h-[350px] overflow-y-auto w-full">
         {products.map((product, index) => (
           <li
             key={product?._id}
@@ -438,8 +463,22 @@ export const ShoppingCart = ({
               </div>
             </div>
           </div>
+          {/* toggle button */}
+          {<div className={`${hasPermission("credit_give") ? "h-8" : "h-4"} flex justify-end my-2 `}>
+            {hasPermission("credit_give") && <button onClick={handleToggle} className={`relative w-[90px] h-8 rounded-full flex items-center px-1 transition-colors ${products.length === 0 ? "invisible" : "visible"} ${isPay ? "bg-red-500" : "bg-primary"}`}>
+              <span className={`${isPay ? "translate-x-[42px]" : "translate-x-0"} absolute left-1 top-1 w-[41px] h-6 bg-white rounded-full shadow-md transition-transform duration-300`}></span>
+              <span className="relative w-1/2 text-center text-xs text-white font-medium">
+                CREDIT
+              </span>
+              <span className="relative w-1/2 text-center text-xs text-white font-medium">
+                PAY
+              </span>
 
+            </button>}
+
+          </div>}
           <div className="flex gap-2 mt-2 justify-between">
+
             <button
               className="flex items-center justify-center gap-2 px-6 py-3 w-1/2 bg-secondary hover:bg-opacity-90 text-white rounded-lg"
               onClick={() => {
@@ -449,7 +488,9 @@ export const ShoppingCart = ({
             >
               <FaSave /> Save
             </button>
-            <button
+
+            {products.length > 0 && isPay ? <button onClick={handleOpenCreditDialog} className="px-6 py-3 w-1/2 bg-red-500 text-white rounded-lg">Credit</button> : <button
+
               className={`flex items-center justify-center gap-2 px-6 py-3 w-1/2 ${products.length === 0
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-primary hover:bg-opacity-90"
@@ -465,10 +506,13 @@ export const ShoppingCart = ({
                 <FaMoneyCheckAlt />
               )}
               {products.length === 0 ? "Cart Empty" : "Pay"}
-            </button>
+            </button>}
           </div>
         </>
       )}
+      {showCreditDialog && (<CreditDialogBox
+        invoiceData={invoice} setShowCreditDialog={setShowCreditDialog} resetBillingState={resetBillingState}
+      />)}
 
       {showPayDialog && (
         <PayDialogueBox

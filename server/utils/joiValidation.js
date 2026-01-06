@@ -470,7 +470,7 @@ export const resetPasswordValidation = Joi.object({
 
 
 export const addPermissionValidation = Joi.object({
-    permission: Joi.string().valid("product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create").messages({
+    permission: Joi.string().valid("product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create", "credit_read", "credit_pay", "credit_give", "credit_create").messages({
         'string.base': 'Permission must be a string',
         'string.empty': 'Permission cannot be empty',
         'any.only': 'This permission is not Valid',
