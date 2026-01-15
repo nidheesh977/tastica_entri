@@ -22,7 +22,7 @@ export const PaymentCancel = () => {
         url: `/payment/card/failed/invoice/${id}`,
         withCredentials: true,
       });
-      console.log(response);
+
     } catch (error) {
       console.log(error);
     }

@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../config/axiosInstance"
-import { addCreditBookData, removeCreditBookData, openPaymentCreditbox } from "../redux/features/creditSlice"
+import { addCreditBookData, removeCreditBookData, openPaymentCreditbox, removeCreditObjectId } from "../redux/features/creditSlice"
 import { removeBackgroundBlur } from "../redux/features/commonSlice"
 import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +14,10 @@ export const useCredit = () => {
     const { creditBookObjectId } = useSelector((state) => state.credit);
     const bookid = useParams().id
 
-    const { data: creditData } = useQuery({
+
+
+
+    const { data: creditData, isPending: isCreditDataPending } = useQuery({
         queryKey: ["credit"],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -26,7 +29,7 @@ export const useCredit = () => {
         }
     })
 
-    const { data: creditDataForPay } = useQuery({
+    const { data: creditDataForPay, } = useQuery({
         queryKey: ["creditid", creditBookObjectId],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -37,11 +40,14 @@ export const useCredit = () => {
             return response?.data?.data
         },
         enabled: !!creditBookObjectId,
+
     })
 
-    const { data: creditDataDisplay, refetch: creditDataDisplayRefetch } = useQuery({
+    const { data: creditDataDisplay, isFetching: iscreditDataDisplay, refetch: creditDataDisplayRefetch } = useQuery({
         queryKey: ["creditbookid", bookid],
         queryFn: async () => {
+
+            if (!bookid) return null
             const response = await axiosInstance({
                 method: "GET",
                 url: `/payment/credit/${bookid}`,
@@ -73,7 +79,6 @@ export const useCredit = () => {
 
         },
         onError: (error) => {
-            console.log(error);
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },
@@ -99,7 +104,7 @@ export const useCredit = () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
         onError: (error) => {
-            console.log(error);
+
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },
@@ -118,16 +123,42 @@ export const useCredit = () => {
             })
 
         }, onSuccess: () => {
-            toast.success("Credit added successfully!");
+            toast.success("Credit paid successfully!");
             queryClient.invalidateQueries(["credit"]);
             creditDataDisplayRefetch()
             dispatch(openPaymentCreditbox(false))
             dispatch(removeBackgroundBlur(false))
+            dispatch(removeCreditObjectId())
             // dispatch(removeCreditBookData())
             // dispatch(removeBackgroundBlur(false))
         },
         onError: (error) => {
-            console.log(error);
+
+
+            toast.error(error?.response?.data?.message || "Failed to Credit");
+        },
+    });
+
+
+    const { mutate: advanceAmtClear, isPending: isadvanceLoading, isSuccess: isAdvanceSuccess } = useMutation({
+        mutationFn: async (creditBookId) => {
+
+
+            const res = await axiosInstance({
+                method: "PATCH",
+                url: `payment/credit/${creditBookId}`,
+                withCredentials: true,
+            })
+
+        }, onSuccess: () => {
+            toast.success("Credit advance Amount clear successfully!");
+            queryClient.invalidateQueries(["credit"]);
+            creditDataDisplayRefetch()
+            // dispatch(removeCreditBookData())
+            // dispatch(removeBackgroundBlur(false))
+        },
+        onError: (error) => {
+
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },
@@ -142,12 +173,15 @@ export const useCredit = () => {
         isRegisterSuccess,
         isRegisterLoading,
         creditData,
+        isCreditDataPending,
         creditDataForPay,
+        iscreditDataDisplay,
         payCredit,
         payCreditSuccess,
         isPaycreditLoading,
         creditDataDisplay,
-        creditDataDisplayRefetch
+        creditDataDisplayRefetch,
+        advanceAmtClear
     }
 
 }

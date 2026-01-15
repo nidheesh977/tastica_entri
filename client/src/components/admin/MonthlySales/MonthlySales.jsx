@@ -77,7 +77,7 @@ export const MonthlySales = ({ invoices, method }) => {
     }
   }
 
-  console.log(options);
+
 
 
   return (

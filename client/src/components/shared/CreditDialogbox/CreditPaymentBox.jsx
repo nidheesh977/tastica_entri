@@ -19,12 +19,12 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
 
 
 
+
     const isFormValid = useMemo(() => {
         return (
             creditPayData?.creditBookId.length >= 8 && creditPayData?.paidAmount !== "" && creditPayData?.paymentMethod !== ""
         )
     }, [creditPayData?.creditBookId, creditPayData?.paidAmount, creditPayData?.paymentMethod])
-
 
 
 
@@ -56,6 +56,14 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
         return Math.round((n + Number.EPSILON) * 100) / 100
     }
 
+    // customer pay
+    let customerPay = 0
+    if (Number(creditDataForPay?.customertotalCredit) === Number(creditDataForPay?.advanceAmount)) {
+        customerPay = creditDataForPay?.customertotalCredit
+    } else {
+        customerPay = (Number(creditDataForPay?.customertotalCredit ?? 0) - Number(creditDataForPay?.advanceAmount ?? 0)).toFixed(2)
+    }
+
     useEffect(() => {
 
         if (isPendingPayment === false) return
@@ -79,7 +87,7 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
         <div className='mt-5 w-full'>
             <p className='w-fit text-start text-[16px] my-3 text-red-500'>Are the book ID, paid amount, payment method correct below?</p>
             <p className='w-fit text-sm font-medium my-1 tracking-wider'>Customer credit ID : {creditPayData?.creditBookId || "0000000"}</p>
-            <p className='w-fit text-sm font-medium my-1 tracking-wider'>payment amount : {creditPayData?.paidAmount || 0}</p>
+            <p className='w-fit text-sm font-medium my-1 tracking-wider'>Paid amount : {creditPayData?.paidAmount || 0}</p>
             <p className='w-fit text-sm font-medium my-1 tracking-wider'>Payment method {creditPayData?.paymentMethod || ""}</p>
 
 
@@ -92,7 +100,7 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
 
     const formInputData = (
         <form className='flex flex-col items-center justify-end mt-5 gap-3'>
-            <input value={creditPayData?.creditBookId} readOnly={isPendingPayment} type="text" name='bookid' onChange={(e) => setCreditPayData((prev) => {
+            <input value={creditPayData?.creditBookId || ""} readOnly={isPendingPayment} type="text" name='bookid' onChange={(e) => setCreditPayData((prev) => {
                 const creditIdToUpperCase = e.target.value.toUpperCase()
                 return { ...prev, creditBookId: creditIdToUpperCase }
             })}
@@ -105,7 +113,6 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
                 <option value={""}>Select Payment</option>
                 <option value={"cash"}>Cash</option>
                 <option value={"internal-device"}>Card</option>
-                <option value={"digital"}>Stripe</option>
             </select>
 
             <button type='button' onClick={() => handleopenConfirmBox(creditDataForPay?._id)} className='w-full h-10 bg-primary mt-5 rounded-md text-white  disabled:opacity-40' disabled={!isFormValid}>{"Pay"}</button>
@@ -131,15 +138,15 @@ export const CreditPaymentBox = ({ isPendingPayment = false, customerName, custo
             {isPendingPayment === false && <div className='w-full flex justify-between mt-2'>
                 <div>
                     <p>Credit Amt</p>
-                    <p className='font-medium tracking-wider'>{round2(creditDataForPay?.customertotalCredit)}</p>
+                    <p className='font-medium tracking-wider'>{creditDataForPay?.customertotalCredit.toFixed(2)}</p>
                 </div>
                 <div>
                     <p>Advance Amt</p>
-                    <p className='font-medium tracking-wider'>{round2(creditDataForPay?.advanceAmount)}</p>
+                    <p className='font-medium tracking-wider'>{creditDataForPay?.advanceAmount.toFixed(2)}</p>
                 </div>
                 <div>
                     <p>Customer pay</p>
-                    <p className='font-medium tracking-wider'>{creditDataForPay?.customertotalCredit === 0 ? 0 : round2(Number(creditDataForPay?.customertotalCredit || 0)) - round2(Number(creditDataForPay?.advanceAmount || 0))}</p>
+                    <p className='font-medium tracking-wider'>{creditDataForPay?.customertotalCredit === 0 ? 0 : customerPay}</p>
                 </div>
             </div>}
 

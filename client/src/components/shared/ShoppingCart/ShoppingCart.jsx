@@ -102,7 +102,7 @@ export const ShoppingCart = ({
       // }
       if (e.key === "Enter") {
         const cleanedBuffer = buffer.replace(/shift/gi, "");
-        console.log(cleanedBuffer);
+
         if (cleanedBuffer.length > 2) {
           addProductToInvoice({ productId: cleanedBuffer, quantity: 1 });
         }
@@ -216,9 +216,7 @@ export const ShoppingCart = ({
     const usedPoints = Math.min(redeemAmountAdd, loyalty);
     const remaining = redeemAmountAdd - usedPoints;
     const usedWallet = Math.min(remaining, wallet);
-    console.log("redeemAmountAdd: ", redeemAmountAdd);
-    console.log("loyalty: ", loyalty);
-    console.log("Wallet: ", wallet);
+
 
     return usedPoints + usedWallet;
   }

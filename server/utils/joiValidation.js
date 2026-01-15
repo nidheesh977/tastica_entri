@@ -531,3 +531,63 @@ export const invoiceSoftDeleteValidation = Joi.object({
         'string.max': 'reason must be at most 50 characters long',
     }),
 })
+
+export const creditRegistrationValidation = Joi.object({
+    customerName: Joi.string().pattern(/^[A-Za-z\s]+$/).min(3).max(30).required().messages({
+        'string.required': 'Username is required',
+        'string.base': 'Username must be a string',
+        'string.empty': 'Username cannot be empty',
+        'string.min': 'Username must be at least 3 characters long',
+        'string.max': 'Username must be at most 30 characters long',
+        'string.pattern.base': 'Username can contain only letters',
+    }),
+    registeredCustomer: Joi.boolean().required(),
+
+    customerPhoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        "string.pattern.base": "Phone number must contain only numbers and be between 7 to 14 digits",
+    }),
+})
+
+export const creditGiveValidation = Joi.object({
+
+    creditAmount: Joi.number().positive().precision(2).required().messages({
+        "number.base": "Amount must be a number",
+        "any.required": "Amount is required",
+        "number.positive": "Amount must be greater than 0",
+        "number.precision": "Amount can have maximum 2 decimal places"
+    }),
+    creditBookId: Joi.string().uppercase().pattern(/^[A-Z0-9]{8}$/).max(8).required().messages({
+        "string.pattern.base": "Book ID must be contain only  uppercase letters and numbers",
+        "string.max": "Book ID must not exceed 8 characters",
+        "string.empty": "Book ID is required",
+        "any.required": "Book ID is required"
+    }),
+    paymentMethod: Joi.string().allow(null, "").valid("cash", "internal-device", "digital").optional().messages({
+        "any.only": "Payment method must be cash, card, or stripe"
+    })
+
+})
+
+
+export const creditPaymentValidation = Joi.object({
+    creditBookId: Joi.string().uppercase().pattern(/^[A-Z0-9]{8}$/).max(8).required().messages({
+        "string.pattern.base": "Book ID must be contain only  uppercase letters and numbers",
+        "string.max": "Book ID must not exceed 8 characters",
+        "string.empty": "Book ID is required",
+        "any.required": "Book ID is required"
+    }),
+    paidAmount: Joi.number().positive().precision(2).required().messages({
+        "number.base": "Amount must be a number",
+        "any.required": "Amount is required",
+        "number.positive": "Amount must be greater than 0",
+        "number.precision": "Amount can have maximum 2 decimal places"
+    }),
+    paymentMethod: Joi.string().allow(null, "").valid("cash", "internal-device", "digital").optional().messages({
+        "any.only": "Payment method must be cash, card, or stripe"
+    }),
+    singleCreditPay: Joi.boolean().required(),
+    creditInvoiceId: Joi.string().allow(null, "").optional().length(24).hex().required()
+})

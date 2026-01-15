@@ -126,7 +126,7 @@ export const useAdmins = (status) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["invoices", status]);
-      console.log(data);
+
     },
 
     onError: (error) => {

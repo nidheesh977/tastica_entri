@@ -81,7 +81,7 @@ export const OpenOrderCart = ({
       // }
       if (e.key === "Enter") {
         const cleanedBuffer = buffer.replace(/shift/gi, "");
-        console.log(cleanedBuffer);
+
         if (cleanedBuffer.length > 2) {
           addProductToInvoice({
             productId: cleanedBuffer,

@@ -13,6 +13,7 @@ export const ListCardInvoice = ({
   const [refunded, setRefunded] = useState(false);
   const [custom, setCustom] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [credited, setCredited] = useState(false);
   const [editId, setEditId] = useState(null);
   const [archiveReason, setArchiveReason] = useState("");
 
@@ -49,11 +50,11 @@ export const ListCardInvoice = ({
   return (
     <div className="md:w-5/6 w-full text-center pt-5 pb-14 px-5 border border-primary h-full shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 items-center mb-4">
-        <h1 className="font-thin text-start md:col-span-8 text-3xl my-3 text-primary">
+        <h1 className="font-thin text-start md:col-span-7 text-3xl my-3 text-primary">
           Invoices
         </h1>
         {setStatus && (
-          <div className="flex items-center lg:gap-3">
+          <div className="flex items-center lg:gap-3 ">
             <span
               className={`cursor-pointer text-sm px-2 pb-1 ${paid ? "border-b-2 border-black" : ""
                 }`}
@@ -62,10 +63,25 @@ export const ListCardInvoice = ({
                 setRefunded(false);
                 setCustom(false);
                 setDeleted(false);
+                setCredited(false);
                 setStatus("paid");
               }}
             >
               Paid
+            </span>
+            <span
+              className={`cursor-pointer text-sm px-2 pb-1 ${credited ? "border-b-2 border-black" : ""
+                }`}
+              onClick={() => {
+                setCredited(true);
+                setPaid(false);
+                setRefunded(false);
+                setCustom(false);
+                setDeleted(false);
+                setStatus("credited");
+              }}
+            >
+              Credited
             </span>
             <span
               className={`cursor-pointer text-sm px-2 pb-1 ${refunded ? "border-b-2 border-black" : ""
@@ -75,6 +91,7 @@ export const ListCardInvoice = ({
                 setRefunded(true);
                 setCustom(false);
                 setDeleted(false);
+                setCredited(false);
                 setStatus("refunded");
               }}
             >
@@ -88,6 +105,7 @@ export const ListCardInvoice = ({
                 setRefunded(false);
                 setCustom(true);
                 setDeleted(false);
+                setCredited(false);
                 setStatus("custom");
               }}
             >
@@ -101,6 +119,7 @@ export const ListCardInvoice = ({
                 setRefunded(false);
                 setCustom(false);
                 setDeleted(true);
+                setCredited(false);
                 setStatus("archived");
               }}
             >
@@ -173,7 +192,7 @@ export const ListCardInvoice = ({
                 )}
 
                 <td className="border border-primary px-4 py-2 text-sm">
-                  {invoice?.paymentMethod}
+                  {invoice?.paymentMethod ? invoice?.paymentMethod : "Pending"}
                 </td>
                 <td className={`${invoice?.creditAmount === 0 ? "bg-green-300" : "bg-red-300"} border text-center border-primary px-4 font-medium py-2 text-sm`}>
                   {invoice?.creditAmount}

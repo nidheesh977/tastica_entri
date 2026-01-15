@@ -18,7 +18,7 @@ export const shopLogin = async (req, res) => {
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
-        console.log("hai")
+
         // validate data from joi validation 
         const { email, password } = value;
 

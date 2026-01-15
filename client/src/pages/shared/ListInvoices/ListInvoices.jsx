@@ -8,6 +8,8 @@ export const ListInvoices = () => {
   const { invoices } = useAdmins(status);
   const { handleInvoiceDelete } = useInvoices();
 
+
+
   return (
     <>
       <div className="m-2 my-10 md:flex items-center justify-center">

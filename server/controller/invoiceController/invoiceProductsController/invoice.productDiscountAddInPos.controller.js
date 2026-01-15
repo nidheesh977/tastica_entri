@@ -78,7 +78,7 @@ export const addProductDiscountInPOS = async (req, res) => {
 
         else if (manualDiscountAmount < findProducFromInvoice.manualDiscount) {
 
-            console.log("hitted bottom");
+
 
             const productPrice = findProducFromInvoice?.manualDiscount;
 

@@ -13,7 +13,7 @@ export const AdminForgotPasswordMail = () => {
       });
 
       toast.success("Email send successfully");
-      console.log(response?.data?.data);
+
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to send email");
     }

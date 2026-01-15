@@ -20,7 +20,7 @@ export const RechargeWallet = () => {
       });
 
       setWalletData(response?.data?.data);
-      console.log("Customer login response: ", response?.data?.data);
+
 
       toast.success("Login  successful");
     } catch (error) {

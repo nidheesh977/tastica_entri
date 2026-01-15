@@ -5,13 +5,23 @@ import invoiceModel from "../../model/invoiceModel.js";
 import productModel from "../../model/productModel.js";
 import { generateCreditId } from "../../utils/generateId.js";
 import mongoose from "mongoose"
+import { creditGiveValidation, creditPaymentValidation, creditRegistrationValidation } from "../../utils/joiValidation.js";
 
 export const createCreditBook = async (req, res) => {
 
     try {
         const shopId = req.shop.id;
-        const { invoiceId } = req.params
-        const { customerName, registeredCustomer, customerPhoneNumber, userRole } = req.body;
+        const { invoiceId } = req.params;
+
+
+        const { error, value } = creditRegistrationValidation.validate(req.body)
+
+
+        if (error) {
+            return res.status(400).json({ success: false, message: error.details[0].message })
+        }
+
+        const { customerName, registeredCustomer, customerPhoneNumber } = value;
 
         // create credit book model function
         const saveCreditBook = async (Model, data) => {
@@ -25,6 +35,7 @@ export const createCreditBook = async (req, res) => {
 
             return await doc.save()
         }
+
 
 
 
@@ -76,6 +87,7 @@ export const createCreditBook = async (req, res) => {
             const nameOfCustomer = customerName.trim();
             const phoneNumberOfCustomer = customerPhoneNumber.trim();
 
+
             const creditBookExist = await creditModel.findOne({ shop: shopId, customerPhoneNumber: phoneNumberOfCustomer })
 
 
@@ -106,6 +118,8 @@ export const createCreditBook = async (req, res) => {
         res.status(200).json({ success: true, message: "Successfully added", data: { creditBookId, creditCustomerName } })
 
     } catch (error) {
+
+
         return res.status(500).json({ success: false, message: "internal server error" })
     }
 }
@@ -118,8 +132,16 @@ export const addCredit = async (req, res) => {
 
     const shopId = req.shop.id;
     const { invoiceId } = req.params
-    const { creditAmount, creditBookId, paymentMethod } = req.body;
     const userId = req.user.id
+
+
+    const { error, value } = creditGiveValidation.validate(req.body)
+
+    if (error) {
+        return res.status(400).json({ success: false, message: error.details[0].message })
+    }
+
+    const { creditAmount, creditBookId, paymentMethod } = value;
 
     if (Number(creditAmount) < 0) {
         return res.status(400).json({ success: false, message: "Not Enter Negative Balance" })
@@ -253,7 +275,7 @@ export const addCredit = async (req, res) => {
         res.status(200).json({ success: true, message: "Successfully added" })
 
     } catch (error) {
-        console.log(error);
+
         await session.abortTransaction();
         return res.status(500).json({ success: false, message: "internal server error" })
     } finally {
@@ -264,15 +286,21 @@ export const addCredit = async (req, res) => {
 
 export const payCreditAmount = async (req, res) => {
 
+    const shopId = req.shop.id
+    const { bookid } = req.params;
+
+    const { error, value } = creditPaymentValidation.validate(req.body)
+
+    if (error) {
+        return res.status(400).json({ success: false, message: error.details[0].message })
+    }
+
+    const { creditBookId, paidAmount, paymentMethod, singleCreditPay, creditInvoiceId } = value;
     const session = await mongoose.startSession()
+
     try {
 
         session.startTransaction()
-
-        const shopId = req.shop.id
-        const { bookid } = req.params;
-        const { creditBookId, paidAmount, paymentMethod, singleCreditPay, creditInvoiceId } = req.body;
-
 
         const bookExist = await creditModel.findOne({ shop: shopId, _id: bookid, }).session(session)
 
@@ -349,6 +377,8 @@ export const payCreditAmount = async (req, res) => {
 
 
 
+
+
         if (singleCreditPay === true) {
             const findInvoiceCreditId = bookArr.find((invoice) => String(invoice?._id) === String(creditInvoiceId))
 
@@ -356,6 +386,7 @@ export const payCreditAmount = async (req, res) => {
             if (!findInvoiceCreditId) {
                 return res.status(404).json({ success: false, message: "Invoice credit not found" })
             }
+
 
             amount = Number((amount -= findInvoiceCreditId.creditAmount).toFixed(2))
             deductTotalDebt = Number((deductTotalDebt -= findInvoiceCreditId.creditAmount).toFixed(2))
@@ -384,12 +415,9 @@ export const payCreditAmount = async (req, res) => {
 
         } else {
             for (let credit of bookArr.reverse()) {
-
                 if (credit.creditStatus === "pending") {
 
-
                     if (credit.creditAmount > amount) {
-
                         lessMoney = true
                     } else {
                         amount = Number((amount -= credit.creditAmount).toFixed(2))
@@ -403,11 +431,15 @@ export const payCreditAmount = async (req, res) => {
                         await updateCreditBook(deductTotalDebt, amount, addPaidDebt, session)
                         await updateInvoiceCredit(shopId, credit?.invoice, paymentMethod, session)
 
-                        if (amount < credit.creditAmount) {
-
+                        if (amount <= 0) {
                             break;
-
                         }
+                        // else if (amount < credit.creditAmount) {
+
+                        //     console.log("amount < credit.creditAmount", amount);
+
+                        //     break;
+                        // }
                     }
                 }
 
@@ -418,6 +450,8 @@ export const payCreditAmount = async (req, res) => {
             }
         }
 
+
+
         if (lessMoney) {
             return res.status(400).json({ success: false, message: "Add More amount" })
         }
@@ -427,7 +461,6 @@ export const payCreditAmount = async (req, res) => {
         res.status(200).json({ success: true, message: "Debt paid successfully" })
 
     } catch (error) {
-        console.log(error);
         await session.abortTransaction()
         return res.status(500).json({ success: false, message: "internal server error" })
     } finally {
@@ -506,7 +539,7 @@ export const getSingleCreditBookForPayment = async (req, res) => {
         res.status(200).json({ success: true, message: "data fetched successfully", data: data, })
 
     } catch (error) {
-        console.log(error);
+
 
         return res.status(500).json({ success: false, message: "internal server error" })
     }
@@ -532,6 +565,25 @@ export const getCreditSingleBookForDisplay = async (req, res) => {
 
     } catch (error) {
 
+        return res.status(500).json({ success: false, message: "internal server error" })
+    }
+}
+
+
+
+export const clearAdvanceAmt = async (req, res) => {
+    try {
+
+        const shopId = req.shop.id;
+        const { id } = req.params;
+
+        await creditModel.findOneAndUpdate({ shop: shopId, _id: id }, {
+            advanceAmount: 0
+        }, { new: true })
+
+        res.status(200).json({ success: true, message: "Advance clear successfully" })
+
+    } catch (error) {
         return res.status(500).json({ success: false, message: "internal server error" })
     }
 }

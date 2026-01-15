@@ -9,10 +9,10 @@ export const CreditRegister = ({ invoiceId, title, customerData, setOpenRegister
         registeredCustomer: true,
         customerName: customerData?.customerName || "",
         customerPhoneNumber: customerData?.phoneNumber || "",
-        userRole: customerData?.role || ""
     })
 
     const { createCreditBook, isRegisterLoading, isRegisterSuccess } = useCredit()
+
 
 
 
@@ -41,7 +41,6 @@ export const CreditRegister = ({ invoiceId, title, customerData, setOpenRegister
                         return {
                             ...prev,
                             registeredCustomer: value,
-                            userRole: value ? customerData?.role : "",
                             customerName: value ? customerData?.customerName : "",
                             customerPhoneNumber: value ? customerData?.phoneNumber : ""
                         }
@@ -52,19 +51,22 @@ export const CreditRegister = ({ invoiceId, title, customerData, setOpenRegister
                         <option value={false}>No</option>
                     </select>
                 </div>
+
                 {creditRegisterData.registeredCustomer !== true && <div className='flex flex-col w-full items-start justify-start my-3'>
                     <label htmlFor="" className='my-1 '>Customer name</label>
-                    <input type="text" value={creditRegisterData?.customerName} onChange={(e) => setCreditRegisterData((prev) => {
+                    <input type="text" value={creditRegisterData?.customerName} onChange={(e) => {
                         const updated = e.target.value.replace(/\b\w/g, (char) => char.toUpperCase())
-                        return { customerName: updated }
+                        setCreditRegisterData((prev) => (
+                            { ...prev, customerName: updated }
+                        ))
                     }
-                    )}
+                    }
                         className=' h-10 w-full rounded-md bg-gray-100 p-2 tracking-wider' placeholder='Customer Name' />
                 </div>}
 
                 {creditRegisterData.registeredCustomer !== true && <div className='flex flex-col w-full items-start justify-start my-3'>
                     <label htmlFor="" className='my-1 '>Phone Number</label>
-                    <input type="number" onChange={(e) => setCreditRegisterData((prev) => ({ ...prev, customerPhoneNumber: e.target.value }))}
+                    <input type="text" onChange={(e) => setCreditRegisterData((prev) => ({ ...prev, customerPhoneNumber: e.target.value }))}
                         placeholder='Customer Phone Number' className='uppercase h-10 w-full rounded-md bg-gray-100 p-2 tracking-wider' />
                 </div>}
 

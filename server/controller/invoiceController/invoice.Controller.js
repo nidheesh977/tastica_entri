@@ -56,7 +56,7 @@ export const createNewInvoiceTab = async (req, res) => {
 
         res.status(201).json({ success: true, message: "Invoice created successfully", data: newInvoice })
     } catch (error) {
-        console.log(error);
+
 
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
@@ -208,7 +208,7 @@ export const deleteOpenOrder = async (req, res) => {
         res.status(200).json({ success: true, message: "Invoice deleted successfully" })
 
     } catch (error) {
-        console.log(error);
+
 
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
@@ -274,11 +274,14 @@ export const getFullInvoice = async (req, res) => {
         const shopId = req.shop.id;
         const { status } = req.query;
 
+
+
         if (!shopId) {
             return res.status(400).json({ success: false, message: "Shop ID is not get" });
         }
 
         const fullInvoice = await invoiceModel.find({ shop: shopId, invoiceStatus: status, }).sort({ createdAt: 1 }).populate("customer").populate("products");
+
 
         res.status(200).json({ success: true, message: "Data fetched Successfully", data: fullInvoice })
     } catch (error) {
