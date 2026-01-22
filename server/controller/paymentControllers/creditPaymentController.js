@@ -62,7 +62,7 @@ export const createCreditBook = async (req, res) => {
             const creditId = await generateCreditId(shopId)
 
             const nameOfCustomer = findCustomer.customerName.trim();
-
+            const registeredCustomerPhoneNumber = findCustomer.phoneNumber.trim()
 
             const creditBookExist = await creditModel.findOne({ shop: shopId, customerPhoneNumber: findCustomer.phoneNumber })
 
