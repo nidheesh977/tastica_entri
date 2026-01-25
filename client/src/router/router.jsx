@@ -71,6 +71,8 @@ import { CustomerCreditBook } from "../pages/shared/CustomerCreditBook/CustomerC
 import { AdminDashBoardSalesPage } from "../pages/admin/AdminDashBoardStatusPage/AdminDashBoardSalesPage";
 import { ListCreditDataStaff } from "../pages/staff/ListCreditDataStaff/ListCreditDataStaff";
 import { CustomerCreditBookStaff } from "../pages/staff/CustomerCreditBookStaff/CustomerCreditBookStaff";
+import { ExpenseListPage } from "../pages/shared/expensePage/ExpenseListPage";
+import { ExpenseFormPage } from "../pages/shared/expensePage/ExpenseFormPage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -252,6 +254,14 @@ export const router = createBrowserRouter([
           {
             path: "credit/book/data/:id",
             element: <CustomerCreditBook />
+          },
+          {
+            path: "expense/list",
+            element: <ExpenseListPage />
+          },
+          {
+            path: "expense/create",
+            element: <ExpenseFormPage />
           }
         ],
       },

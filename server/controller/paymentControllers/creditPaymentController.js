@@ -62,7 +62,7 @@ export const createCreditBook = async (req, res) => {
             const creditId = await generateCreditId(shopId)
 
             const nameOfCustomer = findCustomer.customerName.trim();
-
+            const registeredCustomerPhoneNumber = findCustomer.phoneNumber.trim()
 
             const creditBookExist = await creditModel.findOne({ shop: shopId, customerPhoneNumber: findCustomer.phoneNumber })
 
@@ -78,7 +78,7 @@ export const createCreditBook = async (req, res) => {
                     shopId,
                     nameOfCustomer,
                     registeredCustomer,
-                    phoneNumberOfCustomer,
+                    phoneNumberOfCustomer: registeredCustomerPhoneNumber,
                 })
 
 
@@ -118,7 +118,7 @@ export const createCreditBook = async (req, res) => {
         res.status(200).json({ success: true, message: "Successfully added", data: { creditBookId, creditCustomerName } })
 
     } catch (error) {
-
+        console.log(error)
 
         return res.status(500).json({ success: false, message: "internal server error" })
     }

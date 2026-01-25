@@ -591,3 +591,109 @@ export const creditPaymentValidation = Joi.object({
     singleCreditPay: Joi.boolean().required(),
     creditInvoiceId: Joi.string().allow(null, "").optional().length(24).hex().required()
 })
+
+
+
+
+//------------------------------------------- expense validation ----------------------------------------------------------------
+
+export const createExpenseAccountValidation = Joi.object({
+    expenseTitle: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Title is required',
+        'string.base': 'Title must be a string',
+        'string.empty': 'Title cannot be empty',
+        'string.min': 'Title must be at least 3 characters long',
+        'string.max': 'Title must be at most 30 characters long',
+    }),
+    description: Joi.string().min(3).max(200).required().messages({
+        'string.required': 'Description is required',
+        'string.base': 'Description must be a string',
+        'string.empty': 'Description cannot be empty',
+        'string.min': 'Description must be at least 3 characters long',
+        'string.max': 'Description must be at most 200 characters long',
+    })
+
+})
+
+export const addExpenseValidation = Joi.object({
+    title: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Expense Title is required',
+        'string.base': 'Expense Title must be a string',
+        'string.empty': 'Expense Title cannot be empty',
+        'string.min': 'Expense Title must be at least 3 characters long',
+        'string.max': 'Expense Title must be at most 30 characters long',
+    }),
+})
+
+
+
+
+// -----------------------------------------------payment account validation-----------------------------------------------------
+
+
+
+export const createPaymentAccountValidation = Joi.object({
+    accountTitle: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Account Title is required',
+        'string.base': 'Account Title must be a string',
+        'string.empty': 'Account Title cannot be empty',
+        'string.min': 'Account Title must be at least 3 characters long',
+        'string.max': 'Account Title must be at most 30 characters long',
+    }),
+    accountNumber: Joi.string().optional().messages({
+        'string.base': 'Account Number must be a string',
+        'string.empty': 'Account Number cannot be empty',
+        'string.min': 'Account Number must be at least 3 characters long',
+        'string.max': 'Account Number must be at most 30 characters long',
+    }),
+    accountType: Joi.string().required().valid("bank", "cash").messages({
+        'string.base': 'Account Type must be a string.',
+        'string.empty': 'Account Type cannot be empty.',
+        'any.only': 'Account Type must be either Bank or Cash.',
+        'any.required': 'Account Type is a required field.'
+    }),
+})
+
+// ---------------------------------------------------Tax validation--------------------------------------------------------------
+
+
+export const addTaxRatesValidation = Joi.object({
+    taxCodeName: Joi.string().trim().uppercase().min(2).max(15).required().messages({
+        'string.base': 'Tax Code Name must be a string.',
+        'string.empty': 'Tax Code Name cannot be empty.',
+        'string.min': 'Tax Code Name must be at least 2 characters.',
+        'string.max': 'Tax Code Name is too long (max 15 chars).',
+        'any.required': 'Tax Code Name is required.'
+    }),
+    rate: Joi.number().min(0).required().messages({
+        'number.base': 'Rate must be a number.',
+        'number.min': 'Rate cannot be less than 0.',
+        'number.empty': 'Rate cannot be empty.',
+        'any.required': 'Rate is a required field.'
+    })
+})
+
+
+// --------------------------------------------------Vendor validation---------------------------------------------------------
+
+export const createVendorValidation = Joi.object({
+    vendorName: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Vendor Name is required',
+        'string.base': 'Vendor Name must be a string',
+        'string.empty': 'Vendor Name cannot be empty',
+        'string.min': 'Vendor Name must be at least 3 characters long',
+        'string.max': 'Vendor Name must be at most 30 characters long',
+    }),
+    vendorEmail: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Vendor email is required',
+        'string.base': 'Vendor email must be a string',
+        'string.empty': 'Vendor email cannot be empty',
+        'string.email': 'Vendor email must be a valid email address',
+    }),
+    vendorPhoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits',
+    }),
+})

@@ -97,3 +97,14 @@ export const generateCreditId = async (shopId) => {
   )
   return `CRED${String(counter.seq).padStart(4, "0")}`
 }
+
+
+export const generateExpenseId = async (shopId) => {
+  const counterName = "expense"
+  const counter = await counterModel.findOneAndUpdate(
+    { shopId, counterName: counterName },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  )
+  return `EXPE${String(counter.seq).padStart(6, "0")}`
+}

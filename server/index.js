@@ -8,7 +8,7 @@ import cors from 'cors';
 import compression from 'compression';
 import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit'
-
+import { errorHandler } from "./middleware/errorHandler.js"
 
 dotenv.config();
 
@@ -50,5 +50,5 @@ connectDB()
 // routes Middlewares
 app.use('/api', apiRouter);
 
-
+app.use(errorHandler)
 export default app

@@ -1,0 +1,1 @@
+export { createPaymentAccount } from "./paymentAccountController.controller.js"
