@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import PaymentAccountModel from "../../model/paymentAccountModel.js";
 import { createPaymentAccountValidation } from "../../utils/joiValidation.js";
+import { Types } from "mongoose";
 
 
 
@@ -88,4 +89,44 @@ export const createPaymentAccount = async (req, res) => {
 
         return res.status(500).json({ success: false, message: "Internal server" })
     }
-} 
+}
+
+
+export const getPaymentAcountForExpenseForm = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const findAccount = await PaymentAccountModel.aggregate([
+            { $match: { shop: new Types.ObjectId(shopId) } },
+            {
+
+
+                $project: {
+                    _id: "$_id",
+                    accountType: "$accountType",
+                    accountTitle: "$accountTitle"
+                }
+
+
+            },
+            {
+                $group: {
+                    _id: "$accountType",
+                    accounts: {
+                        $push: {
+                            _id: "$_id",
+                            accountTitle: "$accountTitle"
+                        }
+                    }
+                }
+            }
+        ])
+
+
+
+
+        res.status(200).json({ success: true, message: "Payment account create successfully", data: findAccount })
+    } catch (error) {
+        next(error)
+    }
+}

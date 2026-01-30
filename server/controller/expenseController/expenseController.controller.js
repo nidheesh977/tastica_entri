@@ -4,6 +4,8 @@ import TaxRateModel from "../../model/taxRateModel.js";
 import ExpenseAccountModel from "../../model/expense model/expenseAccountModel.js";
 import { calculateTax } from "../../utils/calculateTax.js";
 import { generateExpenseId } from "../../utils/generateId.js";
+import { Types } from "mongoose"
+import customerModel from "../../model/customerModel.js";
 
 export const createExpense = async (req, res, next) => {
     try {
@@ -21,7 +23,7 @@ export const createExpense = async (req, res, next) => {
             taxRate,
             vendor,
             referenceId,
-            customerId } = req.body
+            customer } = req.body
 
 
         const findTaxRate = await TaxRateModel.findOne({ shop: shopId, },
@@ -40,7 +42,7 @@ export const createExpense = async (req, res, next) => {
             return res.status(404).json({ success: false, message: "Selected expense is not found" })
         }
 
-        const billable = !!customerId
+        const billable = !!customer
 
         const expenseId = await generateExpenseId(shopId)
 
@@ -53,10 +55,12 @@ export const createExpense = async (req, res, next) => {
 
         const isVendor = vendor === "" ? null : vendor
 
+        const dateToIso = new Date(date).toISOString();
+
         const newExpense = ExpenseModel({
             expenseId: expenseId,
             shop: shopId,
-            createdDate: date,
+            createdDate: dateToIso,
             expenseAccount,
             expenseSubTitle: selectdExpense.title,
             expenseAmount,
@@ -69,7 +73,7 @@ export const createExpense = async (req, res, next) => {
             shopTaxAccount,
             taxRate: selectedTaxRate.rate,
             vendor: isVendor,
-            customer: customerId,
+            customer,
             referenceId,
             billable: billable
         })
@@ -84,17 +88,117 @@ export const createExpense = async (req, res, next) => {
 }
 
 
+
+//  For customer
+
+
+export const getCustomerForExpenseForm = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const result = await customerModel.aggregate([
+            { $match: { shopId: new Types.ObjectId(shopId) } },
+            {
+                $project: {
+                    _id: 1,
+                    customerName: 1
+                }
+            }
+        ])
+
+
+
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 export const getExpense = async (req, res) => {
     try {
 
         const { id: shopId } = req.shop
 
-        const findExpense = await ExpenseModel.aggregate([
-            { $match: { shop: mongoose.Types.ObjectId(shopId) } },
+        const page = Number(req.query.page) || 1
+        const limit = Number(req.query.limit) || 4
+
+        const results = await ExpenseModel.aggregate([
+            {
+                $facet: {
+                    data: [
+                        { $sort: { createdAt: -1 } },
+                        { $skip: (page - 1) * limit },
+                        { $limit: limit },
+                        { $match: { shop: new Types.ObjectId(shopId) } },
+
+                        {
+                            $lookup: {
+                                from: "vendors",
+                                localField: "vendor",
+                                foreignField: "_id",
+                                as: "vendor"
+                            },
+
+                        },
+                        {
+                            $lookup: {
+                                from: "accounts",
+                                localField: "paidThrough",
+                                foreignField: "_id",
+                                as: "payment"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "customers",
+                                localField: "customer",
+                                foreignField: "_id",
+                                as: "customerData"
+                            }
+                        },
+                        {
+                            $project: {
+                                expenseSubTitle: 1,
+                                referenceId: 1,
+                                "vendor.vendorName": 1,
+                                "payment.accountTitle": 1,
+                                "customerData.customerName": 1,
+                                customer: 1,
+                                expenseAmount: 1,
+                                createdDate: 1,
+                                billable: 1
+                            }
+                        },
+
+
+
+
+                    ],
+
+                    totalCount: [{ $match: { shop: new Types.ObjectId(shopId) } }, { $count: "count" }]
+
+
+                }
+            }
 
         ])
 
-        res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpense })
+
+
+
+        const data = results[0]?.data || []
+        const totalCount = results[0]?.totalCount[0]?.count || 0
+
+        const datalength = data.length || 0
+
+        const hasmore = (page * limit) < totalCount
+
+
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data, totalCount, page, datalength, hasmore, limit })
     } catch (error) {
         console.log(error);
 

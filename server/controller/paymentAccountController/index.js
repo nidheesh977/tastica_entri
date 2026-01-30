@@ -1,1 +1,1 @@
-export { createPaymentAccount } from "./paymentAccountController.controller.js"
+export { createPaymentAccount, getPaymentAcountForExpenseForm } from "./paymentAccountController.controller.js"

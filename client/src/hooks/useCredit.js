@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient, QueryClient } from "@tanstack/re
 import { axiosInstance } from "../config/axiosInstance"
 import { addCreditBookData, removeCreditBookData, openPaymentCreditbox, removeCreditObjectId } from "../redux/features/creditSlice"
 import { removeBackgroundBlur } from "../redux/features/commonSlice"
-import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
