@@ -1,5 +1,5 @@
 import express from "express"
-import { createExpenseAccount, addNewExpenseInAccount, getExpenseAccountForExpenseForm, getExpenseAccounts } from "../../../controller/expenseAccoutController/index.js";
+import { createExpenseAccount, addNewExpenseInAccount, getExpenseAccountForExpenseForm, getExpenseAccounts, getSingleExpenseAccount, deleteExpenseAccountTitle } from "../../../controller/expenseAccoutController/index.js";
 import { shopVerifyToken } from "../../../middleware/shopCookieTokenVerification.js";
 import { userVerifyToken } from "../../../middleware/cookieTokenVerification.js";
 import { checkUserRole } from "../../../middleware/authRoleVerification.js";
@@ -11,5 +11,7 @@ expenseAccountRouter.post('/', shopVerifyToken, userVerifyToken, checkUserRole('
 expenseAccountRouter.post('/:id', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addNewExpenseInAccount)
 expenseAccountRouter.get('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getExpenseAccounts)
 expenseAccountRouter.get('/form', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getExpenseAccountForExpenseForm)
+expenseAccountRouter.get('/:expenseId', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getSingleExpenseAccount)
+expenseAccountRouter.patch('/:expenseId/title/:titleId', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), deleteExpenseAccountTitle)
 
-export default expenseAccountRouter
+export default expenseAccountRouter; 

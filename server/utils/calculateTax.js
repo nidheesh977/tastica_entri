@@ -31,7 +31,7 @@ export const calculateTax = (amount, rate, type) => {
             const tax = round2((amount * rate) / (100 + rate))
 
             return {
-                baseAmount: (amount - tax),
+                baseAmount: round2(amount - tax),
                 taxAmount: tax,
                 totalAmount: round2(amount)
             }

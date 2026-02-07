@@ -3,6 +3,7 @@ import { useExpenseAccount } from '../../../hooks/expense/useExpenseAccount'
 import { ExpenseAccountCreate } from './ExpenseAccountCreate'
 import { addBackgroundBlur } from "../../../redux/features/commonSlice"
 import { useDispatch } from "react-redux"
+import { Link } from 'react-router-dom'
 
 
 export const ExpenseAccount = () => {
@@ -34,24 +35,19 @@ export const ExpenseAccount = () => {
             <div className='flex flex-wrap gap-5'>
                 {
                     expenseAccount?.map((expenseAcc, index) => (
-                        <div key={expenseAcc?._id} className="card w-72 bg-base-100 card-sm shadow-md">
-                            <div className="card-body items-start justify-start">
-                                <h2 className="card-title w-fit">{expenseAcc?.expenseTitle}</h2>
-                                <p className='text-gray-500 h-fit w-fit'>{expenseAcc?.description}</p>
+                        <Link key={expenseAcc?._id} to={`/admin/expense/account/${expenseAcc?._id}`}>
+                            <div className="card w-72 bg-base-100 card-sm shadow-md hover:bg-base-200 cursor-pointer">
+                                <div className="card-body items-start justify-start">
+                                    <h2 className="card-title w-fit">{expenseAcc?.expenseTitle}</h2>
+                                    <p className='text-gray-500 h-fit w-fit'>{expenseAcc?.description.slice(0, 25) + "..."}</p>
 
-                                {<div className='w-full mt-1 bg-gray-200 py-2 px-2 rounded-md font-medium'>
-                                    {expenseAcc?.subTitle[0]?.title || "Empty"}
-                                </div>}
-                                {openSubTitle === false ? <div className='mt-5 flex justify-end'>
-                                    <button onClick={() => handleOpen(index)} className='btn btn-xs btn-outline btn-primary '>More</button>
-                                </div> : null}
+                                    {<div className='w-full mt-1 bg-gray-200 py-2 px-2 rounded-md font-medium'>
+                                        {expenseAcc?.subTitle[0]?.title || "Empty"}
+                                    </div>}
 
-
-
-
-
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     ))
                 }
             </div>

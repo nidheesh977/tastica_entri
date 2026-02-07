@@ -75,6 +75,7 @@ import { ExpenseListPage } from "../pages/shared/expensePage/ExpenseListPage";
 import { ExpenseFormPage } from "../pages/shared/expensePage/ExpenseFormPage";
 import { ExpenseSinglePage } from "../pages/shared/ExpenseSinglePage/ExpenseSinglePage";
 import { ExpenseAccountPage } from "../pages/shared/ExpenseAccountPage/ExpenseAccountPage"
+import { ExpenseAccountSinglePage } from "../pages/shared/ExpenseAccountSinglePage/ExpenseAccountSinglePage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -260,6 +261,10 @@ export const router = createBrowserRouter([
           {
             path: "expense/account",
             element: <ExpenseAccountPage />
+          },
+          {
+            path: "expense/account/:id",
+            element: <ExpenseAccountSinglePage />
           },
           {
             path: "expense/list",

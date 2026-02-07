@@ -9,7 +9,7 @@ export const App = () => {
 
   return (
     <>
-      {isBlur === true ? <div className="bg-black opacity-40 w-full min-h-screen top-0 left-0 fixed z-[999]"></div> : ""}
+      {isBlur === true ? <div className="bg-black opacity-70 w-full min-h-screen top-0 left-0 fixed z-[1000]"></div> : null}
       <RouterProvider router={router} />
       <Toaster />
     </>

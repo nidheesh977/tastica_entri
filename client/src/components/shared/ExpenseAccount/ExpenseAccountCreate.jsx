@@ -5,6 +5,7 @@ import { TextAreaComponent } from "../DaisyUiComponent/TextAreaComponent"
 import { useForm, Controller } from "react-hook-form"
 import { removeBackgroundBlur } from "../../../redux/features/commonSlice"
 import { useDispatch } from "react-redux"
+import { IoMdClose } from "react-icons/io"
 
 
 export const ExpenseAccountCreate = ({ setOpenForm }) => {
@@ -22,6 +23,10 @@ export const ExpenseAccountCreate = ({ setOpenForm }) => {
     const onSubmit = (data) => {
         createExpenseAccount(data)
     }
+    const handleExpenseAddCancel = () => {
+        setOpenForm(false)
+        dispatch(removeBackgroundBlur(false))
+    }
 
     useEffect(() => {
         if (!expenseAccountCreated) return;
@@ -31,8 +36,13 @@ export const ExpenseAccountCreate = ({ setOpenForm }) => {
 
     return (
         <div className="fixed w-96 p-5 shadow-md bg-white top-[45%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md">
-            <h2 className="mb-5 font-semibold">Create Expense Account</h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="">
+            <div className="flex justify-between items-center">
+                <h2 className="mb-5 font-semibold">Create Expense Account</h2>
+                <button onClick={handleExpenseAddCancel} className="btn btn-ghost btn-sm">
+                    <IoMdClose size={20} />
+                </button>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} >
                 <label className="label">Expense Title</label>
                 <Controller name="expenseTitle" control={control} render={({ field }) => (
                     <InputComponent field={field} />

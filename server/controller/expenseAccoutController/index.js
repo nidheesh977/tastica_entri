@@ -1,1 +1,8 @@
-export { createExpenseAccount, addNewExpenseInAccount, getExpenseAccountForExpenseForm, getExpenseAccounts } from "./expenseAccount.controller.js"
+export {
+    createExpenseAccount,
+    addNewExpenseInAccount,
+    getExpenseAccountForExpenseForm,
+    getExpenseAccounts,
+    getSingleExpenseAccount,
+    deleteExpenseAccountTitle
+} from "./expenseAccount.controller.js"

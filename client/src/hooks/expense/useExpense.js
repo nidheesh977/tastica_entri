@@ -97,9 +97,7 @@ export const useExpense = (page, imageQuery) => {
         isFetching,
         isPending,
         isPlaceholderData,
-
         expenseSingleData,
-
         expenseImageData
 
     }

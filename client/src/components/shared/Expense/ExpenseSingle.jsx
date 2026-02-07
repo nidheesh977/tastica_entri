@@ -16,8 +16,6 @@ export const ExpenseSingle = () => {
 
     const { expenseSingleData, expenseImageData } = useExpense(null, imageQuery)
 
-    console.log(expenseImageData)
-
     const currecnyCode = useSelector((state) => state?.auth?.shopData?.currencyCode)
 
     const handleViewImage = (publicId) => {
