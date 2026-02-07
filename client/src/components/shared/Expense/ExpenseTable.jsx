@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useExpense } from '../../../hooks/expense/useExpense'
 import { useSelector } from "react-redux"
+import { Link } from 'react-router-dom'
 
 export const ExpenseTable = () => {
     const [page, setPage] = useState(1)
-    const { paginatedData, isFetching, isPlaceholderData } = useExpense(page)
+    const { paginatedData, isFetching, isPlaceholderData } = useExpense(page, null)
 
     console.log(paginatedData);
 
@@ -50,7 +51,9 @@ export const ExpenseTable = () => {
                                 <tr className='border-y border-gray-300' key={expense._id}>
                                     <th>{(page - 1) * paginatedData?.limit + index + 1}</th>
                                     <td className='text-gray-500 font-medium'>{new Date(expense.createdDate).toLocaleDateString()}</td>
-                                    <td className='text-blue-500 font-medium'>{expense.expenseSubTitle}</td>
+                                    <td className='text-blue-500 font-medium'>
+                                        <Link to={`/admin/expense/${expense._id}`}>{expense.expenseSubTitle}</Link>
+                                    </td>
                                     <td className='text-gray-500 font-medium'>{expense?.referenceId}</td>
                                     <td className='font-medium text-center text-gray-800'>{expense?.vendor[0]?.vendorName}</td>
                                     <td className='font-medium  text-gray-800'>{expense?.payment[0]?.accountTitle}</td>

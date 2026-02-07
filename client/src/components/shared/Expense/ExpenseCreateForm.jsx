@@ -9,30 +9,51 @@ import { useVendor } from "../../../hooks/useVendor";
 import { usePaymentAccount } from "../../../hooks/usePaymentAccount";
 import { filterDataArr } from "../../../utils/filterDataArr";
 import { useExpense } from "../../../hooks/expense/useExpense";
+import { useCustomerExpense } from "../../../hooks/expense/useCustomerExpense";
 
 
 export const ExpenseCreateForm = () => {
 
-    // const [filteredData, setFilteredData] = useState([])
+    const [isDelete, setIsDelete] = useState(true)
+    // const [imageDocs, setImageDoc] = useState(null)
 
-    const { expenseAccountData } = useExpenseAccount()
+
+    const { expenseAccountDataExpenseForm } = useExpenseAccount()
     const { taxRatesData } = useTaxRates()
     const { vendorData } = useVendor()
     const { paymentAccountData } = usePaymentAccount()
-    const { createExpense, customerData } = useExpense()
+    const { createExpense, isPending } = useExpense()
+    const { customerData } = useCustomerExpense()
 
 
-    const { handleSubmit, watch, register, setValue } = useForm({
-        defaultValues: {
-            expenseAmount: 0
-        }
-    })
+    const { handleSubmit, watch, register, setValue } = useForm()
 
+    // console.log(imageDocs);
 
 
 
     const onSubmit = (data) => {
-        createExpense(data)
+        console.log(data)
+        const formData = new FormData()
+        formData.append("image_doc", data.image_doc[0])
+        formData.append("date", data.date)
+        formData.append("expenseAccount", data.expenseAccount)
+        formData.append("expenseSubTitle", data.expenseSubTitle)
+        formData.append("expenseAmount", Number(data.expenseAmount))
+        formData.append("amountIs", data.amountIs)
+        formData.append("paidThrough", data.paidThrough)
+        formData.append("shopTaxAccount", data.shopTaxAccount)
+        formData.append("taxRate", data.taxRate)
+        formData.append("vendor", data.vendor)
+        formData.append("referenceId", data.referenceId)
+        formData.append("customer", data.customer)
+        formData.append("notes", data.notes)
+
+
+
+        const obj = Object.fromEntries(formData.entries())
+        console.log(obj)
+        createExpense(formData)
     }
 
     const selectedExpenseAccount = watch("expenseTitleDis")
@@ -48,13 +69,39 @@ export const ExpenseCreateForm = () => {
     const customerNameSearch = watch("searchcustomer")
 
 
+
+    const imageDoc = watch("image_doc") // File/Blob from react-hook-form
+    const [preview, setPreview] = useState(null)
+
+    console.log(preview);
+
+
+    useEffect(() => {
+        if (!imageDoc || imageDoc.length === 0) {
+            setPreview(null)
+            return
+        }
+
+        const file = imageDoc[0]
+
+        if (!(file instanceof File || file instanceof Blob)) {
+            console.warn("Not a File/Blob", file)
+            setPreview(null)
+            return
+        }
+
+        const url = URL.createObjectURL(file)
+        setPreview(url)
+
+        return () => URL.revokeObjectURL(url)
+    }, [imageDoc])
+
     const handleSaveExpense = () => {
         handleSubmit(onSubmit)()
     }
 
-
     const expenseAccount = (
-        filterDataArr(expenseAccountData, expenseAccountSearch, "subTitle", "title", false)?.map((expense, index) => (
+        filterDataArr(expenseAccountDataExpenseForm, expenseAccountSearch, "subTitle", "title", false)?.map((expense, index) => (
             <div key={expense?._id}>
                 <p className="text-sm font-semibold" >{expense.expenseTitle}</p>
                 {expense?.subTitle.map((title) => (
@@ -177,7 +224,7 @@ export const ExpenseCreateForm = () => {
                     {/* expense amount */}
                     <div className='flex flex-col lg:flex-row justify-between items-start lg:items-center'>
                         <label htmlFor="amount" className='text-red-500'>Amount*</label>
-                        <input type="number"  {...register("expenseAmount", { valueAsNumber: true })} min={0} id='amount' className="mr-16 rounded-md input input-sm input-bordered w-full max-w-sm " />
+                        <input type="number"  {...register("expenseAmount", { valueAsNumber: true })} placeholder="Enter expense amount" id='amount' className="mr-16 rounded-md input input-sm input-bordered w-full max-w-sm " />
                     </div>
 
                     <div className='flex  flex-row justify-start items-start  gap-10 lg:gap-40 xl:gap-32'>
@@ -242,6 +289,14 @@ export const ExpenseCreateForm = () => {
                     <div className='flex flex-col lg:flex-row justify-between items-start lg:items-center relative mt-8'>
                         <label htmlFor="vendor">Vendor</label>
                         <SelectOptionComponent
+                            config={{
+                                deleteBtn: true,
+                                setIsDelete: setIsDelete,
+                                setValue: setValue,
+                                valueName: "vendor",
+                                displayRemove: "vendorDis",
+                                addDisplay: "Select a vendor"
+                            }}
                             selectPlaceholder={"Select a vendor"}
                             selectedVendor={selectedVendor}
                         >
@@ -275,11 +330,20 @@ export const ExpenseCreateForm = () => {
                     <hr className="my-10" />
 
                     <div className='flex flex-col lg:flex-row justify-between items-start lg:items-center relative mt-3'>
-                        <label htmlFor="expense-account">Customer Name</label>
+                        <label htmlFor="expense-account">Customer</label>
                         <SelectOptionComponent
+                            config={{
+                                deleteBtn: true,
+                                setValue: setValue,
+                                valueName: "customer",
+                                displayRemove: "customerDis",
+                                addDisplay: "Select a customer"
+
+                            }}
                             selectPlaceholder={"Select a customer"}
-                            selectedVendor={selectedCustomer}
+                            selectedCustomer={selectedCustomer}
                             isTop={true}
+
                         >
                             <div className="relative">
 
@@ -301,10 +365,10 @@ export const ExpenseCreateForm = () => {
                 </div>
 
 
-            </form>
+            </form >
             <div className="fixed left-0 z-50  bottom-14 p-2 bg-base-200 w-full shadow-md">
                 <div className="px-4 xl:px-28 flex gap-2">
-                    <button onClick={handleSaveExpense} className="btn btn-sm btn-info rounded-md text-white text-xs">Save</button>
+                    <button onClick={handleSaveExpense} disabled={isPending} className="btn btn-sm btn-info rounded-md text-white text-xs">{isPending ? "Saving..." : "Save"}</button>
                     <button className="btn btn-sm  rounded-md text-black text-xs">Save and New</button>
                     <button className="btn btn-sm  rounded-md text-black text-xs">Cancel</button>
                 </div>
@@ -312,15 +376,15 @@ export const ExpenseCreateForm = () => {
 
 
             {/* image container */}
-            <div className='w-1/2 flex justify-center items-start relative'>
-                <div className="fixed top-1/2  card bg-base-100 w-60 shadow-sm border-4 border-dotted">
+            <div className='w-full mt-10 lg:mt-0 lg:w-1/2 flex justify-center items-center lg:items-start relative'>
+                <div className="lg:fixed lg:top-1/2  card bg-base-100 w-72 shadow-sm border-4 border-dotted">
                     <div className="card-body p-4">
                         <h2 className="card-title justify-center text-sm">Drop your Image</h2>
-                        <p className="text-xs text-center">Maximum file size allowed 10MB</p>
-                        <input type="file" className="file-input file-input-sm file-input-primary" />
+                        <p className="text-xs text-center">Maximum file size allowed 3MB</p>
+                        <input type="file" {...register("image_doc")} className="file-input file-input-sm file-input-primary" />
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

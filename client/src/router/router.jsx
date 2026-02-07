@@ -73,6 +73,8 @@ import { ListCreditDataStaff } from "../pages/staff/ListCreditDataStaff/ListCred
 import { CustomerCreditBookStaff } from "../pages/staff/CustomerCreditBookStaff/CustomerCreditBookStaff";
 import { ExpenseListPage } from "../pages/shared/expensePage/ExpenseListPage";
 import { ExpenseFormPage } from "../pages/shared/expensePage/ExpenseFormPage";
+import { ExpenseSinglePage } from "../pages/shared/ExpenseSinglePage/ExpenseSinglePage";
+import { ExpenseAccountPage } from "../pages/shared/ExpenseAccountPage/ExpenseAccountPage"
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -256,12 +258,20 @@ export const router = createBrowserRouter([
             element: <CustomerCreditBook />
           },
           {
+            path: "expense/account",
+            element: <ExpenseAccountPage />
+          },
+          {
             path: "expense/list",
             element: <ExpenseListPage />
           },
           {
             path: "expense/create",
             element: <ExpenseFormPage />
+          },
+          {
+            path: "expense/:id",
+            element: <ExpenseSinglePage />
           }
         ],
       },

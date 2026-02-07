@@ -6,6 +6,7 @@ import productModel from "../../model/productModel.js";
 import { generateCreditId } from "../../utils/generateId.js";
 import mongoose from "mongoose"
 import { creditGiveValidation, creditPaymentValidation, creditRegistrationValidation } from "../../utils/joiValidation.js";
+import { AppError } from "../../utils/AppError.js";
 
 export const createCreditBook = async (req, res) => {
 
@@ -585,5 +586,23 @@ export const clearAdvanceAmt = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ success: false, message: "internal server error" })
+    }
+}
+
+
+export const customerCreditDetail = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop;
+        const { creditBookId } = req.query;
+
+
+        const creditUserData = await creditModel.findOne({ shop: shopId, creditBookId }).select("customerName customerPhoneNumber")
+
+
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: creditUserData })
+
+    } catch (error) {
+        next(error)
     }
 }

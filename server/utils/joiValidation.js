@@ -697,3 +697,80 @@ export const createVendorValidation = Joi.object({
         'string.pattern.base': 'Phone number must be between 7 to 14 digits',
     }),
 })
+
+
+export const createExpenseFormValidation = Joi.object({
+
+
+    date: Joi.date().not(null).required().messages({
+        "any.required": "Date is required",
+        "any.invalid": "Date is required",
+        "date.base": "Date must be a valid date",
+    }),
+    expenseAccount: Joi.string().length(24).hex().required().messages({
+        "any.required": "Expense Account is required",
+        "string.hex": "Invalid ID format",
+        "string.length": "Invalid ID format",
+    }),
+    expenseSubTitle: Joi.string().length(24).hex().required().messages({
+        "any.required": "Expense Sub Title  is required",
+        "string.hex": "Invalid ID format",
+        "string.length": "Invalid ID format",
+    }),
+    amountIs: Joi.string().valid("inclusive", "exclusive").required().messages({
+        "any.only": "Type must be Inclusive or Exclusive",
+        "any.required": "Please select a Tax type"
+    }),
+
+    expenseAmount: Joi.number().positive().precision(2)
+        .when("amountIs", {
+            is: "inclusive",
+            then: Joi.number().min(0).messages({
+                "number.min": "Amount must be 0 or greater for Inclusive tax",
+            }),
+            otherwise: Joi.number().greater(0).messages({
+                "number.greater": "Amount must be greater than 0 for Exclusive tax",
+            }),
+        })
+        .required().invalid(null).empty("").messages({
+            "any.required": "Expense amount is required",
+            "any.invalid": "Expense amount is required",
+            "number.base": "Please enter a valid Expense amount",
+            "number.positive": "Expense amount must be greater than zero",
+            "number.precision": "Only 2 decimal places are allowed"
+        }),
+    paidThrough: Joi.string().length(24).hex().required().messages({
+        "any.required": "paidThrough  is required",
+        "string.hex": "paid Through Invalid ID format",
+        "string.length": "paid ThroughInvalid ID format",
+    }),
+
+    shopTaxAccount: Joi.string().length(24).hex().required().messages({
+        "any.required": "Tax rate  is required",
+        "string.hex": "shop Tax Account Invalid ID format",
+        "string.length": "shop Tax Account Invalid ID format",
+    }),
+    taxRate: Joi.string().length(24).hex().required().messages({
+        "any.required": "Tax rate  is required",
+        "string.hex": "Tax rate Invalid ID format",
+        "string.length": "Tax rate Invalid ID format",
+    }),
+    vendor: Joi.string().length(24).hex().allow(null).empty("").messages({
+        "string.hex": "vendor Invalid ID format",
+        "string.length": "vendor Invalid ID format",
+    }),
+
+    customer: Joi.string().length(24).hex().allow(null).empty("").messages({
+        "string.hex": "customer Invalid ID format",
+        "string.length": "customer Invalid ID format",
+    }),
+    referenceId: Joi.string().optional().empty("").messages({
+        "string.base": "Reference ID must be a string"
+    }),
+    notes: Joi.string().required().empty('').max(500).messages({
+        "any.required": "Notes are required",
+        "string.base": "Notes must be a string",
+        "string.max": "Notes cannot exceed 500 characters"
+    }),
+    image_doc: Joi.string().meta({ swaggerType: 'file' }).optional().allow(null, "").label("image")
+})

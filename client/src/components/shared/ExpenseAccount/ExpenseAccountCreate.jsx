@@ -1,0 +1,47 @@
+import { useEffect } from "react"
+import { useExpenseAccount } from "../../../hooks/expense/useExpenseAccount"
+import { InputComponent } from "../DaisyUiComponent/InputComponent"
+import { TextAreaComponent } from "../DaisyUiComponent/TextAreaComponent"
+import { useForm, Controller } from "react-hook-form"
+import { removeBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch } from "react-redux"
+
+
+export const ExpenseAccountCreate = ({ setOpenForm }) => {
+
+    const { handleSubmit, reset, register, control } = useForm({
+        defaultValues: {
+            expenseTitle: ""
+        }
+    })
+
+
+    const dispatch = useDispatch()
+    const { createExpenseAccount, expenseAccountCreated } = useExpenseAccount()
+
+    const onSubmit = (data) => {
+        createExpenseAccount(data)
+    }
+
+    useEffect(() => {
+        if (!expenseAccountCreated) return;
+        setOpenForm(false)
+        dispatch(removeBackgroundBlur(false))
+    }, [expenseAccountCreated])
+
+    return (
+        <div className="fixed w-96 p-5 shadow-md bg-white top-[45%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md">
+            <h2 className="mb-5 font-semibold">Create Expense Account</h2>
+            <form onSubmit={handleSubmit(onSubmit)} className="">
+                <label className="label">Expense Title</label>
+                <Controller name="expenseTitle" control={control} render={({ field }) => (
+                    <InputComponent field={field} />
+                )} />
+
+                <label className="label mt-5">Description</label>
+                <TextAreaComponent register={register} registerName="description" />
+                <button className="btn btn-primary btn-md w-full mt-3 rounded-md">Primary</button>
+            </form>
+        </div>
+    )
+}

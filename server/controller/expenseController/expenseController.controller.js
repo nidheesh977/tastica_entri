@@ -6,11 +6,30 @@ import { calculateTax } from "../../utils/calculateTax.js";
 import { generateExpenseId } from "../../utils/generateId.js";
 import { Types } from "mongoose"
 import customerModel from "../../model/customerModel.js";
+import { createExpenseFormValidation } from "../../utils/joiValidation.js";
+import { AppError } from "../../utils/AppError.js";
+import { compressImage } from "../../utils/compressImage.js";
+import { uploadImageToCloudinary } from "../../utils/uploadImageToCloudinary .js";
+import { cloudinaryInstance } from "../../config/cloudineryConfig.js";
 
 export const createExpense = async (req, res, next) => {
     try {
 
         const { id: shopId } = req.shop;
+
+
+        const file = req.file;
+
+
+
+
+        const { error, value } = createExpenseFormValidation.validate(req.body)
+
+        if (error) {
+            return next(new AppError(error.details[0].message, 400))
+        }
+
+
 
         const {
             date,
@@ -23,24 +42,37 @@ export const createExpense = async (req, res, next) => {
             taxRate,
             vendor,
             referenceId,
-            customer } = req.body
+            customer,
+            notes
+
+        } = value
+
+
+
+        if (!vendor && !customer || vendor && customer) {
+            return (next(new AppError("Please select either Customer or Vendor", 400)))
+        }
 
 
         const findTaxRate = await TaxRateModel.findOne({ shop: shopId, },
             { taxRates: { $elemMatch: { "_id": taxRate } } }
         )
 
+
+
         if (!findTaxRate) {
             return res.status(404).json({ success: false, message: "Selected Tax rate is not found" })
         }
 
-        const findExpenseAccount = await ExpenseAccountModel.findOne({ shop: shopId },
+        const findExpenseAccount = await ExpenseAccountModel.findOne({ shop: shopId, _id: expenseAccount },
             { subTitle: { $elemMatch: { "_id": expenseSubTitle } } }
         )
 
         if (!findExpenseAccount) {
             return res.status(404).json({ success: false, message: "Selected expense is not found" })
         }
+
+
 
         const billable = !!customer
 
@@ -50,6 +82,17 @@ export const createExpense = async (req, res, next) => {
 
         const selectdExpense = findExpenseAccount.subTitle[0]
 
+        const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
+        const type = process.env.EXPENSE_DOC_IMAGE_AUTH
+
+        let compressedImage = null
+        let result = null
+
+        if (file) {
+            compressedImage = await compressImage(file.buffer, 1200, 72)
+
+            result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
+        }
 
         const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")     // The amountis hold inclusive or exclusive
 
@@ -62,7 +105,7 @@ export const createExpense = async (req, res, next) => {
             shop: shopId,
             createdDate: dateToIso,
             expenseAccount,
-            expenseSubTitle: selectdExpense.title,
+            expenseSubTitle: selectdExpense?.title,
             expenseAmount,
             taxAmount: taxAmount,
             totalAmount: totalAmount,
@@ -75,7 +118,12 @@ export const createExpense = async (req, res, next) => {
             vendor: isVendor,
             customer,
             referenceId,
-            billable: billable
+            billable: billable,
+            notes,
+            cloudinary: {
+                publicId: result?.public_id,
+                version: result?.version
+            }
         })
 
         await newExpense.save()
@@ -83,6 +131,7 @@ export const createExpense = async (req, res, next) => {
         res.status(201).json({ success: true, message: "Expense create successfully" })
 
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -95,7 +144,7 @@ export const createExpense = async (req, res, next) => {
 export const getCustomerForExpenseForm = async (req, res, next) => {
     try {
         const { id: shopId } = req.shop
-
+        console.log("hitted")
         const result = await customerModel.aggregate([
             { $match: { shopId: new Types.ObjectId(shopId) } },
             {
@@ -106,12 +155,14 @@ export const getCustomerForExpenseForm = async (req, res, next) => {
             }
         ])
 
+        console.log(result);
 
 
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
 
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -203,5 +254,45 @@ export const getExpense = async (req, res) => {
         console.log(error);
 
         return res.status(500).json({ success: false, message: "Internal server error" })
+    }
+}
+
+
+export const getSingleExpense = async (req, res, next) => {
+    try {
+        const { expenseId } = req.params
+        const { id: shopId } = req.shop;
+
+        const getExpense = await ExpenseModel.findOne({ shop: shopId, _id: expenseId })
+            .populate({ path: "expenseAccount", select: "expenseTitle" })
+            .populate({ path: "paidThrough", select: "accountTitle" })
+            .populate({ path: "customer", select: "customerName" })
+            .populate({ path: "vendor", select: "vendorName" })
+
+        if (!getExpense) {
+            throw new AppError("Expense Page not found", 404)
+        }
+
+        res.status(200).json({ success: true, message: "Data fetched successfull", data: getExpense })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getImageDoc = async (req, res, next) => {
+    try {
+        const { imagePublicId } = req.query;
+        console.log(imagePublicId);
+
+        const image = cloudinaryInstance.url(imagePublicId, {
+            type: "authenticated",
+            sign_url: true,
+            expires_at: Math.floor(Date.now() / 1000) + 60
+        })
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: image })
+
+    } catch (error) {
+        next(error)
     }
 }

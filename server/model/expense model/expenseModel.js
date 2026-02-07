@@ -97,10 +97,21 @@ const expenseSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    cloudinary: {
+        publicId: {
+            type: String,
+            default: null
+        },
+        version: {
+            type: String,
+            default: null
+        }
     }
 
 }, { timestamps: true })
 
+expenseSchema.index({ shop: 1 })
 
 const ExpenseModel = mongoose.model("Expense", expenseSchema)
 

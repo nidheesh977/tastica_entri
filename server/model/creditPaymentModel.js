@@ -77,6 +77,7 @@ const creditPaymentSchema = mongoose.Schema({
 }, { timestamps: true })
 
 creditPaymentSchema.index({ shop: 1 })
+creditPaymentSchema.index({ creditBookId: 1 })
 
 const creditModel = mongoose.model("Credit", creditPaymentSchema)
 

@@ -1,13 +1,25 @@
-import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import { useMutation, useQuery, keepPreviousData, useQueryClient } from '@tanstack/react-query'
 import { axiosInstance } from '../../config/axiosInstance'
 import toast from 'react-hot-toast'
+import { useLocation, useParams } from "react-router-dom"
 
-export const useExpense = (page) => {
+
+export const useExpense = (page, imageQuery) => {
+
+
+    console.log(imageQuery);
+
+
+    const queryClient = useQueryClient();
+    const { pathname } = useLocation()
+
+    const isValidPage = pathname === "/admin/expense/list"
+
+    const { id: expenseId } = useParams()
 
 
     const { data: paginatedData, isFetching, isPlaceholderData } = useQuery({
-        queryKey: ["expenses", page],
+        queryKey: ["expensePagination", page],
         queryFn: async () => {
             const response = await axiosInstance({
                 method: "GET",
@@ -16,36 +28,60 @@ export const useExpense = (page) => {
             })
             return response?.data
         },
-        placeholderData: keepPreviousData
+        enabled: !!isValidPage,
+        placeholderData: keepPreviousData,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false
     })
 
-    const { data: customerData } = useQuery({
-        queryKey: ["customerExpense"],
+    const { data: expenseSingleData } = useQuery({
+        queryKey: ["expenseId", expenseId],
         queryFn: async () => {
             const response = await axiosInstance({
                 method: "GET",
-                url: "/expense/customer",
+                url: `/expense/${expenseId}`,
                 withCredentials: true
             })
             return response?.data?.data
-        }
+        },
+        enabled: !!expenseId,
+        refetchOnWindowFocus: false
+    })
+
+    const { data: expenseImageData } = useQuery({
+        queryKey: ["expenseDocImg", imageQuery],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: `/expense/image?imagePublicId=${imageQuery}`,
+                withCredentials: true
+            })
+            return response?.data?.data
+        },
+        enabled: !!imageQuery,
+        refetchOnWindowFocus: false,
+        keepPreviousData: false
     })
 
 
-    const { mutate: createExpense } = useMutation({
+
+    const { mutate: createExpense, isPending } = useMutation({
         mutationFn: async (data) => {
+
+
+
             const response = await axiosInstance({
                 method: "POST",
                 url: "/expense",
                 withCredentials: true,
-                data
+                data: data
             })
 
-            console.log(response);
+
 
         }, onSuccess: (data) => {
             toast.success("Expense Create successfully!");
-
+            queryClient.invalidateQueries({ queryKey: ["expensePagination"] });
         },
         onError: (error) => {
 
@@ -57,9 +93,14 @@ export const useExpense = (page) => {
 
     return {
         createExpense,
-        customerData,
         paginatedData,
         isFetching,
-        isPlaceholderData
+        isPending,
+        isPlaceholderData,
+
+        expenseSingleData,
+
+        expenseImageData
+
     }
 }

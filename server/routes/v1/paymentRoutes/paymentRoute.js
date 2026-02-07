@@ -6,7 +6,7 @@ import { userVerifyToken } from '../../../middleware/cookieTokenVerification.js'
 import { checkUserRole } from '../../../middleware/authRoleVerification.js';
 import { internalDevicePayment } from '../../../controller/paymentControllers/internalDevicePayment.js';
 import { paymentRefund } from '../../../controller/paymentControllers/paymentRefundController.js';
-import { payCreditAmount, addCredit, createCreditBook, getCreditBooks, getSingleCreditBookForPayment, getCreditSingleBookForDisplay, clearAdvanceAmt } from '../../../controller/paymentControllers/creditPaymentController.js';
+import { payCreditAmount, addCredit, createCreditBook, getCreditBooks, getSingleCreditBookForPayment, getCreditSingleBookForDisplay, clearAdvanceAmt, customerCreditDetail } from '../../../controller/paymentControllers/creditPaymentController.js';
 import { checkPermission } from '../../../middleware/permissonMiddleware.js';
 
 
@@ -20,6 +20,8 @@ paymentRouter.post('/internal-device/invoice/:invoiceId', shopVerifyToken, userV
 paymentRouter.post('/create/credit/invoice/:invoiceId', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_create"), createCreditBook);
 paymentRouter.post('/credit/invoice/:invoiceId', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_give"), addCredit);
 paymentRouter.put('/pay-credit/:bookid', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_pay"), payCreditAmount);
+
+paymentRouter.get('/credit', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_read"), customerCreditDetail)
 paymentRouter.get('/credits', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_read"), getCreditBooks)
 paymentRouter.get('/credit/pay/:id', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_read"), getSingleCreditBookForPayment)
 paymentRouter.get('/credit/:id', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("credit_read"), getCreditSingleBookForDisplay)

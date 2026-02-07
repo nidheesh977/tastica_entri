@@ -91,3 +91,18 @@ export const getExpenseAccountForExpenseForm = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
+
+
+export const getExpenseAccounts = async (req, res, next) => {
+    try {
+        const shopId = req.shop.id;
+
+        const findExpenses = await ExpenseAccountModel.find({ shop: shopId }).select("_id expenseTitle description subTitle.title subTitle._id").sort({ createdAt: -1 })
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpenses })
+    } catch (error) {
+        console.log(error);
+
+        next(error)
+    }
+}

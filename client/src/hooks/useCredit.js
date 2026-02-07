@@ -6,13 +6,12 @@ import { removeBackgroundBlur } from "../redux/features/commonSlice"
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-export const useCredit = () => {
+export const useCredit = (queryValue) => {
 
     const dispatch = useDispatch()
     const queryClient = useQueryClient();
     const { creditBookObjectId } = useSelector((state) => state.credit);
     const bookid = useParams().id
-
 
 
 
@@ -40,6 +39,20 @@ export const useCredit = () => {
         },
         enabled: !!creditBookObjectId,
 
+    })
+
+    const { data: creditDataForAddDialog, isFetching: isCreditrDataAddDialog } = useQuery({
+        queryKey: ["creditCustomerData", queryValue],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: `payment/credit?creditBookId=${queryValue}`
+            })
+
+            return response?.data?.data
+        },
+        enabled: !!queryValue,
+        keepPreviousData: false,
     })
 
     const { data: creditDataDisplay, isFetching: iscreditDataDisplay, refetch: creditDataDisplayRefetch } = useQuery({
@@ -180,7 +193,9 @@ export const useCredit = () => {
         isPaycreditLoading,
         creditDataDisplay,
         creditDataDisplayRefetch,
-        advanceAmtClear
+        advanceAmtClear,
+        creditDataForAddDialog,
+        isCreditrDataAddDialog
     }
 
 }
