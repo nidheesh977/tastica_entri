@@ -45,7 +45,7 @@ export const ExpenseAccountAddTitle = ({ setAddTitleBox }) => {
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 <label className="label">Title</label>
                 <Controller name="title" control={control} render={({ field }) => (
-                    <InputComponent field={field} />
+                    <InputComponent field={field} placeholder="Add Expense Title" />
                 )} />
 
                 <button disabled={addTitleToExpenseAccountCreated === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTitleToExpenseAccountCreated ? "Addding" : "Add"}</button>

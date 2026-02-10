@@ -45,12 +45,15 @@ export const ExpenseAccountCreate = ({ setOpenForm }) => {
             <form onSubmit={handleSubmit(onSubmit)} >
                 <label className="label">Expense Title</label>
                 <Controller name="expenseTitle" control={control} render={({ field }) => (
-                    <InputComponent field={field} />
+                    <InputComponent field={field} regexVal={/\b\w/g} placeholder={"Eg. Meals"} />
                 )} />
 
                 <label className="label mt-5">Description</label>
-                <TextAreaComponent register={register} registerName="description" />
-                <button className="btn btn-primary btn-md w-full mt-3 rounded-md">Primary</button>
+                <Controller name="description" control={control} render={({ field }) => (
+                    <TextAreaComponent field={field} placeholder={"Add description"} />
+                )} />
+
+                <button className="btn btn-primary btn-md w-full mt-3 rounded-md">Create Expense</button>
             </form>
         </div>
     )

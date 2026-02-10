@@ -1,1 +1,7 @@
-export { createTaxRateAccount, addTaxRatesToAccount, getTaxRatesForExpenseForm } from "./taxRateController.controller.js"
+export {
+    createTaxRateAccount,
+    addTaxRatesToAccount,
+    getTaxRatesForExpenseForm,
+    getTaxRatesForShop,
+    deleteTaxRate
+} from "./taxRateController.controller.js"

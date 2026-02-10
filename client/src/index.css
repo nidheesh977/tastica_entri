@@ -3,11 +3,20 @@
 @tailwind utilities;
 
 
+
+
 body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  overflow-y: scroll
+  overflow-y: scroll;
+
+}
+
+body.modal-open {
+  overflow-y: hidden;
+  scrollbar-gutter: stable;
+  height: 100vh;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {

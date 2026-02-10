@@ -665,6 +665,12 @@ export const addTaxRatesValidation = Joi.object({
         'string.max': 'Tax Code Name is too long (max 15 chars).',
         'any.required': 'Tax Code Name is required.'
     }),
+    taxType: Joi.string().trim().uppercase().valid("GST", "VAT", "SALES_TAX", "ZERO").required().messages({
+        'any.only': 'taxType must be one of GST, VAT, SALES_TAX,  or ZERO',
+        'string.base': 'Tax type must be a string.',
+        'string.empty': 'Tax type  cannot be empty.',
+        'any.required': 'Tax Code Name is required.'
+    }),
     rate: Joi.number().min(0).required().messages({
         'number.base': 'Rate must be a number.',
         'number.min': 'Rate cannot be less than 0.',

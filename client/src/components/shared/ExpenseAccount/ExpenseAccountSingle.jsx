@@ -28,7 +28,7 @@ export const ExpenseAccountSingle = () => {
     }
 
     return (
-        <div className=' px-4 xl:px-24 pt-10 pb-32'>
+        <div className='px-4 xl:px-24 pt-10 pb-32'>
             {openAddTitleBox ? <ExpenseAccountAddTitle setAddTitleBox={setAddTitleBox} /> : null}
             {singleExpenseAccountLoading ? <p>Loading...</p> : null}
             {singleExpenseAccountLoading === false ? <div className='w-[80%] mx-auto'>

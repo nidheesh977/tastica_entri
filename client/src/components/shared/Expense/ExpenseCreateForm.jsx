@@ -19,7 +19,7 @@ export const ExpenseCreateForm = () => {
 
 
     const { expenseAccountDataExpenseForm } = useExpenseAccount()
-    const { taxRatesData } = useTaxRates()
+    const { taxRatesDataForExpenseForm } = useTaxRates()
     const { vendorData } = useVendor()
     const { paymentAccountData } = usePaymentAccount()
     const { createExpense, isPending } = useExpense()
@@ -141,10 +141,10 @@ export const ExpenseCreateForm = () => {
     )
 
     const taxRates = (
-        filterDataArr(taxRatesData?.taxRates, taxRateSearch, "", "taxCodeName", true)?.map(taxRate => (
+        filterDataArr(taxRatesDataForExpenseForm?.taxRates, taxRateSearch, "", "taxCodeName", true)?.map(taxRate => (
             <button type="button" onClick={() => {
                 setValue("taxRateDis", `${taxRate.taxCodeName} [${taxRate.rate}%]`)
-                setValue("shopTaxAccount", taxRatesData._id)
+                setValue("shopTaxAccount", taxRatesDataForExpenseForm._id)
                 setValue("taxRate", taxRate.taxId)
             }}
                 key={taxRate.taxId} className="w-full text-start rounded-md px-2 py-1 my-2 hover:bg-blue-500 hover:text-white block text-sm text-gray-700">{taxRate.taxCodeName} [{taxRate.rate}%] </button>
