@@ -61,9 +61,7 @@ export const useTaxRates = () => {
 
     const { mutate: addTaxToAccount, isPending: addTaxToAccountLoaded } = useMutation({
         mutationFn: async ({ shopTaxId, data }) => {
-            console.log(data);
 
-            console.log(shopTaxId);
 
             const res = await axiosInstance({
                 method: "POST",

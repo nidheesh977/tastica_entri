@@ -9,13 +9,9 @@ const paymentAccountSchema = new mongoose.Schema({
     },
     accountType: {
         type: String,
-        enum: ["bank", "cash"],
-        default: "cash",
+        enum: ["Bank", "Cash"],
+        default: "Cash",
         required: true,
-    },
-    accountNumber: {
-        type: String,
-        default: null,
     },
     accountTitle: {
         type: String,
@@ -33,10 +29,6 @@ const paymentAccountSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    isAccountNumber: {
-        type: Boolean,
-        default: false
-    }
 }, { timestamps: true })
 
 paymentAccountSchema.index({ shop: 1 })

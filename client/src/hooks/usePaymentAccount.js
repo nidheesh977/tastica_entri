@@ -1,9 +1,35 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../config/axiosInstance"
-
+import { useLocation } from "react-router-dom"
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { removeBackgroundBlur } from "../redux/features/commonSlice"
 
 export const usePaymentAccount = () => {
-    const { data: paymentAccountData } = useQuery({
+
+    const queryClient = useQueryClient();
+
+    const { pathname } = useLocation()
+
+    const isValidPage = pathname === "/admin/expense/create"
+    const isPaymentAccount = pathname === "/admin/payment/account"
+
+    const dispatch = useDispatch()
+
+    const { data: paymentAccountDataForExpForm } = useQuery({
+        queryKey: ["paymentAccountForForm"],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: "/payment-account/form",
+                withCredentials: true
+            })
+            return response?.data?.data ?? []
+        },
+        enabled: !!isValidPage
+    })
+
+    const { data: paymentAccountData, isLoading, isFetching: paymentAccountRefreshing } = useQuery({
         queryKey: ["paymentAccount"],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -12,8 +38,80 @@ export const usePaymentAccount = () => {
                 withCredentials: true
             })
             return response?.data?.data ?? []
+        },
+        staleTime: 3 * 60 * 1000
+    })
+
+    const { data: paymentTypeData, isFetching: paymentTypeFetched } = useQuery({
+        queryKey: ["paymentTypeAccount"],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: "/payment-account/type",
+                withCredentials: true
+            })
+
+            return response?.data?.data ?? []
+        }, enabled: !!isPaymentAccount
+    })
+
+
+    const { mutate: createPaymentAccount, isSuccess: accountCreateSuccess } = useMutation({
+        mutationFn: async (data) => {
+            const response = await axiosInstance({
+                method: "POST",
+                url: "/payment-account",
+                withCredentials: true,
+                data: data
+            })
+
+
+        },
+        onSuccess(data) {
+            dispatch(removeBackgroundBlur(false))
+            toast.success("Payment Account create successfully")
+            queryClient.invalidateQueries({ queryKey: ["paymentAccount"] });
+
+        },
+        onError(error) {
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
         }
     })
 
-    return { paymentAccountData }
+    const { mutate: accountStatusChange, isPending: statusChangeLoading } = useMutation({
+        mutationFn: async (accountId) => {
+            const response = await axiosInstance({
+                method: "PATCH",
+                url: `/payment-account/${accountId}`,
+                withCredentials: true
+            })
+
+            return response?.data
+        }, onSuccess(data) {
+            toast.success(data?.message)
+            queryClient.invalidateQueries({ queryKey: ["paymentAccount"] });
+        },
+        onError(error) {
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
+        }
+    })
+
+
+
+    return {
+        paymentAccountDataForExpForm,
+        paymentAccountData,
+        paymentAccountRefreshing,
+        isLoading,
+        paymentTypeData,
+        createPaymentAccount,
+        accountStatusChange,
+        statusChangeLoading,
+        accountCreateSuccess
+    }
 }
+

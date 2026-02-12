@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import PaymentAccountModel from "../../model/paymentAccountModel.js";
 import { createPaymentAccountValidation } from "../../utils/joiValidation.js";
 import { Types } from "mongoose";
+import { AppError } from "../../utils/AppError.js";
 
 
 
@@ -16,7 +17,7 @@ export const createPaymentAccount = async (req, res) => {
 
     const shopId = req.shop.id;
 
-    const { accountType, accountNumber, accountTitle } = value;
+    const { accountType, accountTitle } = value;
 
     const accountTitleToLowerCase = accountTitle.trim().replace(/\s+/g, " ")
 
@@ -24,9 +25,8 @@ export const createPaymentAccount = async (req, res) => {
 
 
 
-
-        const isPaymentAccountExist = await PaymentAccountModel.findOne({ shop: shopId, accountTitleLowerCase: accountTitleToLowerCase })
-            .select("_id accountNumber accountTitleLowerCase")
+        const isPaymentAccountExist = await PaymentAccountModel.findOne({ shop: shopId, accountTitleLowerCase: accountTitleToLowerCase, accountType: accountType })
+            .select("_id  accountTitleLowerCase")
 
         if (isPaymentAccountExist) {
             return res.status(409).json({ success: false, message: "Payment Account Already Exist" })
@@ -34,51 +34,12 @@ export const createPaymentAccount = async (req, res) => {
 
 
 
-        if (accountType === "bank" && !accountNumber) {
-            return res.status(400).json({ success: false, message: "Please enter Account Number" })
-        }
-
-        if (accountNumber && accountType === "bank") {
-            const findAccount = await PaymentAccountModel.find({ shop: shopId, isAccountNumber: true }).select("_id accountNumber isAccountNumber")
-
-            for (let account of findAccount) {
-                const compareAccountNumber = await bcryptjs.compare(process.env.ACCOUNT_NUMBER_PEPPER_HASH + accountNumber, account.accountNumber || "")
-
-                if (compareAccountNumber) {
-                    return res.status(409).json({ success: false, message: "Account number already exist" })
-                }
-            }
-
-        }
-
-
-
-        let isAccountNumber = !!accountNumber
-
-
-        let isAccountNumberEmpty = accountNumber && accountType === "bank" ? accountNumber : null;
-
-
-        let hashedAccountNumber = null
-
-        if (isAccountNumberEmpty) {
-            const pepperHashValue = process.env.ACCOUNT_NUMBER_PEPPER_HASH
-
-            const joinedValue = pepperHashValue + accountNumber || ""
-
-            hashedAccountNumber = await bcryptjs.hash(joinedValue, 10)
-        } else {
-            hashedAccountNumber = null
-        }
-
 
         const newPaymentAccount = PaymentAccountModel({
             shop: shopId,
             accountType: accountType,
-            accountNumber: hashedAccountNumber,
             accountTitle: accountTitle,
             accountTitleLowerCase: accountTitle,
-            isAccountNumber: isAccountNumber
         })
 
         await newPaymentAccount.save()
@@ -97,7 +58,7 @@ export const getPaymentAcountForExpenseForm = async (req, res, next) => {
         const { id: shopId } = req.shop
 
         const findAccount = await PaymentAccountModel.aggregate([
-            { $match: { shop: new Types.ObjectId(shopId) } },
+            { $match: { shop: new Types.ObjectId(shopId), isActive: true } },
             {
 
 
@@ -126,6 +87,83 @@ export const getPaymentAcountForExpenseForm = async (req, res, next) => {
 
 
         res.status(200).json({ success: true, message: "Payment account create successfully", data: findAccount })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getPaymentAccountForShop = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const getPaymentAccount = await PaymentAccountModel.find({ shop: shopId }).select("_id accountTitle accountType isActive").lean()
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: getPaymentAccount })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getAccountType = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const result = await PaymentAccountModel.aggregate([
+            { $match: { shop: new Types.ObjectId(shopId) } },
+            { $sort: { createdAt: 1 } },
+            {
+                $group: {
+                    _id: "$accountType"
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    value: "$_id",
+                    name: "$_id",
+
+                }
+            },
+
+        ]);
+
+        let num = 1
+
+        const datas = result.map((item) => ({
+            id: num += 1,
+            ...item,
+
+        }))
+
+        datas.unshift({ id: 1, value: "", name: "Select Account type", })
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: datas })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const paymentActiveOrInactive = async (req, res, next) => {
+    try {
+        const { paymentAccountId } = req.params;
+        const { id: shopId } = req.shop;
+
+        const findAccount = await PaymentAccountModel.findOne({ shop: shopId, _id: paymentAccountId }).select("_id isActive")
+
+        if (!findAccount) {
+            return next(new AppError("Account not found", 404))
+        }
+
+        const changeActiveOrInActive = findAccount?.isActive ? false : true
+
+        await PaymentAccountModel.findOneAndUpdate({ shop: shopId, _id: paymentAccountId }, {
+            isActive: changeActiveOrInActive
+        }, { new: true })
+
+        const message = changeActiveOrInActive ? "Account active successfully" : "Account in-active successfully"
+
+        res.status(200).json({ success: true, message: message, })
     } catch (error) {
         next(error)
     }

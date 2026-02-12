@@ -11,6 +11,8 @@ export const TaxRatesBox = () => {
     }
 
 
+
+
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">
             <div className="mx-auto mt-10 max-w-4xl flex justify-center items-center">

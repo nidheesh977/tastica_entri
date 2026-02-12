@@ -640,17 +640,11 @@ export const createPaymentAccountValidation = Joi.object({
         'string.min': 'Account Title must be at least 3 characters long',
         'string.max': 'Account Title must be at most 30 characters long',
     }),
-    accountNumber: Joi.string().optional().messages({
-        'string.base': 'Account Number must be a string',
-        'string.empty': 'Account Number cannot be empty',
-        'string.min': 'Account Number must be at least 3 characters long',
-        'string.max': 'Account Number must be at most 30 characters long',
-    }),
-    accountType: Joi.string().required().valid("bank", "cash").messages({
+    accountType: Joi.string().required().valid("Cash", "Bank").messages({
+        'any.required': 'Account Type is a required field.',
         'string.base': 'Account Type must be a string.',
         'string.empty': 'Account Type cannot be empty.',
         'any.only': 'Account Type must be either Bank or Cash.',
-        'any.required': 'Account Type is a required field.'
     }),
 })
 

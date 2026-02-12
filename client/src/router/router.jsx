@@ -77,6 +77,7 @@ import { ExpenseSinglePage } from "../pages/shared/ExpenseSinglePage/ExpenseSing
 import { ExpenseAccountPage } from "../pages/shared/ExpenseAccountPage/ExpenseAccountPage"
 import { ExpenseAccountSinglePage } from "../pages/shared/ExpenseAccountSinglePage/ExpenseAccountSinglePage";
 import { TaxRatePage } from "../pages/shared/TaxRatePage/TaxRatePage";
+import { PaymentAccountPage } from "../pages/shared/PaymentAccountPage/PaymentAccountPage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -283,6 +284,10 @@ export const router = createBrowserRouter([
             path: "tax/rate",
             element: <TaxRatePage />
           },
+          {
+            path: "payment/account",
+            element: <PaymentAccountPage />
+          }
         ],
       },
     ],

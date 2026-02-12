@@ -21,7 +21,7 @@ export const ExpenseCreateForm = () => {
     const { expenseAccountDataExpenseForm } = useExpenseAccount()
     const { taxRatesDataForExpenseForm } = useTaxRates()
     const { vendorData } = useVendor()
-    const { paymentAccountData } = usePaymentAccount()
+    const { paymentAccountDataForExpForm } = usePaymentAccount()
     const { createExpense, isPending } = useExpense()
     const { customerData } = useCustomerExpense()
 
@@ -122,7 +122,7 @@ export const ExpenseCreateForm = () => {
 
     const paymentAccount = (
 
-        filterDataArr(paymentAccountData, paymentAccountSearch, "accounts", "accountTitle", false)?.map((account, index) => (
+        filterDataArr(paymentAccountDataForExpForm, paymentAccountSearch, "accounts", "accountTitle", false)?.map((account, index) => (
             <div key={account?._id}>
                 <p className="text-sm font-semibold" >{account._id}</p>
                 {account.accounts.map((account) => (

@@ -62,8 +62,8 @@ export const TaxRateForm = ({ shopTaxId, setOpenTaxCreateForm }) => {
                     <InputComponent field={field} placeholder={"Add Tax Rate: 5"} />
                 )} />
                 <label className="label mt-2">Tax Type</label>
-                <Controller name="taxType" control={control} defaultValue={"Select Tax Type"} render={({ field }) => (
-                    <SimpleSelectOption taxTypes={taxTypes} field={field} />
+                <Controller name="taxType" control={control} defaultValue={taxTypes[0]?.name} render={({ field }) => (
+                    <SimpleSelectOption data={taxTypes} field={field} />
                 )} />
                 <button disabled={addTaxToAccountLoaded === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTaxToAccountLoaded ? "Creating" : "Create Tax Rates"}</button>
             </form>
