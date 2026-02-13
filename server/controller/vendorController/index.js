@@ -1,1 +1,6 @@
-export { createNewVendor, getVendorForExpenseForm } from "./vendorController.controller.js"
+export {
+    createNewVendor,
+    getVendorForExpenseForm,
+    getVendorDataForShop,
+    vendorStatusUpdate
+} from "./vendorController.controller.js"

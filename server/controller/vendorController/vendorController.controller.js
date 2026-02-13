@@ -1,6 +1,10 @@
 import mongoose, { mongo } from "mongoose";
 import VendorModel from "../../model/vendorModel.js";
 import { createVendorValidation } from "../../utils/joiValidation.js";
+import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
+import { AuditLogModel } from "../../model/auditLogModel.js";
+import { after } from "node:test";
+import { AppError } from "../../utils/AppError.js";
 
 
 export const createNewVendor = async (req, res) => {
@@ -16,26 +20,35 @@ export const createNewVendor = async (req, res) => {
 
         const { id: shopId } = req.shop
 
-        const { vendorName, vendorEmail, vendorPhoneNumber } = value;
+        const { vendorName, email, phoneNumber, address } = value;
+
+        const lastFourDigit = phoneNumber.slice(-4)
+
+        const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
+
+        const maskAddress = address.slice(0, 5) + "..."
 
 
-
-
-        const vendorExist = await VendorModel.findOne({ vendorEmail: vendorEmail })
+        const vendorExist = await VendorModel.findOne({ shop: shopId, email: email })
 
         if (vendorExist) {
-            return res.staus(409).json({ success: false, message: "Vendor account already exist" })
+            return res.status(409).json({ success: false, message: "Vendor account already exist" })
         }
 
         const sliceString = vendorName.substring(0, 1).toUpperCase()
 
+        const encryptPhoneNumber = encryptData(phoneNumber)
+        const encryptAddress = encryptData(address)
 
         const newVendor = VendorModel({
             shop: shopId,
             char: sliceString,
             vendorName: vendorName,
-            vendorEmail: vendorEmail,
-            vendorPhoneNumber: vendorPhoneNumber
+            email: email,
+            phoneNumber: encryptPhoneNumber,
+            address: encryptAddress,
+            maskPhoneNumber: maskedNumber,
+            maskAddress: maskAddress
         });
 
         await newVendor.save();
@@ -43,6 +56,8 @@ export const createNewVendor = async (req, res) => {
         res.status(201).json({ success: true, message: "Vendor create successfully" })
 
     } catch (error) {
+        console.log(error);
+
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
@@ -68,5 +83,81 @@ export const getVendorForExpenseForm = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ success: false, message: "Internal server error" })
+    }
+}
+
+
+
+export const getVendorDataForShop = async (req, res, next) => {
+    try {
+
+        const { id: shopId } = req.shop
+
+        const getVendorData = await VendorModel.find({ shop: shopId }).select("_id vendorName email maskPhoneNumber maskAddress isActive inActiveReason")
+
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: getVendorData })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const vendorStatusUpdate = async (req, res, next) => {
+
+    const { vendorId, reason, isActive } = req.body
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+
+    const session = await mongoose.startSession()
+
+    try {
+
+        const result = await session.withTransaction(async () => {
+
+            const vendor = await VendorModel.findById(vendorId).session(session)
+
+
+            if (!vendor) {
+                throw new AppError("Vendor not found", 400)
+            }
+
+            if (vendor.isActive === false && isActive === false || vendor.isActive === true && isActive === true) {
+                throw new AppError(`Vendor Already ${isActive ? "active" : "inactive"}`, 400)
+            }
+
+
+
+            const previousState = { isActive: vendor?.isActive, inactiveReason: vendor?.inActiveReason }
+
+            await VendorModel.findOneAndUpdate({ shop: shopId, _id: vendorId },
+                { isActive: isActive, inActiveReason: isActive ? null : reason || (isActive ? "Reactivation" : "Deactivation") },
+                { session, runValidators: true }
+            )
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: vendorId,
+                    targetModel: "Vendor",
+                    action: "STATUS_CHANGE",
+                    payload: {
+                        before: previousState,
+                        after: { isActive: isActive, inactiveReason: isActive ? null : reason }
+                    },
+                    reason: reason || (isActive ? "Reactivation" : "Deactivation"),
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(200).json({ success: true, message: `Vendor ${isActive ? "Active" : "Inactive"} successfully` })
+
+        })
+
+    } catch (error) {
+        next(error)
+    } finally {
+        await session.endSession()
     }
 }

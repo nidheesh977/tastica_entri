@@ -684,17 +684,23 @@ export const createVendorValidation = Joi.object({
         'string.min': 'Vendor Name must be at least 3 characters long',
         'string.max': 'Vendor Name must be at most 30 characters long',
     }),
-    vendorEmail: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
         'string.required': 'Vendor email is required',
         'string.base': 'Vendor email must be a string',
         'string.empty': 'Vendor email cannot be empty',
         'string.email': 'Vendor email must be a valid email address',
     }),
-    vendorPhoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
         'string.base': 'Phone number must be a string',
         'string.empty': 'Phone number cannot be empty',
         'string.pattern.base': 'Phone number must be between 7 to 14 digits',
+    }),
+    address: Joi.string().min(3).max(100).required().messages({
+        'string.required': 'Address is required',
+        'string.min': 'Address must be at least 3 characters long',
+        'string.max': 'Address must be at most 100 characters long',
+        'string.empty': 'Address cannot be empty',
     }),
 })
 

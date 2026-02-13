@@ -20,7 +20,7 @@ export const ExpenseCreateForm = () => {
 
     const { expenseAccountDataExpenseForm } = useExpenseAccount()
     const { taxRatesDataForExpenseForm } = useTaxRates()
-    const { vendorData } = useVendor()
+    const { vendorDataForm } = useVendor()
     const { paymentAccountDataForExpForm } = usePaymentAccount()
     const { createExpense, isPending } = useExpense()
     const { customerData } = useCustomerExpense()
@@ -152,7 +152,7 @@ export const ExpenseCreateForm = () => {
     )
 
     const vendors = (
-        filterDataArr(vendorData, vendorNameSearch, "", "vendorName", true)?.map((vendor) => (
+        filterDataArr(vendorDataForm, vendorNameSearch, "", "vendorName", true)?.map((vendor) => (
             <div key={vendor._id} role="button" className="flex px-2 rounded-md items-center gap-5 hover:bg-blue-500 hover:text-white" onClick={() => {
                 setValue("vendor", vendor._id)
                 setValue("vendorDis", vendor.vendorName)
