@@ -10,6 +10,7 @@ import { usePaymentAccount } from "../../../hooks/usePaymentAccount";
 import { filterDataArr } from "../../../utils/filterDataArr";
 import { useExpense } from "../../../hooks/expense/useExpense";
 import { useCustomerExpense } from "../../../hooks/expense/useCustomerExpense";
+import { useVendorStaff } from "../../../hooks/useVendorStaff";
 
 
 export const ExpenseCreateForm = () => {
@@ -23,7 +24,7 @@ export const ExpenseCreateForm = () => {
     const { vendorDataForm } = useVendor()
     const { paymentAccountDataForExpForm } = usePaymentAccount()
     const { createExpense, isPending } = useExpense()
-    const { customerData } = useCustomerExpense()
+    const { vendorStaffDataForForm } = useVendorStaff()
 
 
     const { handleSubmit, watch, register, setValue } = useForm()
@@ -169,13 +170,13 @@ export const ExpenseCreateForm = () => {
     )
 
     const customer = (
-        filterDataArr(customerData, customerNameSearch, "", "customerName", true)?.map((customer) => (
-            <div key={customer._id} role="button" className="flex px-2 rounded-md items-center gap-5 hover:bg-blue-500 hover:text-white" onClick={() => {
-                setValue("customer", customer._id)
-                setValue("customerDis", customer.customerName)
+        filterDataArr(vendorStaffDataForForm, customerNameSearch, "", "customerName", true)?.map((staff) => (
+            <div key={staff._id} role="button" className="flex px-2 rounded-md items-center gap-5 hover:bg-blue-500 hover:text-white" onClick={() => {
+                setValue("customer", staff._id)
+                setValue("customerDis", staff.staffName)
 
             }}>
-                <p>{customer?.customerName}</p>
+                <p>{staff?.staffName}</p>
             </div>
         ))
     )

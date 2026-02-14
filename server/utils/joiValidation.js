@@ -780,3 +780,43 @@ export const createExpenseFormValidation = Joi.object({
     }),
     image_doc: Joi.string().meta({ swaggerType: 'file' }).optional().allow(null, "").label("image")
 })
+
+
+export const createVendorStatusValidation = Joi.object({
+    vendorId: Joi.string().length(24).hex().required(),
+    isActive: Joi.boolean().required(),
+    reason: Joi.string().min(5).max(100).when("isActive", {
+        is: false,
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Reason must be a valid text string',
+        'string.empty': 'Please provide a reason for deactivation',
+        'string.min': 'Reason is too short (minimum 5 characters)',
+        'any.required': 'A reason is required when deactivating'
+    })
+})
+
+
+export const createVendorStaffValidation = Joi.object({
+    vendorId: Joi.string().length(24).hex().required(),
+    staffName: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Staff Name is required',
+        'string.base': 'Staff Name must be a string',
+        'string.empty': 'Staff Name cannot be empty',
+        'string.min': 'Staff Name must be at least 3 characters long',
+        'string.max': 'Staff Name must be at most 30 characters long',
+    }),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Staff email is required',
+        'string.base': 'Staff email must be a string',
+        'string.empty': 'Staff email cannot be empty',
+        'string.email': 'Staff email must be a valid email address',
+    }),
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits',
+    }),
+})

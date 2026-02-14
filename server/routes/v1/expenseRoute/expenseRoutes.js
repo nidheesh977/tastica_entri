@@ -11,7 +11,7 @@ const expenseRouter = express.Router();
 expenseRouter.post("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), createExpense)
 expenseRouter.get("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getExpense)
 expenseRouter.get("/image", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getImageDoc)
-expenseRouter.get("/customer", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getCustomerForExpenseForm)
+// expenseRouter.get("/customer", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getCustomerForExpenseForm)
 expenseRouter.get("/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getSingleExpense)
 
 

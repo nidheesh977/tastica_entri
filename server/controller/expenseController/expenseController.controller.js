@@ -144,7 +144,7 @@ export const createExpense = async (req, res, next) => {
 export const getCustomerForExpenseForm = async (req, res, next) => {
     try {
         const { id: shopId } = req.shop
-        console.log("hitted")
+
         const result = await customerModel.aggregate([
             { $match: { shopId: new Types.ObjectId(shopId) } },
             {

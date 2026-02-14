@@ -8,7 +8,6 @@ export const VendorBox = () => {
 
     const { vendorData, vendorDataRefreshing, vendorDataLoading } = useVendor()
 
-    console.log(vendorData)
 
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">

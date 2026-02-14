@@ -10,6 +10,7 @@ export const useVendor = () => {
     const { pathname } = useLocation()
 
     const isValidPage = pathname === "/admin/expense/create"
+    const isValidVendorPage = pathname === "/admin/vendor"
 
     const queryClient = useQueryClient();
 
@@ -39,6 +40,7 @@ export const useVendor = () => {
             })
             return response?.data?.data ?? []
         },
+        enabled: !!isValidVendorPage,
         staleTime: 3 * 60 * 1000
     })
 

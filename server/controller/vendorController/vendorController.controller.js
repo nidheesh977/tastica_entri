@@ -1,6 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 import VendorModel from "../../model/vendorModel.js";
-import { createVendorValidation } from "../../utils/joiValidation.js";
+import { createVendorStatusValidation, createVendorValidation } from "../../utils/joiValidation.js";
 import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 import { after } from "node:test";
@@ -106,15 +106,27 @@ export const getVendorDataForShop = async (req, res, next) => {
 
 export const vendorStatusUpdate = async (req, res, next) => {
 
-    const { vendorId, reason, isActive } = req.body
+
     const { id: shopId } = req.shop;
     const { id: userId } = req.user
+
+    const { error, value } = createVendorStatusValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error?.details[0].message, 400))
+    }
+
+    const { vendorId, reason, isActive } = value
 
     const session = await mongoose.startSession()
 
     try {
 
         const result = await session.withTransaction(async () => {
+
+            if (!mongoose.Types.ObjectId.isValid(vendorId)) {
+                throw new AppError("Invalid ID format", 400)
+            }
 
             const vendor = await VendorModel.findById(vendorId).session(session)
 

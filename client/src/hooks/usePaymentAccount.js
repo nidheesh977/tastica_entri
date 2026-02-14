@@ -38,7 +38,7 @@ export const usePaymentAccount = () => {
                 withCredentials: true
             })
             return response?.data?.data ?? []
-        },
+        }, enabled: !!isPaymentAccount,
         staleTime: 3 * 60 * 1000
     })
 
