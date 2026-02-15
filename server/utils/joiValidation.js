@@ -782,7 +782,7 @@ export const createExpenseFormValidation = Joi.object({
 })
 
 
-export const createVendorStatusValidation = Joi.object({
+export const vendorStatusValidation = Joi.object({
     vendorId: Joi.string().length(24).hex().required(),
     isActive: Joi.boolean().required(),
     reason: Joi.string().min(5).max(100).when("isActive", {
@@ -796,6 +796,8 @@ export const createVendorStatusValidation = Joi.object({
         'any.required': 'A reason is required when deactivating'
     })
 })
+
+
 
 
 export const createVendorStaffValidation = Joi.object({
@@ -819,4 +821,20 @@ export const createVendorStaffValidation = Joi.object({
         'string.empty': 'Phone number cannot be empty',
         'string.pattern.base': 'Phone number must be between 7 to 14 digits',
     }),
+})
+
+
+export const vendorStaffStatusValidation = Joi.object({
+    staffId: Joi.string().length(24).hex().required(),
+    isActive: Joi.boolean().required(),
+    reason: Joi.string().min(5).max(100).when("isActive", {
+        is: false,
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Reason must be a valid text string',
+        'string.empty': 'Please provide a reason for deactivation',
+        'string.min': 'Reason is too short (minimum 5 characters)',
+        'any.required': 'A reason is required when deactivating'
+    })
 })

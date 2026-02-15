@@ -1,5 +1,6 @@
 export {
     createVendorStaff,
     getVendorStaffForExpenseForm,
-    vendorStaffDataForShop
+    vendorStaffDataForShop,
+    vendorStaffStatusUpdate
 } from "./vendorStaffController.js"

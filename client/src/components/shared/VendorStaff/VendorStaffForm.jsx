@@ -6,7 +6,7 @@ import { SelectOptionComponent } from '../DaisyUiComponent/SelectOptionComponent
 import { useParams } from 'react-router-dom'
 import { useVendorStaff } from '../../../hooks/useVendorStaff'
 
-export const VendorStaffForm = ({ setOpenCreateForm }) => {
+export const VendorStaffForm = ({ setOpenCreateForm, dispatch, removeBackgroundBlur }) => {
 
     const { handleSubmit, control, register } = useForm({
         defaultValues: {
@@ -23,6 +23,7 @@ export const VendorStaffForm = ({ setOpenCreateForm }) => {
 
     const handleCancelForm = () => {
         setOpenCreateForm(false)
+        dispatch(removeBackgroundBlur(false))
     }
 
     const onsubmit = (data) => {

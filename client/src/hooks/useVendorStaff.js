@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import React from 'react'
+import { useDispatch } from "react-redux"
 import { axiosInstance } from '../config/axiosInstance'
 import { useLocation, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { removeBackgroundBlur } from "../redux/features/commonSlice"
+
 
 export const useVendorStaff = () => {
 
@@ -15,7 +17,7 @@ export const useVendorStaff = () => {
     const isValidPage = pathname === "/admin/expense/create"
     const isValidvendorStaffPage = pathname === `/admin/vendor/${vendorId}/staff`
 
-
+    const dispatch = useDispatch()
 
     const { data: vendorStaffDataForForm } = useQuery({
         queryKey: ["vendorStaffForm"],
@@ -38,7 +40,6 @@ export const useVendorStaff = () => {
                 url: `/vendor/${vendorId}/staff`,
                 withCredentials: true
             })
-            console.log(vendorStaffData);
 
             return response?.data?.data ?? []
         },
@@ -59,7 +60,7 @@ export const useVendorStaff = () => {
 
         },
         onSuccess(data) {
-            // dispatch(removeBackgroundBlur(false))
+            dispatch(removeBackgroundBlur(false))
             toast.success("staff create successfully")
             queryClient.invalidateQueries({ queryKey: ["vendorStaff"] });
 
@@ -71,6 +72,32 @@ export const useVendorStaff = () => {
         }
     })
 
+    const { mutate: changeVendorStaffStatus, isPending: statusUploadLoading, isSuccess: vendorStaffStatusSuccess } = useMutation({
+        mutationFn: async (data) => {
+            const response = await axiosInstance({
+                method: "PATCH",
+                url: `/vendor/staff/${vendorId}`,
+                withCredentials: true,
+                data
+            })
+
+            return response?.data
+        }, onSuccess(data) {
+            dispatch(removeBackgroundBlur(false))
+
+            console.log(data)
+            toast.success(data?.message)
+            queryClient.invalidateQueries({ queryKey: ["vendorStaff"] });
+
+        },
+        onError(error) {
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
+        }
+    })
+
+
     return {
         vendorStaffDataForForm,
         vendorStaffData,
@@ -79,6 +106,10 @@ export const useVendorStaff = () => {
 
         createStaff,
         vendorStaffPending,
-        vendorStaffSuccess
+        vendorStaffSuccess,
+
+        changeVendorStaffStatus,
+        statusUploadLoading,
+        vendorStaffStatusSuccess
     }
 }

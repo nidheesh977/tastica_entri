@@ -1,6 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 import VendorModel from "../../model/vendorModel.js";
-import { createVendorStatusValidation, createVendorValidation } from "../../utils/joiValidation.js";
+import { vendorStatusValidation, createVendorValidation } from "../../utils/joiValidation.js";
 import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 import { after } from "node:test";
@@ -110,7 +110,7 @@ export const vendorStatusUpdate = async (req, res, next) => {
     const { id: shopId } = req.shop;
     const { id: userId } = req.user
 
-    const { error, value } = createVendorStatusValidation.validate(req.body)
+    const { error, value } = vendorStatusValidation.validate(req.body)
 
     if (error) {
         return next(new AppError(error?.details[0].message, 400))

@@ -1,30 +1,42 @@
 import React, { use, useState } from 'react'
 import { TableComponent } from '../DaisyUiComponent/TableComponent'
 import { VendorStaffForm } from './VendorStaffForm'
+import { VendorStaffStatusForm } from './VendorStaffStatusForm'
+import { useDispatch } from 'react-redux'
+import { addBackgroundBlur, removeBackgroundBlur } from "../../../redux/features/commonSlice"
 
 export const VendorStaffTable = ({ vendorStaffData }) => {
 
     const [openStatusForm, setOpenStatusForm] = useState({
         openCom: false,
-        vendorId: null,
+        staffId: null,
         isActive: null
     })
 
+    const dispatch = useDispatch()
+
     const [openCreateForm, setOpenCreateForm] = useState(false)
 
-    const handleChangeAccStatus = () => {
-
+    const handleChangeAccStatus = (num, staffId, active) => {
+        setOpenStatusForm((prev) => ({
+            ...prev,
+            openCom: true,
+            staffId: staffId,
+            isActive: active
+        }))
+        dispatch(addBackgroundBlur(true))
     }
 
     const handleOpenCreateForm = () => {
         setOpenCreateForm(true)
+        dispatch(addBackgroundBlur(true))
     }
 
     return (
         <div className='w-full'>
             <div className='w-full flex justify-end gap-5'>
-                {openCreateForm ? <VendorStaffForm setOpenCreateForm={setOpenCreateForm} /> : null}
-                {/* {openStatusForm.openCom ? <VendorStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null} */}
+                {openCreateForm ? <VendorStaffForm setOpenCreateForm={setOpenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
+                {openStatusForm.openCom ? <VendorStaffStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 <button className="btn btn-success btn-sm text-white" onClick={handleOpenCreateForm}>Add</button>
             </div>
 
