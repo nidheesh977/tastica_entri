@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux"
 import { IoMdClose } from "react-icons/io"
 
 
-export const ExpenseAccountCreate = ({ setOpenForm }) => {
+export const ExpenseAccountCreate = ({ setOpenForm, }) => {
 
     const { handleSubmit, reset, register, control } = useForm({
         defaultValues: {

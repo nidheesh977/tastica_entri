@@ -12,9 +12,13 @@ const auditLogSchema = new mongoose.Schema({
         required: true,
         ref: "targetModel"
     },
+    subDocumentId: {
+        type: String,
+        default: null
+    },
     targetModel: {
         type: String,
-        enum: ["User", "Vendor", "VendorStaff"],
+        enum: ["User", "Vendor", "VendorStaff", "ExpenseAccount"],
         required: true
     },
     action: {

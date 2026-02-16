@@ -1,5 +1,6 @@
 
-import { ExpenseAccount } from '../../../components/shared/ExpenseAccount/ExpenseAccount'
+
+import { ExpenseAccountBox } from '../../../components/shared/ExpenseAccount/ExpenseAccountBox'
 
 
 export const ExpenseAccountPage = () => {
@@ -10,7 +11,7 @@ export const ExpenseAccountPage = () => {
 
     return (
         <>
-            <ExpenseAccount />
+            <ExpenseAccountBox />
         </>
     )
 }

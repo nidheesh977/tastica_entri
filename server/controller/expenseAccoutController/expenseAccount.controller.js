@@ -1,7 +1,8 @@
 import mongoose, { Types } from "mongoose";
 import ExpenseAccountModel from "../../model/expense model/expenseAccountModel.js"
-import { addExpenseValidation, createExpenseAccountValidation } from "../../utils/joiValidation.js";
+import { addExpenseValidation, createExpenseAccountValidation, expenseAccountStatusValidation, expenseAccountTitleStatusValidation } from "../../utils/joiValidation.js";
 import { AppError } from "../../utils/AppError.js";
+import { AuditLogModel } from "../../model/auditLogModel.js";
 
 export const createExpenseAccount = async (req, res) => {
     try {
@@ -124,7 +125,7 @@ export const getExpenseAccounts = async (req, res, next) => {
     try {
         const shopId = req.shop.id;
 
-        const findExpenses = await ExpenseAccountModel.find({ shop: shopId }).select("_id expenseTitle description subTitle.title subTitle._id").sort({ createdAt: -1 })
+        const findExpenses = await ExpenseAccountModel.find({ shop: shopId }).select("_id expenseTitle description isActive inActiveReason subTitle.title subTitle._id").sort({ createdAt: -1 })
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpenses })
     } catch (error) {
@@ -145,7 +146,7 @@ export const getSingleExpenseAccount = async (req, res, next) => {
             return next(new AppError("Expense Account not found", 404))
         }
 
-        findExpenses.subTitle = findExpenses.subTitle.filter(item => item.isActive === true)
+
 
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpenses })
@@ -155,24 +156,145 @@ export const getSingleExpenseAccount = async (req, res, next) => {
 }
 
 export const deleteExpenseAccountTitle = async (req, res, next) => {
-    try {
-        const shopId = req.shop.id;
-        const { expenseId } = req.params
-        const { titleId } = req.params
 
-        const findExpenses = await ExpenseAccountModel.findOne({ shop: shopId, _id: expenseId, "subTitle._id": titleId }).select("_id")
+    const shopId = req.shop.id;
+    const { expenseId } = req.params
+    const { id: userId } = req.user
+
+
+    const { error, value } = expenseAccountTitleStatusValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error?.details[0].message, 400))
+    }
+
+    const { titleId, reason, isActive } = value
+
+    const session = await mongoose.startSession()
+
+    try {
+
+        await session.withTransaction(async () => {
+            if (!mongoose.Types.ObjectId.isValid(titleId)) {
+                throw new AppError("Invalid ID format", 400)
+            }
+        })
+
+        const findExpenses = await ExpenseAccountModel.findOne({ shop: shopId, _id: expenseId, "subTitle._id": titleId }).select("subTitle._id subTitle.isActive").session(session)
 
 
         if (!findExpenses) {
             return next(new AppError("Expense Account not found", 404))
         }
 
-        await ExpenseAccountModel.findOneAndUpdate({ shop: shopId, _id: expenseId, "subTitle._id": titleId },
-            { $set: { "subTitle.$.isActive": false } },
-            { new: true })
+        const findSelect = findExpenses.subTitle.find(item => item._id.toString() === titleId.toString())
 
-        res.status(200).json({ success: true, message: "Title Delete successfully" })
+        if (findSelect.isActive === false && isActive === false || findSelect.isActive === true && isActive === true) {
+            throw new AppError(`Expense account Already ${isActive ? "active" : "inactive"}`, 400)
+        }
+
+        const previousState = { isActive: findSelect?.isActive, inactiveReason: findSelect?.inActiveReason }
+
+        await ExpenseAccountModel.findOneAndUpdate({ shop: shopId, _id: expenseId, "subTitle._id": titleId },
+            { $set: { "subTitle.$.isActive": isActive, "subTitle.$.inActiveReason": isActive ? null : reason || (isActive ? "Reactivation" : "Deactivation") } },
+            { new: true }, { session, runValidators: true })
+
+        await AuditLogModel.create([
+            {
+                shop: shopId,
+                targetId: expenseId,
+                subDocumentId: titleId,
+                targetModel: "ExpenseAccount",
+                action: "STATUS_CHANGE",
+                payload: {
+                    before: previousState,
+                    after: { isActive: isActive, inactiveReason: isActive ? null : reason }
+                },
+                reason: reason || (isActive ? "Reactivation" : "Deactivation"),
+                performedBy: userId
+            }
+        ], { session })
+
+        res.status(200).json({ success: true, message: `Expense Account ${isActive ? "Active" : "Inactive"} successfully` })
+
     } catch (error) {
         next(error)
+    }
+}
+
+
+
+
+export const expenseAccountStatusUpdate = async (req, res, next) => {
+
+
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+
+
+
+    const { error, value } = expenseAccountStatusValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error?.details[0].message, 400))
+    }
+
+
+    const { expenseAccountId, reason, isActive } = value
+
+
+    const session = await mongoose.startSession()
+
+    try {
+
+        const result = await session.withTransaction(async () => {
+
+            if (!mongoose.Types.ObjectId.isValid(expenseAccountId)) {
+                throw new AppError("Invalid ID format", 400)
+            }
+
+            const expenseAccount = await ExpenseAccountModel.findById(expenseAccountId).session(session)
+
+
+            if (!expenseAccount) {
+                throw new AppError("Expense account not found", 400)
+            }
+
+            if (expenseAccount.isActive === false && isActive === false || expenseAccount.isActive === true && isActive === true) {
+                throw new AppError(`Expense account Already ${isActive ? "active" : "inactive"}`, 400)
+            }
+
+
+
+            const previousState = { isActive: expenseAccount?.isActive, inactiveReason: expenseAccount?.inActiveReason }
+
+            await ExpenseAccountModel.findOneAndUpdate({ shop: shopId, _id: expenseAccountId },
+                { isActive: isActive, inActiveReason: isActive ? null : reason || (isActive ? "Reactivation" : "Deactivation") },
+                { session, runValidators: true }
+            )
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: expenseAccountId,
+                    targetModel: "ExpenseAccount",
+                    action: "STATUS_CHANGE",
+                    payload: {
+                        before: previousState,
+                        after: { isActive: isActive, inactiveReason: isActive ? null : reason }
+                    },
+                    reason: reason || (isActive ? "Reactivation" : "Deactivation"),
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(200).json({ success: true, message: `Expense Account ${isActive ? "Active" : "Inactive"} successfully` })
+
+        })
+
+    } catch (error) {
+        next(error)
+    } finally {
+        await session.endSession()
     }
 }

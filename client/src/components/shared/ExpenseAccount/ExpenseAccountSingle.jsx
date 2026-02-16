@@ -9,7 +9,7 @@ import { MdDelete } from "react-icons/md";
 
 export const ExpenseAccountSingle = () => {
 
-    const { expenseAccountSingleData, singleExpenseAccountLoading, softDeleTitleExpenseAccount } = useExpenseAccount()
+    const { expenseAccountSingleData, singleExpenseAccountLoading, singleExpenseRefreshing, softDeleTitleExpenseAccount } = useExpenseAccount()
     const [openAddTitleBox, setAddTitleBox] = useState(false)
     const [openDeleteBtn, setOpenDeleteBtn] = useState(false)
     const dispatch = useDispatch()
@@ -47,6 +47,7 @@ export const ExpenseAccountSingle = () => {
                     ))}
                 </div>
             </div> : null}
+            {singleExpenseRefreshing && !singleExpenseAccountLoading ? <p className='text-xs text-gray-400'>Refreshing...</p> : null}
         </div>
     )
 }

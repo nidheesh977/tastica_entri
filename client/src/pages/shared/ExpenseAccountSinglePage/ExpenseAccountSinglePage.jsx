@@ -1,10 +1,10 @@
-import React from 'react'
-import { ExpenseAccountSingle } from '../../../components/shared/ExpenseAccount/ExpenseAccountSingle'
+
+import { ExpenseAccountSingleBox } from '../../../components/shared/ExpenseAccountSingle/ExpenseAccountSingleBox'
 
 export const ExpenseAccountSinglePage = () => {
     return (
         <>
-            <ExpenseAccountSingle />
+            <ExpenseAccountSingleBox />
         </>
     )
 }

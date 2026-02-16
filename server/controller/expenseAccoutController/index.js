@@ -4,5 +4,6 @@ export {
     getExpenseAccountForExpenseForm,
     getExpenseAccounts,
     getSingleExpenseAccount,
-    deleteExpenseAccountTitle
+    deleteExpenseAccountTitle,
+    expenseAccountStatusUpdate
 } from "./expenseAccount.controller.js"

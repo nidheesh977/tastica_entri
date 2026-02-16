@@ -38,13 +38,25 @@ const expenseAccountSchema = new mongoose.Schema({
                 isActive: {
                     type: Boolean,
                     default: true
-                }
+                },
+                inActiveReason: {
+                    type: String,
+                    default: null
+                },
             }
         ],
         default: []
     },
     description: {
         type: String
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    inActiveReason: {
+        type: String,
+        default: null
     },
 
 }, { timestamps: true })

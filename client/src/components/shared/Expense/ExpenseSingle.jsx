@@ -9,7 +9,7 @@ export const ExpenseSingle = () => {
 
     const [imageQuery, setImageQuery] = useState(null)
     const [imageView, setImageView] = useState(false)
-    console.log(imageQuery);
+
 
     const dispatch = useDispatch()
 

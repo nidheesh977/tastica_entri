@@ -2,15 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../../config/axiosInstance"
 import toast from "react-hot-toast"
 import { useLocation, useParams } from "react-router-dom"
-
-
+import { useDispatch } from "react-redux"
+import { removeBackgroundBlur } from "../../redux/features/commonSlice"
 
 export const useExpenseAccount = () => {
 
     const { pathname } = useLocation()
 
     const { id: expenseAccountId } = useParams()
-    console.log(expenseAccountId);
+
+    const dispatch = useDispatch()
 
 
     const isValidPage = pathname === "/admin/expense/create"
@@ -33,7 +34,7 @@ export const useExpenseAccount = () => {
         enabled: !!isValidPage,
     })
 
-    const { data: expenseAccount } = useQuery({
+    const { data: expenseAccount, isLoading: expenseAccountLoading, isFetching: expenseAccountRefreshing } = useQuery({
         queryKey: ["expenseAccount"],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -48,7 +49,7 @@ export const useExpenseAccount = () => {
         staleTime: 2 * 60 * 1000
     })
 
-    const { data: expenseAccountSingleData, isFetching: singleExpenseAccountLoading } = useQuery({
+    const { data: expenseAccountSingleData, isLoading: singleExpenseAccountLoading, isFetching: singleExpenseRefreshing } = useQuery({
         queryKey: ["expenseAccountId", expenseAccountId],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -76,6 +77,7 @@ export const useExpenseAccount = () => {
             return response?.data
 
         }, onSuccess: (data) => {
+            dispatch(removeBackgroundBlur(false))
             toast.success("Expense Account Create successfully!");
             queryClient.invalidateQueries({ queryKey: ["expenseAccount"] });
         }, onError: (error) => {
@@ -84,7 +86,7 @@ export const useExpenseAccount = () => {
         }
     })
 
-    const { mutate: addTitleToExpenseAccount, isSuccess: addTitleToExpenseAccountCreated } = useMutation({
+    const { mutate: addTitleToExpenseAccount, isPending: addTitleLoading, isSuccess: addTitleToExpenseAccountSuccess } = useMutation({
         mutationFn: async (data) => {
             const response = await axiosInstance({
                 method: "POST",
@@ -95,6 +97,7 @@ export const useExpenseAccount = () => {
             return response?.data
 
         }, onSuccess: (data) => {
+            dispatch(removeBackgroundBlur(false))
             toast.success("Expense Account Title Create successfully!");
             queryClient.invalidateQueries({ queryKey: ["expenseAccountId"] });
         }, onError: (error) => {
@@ -103,50 +106,74 @@ export const useExpenseAccount = () => {
         }
     })
 
-    const { mutate: softDeleTitleExpenseAccount, isSuccess: TitleExpenseAccountDeleted } = useMutation({
-        mutationFn: async (titleId) => {
+    const { mutate: changeStatusExpenseSingleAccount, isSuccess: expenseSingStatusAccSuccess, isPending: expenseSingStatusAccSuccessLoading } = useMutation({
+        mutationFn: async (data) => {
             const response = await axiosInstance({
                 method: "PATCH",
-                url: `/expense-account/${expenseAccountId}/title/${titleId}`,
+                url: `/expense-account/${expenseAccountId}/title`,
                 withCredentials: true,
+                data
             })
             return response?.data
 
         },
-        onMutate: async (id) => {
-            await queryClient.cancelQueries(["expenseAccountId", expenseAccountId])
-            const previousData = queryClient.getQueryData(["expenseAccountId", expenseAccountId])
-
-            queryClient.setQueryData(["expenseAccountId", expenseAccountId], (old) => ({
-                ...old,
-                subTitle: old.subTitle.filter(item => item._id !== id)
-            }))
-
-            return { previousData }
-        },
         onSuccess: (data) => {
-            toast.success(" Title Delete successfully!");
-        }, onError: (error, id, context) => {
+            toast.success(" Title status successfully!");
+            dispatch(removeBackgroundBlur(false))
+            queryClient.invalidateQueries({ queryKey: ["expenseAccountId", expenseAccountId], });
+        }, onError: (error) => {
             console.log(error)
-            queryClient.setQueryData(
-                ['expenseAccountId', expenseAccountId],
-                context.previousData
-            )
             toast.error(error?.response?.data?.message || "Somethings went wrong");
+        }
+    })
+
+    const { mutate: changeExpenseAccStatus, isPending: statusUploadLoading, isSuccess: expenseAccStatusSuccess } = useMutation({
+        mutationFn: async (data) => {
+            const response = await axiosInstance({
+                method: "PATCH",
+                url: "/expense-account",
+                withCredentials: true,
+                data
+            })
+
+            return response?.data
+        }, onSuccess(data) {
+            dispatch(removeBackgroundBlur(false))
+
+            queryClient.invalidateQueries({ queryKey: ["expenseAccount"] });
+
+        },
+        onError(error) {
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
         }
     })
 
     return {
         expenseAccountDataExpenseForm,
         expenseAccount,
+        expenseAccountLoading,
+        expenseAccountRefreshing,
+
         createExpenseAccount,
         expenseAccountCreated,
         expenseAccountSingleData,
         singleExpenseAccountLoading,
+        singleExpenseRefreshing,
+
+        changeExpenseAccStatus,
+        expenseSingStatusAccSuccess,
+        expenseSingStatusAccSuccessLoading,
+
         addTitleToExpenseAccount,
-        addTitleToExpenseAccountCreated,
-        softDeleTitleExpenseAccount,
-        TitleExpenseAccountDeleted
+        addTitleToExpenseAccountSuccess,
+        addTitleLoading,
+
+        changeStatusExpenseSingleAccount,
+        statusUploadLoading,
+        expenseAccStatusSuccess,
+
     }
 
 }

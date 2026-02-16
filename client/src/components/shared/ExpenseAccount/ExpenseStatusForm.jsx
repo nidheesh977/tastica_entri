@@ -1,12 +1,10 @@
-import React from 'react'
-import { Controller, useForm } from 'react-hook-form';
-import { IoMdClose } from 'react-icons/io';
-import { TextAreaComponent } from '../DaisyUiComponent/TextAreaComponent';
-import { useVendorStaff } from '../../../hooks/useVendorStaff';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react'
+import { TextAreaComponent } from '../DaisyUiComponent/TextAreaComponent'
+import { IoMdClose } from 'react-icons/io'
+import { Controller, useForm } from 'react-hook-form'
+import { useExpenseAccount } from '../../../hooks/expense/useExpenseAccount'
 
-export const VendorStaffStatusForm = ({ openStatusForm, setOpenStatusForm, dispatch, removeBackgroundBlur }) => {
-
+export const ExpenseStatusForm = ({ openStatusForm, setOpenStatusForm, dispatch, addBackgroundBlur }) => {
 
     const { handleSubmit, control } = useForm({
         defaultValues: {
@@ -14,25 +12,22 @@ export const VendorStaffStatusForm = ({ openStatusForm, setOpenStatusForm, dispa
         }
     })
 
-    const { changeVendorStaffStatus, statusUploadLoading, vendorStaffStatusSuccess } = useVendorStaff()
+    const { changeExpenseAccStatus, expenseAccStatusSuccess, statusUploadLoading } = useExpenseAccount()
 
     const handleCloseStatusForm = () => {
         setOpenStatusForm(prev => ({ openCom: false }))
-        dispatch(removeBackgroundBlur(false))
     }
 
     const onsubmit = (data) => {
-        const { isActive, staffId } = openStatusForm;
-        data = { ...data, isActive, staffId }
-        changeVendorStaffStatus(data)
+        const { isActive, expenseAccountId } = openStatusForm;
+        data = { ...data, isActive, expenseAccountId }
+        changeExpenseAccStatus(data)
     }
 
     useEffect(() => {
-        if (!vendorStaffStatusSuccess) return;
+        if (!expenseAccStatusSuccess) return;
         setOpenStatusForm(prev => ({ openCom: false }))
-    }, [vendorStaffStatusSuccess])
-
-
+    }, [expenseAccStatusSuccess])
 
     return (
         <div className="fixed w-96 p-5 shadow-md bg-white top-[50%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md" >
@@ -46,7 +41,7 @@ export const VendorStaffStatusForm = ({ openStatusForm, setOpenStatusForm, dispa
             <form onSubmit={handleSubmit(onsubmit)}>
                 <label className="label">Reason</label>
                 <Controller name="reason" control={control} render={({ field }) => (
-                    <TextAreaComponent field={field} regexVal={/\b\w/g} placeholder={openStatusForm.isActive ? "Reactivation...." : "Deactivation...."} />
+                    <TextAreaComponent field={field} regexVal={/\b\w/g} placeholder={"Optional"} />
                 )} />
                 <button disabled={statusUploadLoading === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{statusUploadLoading ? `${openStatusForm?.isActive ? "Activating" : "Deactivating"}` : `${openStatusForm?.isActive ? "Activate" : "Deactivate"}`}</button>
             </form>

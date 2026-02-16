@@ -68,7 +68,7 @@ export const getVendorForExpenseForm = async (req, res) => {
         const { id: shopId } = req.shop
 
         const findVendor = await VendorModel.aggregate([
-            { $match: { shop: mongoose.Types.ObjectId.createFromHexString(shopId) } },
+            { $match: { shop: mongoose.Types.ObjectId.createFromHexString(shopId), isActive: true } },
             { $sort: { char: 1 } },
             {
                 $project: {
