@@ -3,7 +3,7 @@ import { axiosInstance } from "../config/axiosInstance"
 import toast from "react-hot-toast"
 import { useLocation } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { removeBackgroundBlur } from "../redux/features/commonSlice"
+import { removeBackgroundBlur, setCloseVendorForm } from "../redux/features/commonSlice"
 
 export const useVendor = () => {
 
@@ -52,10 +52,14 @@ export const useVendor = () => {
                 withCredentials: true,
                 data: data
             })
-        }, onSuccess(data) {
+        }, onSuccess: async (data) => {
             dispatch(removeBackgroundBlur(false))
+            dispatch(setCloseVendorForm(false))
             toast.success("Vendor create successfully")
-            queryClient.invalidateQueries({ queryKey: ["vendor"] });
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["vendorform"] }),
+                queryClient.invalidateQueries({ queryKey: ["vendor"] }),
+            ])
 
         },
         onError(error) {
@@ -77,12 +81,10 @@ export const useVendor = () => {
             })
 
             return response?.data
-        }, onSuccess(data) {
+        }, onSuccess: async (data) => {
             dispatch(removeBackgroundBlur(false))
-
-            console.log(data)
-            toast.success(data?.message)
-            queryClient.invalidateQueries({ queryKey: ["vendor"] });
+            queryClient.invalidateQueries({ queryKey: ["vendor"] }),
+                toast.success(data?.message)
 
         },
         onError(error) {

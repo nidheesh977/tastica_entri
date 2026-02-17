@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { TableComponent } from '../DaisyUiComponent/TableComponent'
 import { ExpenseAccountSingleAddTitleForm } from './ExpenseAccountSingleAddTitleForm'
-import { useDispatch } from "react-redux"
-import { addBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { addBackgroundBlur, setOpenExpenseSubTitleForm } from "../../../redux/features/commonSlice"
 import { ExpenseAccountSingleStatusForm } from './ExpenseAccountSingleStatusForm'
 
 export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
@@ -16,11 +16,12 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
 
     console.log(openStatusForm);
 
+    const { openExpenseSubTitleForm } = useSelector((state) => state.common)
 
     const dispatch = useDispatch()
 
     const handleOpenForm = () => {
-        setopenCreateForm(true)
+        dispatch(setOpenExpenseSubTitleForm(true))
         dispatch(addBackgroundBlur(true))
     }
 
@@ -40,7 +41,7 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
     return (
         <div className='w-full'>
             <div className='w-full flex justify-end'>
-                {openCreateForm ? <ExpenseAccountSingleAddTitleForm setopenCreateForm={setopenCreateForm} /> : null}
+                {openExpenseSubTitleForm ? <ExpenseAccountSingleAddTitleForm /> : null}
                 {openStatusForm.openCom ? <ExpenseAccountSingleStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
                 <button className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
             </div>

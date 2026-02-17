@@ -46,15 +46,17 @@ export const addTaxRatesToAccount = async (req, res) => {
     }
 
     const { taxCodeName, rate, taxType } = value;
-    const { id: taxRateAccountId } = req.params;
     const { id: shopId } = req.shop
+
+
+
 
     try {
 
         const taxCodeNameLower = taxCodeName.trim().replace(/\s+/g, " ").toLowerCase()
 
         const addNewTaxRate = await TaxRateModel.findOneAndUpdate({
-            shop: shopId, _id: taxRateAccountId,
+            shop: shopId,
             taxRates: {
                 $not: {
                     $elemMatch: {
@@ -75,6 +77,9 @@ export const addTaxRatesToAccount = async (req, res) => {
                 }
             }
         }, { new: true })
+
+
+
 
         const message = addNewTaxRate === null ? "Tax Rate Already Exist" : "Tax rate Added Successfully"
         const statusCode = addNewTaxRate === null ? 409 : 201

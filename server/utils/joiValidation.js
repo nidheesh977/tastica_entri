@@ -766,7 +766,7 @@ export const createExpenseFormValidation = Joi.object({
         "string.length": "vendor Invalid ID format",
     }),
 
-    customer: Joi.string().length(24).hex().allow(null).empty("").messages({
+    vendorStaff: Joi.string().length(24).hex().allow(null).empty("").messages({
         "string.hex": "customer Invalid ID format",
         "string.length": "customer Invalid ID format",
     }),
@@ -778,6 +778,12 @@ export const createExpenseFormValidation = Joi.object({
         "string.base": "Notes must be a string",
         "string.max": "Notes cannot exceed 500 characters"
     }),
+    billable: Joi.boolean()
+        .truthy("true")
+        .optional()
+        .messages({
+            "boolean.base": "Billable must be true "
+        }),
     image_doc: Joi.string().meta({ swaggerType: 'file' }).optional().allow(null, "").label("image")
 })
 

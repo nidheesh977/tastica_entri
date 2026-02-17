@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../../config/axiosInstance"
 import toast from "react-hot-toast"
 import { useLocation, useParams } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { removeBackgroundBlur } from "../../redux/features/commonSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { removeBackgroundBlur, setCloseExpenseAccount, setCloseExpenseSubTitleForm } from "../../redux/features/commonSlice"
 
 export const useExpenseAccount = () => {
 
@@ -13,6 +13,9 @@ export const useExpenseAccount = () => {
 
     const dispatch = useDispatch()
 
+    const { expenseAccountId: idExpenseAccount } = useSelector((state) => state.common)
+
+    const finalId = expenseAccountId ?? idExpenseAccount
 
     const isValidPage = pathname === "/admin/expense/create"
 
@@ -33,6 +36,21 @@ export const useExpenseAccount = () => {
         },
         enabled: !!isValidPage,
     })
+    const { data: expenseAccountTitleData } = useQuery({
+        queryKey: ["expenseAccountTitle"],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: "/expense-account/title",
+                withCredentials: true
+            })
+
+            return response?.data?.data ?? []
+        },
+        enabled: !!isValidPage,
+    })
+
+
 
     const { data: expenseAccount, isLoading: expenseAccountLoading, isFetching: expenseAccountRefreshing } = useQuery({
         queryKey: ["expenseAccount"],
@@ -76,10 +94,16 @@ export const useExpenseAccount = () => {
             console.log(response)
             return response?.data
 
-        }, onSuccess: (data) => {
+        }, onSuccess: async () => {
             dispatch(removeBackgroundBlur(false))
+            dispatch(setCloseExpenseAccount(false))
             toast.success("Expense Account Create successfully!");
-            queryClient.invalidateQueries({ queryKey: ["expenseAccount"] });
+
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["expenseAccount"] }),
+                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] })
+            ])
+
         }, onError: (error) => {
             console.log(error)
             toast.error(error?.response?.data?.message || "Somethings went wrong");
@@ -88,18 +112,27 @@ export const useExpenseAccount = () => {
 
     const { mutate: addTitleToExpenseAccount, isPending: addTitleLoading, isSuccess: addTitleToExpenseAccountSuccess } = useMutation({
         mutationFn: async (data) => {
+
+            const payload = {
+                title: data.title
+            }
             const response = await axiosInstance({
                 method: "POST",
-                url: `/expense-account/${expenseAccountId}`,
+                url: `/expense-account/${finalId}`,
                 withCredentials: true,
-                data: data
+                data: payload
             })
             return response?.data
 
-        }, onSuccess: (data) => {
+        }, onSuccess: async () => {
             dispatch(removeBackgroundBlur(false))
+            dispatch(setCloseExpenseSubTitleForm(false))
             toast.success("Expense Account Title Create successfully!");
-            queryClient.invalidateQueries({ queryKey: ["expenseAccountId"] });
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["expenseAccountId"] }),
+                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] })
+            ])
+
         }, onError: (error) => {
             console.log(error)
             toast.error(error?.response?.data?.message || "Somethings went wrong");
@@ -173,6 +206,9 @@ export const useExpenseAccount = () => {
         changeStatusExpenseSingleAccount,
         statusUploadLoading,
         expenseAccStatusSuccess,
+
+
+        expenseAccountTitleData
 
     }
 

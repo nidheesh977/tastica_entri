@@ -3,7 +3,7 @@ import { axiosInstance } from "../config/axiosInstance"
 import { useLocation } from "react-router-dom"
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
-import { removeBackgroundBlur } from "../redux/features/commonSlice"
+import { removeBackgroundBlur, setCloseTaxRateForm, } from "../redux/features/commonSlice"
 
 export const useTaxRates = () => {
 
@@ -60,12 +60,12 @@ export const useTaxRates = () => {
     })
 
     const { mutate: addTaxToAccount, isPending: addTaxToAccountLoaded } = useMutation({
-        mutationFn: async ({ shopTaxId, data }) => {
+        mutationFn: async (data) => {
 
 
             const res = await axiosInstance({
                 method: "POST",
-                url: `/tax-rate/${shopTaxId}`,
+                url: `/tax-rate/add`,
                 withCredentials: true,
                 data: data
             });
@@ -75,12 +75,19 @@ export const useTaxRates = () => {
         },
 
 
-        onSuccess: (data) => {
+        onSuccess: async () => {
             toast.success("Tax rate Added successfully")
             dispatch(removeBackgroundBlur(false))
-            queryClient.invalidateQueries({ queryKey: ["taxRate"] });
+            dispatch(setCloseTaxRateForm(false))
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["taxRate"] }),
+                queryClient.invalidateQueries({ queryKey: ["taxrateForForm"] })
+
+            ])
         },
         onError: (error) => {
+            console.log(error);
+
             toast.error(
                 error?.response?.data?.message || "Something error"
             );
@@ -102,10 +109,15 @@ export const useTaxRates = () => {
         },
 
 
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             toast.success("Tax rate Added successfully")
             dispatch(removeBackgroundBlur(false))
-            queryClient.invalidateQueries({ queryKey: ["taxRate"] });
+            dispatch(removeBackgroundBlur(false))
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["taxRate"] }),
+                queryClient.invalidateQueries({ queryKey: ["taxrateForForm"] })
+
+            ])
         },
         onError: (error) => {
             toast.error(

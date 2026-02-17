@@ -36,7 +36,7 @@ export const SelectOptionComponent = React.memo(({ children, config, isTop, sele
 
 
     return (
-        <div className={` dropdown ${isTop ? "dropdown-top" : "dropdown-bottom"} w-full max-w-sm mr-16 `}>
+        <div className={` dropdown ${isTop ? "dropdown-top" : "dropdown-bottom"} w-full max-w-sm   `} >
             <div className="relative">
                 <div tabIndex={0} role="button" className="btn justify-between bg-transparent hover:bg-transparent btn-sm w-full input-bordered ">
                     <p className={` text-md text-gray-800`}>{selectedExpenseAccount ?? selectPaidThrough ?? selectedTaxRate ?? selectedVendor ?? selectedCustomer ?? selectPlaceholder}</p>

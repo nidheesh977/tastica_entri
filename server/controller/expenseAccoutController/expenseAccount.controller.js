@@ -91,6 +91,31 @@ export const addNewExpenseInAccount = async (req, res, next) => {
     }
 }
 
+export const getExpenseAccountHeadForm = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const result = await ExpenseAccountModel.aggregate([
+            { $match: { shop: new Types.ObjectId(shopId) } },
+            {
+                $project: {
+                    _id: 1,
+                    expenseTitle: 1
+                }
+            }
+        ])
+
+        console.log(result);
+
+
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
 
 export const getExpenseAccountForExpenseForm = async (req, res) => {
     try {

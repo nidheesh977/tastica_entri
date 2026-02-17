@@ -14,7 +14,7 @@ vendorRouter.get("/form", shopVerifyToken, userVerifyToken, checkUserRole('admin
 
 vendorRouter.post("/staff/create", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), createVendorStaff)
 vendorRouter.patch("/staff/:vendorId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), vendorStaffStatusUpdate)
-vendorRouter.get("/staff/form", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getVendorStaffForExpenseForm)
+vendorRouter.get("/staff/form/:vendorId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getVendorStaffForExpenseForm)
 vendorRouter.get("/:vendorId/staff", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), vendorStaffDataForShop)
 
 

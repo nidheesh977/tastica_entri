@@ -89,9 +89,9 @@ const expenseSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    customer: {
+    vendorStaff: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
+        ref: "VendorStaff",
         default: null
     },
     isActive: {

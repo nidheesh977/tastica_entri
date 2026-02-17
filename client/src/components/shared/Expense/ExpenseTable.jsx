@@ -57,7 +57,7 @@ export const ExpenseTable = () => {
                                     <td className='text-gray-500 font-medium'>{expense?.referenceId}</td>
                                     <td className='font-medium text-center text-gray-800'>{expense?.vendor[0]?.vendorName}</td>
                                     <td className='font-medium  text-gray-800'>{expense?.payment[0]?.accountTitle}</td>
-                                    <td className='font-medium  text-gray-800'>{expense?.customerData[0]?.customerName}</td>
+                                    <td className='font-medium  text-gray-800'>{expense?.vendorstaffData[0]?.staffName}</td>
                                     <td className='text-gray-500 font-medium text-[13px]'>{expense?.billable ? "BIALABLE" : "NON-BILLABLE"}</td>
                                     <td className='font-medium  text-gray-800'>{currecnyCode} {expense?.expenseAmount}</td>
                                 </tr>

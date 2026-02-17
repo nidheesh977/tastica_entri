@@ -3,12 +3,12 @@ import { useExpenseAccount } from "../../../hooks/expense/useExpenseAccount"
 import { InputComponent } from "../DaisyUiComponent/InputComponent"
 import { TextAreaComponent } from "../DaisyUiComponent/TextAreaComponent"
 import { useForm, Controller } from "react-hook-form"
-import { removeBackgroundBlur } from "../../../redux/features/commonSlice"
+import { removeBackgroundBlur, setCloseExpenseAccount } from "../../../redux/features/commonSlice"
 import { useDispatch } from "react-redux"
 import { IoMdClose } from "react-icons/io"
 
 
-export const ExpenseAccountCreate = ({ setOpenForm, }) => {
+export const ExpenseAccountCreate = () => {
 
     const { handleSubmit, reset, register, control } = useForm({
         defaultValues: {
@@ -18,21 +18,19 @@ export const ExpenseAccountCreate = ({ setOpenForm, }) => {
 
 
     const dispatch = useDispatch()
+
+
+
     const { createExpenseAccount, expenseAccountCreated } = useExpenseAccount()
 
     const onSubmit = (data) => {
         createExpenseAccount(data)
     }
     const handleExpenseAddCancel = () => {
-        setOpenForm(false)
+        dispatch(setCloseExpenseAccount(false))
         dispatch(removeBackgroundBlur(false))
     }
 
-    useEffect(() => {
-        if (!expenseAccountCreated) return;
-        setOpenForm(false)
-        dispatch(removeBackgroundBlur(false))
-    }, [expenseAccountCreated])
 
     return (
         <div className="fixed w-96 p-5 shadow-md bg-white top-[45%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md">

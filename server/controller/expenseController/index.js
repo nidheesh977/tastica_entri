@@ -1,1 +1,1 @@
-export { createExpense, getExpense, getCustomerForExpenseForm, getSingleExpense } from "./expenseController.controller.js"
+export { createExpense, getExpense, getSingleExpense } from "./expenseController.controller.js"

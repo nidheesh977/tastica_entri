@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { TableComponent } from '../DaisyUiComponent/TableComponent'
 import { VendorForm } from './VendorForm'
-import { useDispatch } from "react-redux"
-import { removeBackgroundBlur, addBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { removeBackgroundBlur, addBackgroundBlur, setOpenVendorForm } from "../../../redux/features/commonSlice"
 import { VendorStatusForm } from './VendorStatusForm'
 import { Link } from 'react-router-dom'
 
@@ -34,17 +34,17 @@ export const VendorDataTable = ({ vendorData }) => {
     }
 
 
-
+    const { openVendorForm } = useSelector(state => state.common)
 
     const handleOpenVendorForm = () => {
-        setopenCreateForm(true)
+        dispatch(setOpenVendorForm(true))
         dispatch(addBackgroundBlur(true))
     }
 
     return (
         <div className='w-full'>
             <div className='w-full flex justify-end gap-5'>
-                {openCreateForm ? <VendorForm setopenCreateForm={setopenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
+                {openVendorForm ? <VendorForm setopenCreateForm={setopenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 {openStatusForm.openCom ? <VendorStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 <button className="btn btn-success btn-sm text-white" onClick={handleOpenVendorForm} >Add</button>
             </div>

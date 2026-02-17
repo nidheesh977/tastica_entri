@@ -54,9 +54,10 @@ export const createVendorStaff = async (req, res, next) => {
 export const getVendorStaffForExpenseForm = async (req, res, next) => {
     try {
         const { id: shopId } = req.shop
+        const { vendorId } = req.params
 
         const result = await VendorStaffModel.aggregate([
-            { $match: { shop: new Types.ObjectId(shopId) } },
+            { $match: { shop: new Types.ObjectId(shopId), vendor: new Types.ObjectId(vendorId) } },
             {
                 $project: {
                     _id: 1,

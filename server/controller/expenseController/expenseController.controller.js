@@ -23,6 +23,9 @@ export const createExpense = async (req, res, next) => {
 
 
 
+
+
+
         const { error, value } = createExpenseFormValidation.validate(req.body)
 
         if (error) {
@@ -42,15 +45,16 @@ export const createExpense = async (req, res, next) => {
             taxRate,
             vendor,
             referenceId,
-            customer,
-            notes
+            vendorStaff,
+            notes,
+            billable,
 
         } = value
 
 
 
-        if (!vendor && !customer || vendor && customer) {
-            return (next(new AppError("Please select either Customer or Vendor", 400)))
+        if (vendorStaff && !vendor) {
+            return (next(new AppError("Please select  Vendor", 400)))
         }
 
 
@@ -74,7 +78,7 @@ export const createExpense = async (req, res, next) => {
 
 
 
-        const billable = !!customer
+
 
         const expenseId = await generateExpenseId(shopId)
 
@@ -96,7 +100,7 @@ export const createExpense = async (req, res, next) => {
 
         const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")     // The amountis hold inclusive or exclusive
 
-        const isVendor = vendor === "" ? null : vendor
+
 
         const dateToIso = new Date(date).toISOString();
 
@@ -115,8 +119,8 @@ export const createExpense = async (req, res, next) => {
             taxCode: selectedTaxRate.taxCodeName,
             shopTaxAccount,
             taxRate: selectedTaxRate.rate,
-            vendor: isVendor,
-            customer,
+            vendor: vendor,
+            vendorStaff,
             referenceId,
             billable: billable,
             notes,
@@ -137,35 +141,6 @@ export const createExpense = async (req, res, next) => {
 }
 
 
-
-//  For customer
-
-
-export const getCustomerForExpenseForm = async (req, res, next) => {
-    try {
-        const { id: shopId } = req.shop
-
-        const result = await customerModel.aggregate([
-            { $match: { shopId: new Types.ObjectId(shopId) } },
-            {
-                $project: {
-                    _id: 1,
-                    customerName: 1
-                }
-            }
-        ])
-
-        console.log(result);
-
-
-
-        res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
-
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-}
 
 
 export const getExpense = async (req, res) => {
@@ -204,10 +179,10 @@ export const getExpense = async (req, res) => {
                         },
                         {
                             $lookup: {
-                                from: "customers",
-                                localField: "customer",
+                                from: "vendorstaffs",
+                                localField: "vendorStaff",
                                 foreignField: "_id",
-                                as: "customerData"
+                                as: "vendorstaffData"
                             }
                         },
                         {
@@ -216,8 +191,7 @@ export const getExpense = async (req, res) => {
                                 referenceId: 1,
                                 "vendor.vendorName": 1,
                                 "payment.accountTitle": 1,
-                                "customerData.customerName": 1,
-                                customer: 1,
+                                "vendorstaffData.staffName": 1,
                                 expenseAmount: 1,
                                 createdDate: 1,
                                 billable: 1
@@ -266,7 +240,7 @@ export const getSingleExpense = async (req, res, next) => {
         const getExpense = await ExpenseModel.findOne({ shop: shopId, _id: expenseId })
             .populate({ path: "expenseAccount", select: "expenseTitle" })
             .populate({ path: "paidThrough", select: "accountTitle" })
-            .populate({ path: "customer", select: "customerName" })
+            .populate({ path: "vendorStaff", select: "staffName" })
             .populate({ path: "vendor", select: "vendorName" })
 
         if (!getExpense) {
@@ -275,6 +249,7 @@ export const getSingleExpense = async (req, res, next) => {
 
         res.status(200).json({ success: true, message: "Data fetched successfull", data: getExpense })
     } catch (error) {
+
         next(error)
     }
 }

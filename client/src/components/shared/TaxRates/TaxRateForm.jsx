@@ -4,11 +4,11 @@ import { InputComponent } from '../DaisyUiComponent/InputComponent'
 import { SimpleSelectOption } from '../DaisyUiComponent/SimpleSelectOption'
 import { useTaxRates } from '../../../hooks/useTaxRates'
 import { IoMdClose } from 'react-icons/io'
-import { useDispatch } from "react-redux"
-import { removeBackgroundBlur } from "../../../redux/features/commonSlice"
-import { useEffect } from 'react'
+import { useDispatch, } from "react-redux"
+import { removeBackgroundBlur, setCloseTaxRateForm } from "../../../redux/features/commonSlice"
 
-export const TaxRateForm = ({ shopTaxId, setOpenTaxCreateForm }) => {
+
+export const TaxRateForm = () => {
 
 
 
@@ -26,6 +26,8 @@ export const TaxRateForm = ({ shopTaxId, setOpenTaxCreateForm }) => {
     const { addTaxToAccount, addTaxToAccountLoaded } = useTaxRates()
 
 
+
+
     const taxTypes = [
         { id: 1, value: "", name: "Select Tax Type" },
         { id: 2, value: "ZERO", name: "ZERO" },
@@ -35,11 +37,11 @@ export const TaxRateForm = ({ shopTaxId, setOpenTaxCreateForm }) => {
     ]
 
     const onSubmit = (data) => {
-        addTaxToAccount({ shopTaxId, data });
+        addTaxToAccount(data);
     }
 
     const handleTaxAddCancel = () => {
-        setOpenTaxCreateForm(false)
+        dispatch(setCloseTaxRateForm(false))
         dispatch(removeBackgroundBlur(false))
     }
 

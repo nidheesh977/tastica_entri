@@ -4,7 +4,8 @@ import { removeBackgroundBlur } from "../../../redux/features/commonSlice"
 import { useDispatch } from "react-redux"
 import { useExpenseAccount } from "../../../hooks/expense/useExpenseAccount"
 import { useEffect } from "react"
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose, IoMdSearch } from "react-icons/io";
+import { SelectOptionComponent } from "../DaisyUiComponent/SelectOptionComponent"
 
 export const ExpenseAccountAddTitle = ({ setAddTitleBox }) => {
 
@@ -47,7 +48,14 @@ export const ExpenseAccountAddTitle = ({ setAddTitleBox }) => {
                 <Controller name="title" control={control} render={({ field }) => (
                     <InputComponent field={field} placeholder="Add Expense Title" />
                 )} />
+                <label className="label">Title</label>
+                <Controller name="title" control={control} render={({ field }) => (
+                    <InputComponent field={field} placeholder="Add Expense Title" />
+                )} />
 
+
+
+                {/* <button disabled={addTitleToExpenseAccountCreated === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTitleToExpenseAccountCreated ? "Addding" : "Add"}</button> */}
                 <button disabled={addTitleToExpenseAccountCreated === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTitleToExpenseAccountCreated ? "Addding" : "Add"}</button>
             </form>
         </div>

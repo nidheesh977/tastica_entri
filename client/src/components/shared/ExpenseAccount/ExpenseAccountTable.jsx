@@ -3,13 +3,12 @@ import { TableComponent } from '../DaisyUiComponent/TableComponent'
 import { Link } from 'react-router-dom'
 import { ExpenseAccountCreate } from './ExpenseAccountCreate'
 import { ExpenseStatusForm } from './ExpenseStatusForm'
-import { useDispatch } from 'react-redux'
-import { addBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch, useSelector } from 'react-redux'
+import { addBackgroundBlur, setOpenExpenseAccount } from "../../../redux/features/commonSlice"
 
 
 export const ExpenseAccountTable = ({ expenseAccount }) => {
 
-    const [openForm, setOpenForm] = useState(false)
 
     const [openStatusForm, setOpenStatusForm] = useState({
         openCom: false,
@@ -19,14 +18,19 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
 
     const dispatch = useDispatch()
 
+    const { openExpenseAccForm } = useSelector((state) => state.common)
+
+
+
+
     const handleOpenForm = () => {
         dispatch(addBackgroundBlur(true))
-        setOpenForm(true)
+        dispatch(setOpenExpenseAccount(true))
     }
 
 
     const handleChangeAccStatus = (num, accountId, active) => {
-        console.log(num, accountId, active);
+
 
         setOpenStatusForm(prev => ({
             openCom: true,
@@ -40,7 +44,7 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
     return (
         <div className='w-full'>
             <div className='w-full flex justify-end'>
-                {openForm ? <ExpenseAccountCreate setOpenForm={setOpenForm} dispatch={dispatch} addBackgroundBlur={addBackgroundBlur} /> : null}
+                {openExpenseAccForm ? <ExpenseAccountCreate /> : null}
                 {openStatusForm.openCom ? <ExpenseStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
                 <button className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
             </div>

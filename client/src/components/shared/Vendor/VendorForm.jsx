@@ -4,8 +4,10 @@ import { IoMdClose } from 'react-icons/io'
 import { InputComponent } from '../DaisyUiComponent/InputComponent'
 import { TextAreaComponent } from '../DaisyUiComponent/TextAreaComponent'
 import { useVendor } from '../../../hooks/useVendor'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeBackgroundBlur, setCloseVendorForm } from "../../../redux/features/commonSlice"
 
-export const VendorForm = ({ setopenCreateForm, dispatch, removeBackgroundBlur }) => {
+export const VendorForm = () => {
 
     const { handleSubmit, control } = useForm({
         defaultValues: {
@@ -16,6 +18,8 @@ export const VendorForm = ({ setopenCreateForm, dispatch, removeBackgroundBlur }
         }
     })
 
+    const dispatch = useDispatch()
+
     const { createVendor, createVendorSuccess, vendorPending } = useVendor()
 
     const onSubmit = (data) => {
@@ -25,15 +29,10 @@ export const VendorForm = ({ setopenCreateForm, dispatch, removeBackgroundBlur }
     }
 
     const handleVendorFormCancel = () => {
-        setopenCreateForm(false)
+        dispatch(setCloseVendorForm(false))
         dispatch(removeBackgroundBlur(false))
     }
 
-    useEffect(() => {
-        if (!createVendorSuccess) return;
-
-        setopenCreateForm(false)
-    }, [createVendorSuccess])
 
     return (
         <div className="fixed w-96 md:w-[750px] p-5 shadow-md bg-white top-[50%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md" >

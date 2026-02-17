@@ -3,10 +3,13 @@ import { useDispatch } from "react-redux"
 import { axiosInstance } from '../config/axiosInstance'
 import { useLocation, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { removeBackgroundBlur } from "../redux/features/commonSlice"
+import { removeBackgroundBlur, setCloseVendorForm } from "../redux/features/commonSlice"
 
 
-export const useVendorStaff = () => {
+export const useVendorStaff = (vendorStatus) => {
+
+    console.log(vendorStatus);
+
 
     const { pathname } = useLocation()
 
@@ -19,17 +22,17 @@ export const useVendorStaff = () => {
 
     const dispatch = useDispatch()
 
-    const { data: vendorStaffDataForForm } = useQuery({
-        queryKey: ["vendorStaffForm"],
+    const { data: vendorStaffDataForForm, refetch } = useQuery({
+        queryKey: ["vendorStaffForm", vendorStatus],
         queryFn: async () => {
             const response = await axiosInstance({
                 method: "GET",
-                url: "/vendor/staff/form",
+                url: `/vendor/staff/form/${vendorStatus}`,
                 withCredentials: true
             })
             return response?.data?.data ?? []
         },
-        enabled: !!isValidPage
+        enabled: false
     })
 
     const { data: vendorStaffData, isLoading: vendorStaffDataLoding, isFetching: vendorStaffDataRefreshing } = useQuery({
@@ -103,6 +106,8 @@ export const useVendorStaff = () => {
         vendorStaffData,
         vendorStaffDataLoding,
         vendorStaffDataRefreshing,
+
+        refetch,
 
         createStaff,
         vendorStaffPending,

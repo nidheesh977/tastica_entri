@@ -7,7 +7,7 @@ import { checkUserRole } from "../../../middleware/authRoleVerification.js";
 const taxRateRouter = express.Router();
 
 taxRateRouter.post("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), createTaxRateAccount)
-taxRateRouter.post("/:id", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addTaxRatesToAccount)
+taxRateRouter.post("/add", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addTaxRatesToAccount)
 taxRateRouter.get("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getTaxRatesForShop)
 taxRateRouter.get("/expense-form", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getTaxRatesForExpenseForm)
 taxRateRouter.delete("/:taxAccountId/rate/:taxRateId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), deleteTaxRate)

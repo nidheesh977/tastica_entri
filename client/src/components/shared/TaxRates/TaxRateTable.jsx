@@ -2,8 +2,8 @@ import { useState } from "react"
 import { TaxRateForm } from "./TaxRateForm"
 import { ModelPopUp } from "../DaisyUiComponent/ModelPopUp"
 import { useTaxRates } from "../../../hooks/useTaxRates"
-import { useDispatch } from "react-redux"
-import { addBackgroundBlur, removeBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { addBackgroundBlur, setOpenTaxRateForm } from "../../../redux/features/commonSlice"
 import { TableComponent } from "../DaisyUiComponent/TableComponent"
 
 export const TaxRateTable = ({ getTaxRateData }) => {
@@ -18,14 +18,14 @@ export const TaxRateTable = ({ getTaxRateData }) => {
     })
 
 
-
+    const { openTaxRateForm } = useSelector(state => state.common)
 
     const dispatch = useDispatch()
     const { deleteTaxFromAccount, deleteTaxAccountLoaded } = useTaxRates()
 
 
     const handleOpenForm = () => {
-        setOpenTaxCreateForm(true)
+        dispatch(setOpenTaxRateForm(true))
         dispatch(addBackgroundBlur(true))
     }
 
@@ -60,7 +60,7 @@ export const TaxRateTable = ({ getTaxRateData }) => {
         <div className="w-full relative">
             {modelBox ? <ModelPopUp modelDataObj={modelDataObj} /> : null}
             <div className="flex justify-end items-center">
-                {openTaxCreateForm ? <TaxRateForm setOpenTaxCreateForm={setOpenTaxCreateForm} shopTaxId={getTaxRateData?._id} /> : null}
+                {openTaxRateForm ? <TaxRateForm /> : null}
                 {<button onClick={handleOpenForm} className="btn btn-success btn-sm text-white">Add</button>}
             </div>
             <TableComponent>
