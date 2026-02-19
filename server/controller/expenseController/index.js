@@ -1,1 +1,8 @@
-export { createExpense, getExpense, getSingleExpense } from "./expenseController.controller.js"
+export {
+    createExpense,
+    getExpense,
+    getSingleExpense,
+    getTaxRateAmount,
+    uploadImageToExpense,
+    downloadExpensePdf
+} from "./expenseController.controller.js"

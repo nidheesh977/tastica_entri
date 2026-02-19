@@ -14,6 +14,7 @@ import customInvoiceReducer from "./features/customInvoiceSlice";
 import latestPaidInvoiceReducer from "./features/latestPaidInvoiceSlice";
 import creditBookReducer from "./features/creditSlice"
 import commonReducer from "./features/commonSlice"
+import expenseReducer from "./features/expenseSlice"
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     customInvoice: customInvoiceReducer,
     latestPaidInvoice: latestPaidInvoiceReducer,
     credit: creditBookReducer,
-    common: commonReducer
+    common: commonReducer,
+    expense: expenseReducer
   },
 });

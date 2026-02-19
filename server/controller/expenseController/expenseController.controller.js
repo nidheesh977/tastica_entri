@@ -11,12 +11,14 @@ import { AppError } from "../../utils/AppError.js";
 import { compressImage } from "../../utils/compressImage.js";
 import { uploadImageToCloudinary } from "../../utils/uploadImageToCloudinary .js";
 import { cloudinaryInstance } from "../../config/cloudineryConfig.js";
+import PDFDocument from "pdfkit"
+
 
 export const createExpense = async (req, res, next) => {
     try {
 
         const { id: shopId } = req.shop;
-
+        const { id: userId } = req.user
 
         const file = req.file;
 
@@ -98,9 +100,7 @@ export const createExpense = async (req, res, next) => {
             result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
         }
 
-        const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")     // The amountis hold inclusive or exclusive
-
-
+        const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")
 
         const dateToIso = new Date(date).toISOString();
 
@@ -108,6 +108,7 @@ export const createExpense = async (req, res, next) => {
             expenseId: expenseId,
             shop: shopId,
             createdDate: dateToIso,
+            createdBy: userId,
             expenseAccount,
             expenseSubTitle: selectdExpense?.title,
             expenseAmount,
@@ -124,7 +125,7 @@ export const createExpense = async (req, res, next) => {
             referenceId,
             billable: billable,
             notes,
-            cloudinary: {
+            image: {
                 publicId: result?.public_id,
                 version: result?.version
             }
@@ -141,6 +142,160 @@ export const createExpense = async (req, res, next) => {
 }
 
 
+export const uploadImageToExpense = async (req, res, next) => {
+    try {
+
+        const { expenseId } = req.params;
+        const { id: shopId } = req.shop
+
+        const isExpenseExist = await ExpenseModel.findOne({ shop: shopId, _id: expenseId })
+
+
+
+
+        if (!isExpenseExist) {
+            return next(new AppError("Expense not found", 404))
+        }
+
+        const file = req.file;
+
+
+        const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
+        const type = process.env.EXPENSE_DOC_IMAGE_AUTH
+
+
+        const compressedImage = await compressImage(file.buffer, 1200, 72)
+
+        const result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
+
+
+        await ExpenseModel.findOneAndUpdate({ shop: shopId, _id: expenseId },
+            {
+                image: {
+                    publicId: result?.public_id,
+                    version: result?.version
+                }
+            },
+            { new: true }
+        )
+
+        res.status(200).json({ success: true, message: "Image upload successfully", })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const downloadExpensePdf = async (req, res, next) => {
+    try {
+        const { id: shopId, currencyCode } = req.shop
+        const { expenseId } = req.params
+
+        const expense = await ExpenseModel.findOne({ shop: shopId, _id: expenseId })
+            .select("_id expenseId createdDate totalAmount expenseSubTitle amountIs taxCode taxRate billable notes taxAmount")
+            .populate({ path: "paidThrough", select: "accountTitle" })
+            .populate({ path: "vendor", select: "vendorName" })
+
+        if (!expense) {
+            return next(new AppError("Expense Account not found", 404))
+        }
+
+        const formattedDate = new Date(expense.createdDate)
+            .toISOString()
+            .split("T")[0];
+
+        const doc = new PDFDocument({
+            size: "A4",
+            margin: 50
+        })
+
+        res.setHeader("Content-Type", "application/pdf")
+        res.setHeader("Content-Disposition",
+            `attachment; filename=${expense?.expenseSubTitle}-${formattedDate}.pdf`)
+
+        doc.pipe(res)
+
+        doc.fontSize(22).text("Expense Details", { align: "left" })
+
+        doc.moveTo(50, 100)   // start point (x, y)
+            .lineTo(545, 100)  // end point (same y = straight)
+            .stroke();
+
+        doc.moveDown(3)
+
+
+        doc.fontSize(14).text("Expense Amount", { align: "left" })
+        doc.moveDown(0.5)
+        doc.fontSize(20).text(currencyCode + " ", { continued: true })
+            .text(expense?.totalAmount.toFixed(2) + " ", { continued: true })
+            .fontSize(12).text("on" + " " + new Date(expense?.createdDate).toLocaleDateString(),)
+        doc.moveDown(0.9)
+        doc.fontSize(12).text(expense.billable ? "BILLABLE" : "NON-BILLABLE")
+
+        doc.moveDown(4)
+
+
+
+        doc.fontSize(24).text(expense.expenseSubTitle)
+
+        doc.moveDown(2)
+
+
+        doc.fontSize(12).text("Paid Through")
+        doc.moveDown(0.2)
+        doc.fontSize(12).text(expense?.paidThrough?.accountTitle)
+
+        doc.moveDown(2)
+
+        doc.fontSize(12).text("Tax")
+        doc.moveDown(0.2)
+        doc.fontSize(12).text(`${expense?.taxCode} [ ${expense?.taxRate}% ]`)
+
+        doc.moveDown(2)
+        doc.fontSize(12).text("Tax Amount")
+        doc.moveDown(0.2)
+        doc.fontSize(12).text(`${currencyCode} ${expense?.taxAmount.toFixed(2)}  ( ${expense?.amountIs} ) `)
+
+        doc.moveDown(2)
+        doc.fontSize(12).text("Paid To")
+        doc.moveDown(0.2)
+        doc.fontSize(12).text(expense?.vendor?.vendorName)
+
+        doc.moveDown(2)
+        doc.fontSize(12).text(expense?.notes)
+
+
+        doc.end();
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getTaxRateAmount = async (req, res, next) => {
+    const { id: shopId } = req.shop
+
+    const { expenseAmount, taxRate, amountIs } = req.body;
+    try {
+
+        const findTaxRate = await TaxRateModel.findOne({ shop: shopId, },
+            { taxRates: { $elemMatch: { "_id": taxRate } } }
+        )
+
+        if (!findTaxRate) {
+            return res.status(404).json({ success: false, message: "Selected Tax rate is not found" })
+        }
+
+        const selectedTaxRate = findTaxRate.taxRates[0]
+
+        const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: taxAmount })
+    } catch (error) {
+        console.log(error);
+
+        next(error)
+    }
+}
 
 
 export const getExpense = async (req, res) => {

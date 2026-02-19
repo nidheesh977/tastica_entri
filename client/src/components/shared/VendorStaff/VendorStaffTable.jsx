@@ -2,8 +2,8 @@ import React, { use, useState } from 'react'
 import { TableComponent } from '../DaisyUiComponent/TableComponent'
 import { VendorStaffForm } from './VendorStaffForm'
 import { VendorStaffStatusForm } from './VendorStaffStatusForm'
-import { useDispatch } from 'react-redux'
-import { addBackgroundBlur, removeBackgroundBlur } from "../../../redux/features/commonSlice"
+import { useDispatch, useSelector } from 'react-redux'
+import { addBackgroundBlur, removeBackgroundBlur, setOpenVendorStaffForm } from "../../../redux/features/commonSlice"
 
 export const VendorStaffTable = ({ vendorStaffData }) => {
 
@@ -15,7 +15,7 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
 
     const dispatch = useDispatch()
 
-    const [openCreateForm, setOpenCreateForm] = useState(false)
+    const { openVendorStaffForm } = useSelector(state => state.common)
 
     const handleChangeAccStatus = (num, staffId, active) => {
         setOpenStatusForm((prev) => ({
@@ -28,14 +28,14 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
     }
 
     const handleOpenCreateForm = () => {
-        setOpenCreateForm(true)
+        dispatch(setOpenVendorStaffForm(true))
         dispatch(addBackgroundBlur(true))
     }
 
     return (
         <div className='w-full'>
             <div className='w-full flex justify-end gap-5'>
-                {openCreateForm ? <VendorStaffForm setOpenCreateForm={setOpenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
+                {openVendorStaffForm ? <VendorStaffForm /> : null}
                 {openStatusForm.openCom ? <VendorStaffStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 <button className="btn btn-success btn-sm text-white" onClick={handleOpenCreateForm}>Add</button>
             </div>

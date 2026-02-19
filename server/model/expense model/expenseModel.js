@@ -14,6 +14,11 @@ const expenseSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     expenseAccount: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "ExpenseAccount",
@@ -98,7 +103,7 @@ const expenseSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    cloudinary: {
+    image: {
         publicId: {
             type: String,
             default: null

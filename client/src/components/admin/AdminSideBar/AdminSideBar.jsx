@@ -17,7 +17,9 @@ import {
   MdEventNote,
   MdDashboard,
   MdPayment,
+  MdAccountBalanceWallet
 } from "react-icons/md";
+import { FaReceipt } from "react-icons/fa6";
 import { BsCreditCard2Back } from "react-icons/bs";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -28,12 +30,14 @@ import { useState } from "react";
 import { BsFillPiggyBankFill } from "react-icons/bs";
 import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
 
+
 export const AdminSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
   const [home, setHome] = useState(false);
   const [staffManagement, setStaffManagement] = useState(false);
   const [productManagement, setProductManagement] = useState(false);
   const [customerManagement, setCustomerManagement] = useState(false);
+  const [expenseManagement, setExpenseManagement] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const permissions = useSelector(
@@ -55,13 +59,13 @@ export const AdminSideBar = () => {
       z-50
     `}
     >
-      <ul className="w-full flex flex-col bg-tertiary gap-1 text-lg font-bold p-2 transition-all duration-1000">
+      <ul className="w-full flex flex-col bg-tertiary gap-1 h-[600px] text-[16px] font-bold p-2 transition-all duration-1000 overflow-y-auto">
         <li
           onClick={() => {
             setHome(!home);
           }}
           className={
-            " bg-tertiary rounded  border flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+            " bg-tertiary rounded  border  flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
           }
         >
           <FaHome />
@@ -228,7 +232,7 @@ export const AdminSideBar = () => {
                     handleSideBar("/admin/upload/products/csv");
                     dispatch(toggleSideBar());
                   }}
-                  className="bg-tertiary  rounded flex items-center text-sm md:text-lg hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+                  className="bg-tertiary  rounded flex items-center text-[16px] hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
                 >
                   <FaFileCsv />
                   Upload Products CSV File
@@ -252,15 +256,62 @@ export const AdminSideBar = () => {
                     handleSideBar("/admin/upload/categories/csv");
                     dispatch(toggleSideBar());
                   }}
-                  className="bg-tertiary 
-                
-              rounded flex text-xs md:text-lg items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+                  className="bg-tertiary flex
+                text-[16px] items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
                 >
                   <FaFileCsv />
                   Upload Categories CSV File
                 </li>
               </>
             )}
+          </>
+        )}
+
+        <li
+          onClick={() => setExpenseManagement(prev => !prev)}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <FaBoxOpen />
+          Expense Management
+          <HiChevronDown
+            className={`transform transition-transform duration-300  ${expenseManagement ? "rotate-180" : ""
+              }`}
+          />
+        </li>
+
+        {expenseManagement && (
+          <>
+            <li
+              onClick={() => {
+                handleSideBar("/admin/expense/create");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <FaReceipt />
+              Expense Create
+            </li>
+            <li
+              onClick={() => {
+                handleSideBar("/admin/expense/list");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <FaReceipt />
+              Expense List
+            </li>
+
+            <li
+              onClick={() => {
+                handleSideBar("/admin/expense/account");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <MdAccountBalanceWallet />
+              Expense Account
+            </li>
           </>
         )}
 
@@ -273,6 +324,27 @@ export const AdminSideBar = () => {
         >
           <FaShoppingCart />
           Shopping Cart
+        </li>
+
+        <li
+          onClick={() => {
+            handleSideBar("/admin/vendor");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Vendor
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/admin/payment/account");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Payment Account
         </li>
 
         <li
@@ -316,6 +388,18 @@ export const AdminSideBar = () => {
           <FiGift />
           Manage Loyalty Points
         </li>
+
+        <li
+          onClick={() => {
+            handleSideBar("/admin/tax/rate");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Tax Rates
+        </li>
+
         <li
           onClick={() => {
             handleSideBar("/admin/manage/recharge");

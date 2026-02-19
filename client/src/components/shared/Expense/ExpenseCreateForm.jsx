@@ -14,9 +14,18 @@ import { useVendorStaff } from "../../../hooks/useVendorStaff";
 import { ExpenseAccountCreate } from "../ExpenseAccount/ExpenseAccountCreate";
 import { ExpenseAccountSingleAddTitleForm } from "../ExpenseAccountSingle/ExpenseAccountSingleAddTitleForm";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenExpenseAccount, addBackgroundBlur, setOpenExpenseSubTitleForm, setOpenTaxRateForm, setOpenVendorForm } from "../../../redux/features/commonSlice"
+import {
+    setOpenExpenseAccount,
+    addBackgroundBlur,
+    setOpenExpenseSubTitleForm,
+    setOpenTaxRateForm,
+    setOpenVendorForm,
+    setAddVendorId,
+    setOpenVendorStaffForm
+} from "../../../redux/features/commonSlice"
 import { TaxRateForm } from "../TaxRates/TaxRateForm";
 import { VendorForm } from "../Vendor/VendorForm";
+import { VendorStaffForm } from "../VendorStaff/VendorStaffForm";
 
 
 export const ExpenseCreateForm = () => {
@@ -24,25 +33,36 @@ export const ExpenseCreateForm = () => {
     const [isDelete, setIsDelete] = useState(true)
     const [openForm, setOpenForm] = useState(false)
     const [openFormTitle, setOpenTitleForm] = useState(false)
+    const [preview, setPreview] = useState(null)
 
-
+    const { createExpense, isPending, calculateExpenseTaxRate, calculateExpenseTaxLoading, } = useExpense()
     const { expenseAccountDataExpenseForm } = useExpenseAccount()
     const { taxRatesDataForExpenseForm } = useTaxRates()
     const { vendorDataForm } = useVendor()
     const { paymentAccountDataForExpForm } = usePaymentAccount()
-    const { createExpense, isPending } = useExpense()
 
     const dispatch = useDispatch()
 
-    const { openExpenseAccForm, openExpenseSubTitleForm, openTaxRateForm, openVendorForm } = useSelector((state) => state.common)
 
+
+    const { openExpenseAccForm, openExpenseSubTitleForm, openTaxRateForm, openVendorForm, openVendorStaffForm } = useSelector((state) => state.common)
+    const { taxAmountShow } = useSelector(state => state.expense)
     const { handleSubmit, watch, register, setValue } = useForm({
         defaultValues: {
             billable: undefined
         }
     })
 
-    // console.log(imageDocs);
+    const taxRate = watch("taxRate")
+    const expenseAmount = watch("expenseAmount")
+    const taxMode = watch("amountIs")
+
+    const payload = {
+        expenseAmount: expenseAmount,
+        amountIs: taxMode,
+        taxRate: taxRate
+    }
+
 
 
 
@@ -86,7 +106,7 @@ export const ExpenseCreateForm = () => {
 
 
     const imageDoc = watch("image_doc")
-    const [preview, setPreview] = useState(null)
+
 
     const vendorStatus = watch("vendor")
     const vendorStaffStatus = watch("vendorStaff")
@@ -123,9 +143,15 @@ export const ExpenseCreateForm = () => {
     }
 
 
+
     useEffect(() => {
         if (vendorStatus) {
             refetch()
+            dispatch(setAddVendorId(vendorStatus))
+        }
+
+        if (expenseAmount && taxMode && taxRate) {
+            calculateExpenseTaxRate(payload)
         }
 
         if (!vendorStatus) {
@@ -134,7 +160,8 @@ export const ExpenseCreateForm = () => {
 
         }
 
-    }, [vendorStatus])
+
+    }, [vendorStatus, expenseAmount, taxMode, taxRate])
 
     const handleSaveExpense = () => {
         handleSubmit(onSubmit)()
@@ -157,6 +184,10 @@ export const ExpenseCreateForm = () => {
     const handleClickOpenVendor = () => {
         dispatch(addBackgroundBlur(true))
         dispatch(setOpenVendorForm(true))
+    }
+    const handleClickOpenVendorStaff = () => {
+        dispatch(addBackgroundBlur(true))
+        dispatch(setOpenVendorStaffForm(true))
     }
 
     const expenseAccount = (
@@ -245,6 +276,7 @@ export const ExpenseCreateForm = () => {
             {openExpenseAccForm ? <ExpenseAccountCreate setOpenForm={setOpenForm} /> : null}
             {openExpenseSubTitleForm ? <ExpenseAccountSingleAddTitleForm setOpenForm={setOpenForm} /> : null}
             {openTaxRateForm ? <TaxRateForm setOpenForm={setOpenForm} /> : null}
+            {openVendorStaffForm ? <VendorStaffForm setOpenForm={setOpenForm} /> : null}
             {openVendorForm ? <VendorForm /> : null}
             <form className='relative w-full xl:w-1/2 p-1 flex flex-col gap-5'>
 
@@ -365,6 +397,11 @@ export const ExpenseCreateForm = () => {
                                 </div>
                             </div>
                         </SelectOptionComponent>
+
+                    </div>
+                    <div className="w-[440px] mt-1 ml-auto visible text-green-700 font-medium text-xs tracking-wider">
+                        {calculateExpenseTaxLoading ? <p>Loading...</p> : null}
+                        {!calculateExpenseTaxLoading && taxAmountShow && expenseAmount && taxMode && taxRate ? `Tax Amount = ${taxAmountShow}` : null}
                     </div>
 
                     <div className='flex flex-col lg:flex-row justify-between items-start lg:items-center relative mt-8 mr-16'>
@@ -442,6 +479,10 @@ export const ExpenseCreateForm = () => {
                                     <div className="flex flex-col gap-3">
                                         {customer}
                                     </div>
+                                </div>
+                                <div className="mt-2 flex justify-between items-center">
+                                    <button type="button" onClick={handleClickOpenVendorStaff} className="btn btn-ghost btn-sm text-blue-600">Add Customer</button>
+                                    {/* <button type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button> */}
                                 </div>
                             </div>
                         </SelectOptionComponent>

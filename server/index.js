@@ -46,9 +46,9 @@ app.use(limiter)
 connectDB()
 
 
-
 // routes Middlewares
 app.use('/api', apiRouter);
+
 
 app.use(errorHandler)
 export default app

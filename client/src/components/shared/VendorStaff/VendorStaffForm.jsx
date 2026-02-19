@@ -5,8 +5,11 @@ import { InputComponent } from '../DaisyUiComponent/InputComponent'
 import { SelectOptionComponent } from '../DaisyUiComponent/SelectOptionComponent'
 import { useParams } from 'react-router-dom'
 import { useVendorStaff } from '../../../hooks/useVendorStaff'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCloseVendorStaffForm, removeBackgroundBlur } from "../../../redux/features/commonSlice"
 
-export const VendorStaffForm = ({ setOpenCreateForm, dispatch, removeBackgroundBlur }) => {
+
+export const VendorStaffForm = ({ setOpenCreateForm }) => {
 
     const { handleSubmit, control, register } = useForm({
         defaultValues: {
@@ -16,31 +19,36 @@ export const VendorStaffForm = ({ setOpenCreateForm, dispatch, removeBackgroundB
         }
     })
 
+    const dispatch = useDispatch()
+
     const { id: vendorId } = useParams()
 
-    const { createStaff, vendorStaffPending, vendorStaffSuccess } = useVendorStaff()
+    const { vendorIdForStaff } = useSelector(state => state.common)
 
+    const { createStaff, vendorStaffPending, vendorStaffSuccess, refetch } = useVendorStaff()
+
+    const validId = vendorId ?? vendorIdForStaff
 
     const handleCancelForm = () => {
-        setOpenCreateForm(false)
+        dispatch(setCloseVendorStaffForm(false))
         dispatch(removeBackgroundBlur(false))
     }
 
     const onsubmit = (data) => {
-        const staffData = { ...data, vendorId: vendorId }
+        const staffData = { ...data, vendorId: validId }
         createStaff(staffData);
 
     }
 
     useEffect(() => {
         if (!vendorStaffSuccess) return
-        setOpenCreateForm(false)
+        refetch()
     }, [vendorStaffSuccess])
 
     return (
         <div className="fixed w-96  p-5 shadow-md bg-white top-[50%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md" >
             <div className="mb-5 flex justify-between items-center">
-                <h2 className=" font-semibold">Create Vendor</h2>
+                <h2 className=" font-semibold">Create Vendor Staff</h2>
                 <button className="btn btn-ghost btn-sm" onClick={handleCancelForm} >
                     <IoMdClose size={20} />
                 </button>

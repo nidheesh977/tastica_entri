@@ -1,14 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { axiosInstance } from '../config/axiosInstance'
 import { useLocation, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { removeBackgroundBlur, setCloseVendorForm } from "../redux/features/commonSlice"
+import { removeBackgroundBlur, setCloseVendorStaffForm } from "../redux/features/commonSlice"
 
 
 export const useVendorStaff = (vendorStatus) => {
 
-    console.log(vendorStatus);
+    const { vendorIdForStaff } = useSelector(state => state.common)
+
+    const validId = vendorStatus ?? vendorIdForStaff
 
 
     const { pathname } = useLocation()
@@ -23,11 +25,11 @@ export const useVendorStaff = (vendorStatus) => {
     const dispatch = useDispatch()
 
     const { data: vendorStaffDataForForm, refetch } = useQuery({
-        queryKey: ["vendorStaffForm", vendorStatus],
+        queryKey: ["vendorStaffForm", validId],
         queryFn: async () => {
             const response = await axiosInstance({
                 method: "GET",
-                url: `/vendor/staff/form/${vendorStatus}`,
+                url: `/vendor/staff/form/${validId}`,
                 withCredentials: true
             })
             return response?.data?.data ?? []
@@ -43,7 +45,6 @@ export const useVendorStaff = (vendorStatus) => {
                 url: `/vendor/${vendorId}/staff`,
                 withCredentials: true
             })
-
             return response?.data?.data ?? []
         },
         enabled: !!vendorId && isValidvendorStaffPage,
@@ -60,13 +61,17 @@ export const useVendorStaff = (vendorStatus) => {
                 withCredentials: true,
                 data: data
             })
-
         },
-        onSuccess(data) {
+        onSuccess: async (data) => {
             dispatch(removeBackgroundBlur(false))
+            dispatch(setCloseVendorStaffForm(false))
             toast.success("staff create successfully")
-            queryClient.invalidateQueries({ queryKey: ["vendorStaff"] });
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["vendorStaff"] }),
+                queryClient.invalidateQueries({ queryKey: ["vendorStaffForm"] })
 
+            ])
+            refetch()
         },
         onError(error) {
             toast.error(
@@ -87,8 +92,6 @@ export const useVendorStaff = (vendorStatus) => {
             return response?.data
         }, onSuccess(data) {
             dispatch(removeBackgroundBlur(false))
-
-            console.log(data)
             toast.success(data?.message)
             queryClient.invalidateQueries({ queryKey: ["vendorStaff"] });
 
