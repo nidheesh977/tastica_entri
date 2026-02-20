@@ -326,7 +326,7 @@ export const getExpense = async (req, res) => {
                         },
                         {
                             $lookup: {
-                                from: "accounts",
+                                from: "paymentaccounts",
                                 localField: "paidThrough",
                                 foreignField: "_id",
                                 as: "payment"

@@ -23,7 +23,7 @@ const paymentAccountSchema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
-        set: (str) => typeof str === "string" ? str.replace(/\s+/g, " ") : str
+        set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str
     },
     isActive: {
         type: Boolean,
@@ -33,6 +33,6 @@ const paymentAccountSchema = new mongoose.Schema({
 
 paymentAccountSchema.index({ shop: 1 })
 
-const PaymentAccountModel = mongoose.model("Account", paymentAccountSchema);
+const PaymentAccountModel = mongoose.model("PaymentAccount", paymentAccountSchema);
 
 export default PaymentAccountModel;

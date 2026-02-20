@@ -18,6 +18,12 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    vendorNameLowerCase: {
+        type: String,
+        required: true,
+        lowercase: true,
+        set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str
+    },
     email: {
         type: String,
         required: true,
@@ -47,7 +53,7 @@ const vendorSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-vendorSchema.index({ shop: 1, email: 1 }, { unique: true });
+vendorSchema.index({ shop: 1, vendorNameLowerCase: 1 }, { unique: true });
 
 const VendorModel = mongoose.model("Vendor", vendorSchema);
 

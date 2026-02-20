@@ -14,7 +14,8 @@ export const useTaxRates = () => {
     const dispatch = useDispatch()
 
 
-    const isValidPage = pathname === "/admin/expense/create"
+    const isValidPage = pathname === "/admin/expense/create" || pathname === "/staff/expense/create"
+
     const { data: taxRatesDataForExpenseForm } = useQuery({
         queryKey: ["taxrateForForm"],
         queryFn: async () => {
@@ -29,7 +30,7 @@ export const useTaxRates = () => {
     })
 
 
-    const { data: getTaxRateData, isFetching: getTaxRateDataFetched } = useQuery({
+    const { data: getTaxRateData, isLoading: getTaxRateDataLoading, isFetching: getTaxDataRefreshing } = useQuery({
         queryKey: ["taxRate"],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -95,47 +96,43 @@ export const useTaxRates = () => {
     })
 
 
-    const { mutate: deleteTaxFromAccount, isPending: deleteTaxAccountLoaded } = useMutation({
-        mutationFn: async ({ taxAccountId, taxRateId }) => {
+    const { mutate: changeTaxRateStatus, isPending: statusUploadLoading, isSuccess: taxRateStatusSuccess } = useMutation({
+        mutationFn: async (data) => {
+            const { taxAccountId: accountTaxId, ...payload } = data;
 
-            const res = await axiosInstance({
-                method: "DELETE",
-                url: `/tax-rate/${taxAccountId}/rate/${taxRateId}`,
+            const response = await axiosInstance({
+                method: "PATCH",
+                url: `/tax-rate/${accountTaxId}`,
                 withCredentials: true,
-            });
+                data: payload
+            })
 
-            return res?.data?.data
+            return response?.data
+        }, onSuccess(data) {
+            dispatch(removeBackgroundBlur(false))
+            toast.success(data?.message)
+            queryClient.invalidateQueries({ queryKey: ["taxRate"] });
 
         },
-
-
-        onSuccess: async (data) => {
-            toast.success("Tax rate Added successfully")
-            dispatch(removeBackgroundBlur(false))
-            dispatch(removeBackgroundBlur(false))
-            await Promise.all([
-                queryClient.invalidateQueries({ queryKey: ["taxRate"] }),
-                queryClient.invalidateQueries({ queryKey: ["taxrateForForm"] })
-
-            ])
-        },
-        onError: (error) => {
+        onError(error) {
             toast.error(
                 error?.response?.data?.message || "Something error"
             );
-        },
+        }
     })
     return {
         taxRatesDataForExpenseForm,
         getTaxRateData,
-        getTaxRateDataFetched,
+        getTaxRateDataLoading,
+        getTaxDataRefreshing,
         createTaxRateBook,
         taxRateLoaded,
         addTaxToAccount,
         addTaxToAccountLoaded,
 
 
-        deleteTaxFromAccount,
-        deleteTaxAccountLoaded
+        changeTaxRateStatus,
+        statusUploadLoading,
+        taxRateStatusSuccess
     }
 }

@@ -20,8 +20,9 @@ export const createVendorStaff = async (req, res, next) => {
 
     try {
 
+        const staffNameLower = staffName.trim().replace(/\s+/g, " ").toLowerCase()
 
-        const staffAlreadyExist = await VendorStaffModel.findOne({ shop: shopId, email: email, vendor: vendorId })
+        const staffAlreadyExist = await VendorStaffModel.findOne({ shop: shopId, vendor: vendorId, staffNameLowerCase: staffNameLower })
 
         if (staffAlreadyExist) {
             return next(new AppError("Staff already exist", 409))
@@ -39,7 +40,8 @@ export const createVendorStaff = async (req, res, next) => {
             staffName,
             email,
             phoneNumber: encryptPhoneNumber,
-            maskPhoneNumber: maskedNumber
+            maskPhoneNumber: maskedNumber,
+            staffNameLowerCase: staffNameLower
         })
 
         await newStaff.save()

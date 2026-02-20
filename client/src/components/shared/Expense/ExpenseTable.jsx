@@ -7,10 +7,12 @@ export const ExpenseTable = () => {
     const [page, setPage] = useState(1)
     const { paginatedData, isFetching, isPlaceholderData } = useExpense(page, null)
 
-    console.log(paginatedData);
+
 
 
     const currecnyCode = useSelector((state) => state?.auth?.shopData?.currencyCode)
+    const admin = useSelector(state => state.auth.adminData)
+
 
     const handlePreviousPage = () => {
         setPage((old) => Math.max(old - 1, 0))
@@ -52,7 +54,7 @@ export const ExpenseTable = () => {
                                     <th>{(page - 1) * paginatedData?.limit + index + 1}</th>
                                     <td className='text-gray-500 font-medium'>{new Date(expense.createdDate).toLocaleDateString()}</td>
                                     <td className='text-blue-500 font-medium'>
-                                        <Link to={`/admin/expense/${expense._id}`}>{expense.expenseSubTitle}</Link>
+                                        <Link to={admin ? `/admin/expense/${expense._id}` : `/staff/expense/${expense._id}`}>{expense.expenseSubTitle}</Link>
                                     </td>
                                     <td className='text-gray-500 font-medium'>{expense?.referenceId}</td>
                                     <td className='font-medium text-center text-gray-800'>{expense?.vendor[0]?.vendorName}</td>

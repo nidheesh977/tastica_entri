@@ -1,7 +1,7 @@
-import { FaHome, FaUsers, FaFileCsv, FaBoxOpen } from "react-icons/fa";
+import { FaHome, FaUsers, FaFileCsv, FaBoxOpen, FaReceipt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { HiChevronDown } from "react-icons/hi";
-import { MdPersonAdd, MdCategory, MdReceipt, MdPayment } from "react-icons/md";
+import { MdPersonAdd, MdCategory, MdReceipt, MdPayment, MdAccountBalanceWallet, MdEventNote } from "react-icons/md";
 import { FaBox } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ export const StaffSideBar = () => {
   const [home, setHome] = useState(false);
   const [productManagement, setProductManagement] = useState(false);
   const [customerManagement, setCustomerManagement] = useState(false);
+  const [expenseManagement, setExpenseManagement] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSideBar = (route) => {
@@ -33,7 +34,7 @@ export const StaffSideBar = () => {
       z-50
     `}
     >
-      <ul className="w-full flex flex-col bg-tertiary gap-1 text-lg font-bold p-2 transition-all duration-1000">
+      <ul className="w-full flex flex-col bg-tertiary gap-1 text-[16px] font-bold p-2 transition-all duration-1000 overflow-y-auto">
         <li
           onClick={() => {
             setHome(!home);
@@ -232,6 +233,87 @@ export const StaffSideBar = () => {
           <BsCreditCard2Back />
           Credit book
         </li>
+
+        <li
+          onClick={() => setExpenseManagement(prev => !prev)}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <FaBoxOpen />
+          Expense Management
+          <HiChevronDown
+            className={`transform transition-transform duration-300  ${expenseManagement ? "rotate-180" : ""
+              }`}
+          />
+        </li>
+
+        {expenseManagement && (
+          <>
+            <li
+              onClick={() => {
+                handleSideBar("/staff/expense/create");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <FaReceipt />
+              Expense Create
+            </li>
+            <li
+              onClick={() => {
+                handleSideBar("/staff/expense/list");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <FaReceipt />
+              Expense List
+            </li>
+
+            <li
+              onClick={() => {
+                handleSideBar("/staff/expense/account");
+                dispatch(toggleSideBar());
+              }}
+              className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+            >
+              <MdAccountBalanceWallet />
+              Expense Account
+            </li>
+
+          </>
+        )}
+        <li
+          onClick={() => {
+            handleSideBar("/staff/vendor");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Vendor
+        </li>
+        <li
+          onClick={() => {
+            handleSideBar("/staff/payment/account");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Payment Account
+        </li>
+
+        <li
+          onClick={() => {
+            handleSideBar("/staff/tax/rate");
+            dispatch(toggleSideBar());
+          }}
+          className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
+        >
+          <MdEventNote />
+          Tax Rates
+        </li>
+
       </ul>
     </div>
   );

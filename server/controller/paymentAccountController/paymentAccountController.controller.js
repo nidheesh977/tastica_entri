@@ -1,8 +1,9 @@
 import bcryptjs from "bcryptjs";
 import PaymentAccountModel from "../../model/paymentAccountModel.js";
-import { createPaymentAccountValidation } from "../../utils/joiValidation.js";
-import { Types } from "mongoose";
+import { createPaymentAccountValidation, paymentAcoountStatusValidation } from "../../utils/joiValidation.js";
+import mongoose, { Types } from "mongoose";
 import { AppError } from "../../utils/AppError.js";
+import { AuditLogModel } from "../../model/auditLogModel.js";
 
 
 
@@ -145,25 +146,64 @@ export const getAccountType = async (req, res, next) => {
 }
 
 export const paymentActiveOrInactive = async (req, res, next) => {
+
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user;
+
+    const { error, value } = paymentAcoountStatusValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error?.details[0].message, 400))
+    }
+
+    const { paymentAccountId, reason, isActive } = value
+
+    const session = await mongoose.startSession()
     try {
-        const { paymentAccountId } = req.params;
-        const { id: shopId } = req.shop;
 
-        const findAccount = await PaymentAccountModel.findOne({ shop: shopId, _id: paymentAccountId }).select("_id isActive")
+        await session.withTransaction(async () => {
 
-        if (!findAccount) {
-            return next(new AppError("Account not found", 404))
-        }
+            if (!mongoose.Types.ObjectId.isValid(paymentAccountId)) {
+                throw new AppError("Invalid ID format", 400)
+            }
 
-        const changeActiveOrInActive = findAccount?.isActive ? false : true
+            const findAccount = await PaymentAccountModel.findOne({ shop: shopId, _id: paymentAccountId }).select("_id isActive")
 
-        await PaymentAccountModel.findOneAndUpdate({ shop: shopId, _id: paymentAccountId }, {
-            isActive: changeActiveOrInActive
-        }, { new: true })
+            if (!findAccount) {
+                return next(new AppError("Account not found", 404))
+            }
 
-        const message = changeActiveOrInActive ? "Account active successfully" : "Account in-active successfully"
+            if (findAccount.isActive === false && isActive === false || findAccount.isActive === true && isActive === true) {
+                throw new AppError(`Vendor Already ${isActive ? "active" : "inactive"}`, 400)
+            }
 
-        res.status(200).json({ success: true, message: message, })
+            const previousState = { isActive: findAccount?.isActive, inactiveReason: findAccount?.inActiveReason }
+
+            await PaymentAccountModel.findOneAndUpdate({ shop: shopId, _id: paymentAccountId },
+                { isActive: isActive, inActiveReason: isActive ? null : reason || (isActive ? "Reactivation" : "Deactivation") },
+                { session, runValidators: true }
+            )
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: paymentAccountId,
+                    targetModel: "PaymentAccount",
+                    action: "STATUS_CHANGE",
+                    payload: {
+                        before: previousState,
+                        after: { isActive: isActive, inactiveReason: isActive ? null : reason }
+                    },
+                    reason: reason || (isActive ? "Reactivation" : "Deactivation"),
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(200).json({ success: true, message: `Vendor ${isActive ? "Active" : "Inactive"} successfully` })
+
+        })
+
+
     } catch (error) {
         next(error)
     }

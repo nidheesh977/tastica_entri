@@ -35,6 +35,7 @@ export const VendorDataTable = ({ vendorData }) => {
 
 
     const { openVendorForm } = useSelector(state => state.common)
+    const admin = useSelector(state => state.auth.adminData)
 
     const handleOpenVendorForm = () => {
         dispatch(setOpenVendorForm(true))
@@ -72,7 +73,7 @@ export const VendorDataTable = ({ vendorData }) => {
                                 <td className='font-medium'>{vendor?.email}</td>
                                 <td className='font-medium'>{vendor?.maskPhoneNumber}</td>
                                 <td className='font-medium'>
-                                    <Link to={`/admin/vendor/${vendor?._id}/staff`} className='btn btn-xs btn-primary'>Staff</Link>
+                                    <Link to={admin ? `/admin/vendor/${vendor?._id}/staff` : `/staff/vendor/${vendor?._id}/staff`} className='btn btn-xs btn-primary'>Staff</Link>
                                 </td>
                                 <td className='font-medium'>{vendor?.maskAddress}</td>
                                 <td>{vendor?.inActiveReason === null ? "N/A" : vendor?.inActiveReason.slice(0, 12)} {vendor?.inActiveReason === null ? null : vendor?.inActiveReason.length > 12 ? "..." : null} </td>

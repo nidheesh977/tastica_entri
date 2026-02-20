@@ -17,9 +17,9 @@ export const useExpenseAccount = () => {
 
     const finalId = expenseAccountId ?? idExpenseAccount
 
-    const isValidPage = pathname === "/admin/expense/create"
+    const isValidPage = pathname === "/admin/expense/create" || pathname === "/staff/expense/create"
 
-    const isExpenseAccountPage = pathname === "/admin/expense/account"
+    const isExpenseAccountPage = pathname === "/admin/expense/account" || pathname === "/staff/expense/account"
 
     const queryClient = useQueryClient();
 

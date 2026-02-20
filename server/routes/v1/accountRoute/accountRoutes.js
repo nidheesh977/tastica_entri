@@ -10,6 +10,6 @@ paymentAccountRouter.post("/", shopVerifyToken, userVerifyToken, checkUserRole('
 paymentAccountRouter.get("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getPaymentAccountForShop);
 paymentAccountRouter.get("/form", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getPaymentAcountForExpenseForm);
 paymentAccountRouter.get("/type", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getAccountType);
-paymentAccountRouter.patch("/:paymentAccountId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), paymentActiveOrInactive);
+paymentAccountRouter.patch("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), paymentActiveOrInactive);
 
 export default paymentAccountRouter;

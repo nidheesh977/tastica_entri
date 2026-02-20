@@ -48,7 +48,7 @@ export const StaffHeader = () => {
   };
 
   return (
-    <nav className="w-full fixed bg-tertiary shadow-xl">
+    <nav className="w-full fixed z-50 bg-tertiary shadow-xl">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
         <div className="flex justify-between items-center">
           <div
@@ -65,17 +65,17 @@ export const StaffHeader = () => {
             />
             {(location.pathname === "/staff" ||
               location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <span
-                className="rounded-md shadow-xl items-center p-2 w-full"
-                onClick={() => clearInvoice()}
-              >
-                <MdRefresh
-                  className=" hover:text-orange-600 mx-auto"
-                  size={20}
-                  title="Reset"
-                />
-              </span>
-            )}
+                <span
+                  className="rounded-md shadow-xl items-center p-2 w-full"
+                  onClick={() => clearInvoice()}
+                >
+                  <MdRefresh
+                    className=" hover:text-orange-600 mx-auto"
+                    size={20}
+                    title="Reset"
+                  />
+                </span>
+              )}
           </div>
 
           <div className="md:hidden">
@@ -84,9 +84,8 @@ export const StaffHeader = () => {
         </div>
 
         <div
-          className={`flex w-full md:w-auto md:block mt-2 md:mt-0 justify-end ${
-            open ? "block" : "hidden"
-          }`}
+          className={`flex w-full md:w-auto md:block mt-2 md:mt-0 justify-end ${open ? "block" : "hidden"
+            }`}
         >
           <ul className="flex flex-col md:flex-row items-center font-thin gap-2 bg-tertiary w-full text-center md:gap-5">
             <li className="md:border-none cursor-pointer rounded-md relative">
@@ -130,17 +129,17 @@ export const StaffHeader = () => {
 
             {(location.pathname === "/staff" ||
               location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <li
-                className="cursor-pointer rounded-md shadow-xl w-full p-2 text-primary"
-                title="Add Custom Product"
-              >
-                <FaRegStickyNote
-                  className="hover:text-orange-600 mx-auto"
-                  size={20}
-                  onClick={() => dispatch(toggleCustomProductHandler())}
-                />
-              </li>
-            )}
+                <li
+                  className="cursor-pointer rounded-md shadow-xl w-full p-2 text-primary"
+                  title="Add Custom Product"
+                >
+                  <FaRegStickyNote
+                    className="hover:text-orange-600 mx-auto"
+                    size={20}
+                    onClick={() => dispatch(toggleCustomProductHandler())}
+                  />
+                </li>
+              )}
 
             <li
               className="cursor-pointer flex items-center rounded-md shadow-xl p-2 w-full text-primary"
@@ -159,14 +158,14 @@ export const StaffHeader = () => {
             </li>
             {(location.pathname === "/staff" ||
               location.pathname.startsWith("/staff/open/orders/data/")) && (
-              <li
-                onClick={openNewInvoice}
-                title="Create New Invoice"
-                className="hover:text-orange-600 cursor-pointer font-bold w-full rounded-md text-primary shadow-xl p-2"
-              >
-                <FaPlus size={20} className="mx-auto cursor-pointer" />
-              </li>
-            )}
+                <li
+                  onClick={openNewInvoice}
+                  title="Create New Invoice"
+                  className="hover:text-orange-600 cursor-pointer font-bold w-full rounded-md text-primary shadow-xl p-2"
+                >
+                  <FaPlus size={20} className="mx-auto cursor-pointer" />
+                </li>
+              )}
 
             <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
               {staffName && <p className="text-xl mx-auto">{staffName}</p>}

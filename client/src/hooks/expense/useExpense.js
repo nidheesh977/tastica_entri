@@ -15,7 +15,7 @@ export const useExpense = (page, imageQuery,) => {
     const queryClient = useQueryClient();
     const { pathname } = useLocation()
 
-    const isValidPage = pathname === "/admin/expense/list"
+    const isValidPage = pathname === "/admin/expense/list" || pathname === "/staff/expense/list"
 
     const { id: expenseId } = useParams()
 
@@ -89,7 +89,7 @@ export const useExpense = (page, imageQuery,) => {
     })
 
     const { mutate: uploadImage, isPending: uploadImageLoading, isSuccess: imageUploadSuccess } = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (data) => {
             const response = await axiosInstance({
                 method: "PATCH",
                 url: `/expense/${expenseId}`,
@@ -105,6 +105,7 @@ export const useExpense = (page, imageQuery,) => {
 
         },
         onError: (error) => {
+            console.log(error);
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },

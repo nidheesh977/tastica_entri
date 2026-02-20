@@ -876,3 +876,33 @@ export const expenseAccountTitleStatusValidation = Joi.object({
         'any.required': 'A reason is required when deactivating'
     })
 })
+
+export const taxRateStatusValidation = Joi.object({
+    taxRateId: Joi.string().length(24).hex().required(),
+    isActive: Joi.boolean().required(),
+    reason: Joi.string().min(5).max(100).when("isActive", {
+        is: false,
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Reason must be a valid text string',
+        'string.empty': 'Please provide a reason for deactivation',
+        'string.min': 'Reason is too short (minimum 5 characters)',
+        'any.required': 'A reason is required when deactivating'
+    })
+})
+
+export const paymentAcoountStatusValidation = Joi.object({
+    paymentAccountId: Joi.string().length(24).hex().required(),
+    isActive: Joi.boolean().required(),
+    reason: Joi.string().min(5).max(100).when("isActive", {
+        is: false,
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Reason must be a valid text string',
+        'string.empty': 'Please provide a reason for deactivation',
+        'string.min': 'Reason is too short (minimum 5 characters)',
+        'any.required': 'A reason is required when deactivating'
+    })
+})

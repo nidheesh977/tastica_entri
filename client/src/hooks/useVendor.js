@@ -9,8 +9,8 @@ export const useVendor = () => {
 
     const { pathname } = useLocation()
 
-    const isValidPage = pathname === "/admin/expense/create"
-    const isValidVendorPage = pathname === "/admin/vendor"
+    const isValidPage = pathname === "/admin/expense/create" || pathname === "/staff/expense/create"
+    const isValidVendorPage = pathname === "/admin/vendor" || pathname === "/staff/vendor"
 
     const queryClient = useQueryClient();
 

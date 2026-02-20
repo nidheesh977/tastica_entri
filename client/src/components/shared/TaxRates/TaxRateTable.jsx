@@ -5,6 +5,7 @@ import { useTaxRates } from "../../../hooks/useTaxRates"
 import { useDispatch, useSelector } from "react-redux"
 import { addBackgroundBlur, setOpenTaxRateForm } from "../../../redux/features/commonSlice"
 import { TableComponent } from "../DaisyUiComponent/TableComponent"
+import { TaxRateStatusForm } from "./TaxRateStatusForm"
 
 export const TaxRateTable = ({ getTaxRateData }) => {
 
@@ -15,6 +16,13 @@ export const TaxRateTable = ({ getTaxRateData }) => {
         taxRateId: null,
         taxName: null,
         taxRate: null
+    })
+
+    const [openStatusForm, setOpenStatusForm] = useState({
+        openCom: false,
+        taxRateId: null,
+        isActive: null,
+        taxAccountId: null
     })
 
 
@@ -56,11 +64,29 @@ export const TaxRateTable = ({ getTaxRateData }) => {
         closeModel: setModelBox
     }
 
+
+    const handleChangeAccStatus = (num, taxRateId, active, taxAccountId) => {
+
+        dispatch(addBackgroundBlur(true))
+        setOpenStatusForm(prev => ({
+            openCom: true,
+            taxRateId: taxRateId,
+            isActive: active,
+            taxAccountId: taxAccountId
+        }))
+
+    }
+
+
+
+    console.log(openStatusForm)
+
     return (
         <div className="w-full relative">
             {modelBox ? <ModelPopUp modelDataObj={modelDataObj} /> : null}
             <div className="flex justify-end items-center">
                 {openTaxRateForm ? <TaxRateForm /> : null}
+                {openStatusForm.openCom ? <TaxRateStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
                 {<button onClick={handleOpenForm} className="btn btn-success btn-sm text-white">Add</button>}
             </div>
             <TableComponent>
@@ -71,6 +97,7 @@ export const TaxRateTable = ({ getTaxRateData }) => {
                         <th>Tax code name</th>
                         <th>Tax Rates</th>
                         <th>Tax Types</th>
+                        <th>Reason</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -81,8 +108,13 @@ export const TaxRateTable = ({ getTaxRateData }) => {
                             <td >{tax?.taxCodeName}</td>
                             <td>{tax?.rate}%</td>
                             <td>{tax?.taxType}</td>
+                            <td>{tax?.inActiveReason === null ? "N/A" : tax?.inActiveReason.slice(0, 12)} {tax?.inActiveReason === null ? null : tax?.inActiveReason.length > 12 ? "..." : null} </td>
                             <td>
-                                <button onClick={() => handleOpenDelete(getTaxRateData._id, tax?._id, tax?.taxCodeName, tax?.rate)} className="btn btn-xs btn-error">Delete</button>
+                                {<button className={`btn btn-xs w-20 ${tax?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, tax?._id, tax?.isActive ? false : true, getTaxRateData?._id)}>
+
+                                    {tax?.isActive === true ? "Active" : "In Active"}
+
+                                </button>}
                             </td>
                         </tr>
                     ))}

@@ -1,7 +1,8 @@
 import mongoose, { Types } from "mongoose";
 import TaxRateModel from "../../model/taxRateModel.js"
-import { addTaxRatesValidation } from "../../utils/joiValidation.js";
+import { addTaxRatesValidation, taxRateStatusValidation } from "../../utils/joiValidation.js";
 import { AppError } from "../../utils/AppError.js";
+import { AuditLogModel } from "../../model/auditLogModel.js";
 
 
 export const createTaxRateAccount = async (req, res) => {
@@ -97,9 +98,18 @@ export const getTaxRatesForExpenseForm = async (req, res) => {
         const { id: shopId } = req.shop
 
         const findTaxRates = await TaxRateModel.aggregate([
-            { $match: { shop: mongoose.Types.ObjectId.createFromHexString(shopId) } },
+            {
+                $match: {
+                    shop: new mongoose.Types.ObjectId(shopId)
+                }
+            },
+
             { $unwind: "$taxRates" },
+
+            { $match: { "taxRates.isActive": true } },
+
             { $sort: { "taxRates.rate": -1 } },
+
             {
                 $group: {
                     _id: "$_id",
@@ -109,8 +119,7 @@ export const getTaxRatesForExpenseForm = async (req, res) => {
                             taxCodeName: "$taxRates.taxCodeName",
                             rate: "$taxRates.rate"
                         }
-                    },
-
+                    }
                 }
             },
 
@@ -135,7 +144,7 @@ export const getTaxRatesForShop = async (req, res, next) => {
     try {
         const { id: shopId } = req.shop
 
-        const getTax = await TaxRateModel.findOne({ shop: shopId }).select("_id currencyCode taxRates._id taxRates.taxCodeName taxRates.taxType taxRates.rate taxRates.isButton")
+        const getTax = await TaxRateModel.findOne({ shop: shopId }).select("_id currencyCode taxRates._id taxRates.taxCodeName taxRates.taxType taxRates.rate taxRates.isButton taxRates.isActive taxRates.inActiveReason")
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: getTax })
     } catch (error) {
@@ -143,26 +152,83 @@ export const getTaxRatesForShop = async (req, res, next) => {
     }
 }
 
-export const deleteTaxRate = async (req, res, next) => {
+export const taxRateStatusUpdate = async (req, res, next) => {
+    const { id: shopId } = req.shop;
+    const { taxAccountId, taxRateId } = req.params;
+    const { id: userId } = req.user
+
+    const { error, value } = taxRateStatusValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error?.details[0].message, 400))
+    }
+
+    const session = await mongoose.startSession()
+
     try {
-        const { id: shopId } = req.shop;
-        const { taxAccountId, taxRateId } = req.params;
 
-        const checkTaxRateExist = await TaxRateModel.findOne({
-            shop: shopId, _id: taxAccountId
-            , "taxRates._id": taxRateId
-        }).select("_id")
+        const { taxRateId, reason, isActive } = value;
 
-        if (!checkTaxRateExist) {
-            return next(new AppError("Tax rate not found", 404))
-        }
+        const result = await session.withTransaction(async () => {
 
-        await TaxRateModel.findOneAndUpdate({ shop: shopId, _id: taxAccountId, "taxRates._id": taxRateId },
-            { $pull: { "taxRates": { _id: taxRateId } } },
-            { new: true }
-        )
+            if (!mongoose.Types.ObjectId.isValid(taxRateId)) {
+                throw new AppError("Invalid ID format", 400)
+            }
 
-        res.status(200).json({ success: true, message: "Tax rate Remove successfully" })
+            const findTaxRate = await TaxRateModel.findOne({ shop: shopId, _id: taxAccountId, "taxRates._id": taxRateId })
+
+            if (!findTaxRate) {
+                return next(new AppError("Tax rate not found", 404))
+            }
+
+            const findSelectTaxRate = findTaxRate.taxRates.find(item => item._id.toString() === taxRateId.toString())
+
+
+
+            if (findSelectTaxRate.isActive === false && isActive === false || findSelectTaxRate.isActive === true && isActive === true) {
+                throw new AppError(`Expense account Already ${isActive ? "active" : "inactive"}`, 400)
+            }
+
+            const previousState = { isActive: findSelectTaxRate?.isActive, inactiveReason: findSelectTaxRate?.inActiveReason }
+
+
+            await TaxRateModel.findOneAndUpdate({ shop: shopId, _id: taxAccountId, "taxRates._id": taxRateId },
+                { $set: { "taxRates.$.isActive": isActive, "taxRates.$.inActiveReason": isActive ? null : reason || (isActive ? "Reactivation" : "Deactivation") } },
+                { new: true }, { session, runValidators: true })
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: taxAccountId,
+                    subDocumentId: taxRateId,
+                    targetModel: "TaxRate",
+                    action: "STATUS_CHANGE",
+                    payload: {
+                        before: previousState,
+                        after: { isActive: isActive, inactiveReason: isActive ? null : reason }
+                    },
+                    reason: reason || (isActive ? "Reactivation" : "Deactivation"),
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(200).json({ success: true, message: `Expense Account ${isActive ? "Active" : "Inactive"} successfully` })
+        })
+
+        // const checkTaxRateExist = await TaxRateModel.findOne({
+        //     shop: shopId, _id: taxAccountId
+        //     , "taxRates._id": taxRateId
+        // }).select("_id") 
+
+        // if (!checkTaxRateExist) {
+        //     return next(new AppError("Tax rate not found", 404))
+        // }
+
+        // await TaxRateModel.findOneAndUpdate({ shop: shopId, _id: taxAccountId, "taxRates._id": taxRateId },
+        //     { $pull: { "taxRates": { _id: taxRateId } } },
+        //     { new: true }
+        // )
+
 
     } catch (error) {
         next(error)

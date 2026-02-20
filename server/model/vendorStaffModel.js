@@ -7,6 +7,8 @@ const encryptedFieldSchema = new mongoose.Schema({
     version: String
 }, { _id: false })
 
+
+
 const vendorStaffSchema = new mongoose.Schema({
     shop: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +23,12 @@ const vendorStaffSchema = new mongoose.Schema({
     staffName: {
         type: String,
         required: true,
+    },
+    staffNameLowerCase: {
+        type: String,
+        required: true,
+        lowercase: true,
+        set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str
     },
     email: {
         type: String,
@@ -39,8 +47,9 @@ const vendorStaffSchema = new mongoose.Schema({
         type: String,
         default: "********"
     },
+
 }, { timestamps: true })
 
-vendorStaffSchema.index({ shop: 1, vendor: 1, })
+vendorStaffSchema.index({ shop: 1, vendor: 1, staffNameLowerCase: 1 })
 
 export const VendorStaffModel = mongoose.model("VendorStaff", vendorStaffSchema)

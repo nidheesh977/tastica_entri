@@ -37,9 +37,13 @@ const taxRateSchema = new mongoose.Schema({
                 type: String,
                 required: true,
                 lowercase: true,
-                set: (str) => typeof str === "string" ? str.replace(/\s+/g, " ") : str
+                set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str
             },
             isActive: { type: Boolean, default: true },
+            inActiveReason: {
+                type: String,
+                default: null
+            },
             taxBreakup: {
                 type: taxBreakeUpSchema,
                 default: null

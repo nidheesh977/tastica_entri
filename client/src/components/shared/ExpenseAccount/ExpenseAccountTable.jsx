@@ -19,7 +19,7 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
     const dispatch = useDispatch()
 
     const { openExpenseAccForm } = useSelector((state) => state.common)
-
+    const admin = useSelector(state => state.auth.adminData)
 
 
 
@@ -67,7 +67,7 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
                                 <th>{index + 1}</th>
                                 <td className='font-medium'>{expenseAcc?.expenseTitle}</td>
                                 <td className='font-medium'>
-                                    <Link to={`/admin/expense/account/${expenseAcc?._id}`} className='btn btn-xs btn-primary'>View</Link>
+                                    <Link to={admin ? `/admin/expense/account/${expenseAcc?._id}` : `/staff/expense/account/${expenseAcc?._id}`} className='btn btn-xs btn-primary'>View</Link>
                                 </td>
                                 <td>{expenseAcc?.inActiveReason === null ? "N/A" : expenseAcc?.inActiveReason.slice(0, 12)} {expenseAcc?.inActiveReason === null ? null : expenseAcc?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>

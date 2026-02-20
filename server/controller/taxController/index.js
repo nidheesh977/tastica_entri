@@ -3,5 +3,5 @@ export {
     addTaxRatesToAccount,
     getTaxRatesForExpenseForm,
     getTaxRatesForShop,
-    deleteTaxRate
+    taxRateStatusUpdate
 } from "./taxRateController.controller.js"

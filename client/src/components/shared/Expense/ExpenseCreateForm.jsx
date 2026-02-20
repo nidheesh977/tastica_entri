@@ -26,6 +26,7 @@ import {
 import { TaxRateForm } from "../TaxRates/TaxRateForm";
 import { VendorForm } from "../Vendor/VendorForm";
 import { VendorStaffForm } from "../VendorStaff/VendorStaffForm";
+import { Link } from "react-router-dom";
 
 
 export const ExpenseCreateForm = () => {
@@ -47,6 +48,11 @@ export const ExpenseCreateForm = () => {
 
     const { openExpenseAccForm, openExpenseSubTitleForm, openTaxRateForm, openVendorForm, openVendorStaffForm } = useSelector((state) => state.common)
     const { taxAmountShow } = useSelector(state => state.expense)
+    const admin = useSelector(state => state.auth.adminData)
+
+
+
+
     const { handleSubmit, watch, register, setValue } = useForm({
         defaultValues: {
             billable: undefined
@@ -495,7 +501,7 @@ export const ExpenseCreateForm = () => {
             <div className="fixed left-0 z-50  bottom-14 p-2 bg-base-200 w-full shadow-md">
                 <div className="px-4 xl:px-28 flex gap-2">
                     <button onClick={handleSaveExpense} disabled={isPending} className="btn btn-sm btn-info rounded-md text-white text-xs">{isPending ? "Saving..." : "Save"}</button>
-                    <button className="btn btn-sm  rounded-md text-black text-xs">Cancel</button>
+                    <Link to={admin ? "/admin/expense/list" : "/staff/expense/list"} className="btn btn-sm  rounded-md text-black text-xs">Cancel</Link>
                 </div>
             </div>
 

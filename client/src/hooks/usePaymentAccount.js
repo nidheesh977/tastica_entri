@@ -11,8 +11,8 @@ export const usePaymentAccount = () => {
 
     const { pathname } = useLocation()
 
-    const isValidPage = pathname === "/admin/expense/create"
-    const isPaymentAccount = pathname === "/admin/payment/account"
+    const isValidPage = pathname === "/admin/expense/create" || pathname === "/staff/expense/create"
+    const isPaymentAccount = pathname === "/admin/payment/account" || pathname === "/staff/payment/account"
 
     const dispatch = useDispatch()
 
@@ -80,16 +80,19 @@ export const usePaymentAccount = () => {
         }
     })
 
-    const { mutate: accountStatusChange, isPending: statusChangeLoading } = useMutation({
-        mutationFn: async (accountId) => {
+    const { mutate: paymentAccountStatusChange, isPending: paymentAccountstatusChangeLoading, isSuccess: paymentAccountStatusSuccess } = useMutation({
+        mutationFn: async (data) => {
+
             const response = await axiosInstance({
                 method: "PATCH",
-                url: `/payment-account/${accountId}`,
-                withCredentials: true
+                url: `/payment-account/`,
+                withCredentials: true,
+                data: data
             })
 
             return response?.data
         }, onSuccess(data) {
+            dispatch(removeBackgroundBlur(false))
             toast.success(data?.message)
             queryClient.invalidateQueries({ queryKey: ["paymentAccount"] });
         },
@@ -109,9 +112,12 @@ export const usePaymentAccount = () => {
         isLoading,
         paymentTypeData,
         createPaymentAccount,
-        accountStatusChange,
-        statusChangeLoading,
-        accountCreateSuccess
+        accountCreateSuccess,
+
+        paymentAccountStatusChange,
+        paymentAccountstatusChangeLoading,
+        paymentAccountStatusSuccess
+
     }
 }
 

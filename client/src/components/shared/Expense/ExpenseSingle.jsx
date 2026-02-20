@@ -29,6 +29,8 @@ export const ExpenseSingle = () => {
 
     const currecnyCode = useSelector((state) => state?.auth?.shopData?.currencyCode)
 
+    const admin = useSelector(state => state.auth.adminData)
+
     const handleViewImage = (publicId) => {
         setImageQuery(publicId)
 
@@ -51,7 +53,7 @@ export const ExpenseSingle = () => {
     }
 
     const handleClickPrint = () => {
-        navigate("/admin/expense/print")
+        navigate(admin ? "/admin/expense/print" : "/staff/expense/print")
         const { totalAmount, createdAt, billable, expenseSubTitle, paidThrough, taxCode, taxRate, taxAmount, amountIs, vendor, notes } = expenseSingleData
         const payload = {
             totalAmount: totalAmount,

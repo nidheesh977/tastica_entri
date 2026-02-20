@@ -96,7 +96,7 @@ export const getExpenseAccountHeadForm = async (req, res, next) => {
         const { id: shopId } = req.shop
 
         const result = await ExpenseAccountModel.aggregate([
-            { $match: { shop: new Types.ObjectId(shopId) } },
+            { $match: { shop: new Types.ObjectId(shopId), isActive: true } },
             {
                 $project: {
                     _id: 1,
@@ -105,7 +105,7 @@ export const getExpenseAccountHeadForm = async (req, res, next) => {
             }
         ])
 
-        console.log(result);
+
 
 
 
@@ -122,7 +122,7 @@ export const getExpenseAccountForExpenseForm = async (req, res) => {
         const shopId = req.shop.id;
 
         const findExpenses = await ExpenseAccountModel.aggregate([
-            { $match: { shop: new Types.ObjectId(shopId) } },
+            { $match: { shop: new Types.ObjectId(shopId), isActive: true } },
             {
                 $project: {
                     expenseTitle: 1,

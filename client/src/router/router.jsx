@@ -413,7 +413,47 @@ export const router = createBrowserRouter([
           {
             path: "credit/book/data/:id",
             element: <CustomerCreditBookStaff />,
-          }
+          },
+          {
+            path: "expense/create",
+            element: <ExpenseFormPage />
+          },
+          {
+            path: "expense/list",
+            element: <ExpenseListPage />
+          },
+          {
+            path: "expense/:id",
+            element: <ExpenseSinglePage />
+          },
+          {
+            path: "expense/account",
+            element: <ExpenseAccountPage />
+          },
+          {
+            path: "expense/print",
+            element: <ExpensePrint />
+          },
+          {
+            path: "expense/account/:id",
+            element: <ExpenseAccountSinglePage />
+          },
+          {
+            path: "tax/rate",
+            element: <TaxRatePage />
+          },
+          {
+            path: "payment/account",
+            element: <PaymentAccountPage />
+          },
+          {
+            path: "vendor",
+            element: <VendorPage />
+          },
+          {
+            path: "vendor/:id/staff",
+            element: <VendorStaffPage />
+          },
         ],
       },
     ],

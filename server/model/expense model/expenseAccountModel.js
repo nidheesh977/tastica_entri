@@ -18,7 +18,7 @@ const expenseAccountSchema = new mongoose.Schema({
         required: true,
         trim: true,
         lowercase: true,
-        set: (str) => str.replace(/\s+/g, " ")
+        set: (str) => str.trim().toLowerCase().replace(/\s+/g, " ")
     },
     subTitle: {
         type: [

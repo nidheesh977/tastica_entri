@@ -59,7 +59,7 @@ const expenseSchema = new mongoose.Schema({
     },
     paidThrough: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Account",
+        ref: "PaymentAccount",
         required: true
     },
     shopTaxAccount: {

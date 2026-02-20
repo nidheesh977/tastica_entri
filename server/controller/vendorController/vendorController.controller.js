@@ -28,8 +28,9 @@ export const createNewVendor = async (req, res) => {
 
         const maskAddress = address.slice(0, 5) + "..."
 
+        const vendorNameLower = vendorName.trim().replace(/\s+/g, " ").toLowerCase()
 
-        const vendorExist = await VendorModel.findOne({ shop: shopId, email: email })
+        const vendorExist = await VendorModel.findOne({ shop: shopId, vendorNameLowerCase: vendorNameLower })
 
         if (vendorExist) {
             return res.status(409).json({ success: false, message: "Vendor account already exist" })
@@ -48,7 +49,8 @@ export const createNewVendor = async (req, res) => {
             phoneNumber: encryptPhoneNumber,
             address: encryptAddress,
             maskPhoneNumber: maskedNumber,
-            maskAddress: maskAddress
+            maskAddress: maskAddress,
+            vendorNameLowerCase: vendorNameLower
         });
 
         await newVendor.save();
@@ -128,7 +130,7 @@ export const vendorStatusUpdate = async (req, res, next) => {
                 throw new AppError("Invalid ID format", 400)
             }
 
-            const vendor = await VendorModel.findById(vendorId).session(session)
+            const vendor = await VendorModel.findOne({ shop: shopId, _id: vendorId }).session(session)
 
 
             if (!vendor) {
