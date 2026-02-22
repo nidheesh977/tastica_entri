@@ -21,6 +21,7 @@ import paymentAccountRouter from "./accountRoute/accountRoutes.js";
 import taxRateRouter from "./taxRateRoute/taxRateRoutes.js";
 import vendorRouter from "./vendorRoute/vendorRoutes.js";
 import expenseRouter from "./expenseRoute/expenseRoutes.js";
+import customInvoiceRouter from "./customInvoiceRoute/customInvoiceRoutes.js";
 
 
 
@@ -48,5 +49,7 @@ v1Router.use("/expense-account", expenseAccountRouter)
 v1Router.use("/payment-account", paymentAccountRouter)
 v1Router.use("/tax-rate", taxRateRouter)
 v1Router.use("/vendor", vendorRouter)
+v1Router.use("/custom-invoice", customInvoiceRouter)
+
 
 export default v1Router;

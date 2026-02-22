@@ -906,3 +906,255 @@ export const paymentAcoountStatusValidation = Joi.object({
         'any.required': 'A reason is required when deactivating'
     })
 })
+
+
+export const createCustomCustomerValidation = Joi.object({
+    customerType: Joi.string().valid('individual', 'business').messages({
+        'string.base': 'Customer Type must be a string',
+        'string.empty': 'Customer Type cannot be empty',
+        'any.only': 'Customer Type must be one of the following values: individual, business',
+    }),
+    customerName: Joi.string().min(3).max(100).when("customerType", {
+        is: "individual",
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Customer Name must be a valid text string',
+        'string.empty': 'Customer Name cannot empty',
+        'string.min': 'Customer Name is too short (minimum 3 characters)',
+        'any.required': 'Customer Name is required'
+    }),
+    businessName: Joi.string().min(3).max(100).when("customerType", {
+        is: "business",
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Business Name must be a valid text string',
+        'string.empty': 'Business Name cannot empty',
+        'string.min': 'Business Name is too short (minimum 3 characters)',
+        'any.required': 'Business Name is required'
+    }),
+    email: Joi.string().optional().empty("").messages({
+        "string.base": "Email must be a string"
+    }),
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits',
+    }),
+    displayName: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'Display Name is required',
+        'string.base': 'Display Name must be a string',
+        'string.empty': 'Display Name cannot be empty',
+        'string.min': 'Display Name must be at least 3 characters long',
+        'string.max': 'Display Name must be at most 30 characters long',
+    }),
+    salutation: Joi.string().min(5).max(100).valid("Mr.", "Mrs.", "Ms.", "Miss", "M/s.").when("customerType", {
+        is: "business",
+        then: Joi.required(),
+        otherwise: Joi.optional().allow(null, "")
+    }).messages({
+        'string.base': 'Salutation must be a valid text string',
+        'string.empty': 'Salutation cannot empty',
+        'string.min': 'Salutation is too short (minimum 5 characters)',
+        'any.required': 'Salutation is required',
+        'any.only': 'Salutation must be one of the following values: "Mr.", "Mrs.", "Ms.", "Miss", "M/s."',
+    }),
+    firstName: Joi.string().min(3).max(100).when("customerType", {
+        is: "business",
+        then: Joi.required(),
+        otherwise: Joi.optional().allow("")
+    }).messages({
+        'string.base': 'First Name must be a valid text string',
+        'string.empty': 'First Name cannot empty',
+        'string.min': 'First Name is too short (minimum 3 characters)',
+        'any.required': 'First Name is required'
+    }),
+    lastName: Joi.string().min(3).max(100).when("customerType", {
+        is: "business",
+        otherwise: Joi.optional().allow("").empty("")
+    }).messages({
+        'string.base': 'Last Name must be a valid text string',
+        'string.empty': 'Last Name cannot empty',
+        'string.min': 'Last Name is too short (minimum 3 characters)',
+        'any.required': 'Last Name is required'
+    }),
+    billingLabel: Joi.string().min(3).max(30).required().messages({
+        'string.required': 'billing Label is required',
+        'string.base': 'billing Label must be a string',
+        'string.empty': 'billing Label cannot be empty',
+        'string.min': 'billing Label must be at least 3 characters long',
+        'string.max': 'billing Label must be at most 30 characters long',
+    }),
+    billingAddress: Joi.string().min(3).max(1000).required().messages({
+        'string.required': 'billing Address is required',
+        'string.base': 'billing Address must be a string',
+        'string.empty': 'billing Address cannot be empty',
+        'string.min': 'billing Address must be at least 3 characters long',
+        'string.max': 'billing Address must be at most 1000 characters long',
+    }),
+    billingCity: Joi.string().min(3).max(100).required().messages({
+        'string.required': 'billing City is required',
+        'string.base': 'billing City must be a string',
+        'string.empty': 'billing City cannot be empty',
+        'string.min': 'billing City must be at least 3 characters long',
+        'string.max': 'billing City must be at most 100 characters long',
+    }),
+    billingState: Joi.string().min(3).max(100).optional().empty("").messages({
+        ' string.base': 'Billing State must be a valid text string',
+        'string.min': 'Shipping city must be at least 3 characters long',
+        'string.max': 'Shipping city must be at most 100 characters long',
+    }),
+    billingCountry: Joi.string().trim().uppercase()
+        .valid("IN", "US", "UK", "CA", "AU", "MV")
+        .required()
+        .messages({
+            "any.required": "Billing country is required",
+            "string.empty": "Billing country cannot be empty",
+            "any.only": "Billing country must be one of IN, US, UK, CA, AU, or MV",
+            "string.base": "Billing country must be a valid string"
+        }),
+
+    billingPostalCode: Joi.string().trim().optional().allow("", null).when("billingCountry", {
+        switch: [
+            {
+                is: "IN",
+                then: Joi.string().pattern(/^[1-9][0-9]{5}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Indian PIN code"
+                    })
+            },
+            {
+                is: "US",
+                then: Joi.string().pattern(/^\d{5}(-\d{4})?$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid US ZIP code"
+                    })
+            },
+            {
+                is: "UK",
+                then: Joi.string().pattern(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid UK postal code"
+                    })
+            },
+            {
+                is: "CA",
+                then: Joi.string().pattern(/^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Canadian postal code"
+                    })
+            },
+            {
+                is: "AU",
+                then: Joi.string().pattern(/^\d{4}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Australian postal code"
+                    })
+            },
+            {
+                is: "MV",
+                then: Joi.string().pattern(/^\d{4,6}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Maldives postal code"
+                    })
+            }
+        ],
+        otherwise: Joi.string()
+    }).messages({
+        "any.required": "billingCountry Postal is required",
+        "string.empty": "billingCountry Postal cannot be empty",
+    }),
+
+    shippingLabel: Joi.string().min(3).max(30).optional().empty("").messages({
+        "string.base": "Shipping Label must be a string",
+        'string.min': 'Shipping Label must be at least 3 characters long',
+        'string.max': 'Shipping Label must be at most 30 characters long',
+    }),
+    shippingAddress: Joi.string().min(3).max(1000).optional().empty("").messages({
+        "string.base": "Shipping Address must be a string",
+        'string.min': 'Shipping Address must be at least 3 characters long',
+        'string.max': 'Shipping Address must be at most 1000 characters long',
+    }),
+    shippingCity: Joi.string().min(3).max(100).optional().empty("").messages({
+        "string.base": "Shipping city must be a string",
+        'string.min': 'Shipping city must be at least 3 characters long',
+        'string.max': 'Shipping city must be at most 100 characters long',
+    }),
+    shippingState: Joi.string().optional().min(3).max(100).empty("").messages({
+        ' string.base': 'Billing State must be a valid text string',
+        'string.min': 'Shipping city must be at least 3 characters long',
+        'string.max': 'Shipping city must be at most 100 characters long',
+    }),
+    shippingCountry: Joi.string().optional().empty("").trim().uppercase()
+        .valid("IN", "US", "UK", "CA", "AU", "MV")
+        .messages({
+            "any.only": "Billing country must be one of IN, US, UK, CA, AU, or MV",
+            "string.base": "Billing country must be a valid string"
+        }),
+
+    shippingPostalCode: Joi.string().trim().optional().allow("", null).when("shippingCountry", {
+        switch: [
+            {
+                is: "IN",
+                then: Joi.string().pattern(/^[1-9][0-9]{5}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Indian PIN code"
+                    })
+            },
+            {
+                is: "US",
+                then: Joi.string().pattern(/^\d{5}(-\d{4})?$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid US ZIP code"
+                    })
+            },
+            {
+                is: "UK",
+                then: Joi.string().pattern(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid UK postal code"
+                    })
+            },
+            {
+                is: "CA",
+                then: Joi.string().pattern(/^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Canadian postal code"
+                    })
+            },
+            {
+                is: "AU",
+                then: Joi.string().pattern(/^\d{4}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Australian postal code"
+                    })
+            },
+            {
+                is: "MV",
+                then: Joi.string().pattern(/^\d{4,6}$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Invalid Maldives postal code"
+                    })
+            }
+        ],
+        otherwise: Joi.string()
+    }).messages({
+        "any.required": "Shipping Postal is required",
+        "string.empty": "Shipping Postal cannot be empty",
+    }),
+})
+

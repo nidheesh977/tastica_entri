@@ -81,6 +81,7 @@ import { PaymentAccountPage } from "../pages/shared/PaymentAccountPage/PaymentAc
 import { VendorPage } from "../pages/shared/VendorPage/VendorPage";
 import { VendorStaffPage } from "../pages/shared/VendorStaffPage/VendorStaffPage";
 import { ExpensePrint } from "../pages/shared/ExpensePrint/ExpensePrint";
+import { CustomInvoiceCustomerPage } from "../pages/shared/CustomInvoiceCustomerPage/CustomInvoiceCustomerPage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -302,6 +303,12 @@ export const router = createBrowserRouter([
           {
             path: "expense/print",
             element: <ExpensePrint />
+          },
+          {
+
+            path: "custom/invoice/customer",
+            element: <CustomInvoiceCustomerPage />
+
           }
         ],
       },

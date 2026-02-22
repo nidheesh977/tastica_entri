@@ -84,7 +84,7 @@ export const ExpenseAccountSingleAddTitleForm = () => {
                     </SelectOptionComponent >
                 </div> : null}
 
-                <button disabled={addTitleLoading === true || !selectedExpenseAccount} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTitleLoading ? "Addding" : "Add"}</button>
+                <button disabled={addTitleLoading === true && !selectedExpenseAccount || addTitleLoading === true} className="btn btn-primary btn-md w-full mt-3 rounded-md">{addTitleLoading ? "Addding" : "Add"}</button>
             </form>
         </div>
     )

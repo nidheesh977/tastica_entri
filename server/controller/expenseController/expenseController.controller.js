@@ -310,10 +310,11 @@ export const getExpense = async (req, res) => {
             {
                 $facet: {
                     data: [
+                        { $match: { shop: new Types.ObjectId(shopId) } },
                         { $sort: { createdAt: -1 } },
                         { $skip: (page - 1) * limit },
                         { $limit: limit },
-                        { $match: { shop: new Types.ObjectId(shopId) } },
+
 
                         {
                             $lookup: {

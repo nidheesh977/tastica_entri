@@ -149,7 +149,7 @@ export const getCustomer = async (req, res) => {
          return res.status(400).json({ success: false, message: "Shop ID is missing" })
       }
 
-      const fetchData = await customerModel.find({ shopId: shopId })
+      const fetchData = await customerModel.find({ shopId: shopId, role: "customer" })
 
       res.status(200).json({ success: true, message: "Data fetch successfully", data: fetchData })
 

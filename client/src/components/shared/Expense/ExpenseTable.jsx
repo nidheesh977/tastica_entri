@@ -19,7 +19,7 @@ export const ExpenseTable = () => {
     }
 
     const handleNextPage = () => {
-        console.log("click");
+
 
         if (!isPlaceholderData && paginatedData.hasmore) {
             setPage((old) => old + 1)

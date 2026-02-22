@@ -9,12 +9,15 @@ const encryptedFieldSchema = new mongoose.Schema({
 
 const addressSchema = new mongoose.Schema({
     label: { type: String },
-    addressLine1: { type: String, required: true },
-    addressLine2: { type: String },
+    address: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String },
     postalCode: { type: String, required: true },
-    country: { type: String, required: true }
+    country: {
+        type: String,
+        enum: ["IN", "US", "UK", "CA", "AU", "MV"],
+        required: true
+    }
 })
 
 const customerSchema = new mongoose.Schema({
@@ -26,8 +29,47 @@ const customerSchema = new mongoose.Schema({
     },
     customerName: {
         type: String,
-        required: true,
         index: true,
+        default: null
+    },
+    customerNameLowerCase: {
+        type: String,
+        lowercase: true,
+        set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str,
+        default: null
+    },
+    businessName: {
+        type: String,
+        default: null
+    },
+    displayName: {
+        type: String,
+        default: null
+    },
+    primaryContact: {
+        salutation: {
+            type: String,
+            enum: ["Mr.", "Mrs.", "Ms.", "Miss", "M/s."],
+            default: null
+        },
+        firstName: {
+            type: String,
+            default: null,
+        },
+        lastName: {
+            type: String,
+            default: null
+        }
+    },
+    businessNameLowerCase: {
+        type: String,
+        lowercase: true,
+        set: (str) => typeof str === "string" ? str.trim().toLowerCase().replace(/\s+/g, " ") : str,
+        default: null
+    },
+    email: {
+        type: String,
+        default: null
     },
     phoneNumber: {
         type: String,
@@ -75,18 +117,26 @@ const customerSchema = new mongoose.Schema({
         default: "customer"
     },
 
+    customerType: {
+        type: String,
+        enum: ["individual", "business"],
+        default: "individual"
+    },
+
     shopId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Shop",
     },
+
 
     invoices: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Invoice"
     }]
 }, { timestamps: true })
-customerSchema.index({ shopId: 1, phoneHash: 1 })
+customerSchema.index({ shopId: 1, phoneHash: 1, role: 1 }, { unique: true })
 customerSchema.index({ shopId: 1, customerId: 1, }, { unique: true })
+customerSchema.index({ shopId: 1, bussinessName: 1, role: 1 }, { unique: true })
 customerSchema.index({ shopId: 1, role: 1 })
 
 

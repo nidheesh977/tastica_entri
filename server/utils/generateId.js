@@ -108,3 +108,14 @@ export const generateExpenseId = async (shopId) => {
   )
   return `EXPE${String(counter.seq).padStart(6, "0")}`
 }
+
+
+export const generateCustomInvoiceCustomerId = async (shopId) => {
+  const counterName = "custom-Invoice-Customer"
+  const counter = await counterModel.findOneAndUpdate(
+    { shopId, counterName: counterName },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  )
+  return `CINV-CUST${String(counter.seq).padStart(4, "0")}`
+}
