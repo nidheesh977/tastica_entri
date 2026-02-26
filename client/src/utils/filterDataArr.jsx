@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 export const filterDataArr = (data, filterValue, arr, key, isSingleArr) => {
     const [filteredData, setFilteredData] = useState([])
 
+    console.log("filteredData", filteredData);
+
+
 
     useEffect(() => {
         if (isSingleArr === false) {
@@ -24,7 +27,7 @@ export const filterDataArr = (data, filterValue, arr, key, isSingleArr) => {
                 return
             } else {
                 const filterData = data.filter((data) => {
-                    return data[key].toLowerCase().includes(filterValue.toString().toLowerCase())
+                    return data[key]?.toLowerCase()?.includes(filterValue.toString().toLowerCase())
                 })
                 setFilteredData(filterData)
 

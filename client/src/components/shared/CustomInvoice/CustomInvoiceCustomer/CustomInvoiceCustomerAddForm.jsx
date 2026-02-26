@@ -1,6 +1,6 @@
 import { Controller, } from 'react-hook-form'
-import { InputComponent } from '../DaisyUiComponent/InputComponent'
-import { SimpleSelectOption } from '../DaisyUiComponent/SimpleSelectOption'
+import { InputComponent } from '../../DaisyUiComponent/InputComponent'
+import { SimpleSelectOption } from '../../DaisyUiComponent/SimpleSelectOption'
 
 
 

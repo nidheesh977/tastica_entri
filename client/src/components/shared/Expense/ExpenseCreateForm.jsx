@@ -73,7 +73,6 @@ export const ExpenseCreateForm = () => {
 
 
     const onSubmit = (data) => {
-        console.log(data)
         const formData = new FormData()
         formData.append("image_doc", data.image_doc[0])
         formData.append("date", data.date)
@@ -304,6 +303,7 @@ export const ExpenseCreateForm = () => {
                     <SelectOptionComponent
                         selectPlaceholder={"Select an account"}
                         selectedExpenseAccount={selectedExpenseAccount}
+                        classNames={"max-w-sm "}
 
                     >
                         <div className="relative">
@@ -361,6 +361,7 @@ export const ExpenseCreateForm = () => {
                         <SelectOptionComponent
                             selectPlaceholder={"Select an account"}
                             selectPaidThrough={selectPaidThrough}
+                            classNames={"max-w-sm "}
                         >
                             <div className="relative">
 
@@ -383,6 +384,7 @@ export const ExpenseCreateForm = () => {
                         <SelectOptionComponent
                             selectPlaceholder={"Select an account"}
                             selectedTaxRate={selectedTaxRate}
+                            classNames={"max-w-sm"}
                         >
                             <div className="relative">
 
@@ -423,6 +425,7 @@ export const ExpenseCreateForm = () => {
                             }}
                             selectPlaceholder={"Select a vendor"}
                             selectedVendor={selectedVendor}
+                            classNames={"max-w-sm "}
                         >
                             <div className="relative ">
 
@@ -471,6 +474,7 @@ export const ExpenseCreateForm = () => {
                             selectPlaceholder={"Select a customer"}
                             selectedCustomer={selectedCustomer}
                             isTop={true}
+                            classNames={"max-w-sm "}
 
                         >
                             <div className="relative">

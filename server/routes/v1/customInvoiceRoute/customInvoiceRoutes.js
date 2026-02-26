@@ -2,14 +2,17 @@ import express from "express"
 import { shopVerifyToken } from "../../../middleware/shopCookieTokenVerification.js";
 import { userVerifyToken } from "../../../middleware/cookieTokenVerification.js";
 import { checkUserRole } from "../../../middleware/authRoleVerification.js";
-import { createCustomInvoiceCustomer, getCustomCustomerForForm, getCustomCustomerInvoice } from "../../../controller/customInvoiceController/index.js";
+import { addBillingAddressToCustomer, addShippingAddressToCustomer, createCustomInvoiceCustomer, getCustomCustomerAddress, getCustomCustomerForForm, getCustomCustomerInvoice } from "../../../controller/customInvoiceController/index.js";
 
 
 const customInvoiceRouter = express.Router();
 
 
 customInvoiceRouter.post('/customer/create', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), createCustomInvoiceCustomer)
+customInvoiceRouter.post('/customer/:customerId/shipping', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addShippingAddressToCustomer)
+customInvoiceRouter.post('/customer/:customerId/billing', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), addBillingAddressToCustomer)
 customInvoiceRouter.get('/customer', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getCustomCustomerInvoice)
 customInvoiceRouter.get('/customer/form', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getCustomCustomerForForm)
+customInvoiceRouter.get('/customer/:customerId', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getCustomCustomerAddress)
 
 export default customInvoiceRouter

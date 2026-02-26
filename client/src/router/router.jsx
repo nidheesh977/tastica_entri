@@ -81,7 +81,8 @@ import { PaymentAccountPage } from "../pages/shared/PaymentAccountPage/PaymentAc
 import { VendorPage } from "../pages/shared/VendorPage/VendorPage";
 import { VendorStaffPage } from "../pages/shared/VendorStaffPage/VendorStaffPage";
 import { ExpensePrint } from "../pages/shared/ExpensePrint/ExpensePrint";
-import { CustomInvoiceCustomerPage } from "../pages/shared/CustomInvoiceCustomerPage/CustomInvoiceCustomerPage";
+import { CustomInvoiceCustomerPage } from "../pages/shared/CustomInvoicePage/CustomInvoiceCustomerPage";
+import { CustomInvoiceFormPage } from "../pages/shared/CustomInvoicePage/CustomInvoiceFormPage";
 
 export const router = createBrowserRouter([
   // Shop rotes
@@ -306,10 +307,17 @@ export const router = createBrowserRouter([
           },
           {
 
+            path: "custom/invoice/create",
+            element: <CustomInvoiceFormPage />
+
+          },
+          {
+
             path: "custom/invoice/customer",
             element: <CustomInvoiceCustomerPage />
 
-          }
+          },
+
         ],
       },
     ],

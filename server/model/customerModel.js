@@ -9,16 +9,16 @@ const encryptedFieldSchema = new mongoose.Schema({
 
 const addressSchema = new mongoose.Schema({
     label: { type: String },
-    address: { type: String, required: true },
-    city: { type: String, required: true },
+    address: { type: String, },
+    city: { type: String, },
     state: { type: String },
-    postalCode: { type: String, required: true },
+    postalCode: { type: String, },
     country: {
         type: String,
         enum: ["IN", "US", "UK", "CA", "AU", "MV"],
-        required: true
+
     }
-})
+}, { _id: true })
 
 const customerSchema = new mongoose.Schema({
     customerId: {
@@ -97,8 +97,8 @@ const customerSchema = new mongoose.Schema({
     billingAddresses: [addressSchema],
     shippingAddresses: [addressSchema],
 
-    defaultBillingAddress: { type: mongoose.Types.ObjectId },
-    defaultShippingAddress: { type: mongoose.Types.ObjectId },
+    defaultBillingAddress: { type: mongoose.Types.ObjectId, default: null },
+    defaultShippingAddress: { type: mongoose.Types.ObjectId, default: null },
     notes: { type: String },
 
     loyalityPoint: {

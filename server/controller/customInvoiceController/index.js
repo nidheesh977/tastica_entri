@@ -1,5 +1,8 @@
 export {
     createCustomInvoiceCustomer,
     getCustomCustomerInvoice,
-    getCustomCustomerForForm
+    getCustomCustomerForForm,
+    getCustomCustomerAddress,
+    addShippingAddressToCustomer,
+    addBillingAddressToCustomer,
 } from "./customInvoiceCustomerController.js"

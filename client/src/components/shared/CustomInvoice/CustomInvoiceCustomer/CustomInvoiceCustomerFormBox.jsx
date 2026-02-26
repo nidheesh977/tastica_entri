@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-import { useCustomInvoiceCustomer } from '../../../hooks/useCustomInvoice/useCustomInvoiceCustomer'
+import { useCustomInvoiceCustomer } from '../../../../hooks/useCustomInvoice/useCustomInvoiceCustomer'
 import { CustomInvoiceCustomerAddForm } from './CustomInvoiceCustomerAddForm'
 import { IoMdClose } from 'react-icons/io'
-import { removeBackgroundBlur } from '../../../redux/features/commonSlice'
+import { removeBackgroundBlur } from '../../../../redux/features/commonSlice'
 import { CustomInvoiceAddressForm } from './CustomInvoiceAddressForm'
 import { CustomInvoiceShippingAddressForm } from './CustomInvoiceShippingAddressForm'
 import { useEffect } from 'react'
@@ -43,7 +43,6 @@ const CustomInvoiceCustomerFormBox = ({ setOpenForm }) => {
 
     const customerTypeSelect = watch("customerType")
     const onsubmit = (data) => {
-        console.log(data)
         createnewCustomCustomer(data)
 
     }

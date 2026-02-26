@@ -1,11 +1,10 @@
 import React from 'react'
-import { useCustomInvoiceCustomer } from '../../../hooks/useCustomInvoice/useCustomInvoiceCustomer';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaPlus } from 'react-icons/fa';
-import { TableComponent } from '../DaisyUiComponent/TableComponent';
+import { TableComponent } from '../../DaisyUiComponent/TableComponent';
 import { CustomInvoiceCustomerAddForm } from './CustomInvoiceCustomerAddForm';
-import { addBackgroundBlur } from "../../../redux/features/commonSlice"
+import { addBackgroundBlur } from "../../../../redux/features/commonSlice"
 import CustomInvoiceCustomerFormBox from './CustomInvoiceCustomerFormBox';
 
 export const CustomInvoiceCustomerTable = ({ customCuspaginatedData, isPlaceholderData, setPage, page, }) => {
