@@ -47,6 +47,9 @@ export const StaffHeader = () => {
     window.open("/staff", "_blank");
   };
 
+
+
+
   return (
     <nav className="w-full fixed z-50 bg-tertiary shadow-xl">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
@@ -168,7 +171,7 @@ export const StaffHeader = () => {
               )}
 
             <li className="flex items-center w-full rounded-md shadow-xl p-2 text-primary">
-              {staffName && <p className="text-xl mx-auto">{staffName}</p>}
+              {staffName && <p className="text-xl mx-auto">{staffName.split(" ")[0]}</p>}
             </li>
             <li className="w-full rounded-md shadow-xl p-2">
               {staffName && (

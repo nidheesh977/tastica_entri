@@ -6,90 +6,147 @@ import { AuditLogModel } from "../../model/auditLogModel.js";
 
 
 export const createTaxRateAccount = async (req, res) => {
+
+    const { currencyCode, id: shopId } = req.shop;
+    const { id: userId } = req.user;
+
+    const session = await mongoose.startSession()
+
     try {
 
-        const { currencyCode, id: shopId } = req.shop
+        await session.withTransaction(async () => {
+            const taxRateAccountExist = await TaxRateModel.findOne({ shop: shopId, isCreated: true }).session(session).select("_id");
+
+            if (taxRateAccountExist) {
+                return res.status(409).json({ success: false, meesgae: "Tax rate account already exist" })
+            }
+
+            const newState = {
+                currencyCode: currencyCode,
+                taxRates: [
+                    { taxCodeName: "Zero Rate", rate: 0, taxNameLowerCase: "zero rate", taxType: "ZERO", isButton: true }
+                ],
+            }
+
+            const newTaxAccount = await TaxRateModel.create([
+                {
+                    shop: shopId,
+                    currencyCode: currencyCode,
+                    taxRates: [
+                        { taxCodeName: "Zero Rate", rate: 0, taxNameLowerCase: "zero rate", taxType: "ZERO", isButton: true }
+                    ],
+                    isCreated: true
+                }
+            ], { session })
 
 
-        const taxRateAccountExist = await TaxRateModel.findOne({ shop: shopId, isCreated: true });
 
-        if (taxRateAccountExist) {
-            return res.status(409).json({ success: false, meesgae: "Tax rate account already exist" })
-        }
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newTaxAccount[0]?._id,
+                    targetModel: "TaxRate",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new tax rate book",
+                    performedBy: userId
+                }
+            ], { session })
 
 
-
-        const newTaxAccount = TaxRateModel({
-            shop: shopId,
-            currencyCode: currencyCode,
-            taxRates: [
-                { taxCodeName: "Zero Rate", rate: 0, taxNameLowerCase: "zero rate", taxType: "ZERO", isButton: true }
-            ],
-            isCreated: true
+            res.status(200).json({ success: true, message: "Tax rate account create successfully" })
         })
-
-        await newTaxAccount.save()
-
-        res.status(200).json({ success: true, message: "Tax rate account create successfully" })
     } catch (error) {
-        console.log(error)
+
         return res.status(500).json({ success: false, message: "internal server error" })
+    } finally {
+        await session.endSession()
     }
 }
 
-export const addTaxRatesToAccount = async (req, res) => {
+export const addTaxRatesToAccount = async (req, res, next) => {
+
+
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
 
     const { error, value } = addTaxRatesValidation.validate(req.body)
-
 
     if (error) {
         return res.status(400).json({ success: false, message: error.details[0].message })
     }
 
     const { taxCodeName, rate, taxType } = value;
-    const { id: shopId } = req.shop
 
-
-
+    const session = await mongoose.startSession()
 
     try {
+        await session.withTransaction(async () => {
 
-        const taxCodeNameLower = taxCodeName.trim().replace(/\s+/g, " ").toLowerCase()
+            const taxCodeNameLower = taxCodeName.trim().replace(/\s+/g, " ").toLowerCase()
 
-        const addNewTaxRate = await TaxRateModel.findOneAndUpdate({
-            shop: shopId,
-            taxRates: {
-                $not: {
-                    $elemMatch: {
-                        taxNameLowerCase: taxCodeNameLower,
-                        rate: rate,
+            const newState = {
+                taxCodeName,
+                rate,
+                taxType
+            }
+
+            const addNewTaxRate = await TaxRateModel.findOneAndUpdate({
+                shop: shopId,
+                taxRates: {
+                    $not: {
+                        $elemMatch: {
+                            taxNameLowerCase: taxCodeNameLower,
+                            rate: rate,
+                        }
                     }
                 }
-            }
 
-        }, {
-            $push: {
-                taxRates: {
-                    taxCodeName: taxCodeName,
-                    rate: rate,
-                    taxNameLowerCase: taxCodeName,
-                    taxType: taxType.toUpperCase(),
-                    isButton: true
+            }, {
+                $push: {
+                    taxRates: {
+                        taxCodeName: taxCodeName,
+                        rate: rate,
+                        taxNameLowerCase: taxCodeName,
+                        taxType: taxType.toUpperCase(),
+                        isButton: true
+                    }
                 }
+            }, { session, new: true })
+
+            if (addNewTaxRate === null) {
+                return next(new AppError("Tax Rate Already Exist", 409))
             }
-        }, { new: true })
 
 
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: addNewTaxRate._id,
+                    targetModel: "TaxRate",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new tax rate",
+                    performedBy: userId
+                }
+            ], { session })
 
 
-        const message = addNewTaxRate === null ? "Tax Rate Already Exist" : "Tax rate Added Successfully"
-        const statusCode = addNewTaxRate === null ? 409 : 201
-
-        res.status(statusCode).json({ success: true, message: message })
+            res.status(201).json({ success: true, message: "Tax rate Added Successfully" })
+        })
 
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ success: false, message: "internal server error" })
+
+
+        next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
@@ -232,5 +289,7 @@ export const taxRateStatusUpdate = async (req, res, next) => {
 
     } catch (error) {
         next(error)
+    } finally {
+        await session.endSession()
     }
 }

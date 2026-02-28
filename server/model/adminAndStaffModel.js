@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const staffPermissions = ["product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create", "credit_read", "credit_pay", "credit_give", "credit_create"]
+const staffPermissions = ["product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create", "credit_read", "credit_pay", "credit_give", "credit_create", "view_expense", "create_expense", "view_expense_account", "create_expense_account", "status_expense_account", "vendor_view", "vendor_create", "vendor_change_status", "payment_acc_view", "payment_acc_create", "payment_acc_change_status", "tax_rate_view", "tax_create", "tax_change_status"]
 
 const userSchema = mongoose.Schema({
     userName: {

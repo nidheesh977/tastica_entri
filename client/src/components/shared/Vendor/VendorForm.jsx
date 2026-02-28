@@ -23,8 +23,6 @@ export const VendorForm = () => {
     const { createVendor, createVendorSuccess, vendorPending } = useVendor()
 
     const onSubmit = (data) => {
-        console.log(data);
-
         createVendor(data)
     }
 

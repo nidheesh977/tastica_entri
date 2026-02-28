@@ -4,7 +4,7 @@ export {
     getExpenseAccountForExpenseForm,
     getExpenseAccounts,
     getSingleExpenseAccount,
-    deleteExpenseAccountTitle,
+    expenseAccountTitleStatusUpdate,
     expenseAccountStatusUpdate,
-    getExpenseAccountHeadForm
+    getExpenseAccountTitle
 } from "./expenseAccount.controller.js"

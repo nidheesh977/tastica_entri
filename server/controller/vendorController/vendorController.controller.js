@@ -7,7 +7,10 @@ import { after } from "node:test";
 import { AppError } from "../../utils/AppError.js";
 
 
-export const createNewVendor = async (req, res) => {
+export const createNewVendor = async (req, res, next) => {
+
+    const { id: shopId } = req.shop
+    const { id: userId } = req.user
 
     const { error, value } = createVendorValidation.validate(req.body)
 
@@ -16,51 +19,76 @@ export const createNewVendor = async (req, res) => {
         return res.status(400).json({ success: false, message: error.details[0].message })
     }
 
+    const session = await mongoose.startSession()
+
+    const { vendorName, email, phoneNumber, address } = value;
+
     try {
 
-        const { id: shopId } = req.shop
+        await session.withTransaction(async () => {
+            const lastFourDigit = phoneNumber.slice(-4)
 
-        const { vendorName, email, phoneNumber, address } = value;
+            const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
 
-        const lastFourDigit = phoneNumber.slice(-4)
+            const maskAddress = address.slice(0, 5) + "..."
 
-        const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
+            const vendorNameLower = vendorName.trim().replace(/\s+/g, " ").toLowerCase()
 
-        const maskAddress = address.slice(0, 5) + "..."
+            const vendorExist = await VendorModel.findOne({ shop: shopId, vendorNameLowerCase: vendorNameLower }).session(session).select("_id")
 
-        const vendorNameLower = vendorName.trim().replace(/\s+/g, " ").toLowerCase()
+            if (vendorExist) {
+                return res.status(409).json({ success: false, message: "Vendor account already exist" })
+            }
 
-        const vendorExist = await VendorModel.findOne({ shop: shopId, vendorNameLowerCase: vendorNameLower })
+            const sliceString = vendorName.substring(0, 1).toUpperCase()
 
-        if (vendorExist) {
-            return res.status(409).json({ success: false, message: "Vendor account already exist" })
-        }
+            const encryptPhoneNumber = encryptData(phoneNumber)
+            const encryptAddress = encryptData(address)
 
-        const sliceString = vendorName.substring(0, 1).toUpperCase()
+            const newState = {
+                vendorName,
+                email,
+            }
 
-        const encryptPhoneNumber = encryptData(phoneNumber)
-        const encryptAddress = encryptData(address)
+            const newVendor = await VendorModel.create([
+                {
+                    shop: shopId,
+                    char: sliceString,
+                    vendorName: vendorName,
+                    email: email,
+                    phoneNumber: encryptPhoneNumber,
+                    address: encryptAddress,
+                    maskPhoneNumber: maskedNumber,
+                    maskAddress: maskAddress,
+                    vendorNameLowerCase: vendorNameLower
+                }
+            ], { session });
 
-        const newVendor = VendorModel({
-            shop: shopId,
-            char: sliceString,
-            vendorName: vendorName,
-            email: email,
-            phoneNumber: encryptPhoneNumber,
-            address: encryptAddress,
-            maskPhoneNumber: maskedNumber,
-            maskAddress: maskAddress,
-            vendorNameLowerCase: vendorNameLower
-        });
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newVendor[0]._id,
+                    targetModel: "Vendor",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new vendor",
+                    performedBy: userId
+                }
+            ], { session })
 
-        await newVendor.save();
 
-        res.status(201).json({ success: true, message: "Vendor create successfully" })
+            res.status(201).json({ success: true, message: "Vendor create successfully" })
+        })
+
+
 
     } catch (error) {
-        console.log(error);
-
-        return res.status(500).json({ success: false, message: "Internal server error" })
+        next(error)
+    } finally {
+        await session.endSession()
     }
 }
 

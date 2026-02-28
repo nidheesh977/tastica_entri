@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { addBackgroundBlur, setOpenTaxRateForm } from "../../../redux/features/commonSlice"
 import { TableComponent } from "../DaisyUiComponent/TableComponent"
 import { TaxRateStatusForm } from "./TaxRateStatusForm"
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck"
 
 export const TaxRateTable = ({ getTaxRateData }) => {
 
@@ -77,9 +78,11 @@ export const TaxRateTable = ({ getTaxRateData }) => {
 
     }
 
+    // permission
+    const { hasPermission } = usePermissionCheck()
+    const createTaxApprove = hasPermission("tax_create")
+    const statusTaxApprove = hasPermission("tax_change_status")
 
-
-    console.log(openStatusForm)
 
     return (
         <div className="w-full relative">
@@ -87,7 +90,7 @@ export const TaxRateTable = ({ getTaxRateData }) => {
             <div className="flex justify-end items-center">
                 {openTaxRateForm ? <TaxRateForm /> : null}
                 {openStatusForm.openCom ? <TaxRateStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
-                {<button onClick={handleOpenForm} className="btn btn-success btn-sm text-white">Add</button>}
+                {<button disabled={!createTaxApprove} onClick={handleOpenForm} className="btn btn-success btn-sm text-white">Add</button>}
             </div>
             <TableComponent>
                 {/* head */}
@@ -110,7 +113,7 @@ export const TaxRateTable = ({ getTaxRateData }) => {
                             <td>{tax?.taxType}</td>
                             <td>{tax?.inActiveReason === null ? "N/A" : tax?.inActiveReason.slice(0, 12)} {tax?.inActiveReason === null ? null : tax?.inActiveReason.length > 12 ? "..." : null} </td>
                             <td>
-                                {<button className={`btn btn-xs w-20 ${tax?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, tax?._id, tax?.isActive ? false : true, getTaxRateData?._id)}>
+                                {<button disabled={!statusTaxApprove} className={`btn btn-xs w-20 ${tax?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, tax?._id, tax?.isActive ? false : true, getTaxRateData?._id)}>
 
                                     {tax?.isActive === true ? "Active" : "In Active"}
 

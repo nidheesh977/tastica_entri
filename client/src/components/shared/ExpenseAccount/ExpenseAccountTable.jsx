@@ -5,6 +5,7 @@ import { ExpenseAccountCreate } from './ExpenseAccountCreate'
 import { ExpenseStatusForm } from './ExpenseStatusForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { addBackgroundBlur, setOpenExpenseAccount } from "../../../redux/features/commonSlice"
+import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
 
 
 export const ExpenseAccountTable = ({ expenseAccount }) => {
@@ -27,7 +28,11 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
         dispatch(addBackgroundBlur(true))
         dispatch(setOpenExpenseAccount(true))
     }
-
+    // for permission
+    const { hasPermission } = usePermissionCheck()
+    const viewExpAccApprove = hasPermission("view_expense_account")
+    const createExpAccApprove = hasPermission("create_expense_account")
+    const statusExpAccApprove = hasPermission("status_expense_account")
 
     const handleChangeAccStatus = (num, accountId, active) => {
 
@@ -46,7 +51,7 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
             <div className='w-full flex justify-end'>
                 {openExpenseAccForm ? <ExpenseAccountCreate /> : null}
                 {openStatusForm.openCom ? <ExpenseStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
-                <button className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
+                <button disabled={!createExpAccApprove} className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
             </div>
 
             <div className='w-full'>
@@ -67,11 +72,11 @@ export const ExpenseAccountTable = ({ expenseAccount }) => {
                                 <th>{index + 1}</th>
                                 <td className='font-medium'>{expenseAcc?.expenseTitle}</td>
                                 <td className='font-medium'>
-                                    <Link to={admin ? `/admin/expense/account/${expenseAcc?._id}` : `/staff/expense/account/${expenseAcc?._id}`} className='btn btn-xs btn-primary'>View</Link>
+                                    <Link to={admin ? `/admin/expense/account/${expenseAcc?._id}` : `/staff/expense/account/${expenseAcc?._id}`} className={`${!viewExpAccApprove ? "cursor-not-allowed pointer-events-none" : ""} btn btn-xs btn-primary`}>View</Link>
                                 </td>
                                 <td>{expenseAcc?.inActiveReason === null ? "N/A" : expenseAcc?.inActiveReason.slice(0, 12)} {expenseAcc?.inActiveReason === null ? null : expenseAcc?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>
-                                    {<button className={`btn btn-xs w-20 ${expenseAcc?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, expenseAcc?._id, expenseAcc?.isActive ? false : true)}>
+                                    {<button disabled={!statusExpAccApprove} className={`btn btn-xs w-20 ${expenseAcc?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, expenseAcc?._id, expenseAcc?.isActive ? false : true)}>
 
                                         {expenseAcc?.isActive === true ? "Active" : "In Active"}
 

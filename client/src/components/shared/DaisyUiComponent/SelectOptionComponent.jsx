@@ -51,7 +51,7 @@ export const SelectOptionComponent = React.memo(({ children, config, isTop, sele
             <div
                 tabIndex={-1}
                 className="z-50 dropdown-content card card-sm rounded-sm bg-base-100  w-full  shadow-md">
-                <div className="card-body bg-white p-3 ">
+                <div className="card-body bg-white p-3  z-[1000]">
                     {children}
                 </div>
             </div>

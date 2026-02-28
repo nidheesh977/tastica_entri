@@ -119,7 +119,7 @@ export const createCreditBook = async (req, res) => {
         res.status(200).json({ success: true, message: "Successfully added", data: { creditBookId, creditCustomerName } })
 
     } catch (error) {
-        console.log(error)
+
 
         return res.status(500).json({ success: false, message: "internal server error" })
     }

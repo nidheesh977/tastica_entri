@@ -27,6 +27,7 @@ import { TaxRateForm } from "../TaxRates/TaxRateForm";
 import { VendorForm } from "../Vendor/VendorForm";
 import { VendorStaffForm } from "../VendorStaff/VendorStaffForm";
 import { Link } from "react-router-dom";
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
 
 
 export const ExpenseCreateForm = () => {
@@ -41,10 +42,13 @@ export const ExpenseCreateForm = () => {
     const { taxRatesDataForExpenseForm } = useTaxRates()
     const { vendorDataForm } = useVendor()
     const { paymentAccountDataForExpForm } = usePaymentAccount()
+    const { hasPermission } = usePermissionCheck()
 
     const dispatch = useDispatch()
 
-
+    const createExpAccApprove = hasPermission("create_expense_account")
+    const createVendorApprove = hasPermission("vendor_create")
+    const createTaxApprove = hasPermission("tax_create")
 
     const { openExpenseAccForm, openExpenseSubTitleForm, openTaxRateForm, openVendorForm, openVendorStaffForm } = useSelector((state) => state.common)
     const { taxAmountShow } = useSelector(state => state.expense)
@@ -92,7 +96,6 @@ export const ExpenseCreateForm = () => {
 
 
         const obj = Object.fromEntries(formData.entries())
-        console.log(obj)
         createExpense(formData)
     }
 
@@ -317,8 +320,8 @@ export const ExpenseCreateForm = () => {
                             </div>
 
                             <div className="mt-2 flex justify-between items-center">
-                                <button type="button" onClick={handleClickOpenExpenseAccount} className="btn btn-ghost btn-sm">Create Expense</button>
-                                <button type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button>
+                                <button disabled={!createExpAccApprove} type="button" onClick={handleClickOpenExpenseAccount} className="btn btn-ghost btn-sm">Create Expense</button>
+                                <button disabled={!createExpAccApprove} type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button>
                             </div>
                         </div>
 
@@ -400,7 +403,7 @@ export const ExpenseCreateForm = () => {
                                 </div>
 
                                 <div className="mt-2 flex justify-between items-center">
-                                    <button type="button" onClick={handleClickOpenTaxRate} className="btn btn-ghost btn-sm text-blue-600">Add New Tax</button>
+                                    <button type="button" disabled={!createTaxApprove} onClick={handleClickOpenTaxRate} className="btn btn-ghost btn-sm text-blue-600">Add New Tax</button>
                                     {/* <button type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button> */}
                                 </div>
                             </div>
@@ -441,7 +444,7 @@ export const ExpenseCreateForm = () => {
                                     </div>
                                 </div>
                                 <div className="mt-2 flex justify-between items-center">
-                                    <button type="button" onClick={handleClickOpenVendor} className="btn btn-ghost btn-sm text-blue-600">Add Vendor</button>
+                                    <button disabled={!createVendorApprove} type="button" onClick={handleClickOpenVendor} className="btn btn-ghost btn-sm text-blue-600">Add Vendor</button>
                                     {/* <button type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button> */}
                                 </div>
                             </div>
@@ -491,7 +494,7 @@ export const ExpenseCreateForm = () => {
                                     </div>
                                 </div>
                                 <div className="mt-2 flex justify-between items-center">
-                                    <button type="button" onClick={handleClickOpenVendorStaff} className="btn btn-ghost btn-sm text-blue-600">Add Customer</button>
+                                    <button type="button" disabled={!createVendorApprove} onClick={handleClickOpenVendorStaff} className="btn btn-ghost btn-sm text-blue-600">Add Customer</button>
                                     {/* <button type="button" onClick={handleClickOpenExpenseAccountTitle} className="btn btn-ghost btn-sm">Expense title</button> */}
                                 </div>
                             </div>
@@ -514,7 +517,7 @@ export const ExpenseCreateForm = () => {
             <div className='w-full mt-10 lg:mt-0 lg:w-1/2 flex justify-center items-center lg:items-start relative'>
                 {preview ? (
                     <div className=" lg:fixed w-96 h-64 max-h-[400px] object-cover  overflow-hidden rounded-md">
-                        <button onClick={handleRemoveImage} className="absolute top-2 right-3 z-10 bg-white px-2 py-1 rounded">
+                        <button disabled={isPending} onClick={handleRemoveImage} className="absolute top-2 right-3 z-10 bg-white px-2 py-1 rounded">
                             Clear
                         </button>
 
@@ -529,7 +532,7 @@ export const ExpenseCreateForm = () => {
                     <div className="lg:fixed lg:top-1/2  card bg-base-100 w-72 shadow-sm border-4 border-dotted">
                         <div className="card-body p-4">
                             <h2 className="card-title justify-center text-sm">Drop your Image</h2>
-                            <p className="text-xs text-center">Maximum file size allowed 3MB</p>
+                            <p className="text-xs text-center">Maximum file size allowed 2MB</p>
                             <input type="file" {...register("image_doc")} className="file-input file-input-sm file-input-primary" />
                         </div>
                     </div>)}

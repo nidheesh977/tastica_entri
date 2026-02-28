@@ -22,7 +22,7 @@ export const useVendorStaff = (vendorStatus) => {
     const isValidPage = pathname === "/admin/expense/create"
     const isValidvendorStaffPage = pathname === `/admin/vendor/${vendorId}/staff` || pathname === `/staff/vendor/${vendorId}/staff`
 
-    console.log(isValidvendorStaffPage);
+
 
 
     const dispatch = useDispatch()

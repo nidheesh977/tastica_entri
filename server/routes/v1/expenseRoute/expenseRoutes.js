@@ -5,15 +5,16 @@ import { userVerifyToken } from "../../../middleware/cookieTokenVerification.js"
 import { checkUserRole } from "../../../middleware/authRoleVerification.js";
 import { upload } from "../../../middleware/multerMiddleware.js";
 import { downloadExpensePdf, getImageDoc, getTaxRateAmount, uploadImageToExpense } from "../../../controller/expenseController/expenseController.controller.js";
+import { checkPermission } from "../../../middleware/permissonMiddleware.js";
 
 const expenseRouter = express.Router();
 
-expenseRouter.post("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), createExpense)
-expenseRouter.post("/tax", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getTaxRateAmount)
-expenseRouter.get("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getExpense)
-expenseRouter.get("/download/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), downloadExpensePdf)
-expenseRouter.get("/image", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getImageDoc)
-expenseRouter.get("/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getSingleExpense)
-expenseRouter.patch("/upload", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), uploadImageToExpense)
-expenseRouter.patch("/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), uploadImageToExpense)
+expenseRouter.post("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), checkPermission("create_expense"), createExpense)
+expenseRouter.post("/tax", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("create_expense"), getTaxRateAmount)
+expenseRouter.get("/", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("view_expense"), getExpense)
+expenseRouter.get("/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("view_expense"), getSingleExpense)
+expenseRouter.get("/download/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("view_expense"), downloadExpensePdf)
+expenseRouter.get("/image", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("view_expense"), getImageDoc)
+// expenseRouter.patch("/upload", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), uploadImageToExpense)
+expenseRouter.patch("/:expenseId", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), upload.single("image_doc"), checkPermission("create_expense"), uploadImageToExpense)
 export default expenseRouter 

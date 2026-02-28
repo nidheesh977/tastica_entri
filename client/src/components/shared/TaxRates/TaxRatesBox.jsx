@@ -1,3 +1,4 @@
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
 import { useTaxRates } from "../../../hooks/useTaxRates"
 import { TaxRateTable } from "./TaxRateTable";
 
@@ -10,6 +11,11 @@ export const TaxRatesBox = () => {
         createTaxRateBook()
     }
 
+    // permission
+    const { hasPermission } = usePermissionCheck()
+    const createTaxApprove = hasPermission("tax_create")
+
+
 
 
 
@@ -20,7 +26,7 @@ export const TaxRatesBox = () => {
                 {getTaxRateData && getTaxRateDataLoading === false ? <TaxRateTable getTaxRateData={getTaxRateData} /> : null}
                 {!getTaxRateDataLoading && getTaxRateData?.length === 0 ? <p>No data found</p> : null}
                 {getTaxDataRefreshing && !getTaxRateDataLoading ? <p className='text-xs text-gray-400'>Refreshing...</p> : null}
-                {getTaxRateDataLoading === false && getTaxRateData === null ? <button onClick={handleCreateNewTaxRateBook} disabled={taxRateLoaded === true} className="btn btn-primary">{taxRateLoaded ? "Creating..." : "Create new tax book"}</button> : null}
+                {getTaxRateDataLoading === false && getTaxRateData === null ? <button onClick={handleCreateNewTaxRateBook} disabled={!createTaxApprove || taxRateLoaded === true} className="btn btn-primary">{taxRateLoaded ? "Creating..." : "Create new tax book"}</button> : null}
 
             </div>
         </div >

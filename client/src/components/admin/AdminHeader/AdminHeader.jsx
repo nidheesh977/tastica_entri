@@ -16,7 +16,7 @@ import { useInvoices } from "../../../hooks/useInvoices";
 import Logo from "../../../assets/logo.png";
 import { axiosInstance } from "../../../config/axiosInstance";
 import toast from "react-hot-toast";
-import { removeAdminData } from "../../../redux/features/authSlice";
+import { removeAdminData, removeAuthPermissions } from "../../../redux/features/authSlice";
 import { toggleCustomProductHandler } from "../../../redux/features/customProductSlice";
 
 export const AdminHeader = () => {
@@ -36,6 +36,7 @@ export const AdminHeader = () => {
         withCredentials: true,
       });
       dispatch(removeAdminData());
+      dispatch(removeAuthPermissions([]));
       toast("Logout success");
       navigate("/shop/admin/login");
     } catch (error) {
@@ -49,7 +50,7 @@ export const AdminHeader = () => {
   const { savedInvoices } = useInvoices();
 
   return (
-    <nav className="w-full fixed z-50 top-0 bg-tertiary shadow-xl">
+    <nav className="w-full fixed z-[2000] top-0 bg-tertiary shadow-xl">
       <div className="md:flex mx-auto py-4 px-5 justify-between items-center bg-tertiary text-primary font-bold md:px-10">
         <div className="flex justify-between items-center">
           <div className="cursor-pointer flex items-center gap-4">
@@ -167,7 +168,7 @@ export const AdminHeader = () => {
               )}
 
             <li className="flex items-center w-full rounded-md  shadow-xl p-2">
-              {adminName && <p className="text-xl mx-auto">{adminName}</p>}
+              {adminName && <p className="text-xl mx-auto">{adminName.split(" ")[0]}</p>}
             </li>
             <li className="w-full rounded-md shadow-xl p-2">
               {adminName && (

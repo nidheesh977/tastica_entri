@@ -187,8 +187,10 @@ export const createCustomInvoiceCustomer = async (req, res, next) => {
 
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
@@ -336,7 +338,7 @@ export const addShippingAddressToCustomer = async (req, res, next) => {
 
         res.status(200).json({ success: true, message: "Shipping address added successfully" })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
 
         next(error)
     }

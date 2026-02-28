@@ -2,7 +2,7 @@ import { useMutation, useQuery, keepPreviousData, useQueryClient } from '@tansta
 import { axiosInstance } from '../../config/axiosInstance'
 import toast from 'react-hot-toast'
 import { useLocation, useParams } from "react-router-dom"
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTaxAmountShow } from "../../redux/features/expenseSlice"
 import { useNavigate } from 'react-router-dom'
 
@@ -18,7 +18,7 @@ export const useExpense = (page, imageQuery,) => {
     const isValidPage = pathname === "/admin/expense/list" || pathname === "/staff/expense/list"
 
     const { id: expenseId } = useParams()
-
+    const admin = useSelector(state => state.auth.adminData)
 
     const { data: paginatedData, isFetching, isPlaceholderData } = useQuery({
         queryKey: ["expensePagination", page],
@@ -97,7 +97,7 @@ export const useExpense = (page, imageQuery,) => {
                 data
             })
 
-            console.log(response)
+
         },
         onSuccess: (data) => {
             toast.success("Image Upload successfully")
@@ -105,7 +105,7 @@ export const useExpense = (page, imageQuery,) => {
 
         },
         onError: (error) => {
-            console.log(error);
+
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },
@@ -123,7 +123,7 @@ export const useExpense = (page, imageQuery,) => {
 
             return response
         }, onSuccess: (response, payload) => {
-            console.log(payload);
+
 
             const url = window.URL.createObjectURL(
                 new Blob([response.data])
@@ -139,7 +139,7 @@ export const useExpense = (page, imageQuery,) => {
 
         },
         onError: (error) => {
-            console.log(error);
+
 
             toast.error(error?.response?.data?.message || "Failed to Credit");
         },
@@ -160,7 +160,7 @@ export const useExpense = (page, imageQuery,) => {
         }, onSuccess: (data) => {
             toast.success("Expense Create successfully!");
             queryClient.invalidateQueries({ queryKey: ["expensePagination"] });
-            navigate("/admin/expense/list")
+            navigate(admin ? "/admin/expense/list" : "/staff/expense/list")
         },
         onError: (error) => {
 

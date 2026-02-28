@@ -23,7 +23,7 @@ export const ExpenseAccountSingleAddTitleForm = () => {
 
     const selectedExpenseAccount = watch("expenseTitleDis")
 
-    const isValidPage = pathname === "/admin/expense/create"
+    const isValidPage = pathname === "/admin/expense/create" || "/staff/expense/create"
 
     const dispatch = useDispatch()
 
@@ -52,7 +52,7 @@ export const ExpenseAccountSingleAddTitleForm = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 <label className="label">Title</label>
                 <Controller name="title" control={control} render={({ field }) => (
-                    <InputComponent field={field} placeholder="Add Expense Title" />
+                    <InputComponent field={field} regexVal={/\b\w/g} placeholder="Add Expense Title" />
                 )} />
                 {isValidPage ? <div className='flex flex-col my-3 justify-start items-start lg:items-start gap-2 relative'>
                     <label htmlFor="paid-through" >Expense Account</label>
@@ -63,7 +63,7 @@ export const ExpenseAccountSingleAddTitleForm = () => {
                         <div className="relative">
                             <div className="h-56 overflow-y-auto">
 
-                                {expenseAccountTitleData.map((expense, index) => (
+                                {expenseAccountTitleData?.map((expense, index) => (
                                     <div key={expense?._id}>
                                         <button type="button" key={expense?._id}
                                             onClick={() => {

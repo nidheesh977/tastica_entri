@@ -15,7 +15,10 @@ export const superAdminlogin = async (req, res) => {
 
     const { phoneNumber, password } = value;
 
+
+
     const superAdminExist = await AdminStaffModel.findOne({
+      role: "super-admin",
       phoneNumber: phoneNumber,
     });
 

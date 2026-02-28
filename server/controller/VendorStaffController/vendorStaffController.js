@@ -8,6 +8,9 @@ import { AuditLogModel } from "../../model/auditLogModel.js";
 
 export const createVendorStaff = async (req, res, next) => {
 
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user;
+
 
     const { error, value } = createVendorStaffValidation.validate(req.body)
 
@@ -15,40 +18,66 @@ export const createVendorStaff = async (req, res, next) => {
         return next(new AppError(error?.details[0].message, 400))
     }
 
-    const { id: shopId } = req.shop
+    const session = await mongoose.startSession()
+
     const { vendorId, staffName, email, phoneNumber } = value
 
     try {
+        await session.withTransaction(async () => {
 
-        const staffNameLower = staffName.trim().replace(/\s+/g, " ").toLowerCase()
+            const staffNameLower = staffName.trim().replace(/\s+/g, " ").toLowerCase()
 
-        const staffAlreadyExist = await VendorStaffModel.findOne({ shop: shopId, vendor: vendorId, staffNameLowerCase: staffNameLower })
+            const staffAlreadyExist = await VendorStaffModel.findOne({ shop: shopId, vendor: vendorId, staffNameLowerCase: staffNameLower }).session(session).select("_id")
 
-        if (staffAlreadyExist) {
-            return next(new AppError("Staff already exist", 409))
-        }
+            if (staffAlreadyExist) {
+                return next(new AppError("Staff already exist", 409))
+            }
 
-        const lastFourDigit = phoneNumber.slice(-4)
+            const lastFourDigit = phoneNumber.slice(-4)
 
-        const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
+            const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
 
-        const encryptPhoneNumber = encryptData(phoneNumber)
+            const encryptPhoneNumber = encryptData(phoneNumber)
 
-        const newStaff = VendorStaffModel({
-            shop: shopId,
-            vendor: vendorId,
-            staffName,
-            email,
-            phoneNumber: encryptPhoneNumber,
-            maskPhoneNumber: maskedNumber,
-            staffNameLowerCase: staffNameLower
+
+            const newState = {
+                staffName,
+                email
+            }
+
+            const newStaff = await VendorStaffModel.create([
+                {
+                    shop: shopId,
+                    vendor: vendorId,
+                    staffName,
+                    email,
+                    phoneNumber: encryptPhoneNumber,
+                    maskPhoneNumber: maskedNumber,
+                    staffNameLowerCase: staffNameLower
+                }
+            ], { session })
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newStaff[0]._id,
+                    targetModel: "VendorStaff",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new vendor staff",
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(201).json({ success: true, message: "Create successfully" })
         })
-
-        await newStaff.save()
-
-        res.status(201).json({ success: true, message: "Create successfully" })
     } catch (error) {
         next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
@@ -72,7 +101,7 @@ export const getVendorStaffForExpenseForm = async (req, res, next) => {
         res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
 
     } catch (error) {
-        console.log(error)
+
         next(error)
     }
 }

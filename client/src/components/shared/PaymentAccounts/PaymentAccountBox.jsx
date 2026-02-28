@@ -6,7 +6,7 @@ export const PaymentAccountBox = () => {
 
     const { paymentAccountData, isLoading, paymentAccountRefreshing } = usePaymentAccount()
 
-    console.log("render");
+
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">
             <div className="mx-auto mt-10 max-w-4xl flex justify-center flex-col items-center">

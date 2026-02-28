@@ -17,7 +17,7 @@ import adminDashBoardRouter from "./adminDashboardRoute/adminDashboardRoutes.js"
 import passwordResetRouter from "./passwordResetRoute/passwordResetRoute.js";
 import walletRouter from "./walletRoute/walletRoutes.js";
 import expenseAccountRouter from "./expenseAccountRoute/expenseAccountRoutes.js";
-import paymentAccountRouter from "./accountRoute/accountRoutes.js";
+import paymentAccountRouter from "./paymentAccountRoute/PaymentAccountRoutes.js";
 import taxRateRouter from "./taxRateRoute/taxRateRoutes.js";
 import vendorRouter from "./vendorRoute/vendorRoutes.js";
 import expenseRouter from "./expenseRoute/expenseRoutes.js";

@@ -16,7 +16,7 @@ export const CreditAddBox = ({ setOpenRegisterDialog, invoiceNumber, totalAmount
         paymentMethod: null
     })
     const [queryValue, setQueryValue] = useState("")
-    console.log(queryValue);
+
 
     const { addCredit, isSuccess, isPending, creditDataForAddDialog, isCreditrDataAddDialog } = useCredit(queryValue)
 
@@ -76,7 +76,6 @@ export const CreditAddBox = ({ setOpenRegisterDialog, invoiceNumber, totalAmount
             return setQueryValue("")
         }
         const timer = setTimeout(() => {
-            console.log("creditAddData.creditBookId", value);
 
             setQueryValue(value)
         }, 300)

@@ -4,6 +4,7 @@ import { ExpenseAccountSingleAddTitleForm } from './ExpenseAccountSingleAddTitle
 import { useDispatch, useSelector } from "react-redux"
 import { addBackgroundBlur, setOpenExpenseSubTitleForm } from "../../../redux/features/commonSlice"
 import { ExpenseAccountSingleStatusForm } from './ExpenseAccountSingleStatusForm'
+import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
 
 export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
 
@@ -14,7 +15,6 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
         isActive: null
     })
 
-    console.log(openStatusForm);
 
     const { openExpenseSubTitleForm } = useSelector((state) => state.common)
 
@@ -24,6 +24,10 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
         dispatch(setOpenExpenseSubTitleForm(true))
         dispatch(addBackgroundBlur(true))
     }
+
+    const { hasPermission } = usePermissionCheck()
+    const createExpAccApprove = hasPermission("create_expense_account")
+    const statusExpAccApprove = hasPermission("status_expense_account")
 
     const handleChangeAccStatus = (num, titleId, active) => {
         setOpenStatusForm(prev => (
@@ -43,7 +47,7 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
             <div className='w-full flex justify-end'>
                 {openExpenseSubTitleForm ? <ExpenseAccountSingleAddTitleForm /> : null}
                 {openStatusForm.openCom ? <ExpenseAccountSingleStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
-                <button className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
+                <button disabled={!createExpAccApprove} className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
             </div>
 
             <div className='w-full'>
@@ -64,7 +68,7 @@ export const ExpenseAccountSingleTable = ({ expenseAccountSingleData }) => {
                                 <td >{title?.title}</td>
                                 <td>{title?.inActiveReason === null ? "N/A" : title?.inActiveReason.slice(0, 12)} {title?.inActiveReason === null ? null : title?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>
-                                    {<button className={`btn btn-xs w-20 ${title?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, title?._id, title?.isActive ? false : true)}>
+                                    {<button disabled={!statusExpAccApprove} className={`btn btn-xs w-20 ${title?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, title?._id, title?.isActive ? false : true)}>
 
                                         {title?.isActive === true ? "Active" : "In Active"}
 

@@ -135,7 +135,7 @@ export const CustomInvoiceCreate = () => {
 
 
     const shippingAddressBox = (
-        <div className="card w-96 bg-base-100 shadow-sm absolute border">
+        <div className="card w-96 z-[1000] bg-base-100 shadow-sm absolute border">
             <div className="card-body p-3">
                 {customCustomerAddressData?.shippingAddresses.length === 0 ? <p>No data found</p> : null}
                 {customCustomerAddressData?.shippingAddresses.map((address, index) => (
@@ -156,7 +156,7 @@ export const CustomInvoiceCreate = () => {
     )
 
     const billingAddressBox = (
-        <div className="card w-96 bg-base-100 shadow-sm absolute border">
+        <div className="card w-96 z-[1000] bg-base-100 shadow-sm absolute border">
             <div className="card-body p-3">
                 {customCustomerAddressData?.billingAddresses.length === 0 ? <p>No data found</p> : null}
                 {customCustomerAddressData?.billingAddresses.map((address, index) => (
@@ -217,7 +217,7 @@ export const CustomInvoiceCreate = () => {
                     <div className='w-[170px]'>
                         <label htmlFor="expense-account" className='text-red-500 block'>Customer Name*</label>
                     </div>
-                    <div className='flex w-full flex-col'>
+                    <div className='flex w-full flex-col z-50'>
                         <SelectOptionComponent
                             selectPlaceholder={"Select a customer"}
                             selectedCustomInvoiceCustomer={selectedCustomInvoiceCustomer}
@@ -238,7 +238,7 @@ export const CustomInvoiceCreate = () => {
 
                         </SelectOptionComponent>
                         {customCustomerAddressIsLoading ? <p className='mt-5'>Loading</p> : null}
-                        {customerSelectId && customCustomerAddressIsLoading === false ? <div className='mt-5 justify-between flex'>
+                        {customerSelectId && customCustomerAddressIsLoading === false ? <div className='mt-5 justify-start flex'>
                             <div className='w-1/3'>
 
                                 <div className='flex gap-2'>
@@ -302,7 +302,7 @@ export const CustomInvoiceCreate = () => {
                     </div>
 
                     <div>
-                        <div className="relative  w-fit">
+                        <div className="relative z-[32]  w-fit">
                             <input type="date" {...register("date", { valueAsDate: true })} id='date' className=" z-50 rounded-md input input-sm input-bordered " />
                             <span className='absolute right-1  top-1/2 -translate-y-1/2 pointer-events-none'>
                                 <FaCalendarAlt className="text-blue-400" />
@@ -324,7 +324,7 @@ export const CustomInvoiceCreate = () => {
                     </div>
 
                     <div>
-                        <div className="relative  w-fit">
+                        <div className="relative  z-[40] w-fit">
                             <input type="date" {...register("date", { valueAsDate: true })} id='date' className=" z-50 rounded-md input input-sm input-bordered " />
                             <span className='absolute right-1  top-1/2 -translate-y-1/2 pointer-events-none'>
                                 <FaCalendarAlt className="text-blue-400" />

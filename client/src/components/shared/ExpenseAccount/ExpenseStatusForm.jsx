@@ -32,7 +32,7 @@ export const ExpenseStatusForm = ({ openStatusForm, setOpenStatusForm, dispatch,
     return (
         <div className="fixed w-96 p-5 shadow-md bg-white top-[50%] z-[1000] left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md" >
             <div className="mb-2 flex justify-between items-center">
-                <h2 className=" font-semibold">Vendor Status</h2>
+                <h2 className=" font-semibold">Expense Account Status</h2>
                 <button className="btn btn-ghost btn-sm" onClick={handleCloseStatusForm}>
                     <IoMdClose size={20} />
                 </button>

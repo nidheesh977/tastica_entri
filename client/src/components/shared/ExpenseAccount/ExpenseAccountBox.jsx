@@ -5,7 +5,7 @@ import { ExpenseAccountTable } from './ExpenseAccountTable';
 export const ExpenseAccountBox = () => {
     const { expenseAccount, expenseAccountLoading, expenseAccountRefreshing } = useExpenseAccount()
 
-    console.log(expenseAccount);
+
 
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">

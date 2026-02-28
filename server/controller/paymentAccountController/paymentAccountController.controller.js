@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import PaymentAccountModel from "../../model/paymentAccountModel.js";
 import { createPaymentAccountValidation, paymentAcoountStatusValidation } from "../../utils/joiValidation.js";
-import mongoose, { Types } from "mongoose";
+import mongoose, { mongo, Types } from "mongoose";
 import { AppError } from "../../utils/AppError.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 
@@ -10,46 +10,70 @@ import { AuditLogModel } from "../../model/auditLogModel.js";
 export const createPaymentAccount = async (req, res) => {
 
 
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
     const { error, value } = createPaymentAccountValidation.validate(req.body);
 
     if (error) {
         return res.status(400).json({ success: false, message: error.details[0].message })
     }
 
-    const shopId = req.shop.id;
+    const session = await mongoose.startSession()
 
     const { accountType, accountTitle } = value;
 
-    const accountTitleToLowerCase = accountTitle.trim().replace(/\s+/g, " ")
-
     try {
+        await session.withTransaction(async () => {
+
+            const accountTitleToLowerCase = accountTitle.trim().replace(/\s+/g, " ")
+
+            const isPaymentAccountExist = await PaymentAccountModel.findOne({ shop: shopId, accountTitleLowerCase: accountTitleToLowerCase, accountType: accountType })
+                .select("_id  accountTitleLowerCase").session(session)
+
+            if (isPaymentAccountExist) {
+                return res.status(409).json({ success: false, message: "Payment Account Already Exist" })
+            }
+
+
+            const newState = {
+                accountType,
+                accountTitle
+            }
+
+            const newPaymentAccount = await PaymentAccountModel.create([
+                {
+                    shop: shopId,
+                    accountType: accountType,
+                    accountTitle: accountTitle,
+                    accountTitleLowerCase: accountTitle,
+                }], { session })
 
 
 
-        const isPaymentAccountExist = await PaymentAccountModel.findOne({ shop: shopId, accountTitleLowerCase: accountTitleToLowerCase, accountType: accountType })
-            .select("_id  accountTitleLowerCase")
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newPaymentAccount[0]?._id,
+                    targetModel: "PaymentAccount",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new payment account",
+                    performedBy: userId
+                }
+            ], { session })
 
-        if (isPaymentAccountExist) {
-            return res.status(409).json({ success: false, message: "Payment Account Already Exist" })
-        }
 
-
-
-
-        const newPaymentAccount = PaymentAccountModel({
-            shop: shopId,
-            accountType: accountType,
-            accountTitle: accountTitle,
-            accountTitleLowerCase: accountTitle,
+            res.status(201).json({ success: true, message: "Payment account create successfully" })
         })
-
-        await newPaymentAccount.save()
-
-        res.status(201).json({ success: true, message: "Payment account create successfully" })
 
     } catch (error) {
 
         return res.status(500).json({ success: false, message: "Internal server" })
+    } finally {
+        await session.endSession()
     }
 }
 
@@ -206,5 +230,7 @@ export const paymentActiveOrInactive = async (req, res, next) => {
 
     } catch (error) {
         next(error)
+    } finally {
+        await session.endSession()
     }
 }

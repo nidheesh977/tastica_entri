@@ -24,7 +24,7 @@ export const PaymentAccountForm = ({ setopenCreateForm, dispatch, removeBackgrou
 
     const { createPaymentAccount, accountCreateSuccess } = usePaymentAccount()
 
-    console.log("accountCreateSuccess", accountCreateSuccess);
+
 
     const paymentAccountType = [
         { id: 1, value: "", name: "Select Account type" },

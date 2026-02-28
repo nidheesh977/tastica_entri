@@ -46,12 +46,12 @@ export const ExpenseAccountAddTitle = ({ setAddTitleBox }) => {
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 <label className="label">Title</label>
                 <Controller name="title" control={control} render={({ field }) => (
-                    <InputComponent field={field} placeholder="Add Expense Title" />
+                    <InputComponent field={field} regexVal={/\b\w/g} placeholder="Add Expense Title" />
                 )} />
-                <label className="label">Title</label>
+                {/* <label className="label">Title</label>
                 <Controller name="title" control={control} render={({ field }) => (
                     <InputComponent field={field} placeholder="Add Expense Title" />
-                )} />
+                )} /> */}
 
 
 

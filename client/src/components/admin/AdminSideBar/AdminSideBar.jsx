@@ -56,7 +56,7 @@ export const AdminSideBar = () => {
       fixed top-15 md:top-[77px]  left-0 h-[81%] md:h-[77%] xl:h-[83%] md:w-96 bg-tertiary backdrop-blur  shadow-2xl text-primary
       transform ${sidebar ? "translate-x-0" : "-translate-x-full"}
       transition-transform duration-300 ease-in-out
-      z-50
+      z-[1000]
     `}
     >
       <ul className="w-full flex flex-col bg-tertiary gap-1 h-[600px] text-[16px] font-bold p-2 transition-all duration-1000 overflow-y-auto">
@@ -267,7 +267,7 @@ export const AdminSideBar = () => {
           </>
         )}
 
-        <li
+        {hasPermission("view_expense") && <li
           onClick={() => setExpenseManagement(prev => !prev)}
           className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
@@ -277,11 +277,11 @@ export const AdminSideBar = () => {
             className={`transform transition-transform duration-300  ${expenseManagement ? "rotate-180" : ""
               }`}
           />
-        </li>
+        </li>}
 
-        {expenseManagement && (
+        {hasPermission("view_expense") && expenseManagement && (
           <>
-            <li
+            {hasPermission("create_expense") && <li
               onClick={() => {
                 handleSideBar("/admin/expense/create");
                 dispatch(toggleSideBar());
@@ -290,8 +290,8 @@ export const AdminSideBar = () => {
             >
               <FaReceipt />
               Expense Create
-            </li>
-            <li
+            </li>}
+            {hasPermission("view_expense") && <li
               onClick={() => {
                 handleSideBar("/admin/expense/list");
                 dispatch(toggleSideBar());
@@ -301,8 +301,9 @@ export const AdminSideBar = () => {
               <FaReceipt />
               Expense List
             </li>
+            }
 
-            <li
+            {hasPermission("view_expense_account") && <li
               onClick={() => {
                 handleSideBar("/admin/expense/account");
                 dispatch(toggleSideBar());
@@ -312,6 +313,7 @@ export const AdminSideBar = () => {
               <MdAccountBalanceWallet />
               Expense Account
             </li>
+            }
           </>
         )}
 
@@ -326,7 +328,7 @@ export const AdminSideBar = () => {
           Shopping Cart
         </li>
 
-        <li
+        {hasPermission("vendor_view") && <li
           onClick={() => {
             handleSideBar("/admin/vendor");
             dispatch(toggleSideBar());
@@ -335,8 +337,8 @@ export const AdminSideBar = () => {
         >
           <MdEventNote />
           Vendor
-        </li>
-        <li
+        </li>}
+        {hasPermission("payment_acc_view") && <li
           onClick={() => {
             handleSideBar("/admin/payment/account");
             dispatch(toggleSideBar());
@@ -345,7 +347,7 @@ export const AdminSideBar = () => {
         >
           <MdEventNote />
           Payment Account
-        </li>
+        </li>}
 
         <li
           onClick={() => {
@@ -389,7 +391,7 @@ export const AdminSideBar = () => {
           Manage Loyalty Points
         </li>
 
-        <li
+        {hasPermission("tax_rate_view") && <li
           onClick={() => {
             handleSideBar("/admin/tax/rate");
             dispatch(toggleSideBar());
@@ -398,7 +400,7 @@ export const AdminSideBar = () => {
         >
           <MdEventNote />
           Tax Rates
-        </li>
+        </li>}
 
         <li
           onClick={() => {

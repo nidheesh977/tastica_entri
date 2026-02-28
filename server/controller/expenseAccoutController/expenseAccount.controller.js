@@ -5,93 +5,161 @@ import { AppError } from "../../utils/AppError.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 
 export const createExpenseAccount = async (req, res) => {
+
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+
+    const { error, value } = createExpenseAccountValidation.validate(req.body)
+
+    if (error) {
+        return res.status(400).json({ success: false, message: error.details[0].message })
+    }
+
+    const { expenseTitle, description } = value;
+
+    const session = await mongoose.startSession()
+
     try {
-        const shopId = req.shop.id;
 
-        const { error, value } = createExpenseAccountValidation.validate(req.body)
+        await session.withTransaction(async () => {
 
-        if (error) {
-            return res.status(400).json({ success: false, message: error.details[0].message })
-        }
+            const lowerCaseExpenseTitle = expenseTitle.trim().toLowerCase()
 
-        const { expenseTitle, description } = value;
-
-        const lowerCaseExpenseTitle = expenseTitle.trim().toLowerCase()
-
-        const expenseAccountExist = await ExpenseAccountModel.findOne({ shop: shopId, expenseTitleLowerCase: lowerCaseExpenseTitle }).select("expenseTitleLowerCase")
+            const expenseAccountExist = await ExpenseAccountModel.findOne({ shop: shopId, expenseTitleLowerCase: lowerCaseExpenseTitle }).session(session).select("expenseTitleLowerCase")
 
 
-        if (expenseAccountExist) {
-            return res.status(409).json({ success: false, message: "Expense Account Already Exist" })
-        }
+            if (expenseAccountExist) {
+                return res.status(409).json({ success: false, message: "Expense Account Already Exist" })
+            }
 
-        const newExpenseAccount = ExpenseAccountModel({
-            shop: shopId,
-            expenseTitle: expenseTitle,
-            description: description,
-            expenseTitleLowerCase: expenseTitle
+            const newState = {
+                expenseTitle: expenseTitle,
+                description: description
+            }
+
+            const newExpenseAccount = await ExpenseAccountModel.create([
+                {
+                    shop: shopId,
+                    expenseTitle: expenseTitle,
+                    description: description,
+                    expenseTitleLowerCase: lowerCaseExpenseTitle
+                }
+            ], { session })
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newExpenseAccount[0]._id,
+                    targetModel: "ExpenseAccount",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new expense account",
+                    performedBy: userId
+                }
+            ], { session })
+
+
+
+            res.status(201).json({ success: true, message: "Expense account create successfully" })
+
         })
 
-        await newExpenseAccount.save();
-
-        res.status(201).json({ success: true, message: "Expense account create successfully" })
-
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Internal server error" })
+        next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
 export const addNewExpenseInAccount = async (req, res, next) => {
 
-    const shopId = req.shop.id;
-    const expenseAccountId = req.params.id;
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+    const { id: expenseAccountId } = req.params;
+
     const { error, value } = addExpenseValidation.validate(req.body)
 
     if (error) {
         return res.status(400).json({ success: false, message: error.details[0].message })
     }
+    const { title } = value;
+
+
+
+    if (!expenseAccountId || expenseAccountId === "undefined") {
+        return next(new AppError("expense Account not get", 400))
+    }
+
+    const session = await mongoose.startSession()
     try {
 
+        await session.withTransaction(async () => {
 
-        const { title } = value;
+            const lowerCaseTitle = title.trim().replace(/\s+/g, " ").toLowerCase()
 
-
-        const lowerCaseTitle = title.trim().replace(/\s+/g, " ").toLowerCase()
-
-        const isTitleExist = await ExpenseAccountModel.findOne({
-            shop: shopId, _id: expenseAccountId,
-            subTitle: {
-                $elemMatch: {
-                    titleLowerCase: lowerCaseTitle,
-                    isActive: { $ne: false }
-                }
-            }
-        }).select("_id")
-
-        if (isTitleExist) {
-            return next(new AppError("Expense Title Already Exist", 409))
-        }
-
-        await ExpenseAccountModel.findOneAndUpdate({ shop: shopId, _id: expenseAccountId, }, {
-            $push: {
+            const isTitleExist = await ExpenseAccountModel.findOne({
+                shop: shopId, _id: expenseAccountId,
                 subTitle: {
-                    title: title,
-                    titleLowerCase: title,
-                    isActive: true
+                    $elemMatch: {
+                        titleLowerCase: lowerCaseTitle,
+                        isActive: { $ne: false }
+                    }
                 }
+            }).session(session).select("_id")
+
+            if (isTitleExist) {
+                return next(new AppError("Expense Title Already Exist", 409))
             }
-        }, { new: true })
+
+            const newState = {
+                expenseAccountSubTitle: title,
+            }
+
+            const newAccSubtitle = await ExpenseAccountModel.findOneAndUpdate({ shop: shopId, _id: expenseAccountId, }, {
+                $push: {
+                    subTitle: {
+                        title: title,
+                        titleLowerCase: title,
+                        isActive: true
+                    }
+                }
+            }, { session, new: true })
 
 
 
 
-        res.status(201).json({ success: true, message: "Title Added Successfully" })
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: expenseAccountId,
+                    targetModel: "ExpenseAccount",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new expense account sub title",
+                    performedBy: userId
+                }
+            ], { session })
+
+
+
+
+            res.status(201).json({ success: true, message: "Title Added Successfully" })
+        })
+
+
+
     } catch (error) {
         next(error)
     }
 }
 
-export const getExpenseAccountHeadForm = async (req, res, next) => {
+export const getExpenseAccountTitle = async (req, res, next) => {
     try {
         const { id: shopId } = req.shop
 
@@ -112,7 +180,6 @@ export const getExpenseAccountHeadForm = async (req, res, next) => {
         res.status(200).json({ success: true, message: "Data fetched successfully", data: result })
 
     } catch (error) {
-        console.log(error)
         next(error)
     }
 }
@@ -140,7 +207,6 @@ export const getExpenseAccountForExpenseForm = async (req, res) => {
         res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpenses })
 
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
 }
@@ -154,8 +220,6 @@ export const getExpenseAccounts = async (req, res, next) => {
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: findExpenses })
     } catch (error) {
-        console.log(error);
-
         next(error)
     }
 }
@@ -180,7 +244,7 @@ export const getSingleExpenseAccount = async (req, res, next) => {
     }
 }
 
-export const deleteExpenseAccountTitle = async (req, res, next) => {
+export const expenseAccountTitleStatusUpdate = async (req, res, next) => {
 
     const shopId = req.shop.id;
     const { expenseId } = req.params

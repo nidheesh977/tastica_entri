@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import ExpenseModel from "../../model/expense model/expenseModel.js"
 import TaxRateModel from "../../model/taxRateModel.js";
 import ExpenseAccountModel from "../../model/expense model/expenseAccountModel.js";
@@ -12,176 +12,240 @@ import { compressImage } from "../../utils/compressImage.js";
 import { uploadImageToCloudinary } from "../../utils/uploadImageToCloudinary .js";
 import { cloudinaryInstance } from "../../config/cloudineryConfig.js";
 import PDFDocument from "pdfkit"
+import { AuditLogModel } from "../../model/auditLogModel.js";
 
 
 export const createExpense = async (req, res, next) => {
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+
+    const file = req.file;
+
+    const { error, value } = createExpenseFormValidation.validate(req.body)
+
+    if (error) {
+        return next(new AppError(error.details[0].message, 400))
+    }
+
+
+
+    const {
+        date,
+        expenseAccount,
+        expenseSubTitle,
+        expenseAmount,
+        amountIs,
+        paidThrough,
+        shopTaxAccount,
+        taxRate,
+        vendor,
+        referenceId,
+        vendorStaff,
+        notes,
+        billable,
+
+    } = value
+
+
+    const session = await mongoose.startSession()
     try {
 
-        const { id: shopId } = req.shop;
-        const { id: userId } = req.user
 
-        const file = req.file;
+        const result = await session.withTransaction(async () => {
 
-
-
-
-
-
-
-        const { error, value } = createExpenseFormValidation.validate(req.body)
-
-        if (error) {
-            return next(new AppError(error.details[0].message, 400))
-        }
-
-
-
-        const {
-            date,
-            expenseAccount,
-            expenseSubTitle,
-            expenseAmount,
-            amountIs,
-            paidThrough,
-            shopTaxAccount,
-            taxRate,
-            vendor,
-            referenceId,
-            vendorStaff,
-            notes,
-            billable,
-
-        } = value
-
-
-
-        if (vendorStaff && !vendor) {
-            return (next(new AppError("Please select  Vendor", 400)))
-        }
-
-
-        const findTaxRate = await TaxRateModel.findOne({ shop: shopId, },
-            { taxRates: { $elemMatch: { "_id": taxRate } } }
-        )
-
-
-
-        if (!findTaxRate) {
-            return res.status(404).json({ success: false, message: "Selected Tax rate is not found" })
-        }
-
-        const findExpenseAccount = await ExpenseAccountModel.findOne({ shop: shopId, _id: expenseAccount },
-            { subTitle: { $elemMatch: { "_id": expenseSubTitle } } }
-        )
-
-        if (!findExpenseAccount) {
-            return res.status(404).json({ success: false, message: "Selected expense is not found" })
-        }
-
-
-
-
-
-        const expenseId = await generateExpenseId(shopId)
-
-        const selectedTaxRate = findTaxRate.taxRates[0]
-
-        const selectdExpense = findExpenseAccount.subTitle[0]
-
-        const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
-        const type = process.env.EXPENSE_DOC_IMAGE_AUTH
-
-        let compressedImage = null
-        let result = null
-
-        if (file) {
-            compressedImage = await compressImage(file.buffer, 1200, 72)
-
-            result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
-        }
-
-        const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")
-
-        const dateToIso = new Date(date).toISOString();
-
-        const newExpense = ExpenseModel({
-            expenseId: expenseId,
-            shop: shopId,
-            createdDate: dateToIso,
-            createdBy: userId,
-            expenseAccount,
-            expenseSubTitle: selectdExpense?.title,
-            expenseAmount,
-            taxAmount: taxAmount,
-            totalAmount: totalAmount,
-            baseAmount: baseAmount,
-            amountIs,
-            paidThrough,
-            taxCode: selectedTaxRate.taxCodeName,
-            shopTaxAccount,
-            taxRate: selectedTaxRate.rate,
-            vendor: vendor,
-            vendorStaff,
-            referenceId,
-            billable: billable,
-            notes,
-            image: {
-                publicId: result?.public_id,
-                version: result?.version
+            if (vendorStaff && !vendor) {
+                return (next(new AppError("Please select Vendor", 400)))
             }
+
+
+            const findTaxRate = await TaxRateModel.findOne({ shop: shopId, },
+                { taxRates: { $elemMatch: { "_id": taxRate } } }
+            ).session(session)
+
+
+
+            if (!findTaxRate) {
+                return res.status(404).json({ success: false, message: "Selected Tax rate is not found" })
+            }
+
+            const findExpenseAccount = await ExpenseAccountModel.findOne({ shop: shopId, _id: expenseAccount },
+                { subTitle: { $elemMatch: { "_id": expenseSubTitle } } }
+            ).session(session)
+
+            if (!findExpenseAccount) {
+                return res.status(404).json({ success: false, message: "Selected expense is not found" })
+            }
+
+
+
+
+
+            const expenseId = await generateExpenseId(shopId)
+
+            const selectedTaxRate = findTaxRate.taxRates[0]
+
+            const selectdExpense = findExpenseAccount.subTitle[0]
+
+            const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
+            const type = process.env.EXPENSE_DOC_IMAGE_AUTH
+
+            let compressedImage = null
+            let result = null
+
+            if (file) {
+                compressedImage = await compressImage(file.buffer, 1200, 72)
+
+                result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
+            }
+
+            const { baseAmount, taxAmount, totalAmount } = calculateTax(expenseAmount || 0, selectedTaxRate.rate || 0, amountIs || "nothing")
+
+            const dateToIso = new Date(date).toISOString();
+
+            const newState = {
+                expenseId: expenseId,
+                expenseAccountSubTitle: selectdExpense?.title,
+                expenseAccount,
+                expenseAmount: expenseAmount,
+                taxAmount: taxAmount,
+                totalAmount: totalAmount,
+                baseAmount: baseAmount,
+                taxRate: selectedTaxRate.rate,
+                taxCode: selectedTaxRate.taxCodeName,
+                vendor: vendor,
+                taxMode: amountIs,
+                vendorStaff,
+            }
+
+            const newExpense = await ExpenseModel.create([
+                {
+                    expenseId: expenseId,
+                    shop: shopId,
+                    createdDate: dateToIso,
+                    createdBy: userId,
+                    expenseAccount,
+                    expenseSubTitle: selectdExpense?.title,
+                    expenseAmount,
+                    taxAmount: taxAmount,
+                    totalAmount: totalAmount,
+                    baseAmount: baseAmount,
+                    amountIs,
+                    paidThrough,
+                    taxCode: selectedTaxRate.taxCodeName,
+                    shopTaxAccount,
+                    taxRate: selectedTaxRate.rate,
+                    vendor: vendor,
+                    vendorStaff,
+                    referenceId,
+                    billable: billable,
+                    notes,
+                    image: {
+                        publicId: result?.public_id,
+                        version: result?.version
+                    }
+                }
+            ], { session })
+
+
+
+
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: newExpense[0]._id,
+                    targetModel: "Expense",
+                    action: "CREATE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Create new expense form",
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(201).json({ success: true, message: "Expense create successfully" })
         })
 
-        await newExpense.save()
-
-        res.status(201).json({ success: true, message: "Expense create successfully" })
-
     } catch (error) {
-        console.log(error)
         next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
 
 export const uploadImageToExpense = async (req, res, next) => {
+
+    const { expenseId } = req.params;
+    const { id: shopId } = req.shop;
+    const { id: userId } = req.user
+
+    const file = req.file;
+    const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
+    const type = process.env.EXPENSE_DOC_IMAGE_AUTH
+
+    const session = await mongoose.startSession()
+
     try {
 
-        const { expenseId } = req.params;
-        const { id: shopId } = req.shop
+        await session.withTransaction(async () => {
 
-        const isExpenseExist = await ExpenseModel.findOne({ shop: shopId, _id: expenseId })
-
+            const isExpenseExist = await ExpenseModel.findOne({ shop: shopId, _id: expenseId }).select("_id").session(session)
 
 
-
-        if (!isExpenseExist) {
-            return next(new AppError("Expense not found", 404))
-        }
-
-        const file = req.file;
+            if (!isExpenseExist) {
+                return next(new AppError("Expense not found", 404))
+            }
 
 
-        const folder = process.env.EXPENSE_DOC_IMAGE_FOLDER
-        const type = process.env.EXPENSE_DOC_IMAGE_AUTH
 
 
-        const compressedImage = await compressImage(file.buffer, 1200, 72)
+            const compressedImage = await compressImage(file.buffer, 1200, 72)
 
-        const result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
+            const result = await uploadImageToCloudinary(compressedImage, folder, type, "image")
 
 
-        await ExpenseModel.findOneAndUpdate({ shop: shopId, _id: expenseId },
-            {
+            const newState = {
                 image: {
                     publicId: result?.public_id,
                     version: result?.version
                 }
-            },
-            { new: true }
-        )
+            }
 
-        res.status(200).json({ success: true, message: "Image upload successfully", })
+            await ExpenseModel.findOneAndUpdate({ shop: shopId, _id: expenseId },
+                {
+                    image: {
+                        publicId: result?.public_id,
+                        version: result?.version
+                    }
+                },
+                { session, new: true, }
+            )
+
+            await AuditLogModel.create([
+                {
+                    shop: shopId,
+                    targetId: expenseId,
+                    targetModel: "Expense",
+                    action: "UPLOAD_IMAGE",
+                    payload: {
+                        before: null,
+                        after: newState
+                    },
+                    reason: "Upload image to expense form",
+                    performedBy: userId
+                }
+            ], { session })
+
+            res.status(200).json({ success: true, message: "Image upload successfully", })
+        })
+
     } catch (error) {
         next(error)
+    } finally {
+        await session.endSession()
     }
 }
 
@@ -291,8 +355,6 @@ export const getTaxRateAmount = async (req, res, next) => {
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: taxAmount })
     } catch (error) {
-        console.log(error);
-
         next(error)
     }
 }
@@ -381,7 +443,6 @@ export const getExpense = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data, totalCount, page, datalength, hasmore, limit })
     } catch (error) {
-        console.log(error);
 
         return res.status(500).json({ success: false, message: "Internal server error" })
     }
@@ -413,7 +474,7 @@ export const getSingleExpense = async (req, res, next) => {
 export const getImageDoc = async (req, res, next) => {
     try {
         const { imagePublicId } = req.query;
-        console.log(imagePublicId);
+
 
         const image = cloudinaryInstance.url(imagePublicId, {
             type: "authenticated",

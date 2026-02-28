@@ -470,7 +470,7 @@ export const resetPasswordValidation = Joi.object({
 
 
 export const addPermissionValidation = Joi.object({
-    permission: Joi.string().valid("product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create", "credit_read", "credit_pay", "credit_give", "credit_create").messages({
+    permission: Joi.string().valid("product_read", "product_update", "product_delete", "product_create", "category_read", "category_update", "category_delete", "category_create", "customer_read", "customer_update", "customer_delete", "customer_create", "credit_read", "credit_pay", "credit_give", "credit_create", "view_expense", "create_expense", "view_expense_account", "create_expense_account", "status_expense_account", "vendor_view", "vendor_create", "vendor_change_status", "payment_acc_view", "payment_acc_create", "payment_acc_change_status", "tax_rate_view", "tax_create", "tax_change_status").messages({
         'string.base': 'Permission must be a string',
         'string.empty': 'Permission cannot be empty',
         'any.only': 'This permission is not Valid',
@@ -677,14 +677,14 @@ export const addTaxRatesValidation = Joi.object({
 // --------------------------------------------------Vendor validation---------------------------------------------------------
 
 export const createVendorValidation = Joi.object({
-    vendorName: Joi.string().min(3).max(30).required().messages({
+    vendorName: Joi.string().trim().min(3).max(30).required().messages({
         'string.required': 'Vendor Name is required',
         'string.base': 'Vendor Name must be a string',
         'string.empty': 'Vendor Name cannot be empty',
         'string.min': 'Vendor Name must be at least 3 characters long',
         'string.max': 'Vendor Name must be at most 30 characters long',
     }),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+    email: Joi.string().trim().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
         'string.required': 'Vendor email is required',
         'string.base': 'Vendor email must be a string',
         'string.empty': 'Vendor email cannot be empty',
@@ -701,6 +701,29 @@ export const createVendorValidation = Joi.object({
         'string.min': 'Address must be at least 3 characters long',
         'string.max': 'Address must be at most 100 characters long',
         'string.empty': 'Address cannot be empty',
+    }),
+})
+
+export const createVendorStaffValidation = Joi.object({
+    vendorId: Joi.string().trim().length(24).hex().required(),
+    staffName: Joi.string().trim().min(3).max(30).required().messages({
+        'string.required': 'Staff Name is required',
+        'string.base': 'Staff Name must be a string',
+        'string.empty': 'Staff Name cannot be empty',
+        'string.min': 'Staff Name must be at least 3 characters long',
+        'string.max': 'Staff Name must be at most 30 characters long',
+    }),
+    email: Joi.string().trim().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+        'string.required': 'Staff email is required',
+        'string.base': 'Staff email must be a string',
+        'string.empty': 'Staff email cannot be empty',
+        'string.email': 'Staff email must be a valid email address',
+    }),
+    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
+        'string.required': 'Phone number is required',
+        'string.base': 'Phone number must be a string',
+        'string.empty': 'Phone number cannot be empty',
+        'string.pattern.base': 'Phone number must be between 7 to 14 digits',
     }),
 })
 
@@ -773,7 +796,7 @@ export const createExpenseFormValidation = Joi.object({
     referenceId: Joi.string().optional().empty("").messages({
         "string.base": "Reference ID must be a string"
     }),
-    notes: Joi.string().required().empty('').max(500).messages({
+    notes: Joi.string().trim().required().empty('').max(500).messages({
         "any.required": "Notes are required",
         "string.base": "Notes must be a string",
         "string.max": "Notes cannot exceed 500 characters"
@@ -791,7 +814,7 @@ export const createExpenseFormValidation = Joi.object({
 export const vendorStatusValidation = Joi.object({
     vendorId: Joi.string().length(24).hex().required(),
     isActive: Joi.boolean().required(),
-    reason: Joi.string().min(5).max(100).when("isActive", {
+    reason: Joi.string().trim().min(5).max(100).when("isActive", {
         is: false,
         then: Joi.required(),
         otherwise: Joi.optional().allow(null, "")
@@ -806,28 +829,7 @@ export const vendorStatusValidation = Joi.object({
 
 
 
-export const createVendorStaffValidation = Joi.object({
-    vendorId: Joi.string().length(24).hex().required(),
-    staffName: Joi.string().min(3).max(30).required().messages({
-        'string.required': 'Staff Name is required',
-        'string.base': 'Staff Name must be a string',
-        'string.empty': 'Staff Name cannot be empty',
-        'string.min': 'Staff Name must be at least 3 characters long',
-        'string.max': 'Staff Name must be at most 30 characters long',
-    }),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
-        'string.required': 'Staff email is required',
-        'string.base': 'Staff email must be a string',
-        'string.empty': 'Staff email cannot be empty',
-        'string.email': 'Staff email must be a valid email address',
-    }),
-    phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
-        'string.required': 'Phone number is required',
-        'string.base': 'Phone number must be a string',
-        'string.empty': 'Phone number cannot be empty',
-        'string.pattern.base': 'Phone number must be between 7 to 14 digits',
-    }),
-})
+
 
 
 export const vendorStaffStatusValidation = Joi.object({
@@ -914,7 +916,7 @@ export const createCustomCustomerValidation = Joi.object({
         'string.empty': 'Customer Type cannot be empty',
         'any.only': 'Customer Type must be one of the following values: individual, business',
     }),
-    customerName: Joi.string().min(3).max(100).when("customerType", {
+    customerName: Joi.string().trim().min(3).max(100).when("customerType", {
         is: "individual",
         then: Joi.required(),
         otherwise: Joi.optional().allow(null, "")
@@ -924,7 +926,7 @@ export const createCustomCustomerValidation = Joi.object({
         'string.min': 'Customer Name is too short (minimum 3 characters)',
         'any.required': 'Customer Name is required'
     }),
-    businessName: Joi.string().min(3).max(100).when("customerType", {
+    businessName: Joi.string().trim().min(3).max(100).when("customerType", {
         is: "business",
         then: Joi.required(),
         otherwise: Joi.optional().allow(null, "")
@@ -934,8 +936,9 @@ export const createCustomCustomerValidation = Joi.object({
         'string.min': 'Business Name is too short (minimum 3 characters)',
         'any.required': 'Business Name is required'
     }),
-    email: Joi.string().optional().empty("").messages({
-        "string.base": "Email must be a string"
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional().empty("").messages({
+        "string.base": "Email must be a string",
+        'string.email': 'Staff email must be a valid email address',
     }),
     phoneNumber: Joi.string().pattern(/^[0-9]{7,14}$/).required().messages({
         'string.required': 'Phone number is required',
@@ -943,7 +946,7 @@ export const createCustomCustomerValidation = Joi.object({
         'string.empty': 'Phone number cannot be empty',
         'string.pattern.base': 'Phone number must be between 7 to 14 digits',
     }),
-    displayName: Joi.string().min(3).max(30).required().messages({
+    displayName: Joi.string().trim().min(3).max(30).required().messages({
         'string.required': 'Display Name is required',
         'string.base': 'Display Name must be a string',
         'string.empty': 'Display Name cannot be empty',
@@ -961,7 +964,7 @@ export const createCustomCustomerValidation = Joi.object({
         'any.required': 'Salutation is required',
         'any.only': 'Salutation must be one of the following values: "Mr.", "Mrs.", "Ms.", "Miss", "M/s."',
     }),
-    firstName: Joi.string().min(3).max(100).when("customerType", {
+    firstName: Joi.string().trim().min(3).max(100).when("customerType", {
         is: "business",
         then: Joi.required(),
         otherwise: Joi.optional().allow("")
@@ -971,7 +974,7 @@ export const createCustomCustomerValidation = Joi.object({
         'string.min': 'First Name is too short (minimum 3 characters)',
         'any.required': 'First Name is required'
     }),
-    lastName: Joi.string().min(1).max(100).when("customerType", {
+    lastName: Joi.string().trim().min(1).max(100).when("customerType", {
         is: "business",
         otherwise: Joi.optional().allow("").empty("")
     }).messages({
@@ -980,22 +983,22 @@ export const createCustomCustomerValidation = Joi.object({
         'string.min': 'Last Name is too short (minimum 3 characters)',
         'any.required': 'Last Name is required'
     }),
-    billingLabel: Joi.string().min(3).max(30).optional().empty("").messages({
+    billingLabel: Joi.string().trim().min(3).max(30).optional().empty("").messages({
         'string.base': 'Billing Label must be a string',
         'string.min': 'Billing Label must be at least 3 characters long',
         'string.max': 'Billing Label must be at most 30 characters long',
     }),
-    billingAddress: Joi.string().min(3).max(1000).optional().empty("").messages({
+    billingAddress: Joi.string().trim().min(3).max(1000).optional().empty("").messages({
         'string.base': 'Billing Address must be a string',
         'string.min': 'Billing Address must be at least 3 characters long',
         'string.max': 'Billing Address must be at most 1000 characters long',
     }),
-    billingCity: Joi.string().min(3).max(100).optional().empty("").messages({
+    billingCity: Joi.string().trim().min(3).max(100).optional().empty("").messages({
         'string.base': 'Billing City must be a string',
         'string.min': 'Billing City must be at least 3 characters long',
         'string.max': 'Billing City must be at most 100 characters long',
     }),
-    billingState: Joi.string().min(3).max(100).optional().empty("").messages({
+    billingState: Joi.string().trim().min(3).max(100).optional().empty("").messages({
         ' string.base': 'Billing State must be a valid text string',
         'string.min': 'Billing city must be at least 3 characters long',
         'string.max': 'Billing city must be at most 100 characters long',
@@ -1064,27 +1067,27 @@ export const createCustomCustomerValidation = Joi.object({
         "string.empty": "billingCountry Postal cannot be empty",
     }),
 
-    shippingLabel: Joi.string().min(3).max(30).optional().empty("").messages({
+    shippingLabel: Joi.string().trim().min(3).max(30).optional().empty("").messages({
         "string.base": "Shipping Label must be a string",
         'string.min': 'Shipping Label must be at least 3 characters long',
         'string.max': 'Shipping Label must be at most 30 characters long',
     }),
-    shippingAddress: Joi.string().min(3).max(1000).optional().empty("").messages({
+    shippingAddress: Joi.string().trim().min(3).max(1000).optional().empty("").messages({
         "string.base": "Shipping Address must be a string",
         'string.min': 'Shipping Address must be at least 3 characters long',
         'string.max': 'Shipping Address must be at most 1000 characters long',
     }),
-    shippingCity: Joi.string().min(3).max(100).optional().empty("").messages({
+    shippingCity: Joi.string().trim().min(3).max(100).optional().empty("").messages({
         "string.base": "Shipping city must be a string",
         'string.min': 'Shipping city must be at least 3 characters long',
         'string.max': 'Shipping city must be at most 100 characters long',
     }),
-    shippingState: Joi.string().optional().min(3).max(100).empty("").messages({
+    shippingState: Joi.string().trim().optional().min(3).max(100).empty("").messages({
         ' string.base': 'Billing State must be a valid text string',
         'string.min': 'Shipping city must be at least 3 characters long',
         'string.max': 'Shipping city must be at most 100 characters long',
     }),
-    shippingCountry: Joi.string().optional().empty("").trim().uppercase()
+    shippingCountry: Joi.string().trim().optional().empty("").trim().uppercase()
         .valid("IN", "US", "UK", "CA", "AU", "MV")
         .messages({
             "any.only": "Billing country must be one of IN, US, UK, CA, AU, or MV",
@@ -1152,28 +1155,28 @@ export const createCustomCustomerValidation = Joi.object({
 
 export const createShippingAddress = Joi.object({
 
-    shippingLabel: Joi.string().min(3).max(30).required().messages({
+    shippingLabel: Joi.string().trim().min(3).max(30).required().messages({
         "string.required": "Shipping Label is required",
         "string.empty": "Shipping Label is required",
         "string.base": "Shipping Label must be a string",
         'string.min': 'Shipping Label must be at least 3 characters long',
         'string.max': 'Shipping Label must be at most 30 characters long',
     }),
-    shippingAddress: Joi.string().min(3).max(1000).required().messages({
+    shippingAddress: Joi.string().trim().min(3).max(1000).required().messages({
         "string.required": "Shipping Address is required",
         "string.empty": "Shipping Address is required",
         "string.base": "Shipping Address must be a string",
         'string.min': 'Shipping Address must be at least 3 characters long',
         'string.max': 'Shipping Address must be at most 1000 characters long',
     }),
-    shippingCity: Joi.string().min(3).max(100).required().messages({
+    shippingCity: Joi.string().trim().min(3).max(100).required().messages({
         "string.required": "Shipping city is required",
         "string.empty": "Shipping city is required",
         "string.base": "Shipping city must be a string",
         'string.min': 'Shipping city must be at least 3 characters long',
         'string.max': 'Shipping city must be at most 100 characters long',
     }),
-    shippingState: Joi.string().optional().min(3).max(100).empty("").messages({
+    shippingState: Joi.string().trim().optional().min(3).max(100).empty("").messages({
         ' string.base': 'Billing State must be a valid text string',
         'string.min': 'Shipping city must be at least 3 characters long',
         'string.max': 'Shipping city must be at most 100 characters long',
@@ -1246,28 +1249,28 @@ export const createShippingAddress = Joi.object({
 
 export const createBillingAddress = Joi.object({
 
-    billingLabel: Joi.string().min(3).max(30).required().messages({
+    billingLabel: Joi.string().trim().min(3).max(30).required().messages({
         "string.required": "Billing Label is required",
         "string.empty": "Billing Label is required",
         "string.base": "Billing Label must be a string",
         'string.min': 'Billing Label must be at least 3 characters long',
         'string.max': 'Billing Label must be at most 30 characters long',
     }),
-    billingAddress: Joi.string().min(3).max(1000).required().messages({
+    billingAddress: Joi.string().trim().min(3).max(1000).required().messages({
         "string.required": "Billing Address is required",
         "string.empty": "Billing Address is required",
         "string.base": "Billing Address must be a string",
         'string.min': 'Billing Address must be at least 3 characters long',
         'string.max': 'Billing Address must be at most 1000 characters long',
     }),
-    billingCity: Joi.string().min(3).max(100).required().messages({
+    billingCity: Joi.string().trim().min(3).max(100).required().messages({
         "string.required": "Billing city is required",
         "string.empty": "Billing city is required",
         "string.base": "Billing city must be a string",
         'string.min': 'Billing city must be at least 3 characters long',
         'string.max': 'Billing city must be at most 100 characters long',
     }),
-    billingState: Joi.string().optional().min(3).max(100).empty("").messages({
+    billingState: Joi.string().trim().optional().min(3).max(100).empty("").messages({
         ' string.base': 'Billing State must be a valid text string',
         'string.min': 'Billing State must be at least 3 characters long',
         'string.max': 'Billing State must be at most 100 characters long',

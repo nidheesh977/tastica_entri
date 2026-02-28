@@ -91,7 +91,7 @@ export const useExpenseAccount = () => {
                 withCredentials: true,
                 data: data
             })
-            console.log(response)
+
             return response?.data
 
         }, onSuccess: async () => {
@@ -105,7 +105,7 @@ export const useExpenseAccount = () => {
             ])
 
         }, onError: (error) => {
-            console.log(error)
+
             toast.error(error?.response?.data?.message || "Somethings went wrong");
         }
     })
@@ -134,7 +134,7 @@ export const useExpenseAccount = () => {
             ])
 
         }, onError: (error) => {
-            console.log(error)
+
             toast.error(error?.response?.data?.message || "Somethings went wrong");
         }
     })
@@ -155,7 +155,7 @@ export const useExpenseAccount = () => {
             dispatch(removeBackgroundBlur(false))
             queryClient.invalidateQueries({ queryKey: ["expenseAccountId", expenseAccountId], });
         }, onError: (error) => {
-            console.log(error)
+
             toast.error(error?.response?.data?.message || "Somethings went wrong");
         }
     })

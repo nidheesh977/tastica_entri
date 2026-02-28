@@ -4,6 +4,7 @@ import { VendorStaffForm } from './VendorStaffForm'
 import { VendorStaffStatusForm } from './VendorStaffStatusForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { addBackgroundBlur, removeBackgroundBlur, setOpenVendorStaffForm } from "../../../redux/features/commonSlice"
+import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
 
 export const VendorStaffTable = ({ vendorStaffData }) => {
 
@@ -14,6 +15,12 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
     })
 
     const dispatch = useDispatch()
+
+    // permission
+    const { hasPermission } = usePermissionCheck()
+    const createVendorStaffApprove = hasPermission("vendor_create")
+    const statusVendorStaffApprove = hasPermission("vendor_change_status")
+
 
     const { openVendorStaffForm } = useSelector(state => state.common)
 
@@ -37,7 +44,7 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
             <div className='w-full flex justify-end gap-5'>
                 {openVendorStaffForm ? <VendorStaffForm /> : null}
                 {openStatusForm.openCom ? <VendorStaffStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
-                <button className="btn btn-success btn-sm text-white" onClick={handleOpenCreateForm}>Add</button>
+                <button disabled={!createVendorStaffApprove} className="btn btn-success btn-sm text-white" onClick={handleOpenCreateForm}>Add</button>
             </div>
 
             <div className='w-full'>
@@ -62,7 +69,7 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
                                 <td className='font-medium'>{staff?.maskPhoneNumber}</td>
                                 <td>{staff?.inActiveReason === null ? "N/A" : staff?.inActiveReason.slice(0, 12)} {staff?.inActiveReason === null ? null : staff?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>
-                                    {<button className={`btn btn-xs w-20 ${staff?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, staff?._id, staff?.isActive ? false : true)}>
+                                    {<button disabled={!statusVendorStaffApprove} className={`btn btn-xs w-20 ${staff?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, staff?._id, staff?.isActive ? false : true)}>
 
                                         {staff?.isActive === true ? "Active" : "In Active"}
 

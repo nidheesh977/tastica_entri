@@ -5,6 +5,7 @@ import { usePaymentAccount } from '../../../hooks/usePaymentAccount'
 import { useDispatch } from "react-redux"
 import { addBackgroundBlur, removeBackgroundBlur } from "../../../redux/features/commonSlice"
 import { PaymentAccountStatus } from './paymentAccountStatus'
+import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
 
 
 export const PaymentAccountTable = ({ paymentAccountData }) => {
@@ -18,6 +19,12 @@ export const PaymentAccountTable = ({ paymentAccountData }) => {
         isActive: null,
 
     })
+
+    // permission
+    const { hasPermission } = usePermissionCheck()
+    const createPaymentApprove = hasPermission("payment_acc_create")
+    const statusPaymentApprove = hasPermission("payment_acc_change_status")
+
 
     const dispatch = useDispatch()
 
@@ -44,7 +51,7 @@ export const PaymentAccountTable = ({ paymentAccountData }) => {
             <div className='w-full flex justify-end'>
                 {openCreateForm ? <PaymentAccountForm setopenCreateForm={setopenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 {openStatusForm.openCom ? <PaymentAccountStatus openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} /> : null}
-                <button className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
+                <button disabled={!createPaymentApprove} className="btn btn-success btn-sm text-white" onClick={handleOpenForm}>Add</button>
             </div>
 
             <div className='w-full'>
@@ -65,7 +72,7 @@ export const PaymentAccountTable = ({ paymentAccountData }) => {
                                 <td >{account?.accountTitle}</td>
                                 <td>{account?.accountType}</td>
                                 <td>
-                                    {<button className={`btn btn-xs w-20 ${account?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, account?._id, account?.isActive ? false : true)}>
+                                    {<button disabled={!statusPaymentApprove} className={`btn btn-xs w-20 ${account?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, account?._id, account?.isActive ? false : true)}>
 
                                         {account?.isActive === true ? "Active" : "In Active"}
 

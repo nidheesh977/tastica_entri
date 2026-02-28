@@ -1,18 +1,18 @@
 
 
 export const checkPermission = (permission) => {
-     return (req,res,next) => {
-            try{
-            let userPermission =  req.user.permissions || []
+    return (req, res, next) => {
+        try {
+            let userPermission = req.user.permissions || []
 
-            if(!userPermission.includes(permission)){
-                return res.status(400).json({success:false,message:"Permission denied"})
+            if (!userPermission.includes(permission)) {
+                return res.status(403).json({ success: false, message: "Permission denied" })
             }
 
             next()
-            }catch(error){
-         
-                return res.status(400).json({success:false,message:"permission denied"})
-            }
+        } catch (error) {
+
+            return res.status(403).json({ success: false, message: "permission denied" })
         }
+    }
 }

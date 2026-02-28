@@ -9,12 +9,12 @@ export const ExpensePrint = () => {
 
     const { expensePrintData } = useSelector(state => state.expense)
 
-    console.log(expensePrintData);
+
 
 
     const handlePrint = () => {
         const afterPrintHandler = () => {
-            console.log("Print dialog closed");
+
             navigate(-1); // go back to previous page
             window.removeEventListener("afterprint", afterPrintHandler);
         };

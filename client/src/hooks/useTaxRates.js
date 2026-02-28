@@ -57,7 +57,17 @@ export const useTaxRates = () => {
         }, onSuccess: (data) => {
             toast.success("Taxrate book create successfully")
             queryClient.invalidateQueries({ queryKey: ["taxRate"] });
-        }
+        },
+        onError: (error) => {
+
+
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
+        },
+
+
+
     })
 
     const { mutate: addTaxToAccount, isPending: addTaxToAccountLoaded } = useMutation({
@@ -87,7 +97,7 @@ export const useTaxRates = () => {
             ])
         },
         onError: (error) => {
-            console.log(error);
+
 
             toast.error(
                 error?.response?.data?.message || "Something error"

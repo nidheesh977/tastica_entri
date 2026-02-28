@@ -3,9 +3,6 @@ import React, { useEffect, useState } from 'react'
 export const filterDataArr = (data, filterValue, arr, key, isSingleArr) => {
     const [filteredData, setFilteredData] = useState([])
 
-    console.log("filteredData", filteredData);
-
-
 
     useEffect(() => {
         if (isSingleArr === false) {

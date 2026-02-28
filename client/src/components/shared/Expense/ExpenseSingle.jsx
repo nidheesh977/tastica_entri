@@ -16,7 +16,7 @@ export const ExpenseSingle = () => {
     const [imageQuery, setImageQuery] = useState(null)
     const [imageView, setImageView] = useState(false)
     const [preview, setPreview] = useState(null)
-    console.log(preview);
+
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -208,7 +208,7 @@ export const ExpenseSingle = () => {
                                                 <button disabled={uploadImageLoading === true} onClick={handleSaveExpense} className="btn btn-primary absolute top-2 right-24 z-10 btn-sm rounded">
                                                     {uploadImageLoading ? "Uploading..." : "Upload"}
                                                 </button>
-                                                <button onClick={handleRemoveImage} className="absolute top-2 right-10 z-10 bg-white px-2 py-1 rounded">
+                                                <button disabled={uploadImageLoading === true} onClick={handleRemoveImage} className="absolute top-2 right-10 z-10 bg-white px-2 py-1 rounded">
                                                     Clear
                                                 </button>
 

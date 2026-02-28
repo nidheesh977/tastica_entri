@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { removeBackgroundBlur, addBackgroundBlur, setOpenVendorForm } from "../../../redux/features/commonSlice"
 import { VendorStatusForm } from './VendorStatusForm'
 import { Link } from 'react-router-dom'
+import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
 
 
 export const VendorDataTable = ({ vendorData }) => {
@@ -17,6 +18,11 @@ export const VendorDataTable = ({ vendorData }) => {
         vendorId: null,
         isActive: null
     })
+    // permission
+    const { hasPermission } = usePermissionCheck()
+    const createVendorApprove = hasPermission("vendor_create")
+    const statusVendorApprove = hasPermission("vendor_change_status")
+
 
     const dispatch = useDispatch()
 
@@ -47,7 +53,7 @@ export const VendorDataTable = ({ vendorData }) => {
             <div className='w-full flex justify-end gap-5'>
                 {openVendorForm ? <VendorForm setopenCreateForm={setopenCreateForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
                 {openStatusForm.openCom ? <VendorStatusForm openStatusForm={openStatusForm} setOpenStatusForm={setOpenStatusForm} dispatch={dispatch} removeBackgroundBlur={removeBackgroundBlur} /> : null}
-                <button className="btn btn-success btn-sm text-white" onClick={handleOpenVendorForm} >Add</button>
+                <button disabled={!createVendorApprove} className="btn btn-success btn-sm text-white" onClick={handleOpenVendorForm} >Add</button>
             </div>
 
             <div className='w-full'>
@@ -78,7 +84,7 @@ export const VendorDataTable = ({ vendorData }) => {
                                 <td className='font-medium'>{vendor?.maskAddress}</td>
                                 <td>{vendor?.inActiveReason === null ? "N/A" : vendor?.inActiveReason.slice(0, 12)} {vendor?.inActiveReason === null ? null : vendor?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>
-                                    {<button className={`btn btn-xs w-20 ${vendor?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, vendor?._id, vendor?.isActive ? false : true)}>
+                                    {<button disabled={!statusVendorApprove} className={`btn btn-xs w-20 ${vendor?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, vendor?._id, vendor?.isActive ? false : true)}>
 
                                         {vendor?.isActive === true ? "Active" : "In Active"}
 

@@ -9,6 +9,7 @@ import { BiCategory } from "react-icons/bi";
 import { toggleSideBar } from "../../../redux/features/sidebarSlice";
 import { useState } from "react";
 import { BsCreditCard2Back } from "react-icons/bs";
+import { usePermissionCheck } from "../../../hooks/usePermissionCheck";
 
 export const StaffSideBar = () => {
   const sidebar = useSelector((state) => state.sidebar.sideBar);
@@ -25,6 +26,8 @@ export const StaffSideBar = () => {
     navigate(route);
   };
 
+  const { hasPermission } = usePermissionCheck()
+
   return (
     <div
       className={`
@@ -34,7 +37,7 @@ export const StaffSideBar = () => {
       z-50
     `}
     >
-      <ul className="w-full flex flex-col bg-tertiary gap-1 text-[16px] font-bold p-2 transition-all duration-1000 overflow-y-auto">
+      <ul className="w-full flex flex-col bg-tertiary gap-1 text-[16px] h-[600px] font-bold p-2 transition-all duration-1000 overflow-y-auto">
         <li
           onClick={() => {
             setHome(!home);
@@ -156,7 +159,7 @@ export const StaffSideBar = () => {
                     handleSideBar("/staff/upload/products/csv");
                     dispatch(toggleSideBar());
                   }}
-                  className="bg-tertiary  rounded flex items-center text-sm md:text-lg hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+                  className="bg-tertiary  rounded flex items-center text-sm  hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
                 >
                   <FaFileCsv />
                   Upload Products CSV File
@@ -170,7 +173,7 @@ export const StaffSideBar = () => {
                     handleSideBar("/staff/add/category");
                     dispatch(toggleSideBar());
                   }}
-                  className="bg-tertiary  rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+                  className="bg-tertiary text-sm rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
                 >
                   <BiCategory />
                   Add Category
@@ -182,7 +185,7 @@ export const StaffSideBar = () => {
                   }}
                   className="bg-tertiary 
                 
-              rounded flex text-xs md:text-lg items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
+              rounded flex text-sm  items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10 w-5/6 ms-10"
                 >
                   <FaFileCsv />
                   Upload Categories CSV File
@@ -234,7 +237,7 @@ export const StaffSideBar = () => {
           Credit book
         </li>
 
-        <li
+        {hasPermission("view_expense") && <li
           onClick={() => setExpenseManagement(prev => !prev)}
           className="bg-tertiary border rounded flex items-center hover:bg-orange-50 cursor-pointer gap-2 justify-start p-5 h-10"
         >
@@ -244,11 +247,11 @@ export const StaffSideBar = () => {
             className={`transform transition-transform duration-300  ${expenseManagement ? "rotate-180" : ""
               }`}
           />
-        </li>
+        </li>}
 
         {expenseManagement && (
           <>
-            <li
+            {hasPermission("create_expense") && <li
               onClick={() => {
                 handleSideBar("/staff/expense/create");
                 dispatch(toggleSideBar());
@@ -257,8 +260,8 @@ export const StaffSideBar = () => {
             >
               <FaReceipt />
               Expense Create
-            </li>
-            <li
+            </li>}
+            {hasPermission("view_expense") && <li
               onClick={() => {
                 handleSideBar("/staff/expense/list");
                 dispatch(toggleSideBar());
@@ -267,9 +270,9 @@ export const StaffSideBar = () => {
             >
               <FaReceipt />
               Expense List
-            </li>
+            </li>}
 
-            <li
+            {hasPermission("view_expense_account") && <li
               onClick={() => {
                 handleSideBar("/staff/expense/account");
                 dispatch(toggleSideBar());
@@ -278,11 +281,11 @@ export const StaffSideBar = () => {
             >
               <MdAccountBalanceWallet />
               Expense Account
-            </li>
+            </li>}
 
           </>
         )}
-        <li
+        {hasPermission("vendor_view") && <li
           onClick={() => {
             handleSideBar("/staff/vendor");
             dispatch(toggleSideBar());
@@ -291,8 +294,8 @@ export const StaffSideBar = () => {
         >
           <MdEventNote />
           Vendor
-        </li>
-        <li
+        </li>}
+        {hasPermission("payment_acc_view") && <li
           onClick={() => {
             handleSideBar("/staff/payment/account");
             dispatch(toggleSideBar());
@@ -301,9 +304,9 @@ export const StaffSideBar = () => {
         >
           <MdEventNote />
           Payment Account
-        </li>
+        </li>}
 
-        <li
+        {hasPermission("tax_rate_view") && <li
           onClick={() => {
             handleSideBar("/staff/tax/rate");
             dispatch(toggleSideBar());
@@ -312,7 +315,7 @@ export const StaffSideBar = () => {
         >
           <MdEventNote />
           Tax Rates
-        </li>
+        </li>}
 
       </ul>
     </div>
