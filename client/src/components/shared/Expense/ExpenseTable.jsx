@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 export const ExpenseTable = () => {
     const [page, setPage] = useState(1)
-    const { paginatedData, isFetching, isPlaceholderData } = useExpense(page, null)
+    const { paginatedData, isFetching, isLoading, isPlaceholderData } = useExpense(page, null)
 
 
 
@@ -81,7 +81,9 @@ export const ExpenseTable = () => {
                 </div>
 
             </div>
-            {isFetching ? <p className='w-full text-center'>Loading...</p> : null}
+            {isLoading ? <p className='w-full text-center'>Loading...</p> : null}
+            {isLoading === false && paginatedData?.data.length === 0 ? <p className='w-full text-center'>No data found</p> : null}
+            {isFetching && !isLoading ? <p className='text-xs text-gray-400'>Refreshing...</p> : null}
         </>
     )
 }

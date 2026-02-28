@@ -33,7 +33,9 @@ export const TaxRateForm = () => {
         { id: 2, value: "ZERO", name: "ZERO" },
         { id: 3, value: "VAT", name: "VAT" },
         { id: 4, value: "SALES_TAX", name: "SALES_TAX" },
-        { id: 5, value: "GST", name: "GST" }
+        { id: 5, value: "GST", name: "GST" },
+        { id: 5, value: "HST", name: "HST" },
+        { id: 5, value: "PST", name: "PST" },
     ]
 
     const onSubmit = (data) => {

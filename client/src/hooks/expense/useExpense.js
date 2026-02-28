@@ -20,7 +20,7 @@ export const useExpense = (page, imageQuery,) => {
     const { id: expenseId } = useParams()
     const admin = useSelector(state => state.auth.adminData)
 
-    const { data: paginatedData, isFetching, isPlaceholderData } = useQuery({
+    const { data: paginatedData, isLoading, isFetching, isPlaceholderData } = useQuery({
         queryKey: ["expensePagination", page],
         queryFn: async () => {
             const response = await axiosInstance({
@@ -174,6 +174,7 @@ export const useExpense = (page, imageQuery,) => {
         createExpense,
         creationExpenseSuccess,
         paginatedData,
+        isLoading,
         isFetching,
         isPending,
         isPlaceholderData,

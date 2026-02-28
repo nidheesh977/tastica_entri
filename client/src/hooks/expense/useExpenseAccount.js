@@ -100,8 +100,9 @@ export const useExpenseAccount = () => {
             toast.success("Expense Account Create successfully!");
 
             await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] }),
                 queryClient.invalidateQueries({ queryKey: ["expenseAccount"] }),
-                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] })
+
             ])
 
         }, onError: (error) => {
@@ -129,8 +130,9 @@ export const useExpenseAccount = () => {
             dispatch(setCloseExpenseSubTitleForm(false))
             toast.success("Expense Account Title Create successfully!");
             await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] }),
                 queryClient.invalidateQueries({ queryKey: ["expenseAccountId"] }),
-                queryClient.invalidateQueries({ queryKey: ["expenseAccountForm"] })
+
             ])
 
         }, onError: (error) => {

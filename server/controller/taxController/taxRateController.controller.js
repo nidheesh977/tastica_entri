@@ -94,6 +94,12 @@ export const addTaxRatesToAccount = async (req, res, next) => {
                 taxType
             }
 
+            const isTaxBookExist = await TaxRateModel.findOne({ shop: shopId }).session(session).select("_id")
+
+            if (!isTaxBookExist) {
+                return next(new AppError("Tax Book not found", 404))
+            }
+
             const addNewTaxRate = await TaxRateModel.findOneAndUpdate({
                 shop: shopId,
                 taxRates: {
