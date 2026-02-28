@@ -153,7 +153,7 @@ export const useExpenseAccount = () => {
 
         },
         onSuccess: (data) => {
-            toast.success(" Title status successfully!");
+            toast.success(data?.message)
             dispatch(removeBackgroundBlur(false))
             queryClient.invalidateQueries({ queryKey: ["expenseAccountId", expenseAccountId], });
         }, onError: (error) => {
@@ -174,7 +174,7 @@ export const useExpenseAccount = () => {
             return response?.data
         }, onSuccess(data) {
             dispatch(removeBackgroundBlur(false))
-
+            toast.success(data?.message)
             queryClient.invalidateQueries({ queryKey: ["expenseAccount"] });
 
         },

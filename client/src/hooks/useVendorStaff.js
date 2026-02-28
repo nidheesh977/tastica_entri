@@ -4,14 +4,21 @@ import { axiosInstance } from '../config/axiosInstance'
 import { useLocation, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { removeBackgroundBlur, setCloseVendorStaffForm } from "../redux/features/commonSlice"
+import { useEffect, useRef, useState } from 'react'
 
 
 export const useVendorStaff = (vendorStatus) => {
+
+    const [visiblePhone, setVisiblePhone] = useState({
+        isDecrypt: false,
+        decryptPhoneNumber: null
+    })
 
     const { vendorIdForStaff } = useSelector(state => state.common)
 
     const validId = vendorStatus ?? vendorIdForStaff
 
+    const dispatch = useDispatch()
 
     const { pathname } = useLocation()
 
@@ -24,8 +31,29 @@ export const useVendorStaff = (vendorStatus) => {
 
 
 
+    const timeoutRef = useRef(null)
 
-    const dispatch = useDispatch()
+    useEffect(() => {
+        if (!visiblePhone?.isDecrypt) return
+
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            setVisiblePhone({
+                isDecrypt: false,
+                decryptPhoneNumber: null
+            })
+        }, 10000)
+
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+        }
+
+    }, [visiblePhone?.isDecrypt])
 
     const { data: vendorStaffDataForForm, refetch } = useQuery({
         queryKey: ["vendorStaffForm", validId],
@@ -53,6 +81,32 @@ export const useVendorStaff = (vendorStatus) => {
         enabled: !!vendorId && isValidvendorStaffPage,
         staleTime: 3 * 60 * 1000,
 
+
+    })
+
+
+    const { mutate: getDecryptPhoneNumberForVendorStaff } = useMutation({
+
+        mutationFn: async (staffId) => {
+
+
+            const response = await axiosInstance({
+                method: "GET",
+                url: `/vendor/${vendorId}/staff/${staffId}`,
+                withCredentials: true
+            })
+            return response?.data?.data
+        }, onSuccess: async (data) => {
+            setVisiblePhone((prev) => ({
+                isDecrypt: data?.isDecrypt,
+                decryptPhoneNumber: data?.decryptPhoneNumber
+            }))
+        },
+        onError(error) {
+            toast.error(
+                error?.response?.data?.message || "Something error"
+            );
+        }
 
     })
 
@@ -112,6 +166,9 @@ export const useVendorStaff = (vendorStatus) => {
         vendorStaffData,
         vendorStaffDataLoding,
         vendorStaffDataRefreshing,
+
+        getDecryptPhoneNumberForVendorStaff,
+        visiblePhone,
 
         refetch,
 

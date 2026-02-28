@@ -55,7 +55,7 @@ export const useTaxRates = () => {
             return res?.data?.data
 
         }, onSuccess: (data) => {
-            toast.success("Taxrate book create successfully")
+            toast.success("Tax rate book create successfully")
             queryClient.invalidateQueries({ queryKey: ["taxRate"] });
         },
         onError: (error) => {

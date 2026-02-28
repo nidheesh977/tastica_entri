@@ -5,9 +5,11 @@ import { VendorStaffStatusForm } from './VendorStaffStatusForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { addBackgroundBlur, removeBackgroundBlur, setOpenVendorStaffForm } from "../../../redux/features/commonSlice"
 import { usePermissionCheck } from '../../../hooks/usePermissionCheck'
+import { MdOutlineRemoveRedEye } from 'react-icons/md'
 
-export const VendorStaffTable = ({ vendorStaffData }) => {
+export const VendorStaffTable = ({ vendorStaffData, getDecryptPhoneNumberForVendorStaff, visiblePhone }) => {
 
+    const [selectVendorId, setSelectVendorId] = useState(null)
     const [openStatusForm, setOpenStatusForm] = useState({
         openCom: false,
         staffId: null,
@@ -22,7 +24,9 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
     const statusVendorStaffApprove = hasPermission("vendor_change_status")
 
 
-    const { openVendorStaffForm } = useSelector(state => state.common)
+    const { openVendorStaffForm } = useSelector(state => state.common);
+
+    const { isDecrypt, decryptPhoneNumber } = visiblePhone;
 
     const handleChangeAccStatus = (num, staffId, active) => {
         setOpenStatusForm((prev) => ({
@@ -37,6 +41,11 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
     const handleOpenCreateForm = () => {
         dispatch(setOpenVendorStaffForm(true))
         dispatch(addBackgroundBlur(true))
+    }
+
+    const handleGetDecryptPhoneNumber = (staffId) => {
+        getDecryptPhoneNumberForVendorStaff(staffId)
+        setSelectVendorId(staffId)
     }
 
     return (
@@ -66,7 +75,13 @@ export const VendorStaffTable = ({ vendorStaffData }) => {
                                 <th>{index + 1}</th>
                                 <td className='font-medium'>{staff?.staffName}</td>
                                 <td className='font-medium'>{staff?.email}</td>
-                                <td className='font-medium'>{staff?.maskPhoneNumber}</td>
+                                <td className='font-medium flex items-center gap-4 tracking-wider'>
+                                    {staff?._id === selectVendorId && isDecrypt ? decryptPhoneNumber : staff?.maskPhoneNumber}
+                                    <MdOutlineRemoveRedEye className={`cursor-pointer ${isDecrypt ? "pointer-events-none opacity-40" : ""}`} size={16} onClick={() => {
+                                        handleGetDecryptPhoneNumber(staff?._id)
+                                    }} />
+
+                                </td>
                                 <td>{staff?.inActiveReason === null ? "N/A" : staff?.inActiveReason.slice(0, 12)} {staff?.inActiveReason === null ? null : staff?.inActiveReason.length > 12 ? "..." : null} </td>
                                 <td>
                                     {<button disabled={!statusVendorStaffApprove} className={`btn btn-xs w-20 ${staff?.isActive ? "btn-success" : "btn-error"}  `} onClick={() => handleChangeAccStatus(index, staff?._id, staff?.isActive ? false : true)}>

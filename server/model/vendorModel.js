@@ -41,19 +41,19 @@ const vendorSchema = new mongoose.Schema({
         default: null
     },
     phoneNumber: encryptedFieldSchema,
-    address: encryptedFieldSchema,
+    address: {
+        type: String,
+    },
     maskPhoneNumber: {
         type: String,
         default: "********"
     },
-    maskAddress: {
-        type: String,
-        default: "...."
-    }
+
 
 }, { timestamps: true })
 
 vendorSchema.index({ shop: 1, vendorNameLowerCase: 1 }, { unique: true });
+vendorSchema.index({ shop: 1, vendorName: 1 })
 
 const VendorModel = mongoose.model("Vendor", vendorSchema);
 

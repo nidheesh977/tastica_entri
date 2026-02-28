@@ -1,7 +1,7 @@
 import mongoose, { mongo } from "mongoose";
 import VendorModel from "../../model/vendorModel.js";
 import { vendorStatusValidation, createVendorValidation } from "../../utils/joiValidation.js";
-import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
+import { decryptData, encryptData } from "../../utils/dataEncryptAndDecrypt.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 import { after } from "node:test";
 import { AppError } from "../../utils/AppError.js";
@@ -43,11 +43,12 @@ export const createNewVendor = async (req, res, next) => {
             const sliceString = vendorName.substring(0, 1).toUpperCase()
 
             const encryptPhoneNumber = encryptData(phoneNumber)
-            const encryptAddress = encryptData(address)
+
 
             const newState = {
                 vendorName,
                 email,
+                address
             }
 
             const newVendor = await VendorModel.create([
@@ -57,9 +58,9 @@ export const createNewVendor = async (req, res, next) => {
                     vendorName: vendorName,
                     email: email,
                     phoneNumber: encryptPhoneNumber,
-                    address: encryptAddress,
+                    address: address,
                     maskPhoneNumber: maskedNumber,
-                    maskAddress: maskAddress,
+                    maskAddress: address,
                     vendorNameLowerCase: vendorNameLower
                 }
             ], { session });
@@ -123,7 +124,7 @@ export const getVendorDataForShop = async (req, res, next) => {
 
         const { id: shopId } = req.shop
 
-        const getVendorData = await VendorModel.find({ shop: shopId }).select("_id vendorName email maskPhoneNumber maskAddress isActive inActiveReason")
+        const getVendorData = await VendorModel.find({ shop: shopId }).select("_id vendorName email maskPhoneNumber address isActive inActiveReason")
 
 
         res.status(200).json({ success: true, message: "Data fetched successfully", data: getVendorData })
@@ -201,5 +202,37 @@ export const vendorStatusUpdate = async (req, res, next) => {
         next(error)
     } finally {
         await session.endSession()
+    }
+}
+
+
+export const decryptVendorPhoneNumber = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+        const { vendorId } = req.params;
+
+
+
+        const findVendor = await VendorModel.findOne({ shop: shopId, _id: vendorId }).select("_id phoneNumber maskPhoneNumber")
+
+        if (!findVendor) {
+            return next(new AppError("Vendor not found", 404))
+        }
+
+
+
+        const decryptPhoneNumber = decryptData(findVendor?.phoneNumber)
+
+        const data = {
+            isDecrypt: true,
+            decryptPhoneNumber: decryptPhoneNumber
+        }
+
+
+
+
+        res.status(200).json({ success: true, message: "data fetch phonenumber", data: data })
+    } catch (error) {
+        next(error)
     }
 }

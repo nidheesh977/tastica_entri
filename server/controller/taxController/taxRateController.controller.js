@@ -249,7 +249,7 @@ export const taxRateStatusUpdate = async (req, res, next) => {
 
 
             if (findSelectTaxRate.isActive === false && isActive === false || findSelectTaxRate.isActive === true && isActive === true) {
-                throw new AppError(`Expense account Already ${isActive ? "active" : "inactive"}`, 400)
+                throw new AppError(`Tax account Already ${isActive ? "active" : "inactive"}`, 400)
             }
 
             const previousState = { isActive: findSelectTaxRate?.isActive, inactiveReason: findSelectTaxRate?.inActiveReason }
@@ -275,7 +275,7 @@ export const taxRateStatusUpdate = async (req, res, next) => {
                 }
             ], { session })
 
-            res.status(200).json({ success: true, message: `Expense Account ${isActive ? "Active" : "Inactive"} successfully` })
+            res.status(200).json({ success: true, message: `Tax Rate ${isActive ? "Active" : "Inactive"} successfully` })
         })
 
         // const checkTaxRateExist = await TaxRateModel.findOne({

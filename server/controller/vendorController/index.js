@@ -2,5 +2,6 @@ export {
     createNewVendor,
     getVendorForExpenseForm,
     getVendorDataForShop,
-    vendorStatusUpdate
+    vendorStatusUpdate,
+    decryptVendorPhoneNumber
 } from "./vendorController.controller.js"

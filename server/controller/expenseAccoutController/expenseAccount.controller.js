@@ -304,7 +304,7 @@ export const expenseAccountTitleStatusUpdate = async (req, res, next) => {
             }
         ], { session })
 
-        res.status(200).json({ success: true, message: `Expense Account ${isActive ? "Active" : "Inactive"} successfully` })
+        res.status(200).json({ success: true, message: `Expense Account subtitle ${isActive ? "Active" : "Inactive"} successfully` })
 
     } catch (error) {
         next(error)

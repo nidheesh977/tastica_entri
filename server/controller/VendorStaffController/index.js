@@ -2,5 +2,6 @@ export {
     createVendorStaff,
     getVendorStaffForExpenseForm,
     vendorStaffDataForShop,
-    vendorStaffStatusUpdate
+    vendorStaffStatusUpdate,
+    decryptVendorStaffPhoneNumber
 } from "./vendorStaffController.js"

@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import { VendorStaffModel } from "../../model/vendorStaffModel.js";
 import { AppError } from "../../utils/AppError.js";
-import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
+import { decryptData, encryptData } from "../../utils/dataEncryptAndDecrypt.js";
 import { vendorStaffStatusValidation, createVendorStaffValidation, } from "../../utils/joiValidation.js";
 import { AuditLogModel } from "../../model/auditLogModel.js";
 
@@ -193,5 +193,41 @@ export const vendorStaffStatusUpdate = async (req, res, next) => {
         next(error)
     } finally {
         await session.endSession()
+    }
+}
+
+
+export const decryptVendorStaffPhoneNumber = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+        const { staffId } = req.params;
+        console.log(staffId);
+        console.log(shopId);
+
+
+
+        const findVendorStaff = await VendorStaffModel.findOne({ shop: shopId, _id: staffId }).select("_id phoneNumber")
+
+
+
+
+        if (!findVendorStaff) {
+            return next(new AppError("Vendor not found", 404))
+        }
+
+
+
+        const decryptPhoneNumber = decryptData(findVendorStaff?.phoneNumber)
+
+        const data = {
+            isDecrypt: true,
+            decryptPhoneNumber: decryptPhoneNumber
+        }
+
+
+
+        res.status(200).json({ success: true, message: "data fetch phonenumber", data: data })
+    } catch (error) {
+        next(error)
     }
 }
