@@ -34,10 +34,11 @@ export const VendorDataTable = ({ vendorData, getDecryptPhoneNumber, visiblePhon
     const createVendorApprove = hasPermission("vendor_create")
     const statusVendorApprove = hasPermission("vendor_change_status")
 
+
     const dispatch = useDispatch()
 
     const handleChangeAccStatus = (num, vendorId, active) => {
-        setSelectBtnNum(num)
+
         setOpenStatusForm((prev) => (
             {
                 ...prev,

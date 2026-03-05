@@ -16,6 +16,8 @@ export const useTaxRates = () => {
 
     const isValidPage = pathname === "/admin/expense/create" || pathname === "/staff/expense/create"
 
+    const isValidPageForCustomInvoice = pathname === "/admin/custom/invoice/create"
+
     const { data: taxRatesDataForExpenseForm } = useQuery({
         queryKey: ["taxrateForForm"],
         queryFn: async () => {
@@ -27,6 +29,18 @@ export const useTaxRates = () => {
             return response?.data?.data ?? []
         },
         enabled: !!isValidPage
+    })
+    const { data: taxRatesDataForCustomInvoiceForm } = useQuery({
+        queryKey: ["taxrateForCustomInvoiceForm"],
+        queryFn: async () => {
+            const response = await axiosInstance({
+                method: "GET",
+                url: "/tax-rate/custom-invoice/form",
+                withCredentials: true
+            })
+            return response?.data?.data ?? []
+        },
+        enabled: !!isValidPageForCustomInvoice
     })
 
 
@@ -143,6 +157,9 @@ export const useTaxRates = () => {
 
         changeTaxRateStatus,
         statusUploadLoading,
-        taxRateStatusSuccess
+        taxRateStatusSuccess,
+
+        // customInvoice
+        taxRatesDataForCustomInvoiceForm
     }
 }

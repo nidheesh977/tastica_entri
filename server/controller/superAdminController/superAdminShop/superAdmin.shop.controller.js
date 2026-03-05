@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import AdminStaffModel from "../../../model/adminAndStaffModel.js";
 import customerModel from "../../../model/customerModel.js";
 import shopModel from "../../../model/shopModel.js";
@@ -5,63 +6,96 @@ import { capitalizeFirstLetter } from "../../../utils/capitalizeFirstLetter.js";
 import { generateCustomerId } from "../../../utils/generateId.js";
 import { shopPasswordValidation, shopSignupValidtaion, shopUpdateValidtaion, } from "../../../utils/joiValidation.js";
 import bcryptjs from "bcryptjs";
+import { createDefaultccount } from "../../../helpers/defaultAccount.js";
+import crypto from "crypto"
+import { encryptData } from "../../../utils/dataEncryptAndDecrypt.js";
+
 
 export const createShop = async (req, res) => {
+
+  const { error, value } = shopSignupValidtaion.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  const { shopName, email, password, countryName, currencyCode, phoneNumber } = value;
+
+  const session = await mongoose.startSession()
+
   try {
-    const { error, value } = shopSignupValidtaion.validate(req.body);
+    await session.withTransaction(async () => {
+
+      const shopExist = await shopModel.findOne({ email: email }).session(session);
+
+      if (shopExist) {
+        return res.status(400).json({ message: "Shop already exists" });
+      }
+
+      const shopNameLowercase = capitalizeFirstLetter(shopName);
+
+      const currencyCodeUpperCase = currencyCode.trim().toUpperCase()
+
+      const hasedPassword = await bcryptjs.hash(password, 10);
+
+      const newShop = await shopModel.create([
+        {
+          shopName: shopNameLowercase,
+          email,
+          password: hasedPassword,
+          countryName,
+          currencyCode: currencyCodeUpperCase,
+          role: "shop",
+          phoneNumber,
+          isAccountingInitialized: true
+        }], { session: session });
 
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-    const { shopName, email, password, countryName, currencyCode, phoneNumber } = value;
-
-    const shopExist = await shopModel.findOne({ email: email });
-
-    if (shopExist) {
-      return res.status(400).json({ message: "Shop already exists" });
-    }
-
-    const shopNameLowercase = capitalizeFirstLetter(shopName);
-
-    const currencyCodeUpperCase = currencyCode.trim().toUpperCase()
-
-    const hasedPassword = await bcryptjs.hash(password, 10);
-
-    const newShop = new shopModel({
-      shopName: shopNameLowercase,
-      email,
-      password: hasedPassword,
-      countryName,
-      currencyCode: currencyCodeUpperCase,
-      role: "shop",
-      phoneNumber
-    });
-
-    await newShop.save();
-
-    let customerId = await generateCustomerId(newShop._id)
+      const createdShop = newShop[0]
 
 
-    const lowerCaseCustomerName = capitalizeFirstLetter(newShop.shopName);
+      await createDefaultccount(createdShop._id, session)
+
+      let customerId = await generateCustomerId(createdShop._id)
 
 
-    const newCustomer = new customerModel({
-      customerId,
-      customerName: lowerCaseCustomerName,
-      phoneNumber: newShop.phoneNumber,
-      shopId: newShop._id,
-      role: "shop"
+      const lowerCaseCustomerName = capitalizeFirstLetter(createdShop.shopName);
+
+      const hashedPhoneNumber = crypto.createHmac("sha256", process.env.PHONE_SECRET).update(phoneNumber).digest("hex")
+
+      const encryptPhoneNumber = encryptData(phoneNumber)
+
+      const lastFourDigit = phoneNumber.slice(-4)
+
+      const maskedNumber = lastFourDigit.padStart(phoneNumber.length, "*")
+
+
+      await customerModel.create([
+        {
+          customerId,
+          customerName: lowerCaseCustomerName,
+          phoneNumber: createdShop.phoneNumber,
+          shopId: createdShop._id,
+          role: "shop",
+          phoneHash: hashedPhoneNumber,
+          phone: encryptPhoneNumber,
+          maskPhoneNumber: maskedNumber
+        }
+      ], { session: session })
+
+
+
+
+      res.status(201).json({ success: true, message: "Shop created successfully" });
     })
 
-    await newCustomer.save()
 
-
-    res.status(201).json({ success: true, message: "Shop created successfully" });
   } catch (error) {
+    console.log(error);
 
     return res.status(500).json({ success: false, message: "Internal server error" });
+  } finally {
+    await session.endSession()
   }
 };
 

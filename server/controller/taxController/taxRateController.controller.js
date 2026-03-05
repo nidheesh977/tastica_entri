@@ -299,3 +299,48 @@ export const taxRateStatusUpdate = async (req, res, next) => {
         await session.endSession()
     }
 }
+
+
+export const getTaxRateForCustomInvoice = async (req, res, next) => {
+    try {
+        const { id: shopId } = req.shop
+
+        const findTaxRates = await TaxRateModel.aggregate([
+            {
+                $match: {
+                    shop: new mongoose.Types.ObjectId(shopId)
+                }
+            },
+
+            { $unwind: "$taxRates" },
+
+            { $match: { "taxRates.isActive": true } },
+
+            { $sort: { "taxRates.rate": -1 } },
+
+            {
+                $group: {
+                    _id: "$_id",
+                    sortedRates: {
+                        $push: {
+                            taxId: "$taxRates._id",
+                            taxCodeName: "$taxRates.taxCodeName",
+                            rate: "$taxRates.rate"
+                        }
+                    }
+                }
+            },
+
+            {
+                $project: {
+                    _id: 1,
+                    taxRates: "$sortedRates"
+                }
+            }
+        ])
+
+        res.status(200).json({ success: true, message: "Data fetched successfully", data: findTaxRates[0] })
+    } catch (error) {
+        next(error)
+    }
+}

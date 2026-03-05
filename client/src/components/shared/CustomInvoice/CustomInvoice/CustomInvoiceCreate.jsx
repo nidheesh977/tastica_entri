@@ -7,8 +7,9 @@ import { filterDataArr } from '../../../../utils/filterDataArr'
 import { MdOutlineEmail } from "react-icons/md";
 import { PiBuildingOfficeLight } from "react-icons/pi";
 import { useEffect } from 'react'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setCustomCustomerId } from "../../../../redux/features/commonSlice"
+import { addRow } from "../../../../redux/features/customInvoiceProductTable"
 import { FaCalendarAlt, FaPen } from "react-icons/fa";
 import { useState } from 'react'
 import { CustomInvoiceAddressForm } from '../CustomInvoiceCustomer/CustomInvoiceAddressForm'
@@ -21,6 +22,7 @@ import { InputComponent } from '../../DaisyUiComponent/InputComponent'
 import { SimpleSelectOption } from '../../DaisyUiComponent/SimpleSelectOption'
 import { TextAreaComponent } from '../../DaisyUiComponent/TextAreaComponent'
 import { CustomInvoiceProductTable } from './CustomInvoiceProductTable'
+import { CustomInvoiceCustomProductForm } from './CustomInvoiceCustomProductForm'
 
 
 
@@ -35,22 +37,28 @@ export const CustomInvoiceCreate = () => {
         billing: 0,
     });
 
-    const [rows, setRows] = useState([{ id: 1, item: "", quantity: 1.00, rate: 0.00, discount: 0.00, tax: 0, amount: 0 }])
+    const [rows, setRows] = useState([{ id: 1, row: 1, item: "", description: "", quantity: 1.00, rate: 0.00, discount: 0.00, tax: 0, amount: 0, isNew: true }])
 
 
 
     const { handleSubmit, watch, register, setValue, control } = useForm({
         defaultValues: {
-            invoiceNumber: ""
+            invoiceNumber: "",
+            productName: "",
+            quantity: 0
         }
     })
 
 
     const dispatch = useDispatch()
+    const { openCustomProductAddForm } = useSelector((state) => state.common)
+
+
 
     const selectedCustomInvoiceCustomer = watch("customerDis")
     const customerNameSearch = watch("customerName")
     const customerSelectId = watch("customerId")
+    const selectedProduct = watch("productName")
 
     const onsubmit = (data) => {
         console.log(data)
@@ -72,12 +80,7 @@ export const CustomInvoiceCreate = () => {
     const shippingAddress = customCustomerAddressData?.shippingAddresses[selectedAddressIndex.shipping]
 
 
-    const handleAddNewRow = () => {
-        setRows([
-            ...rows,
-            { id: Date.now(), item: "", quantity: 1.00, rate: 0.00, discount: 0.00, tax: 0, amount: 0 }
-        ])
-    }
+
 
     const handleOpenShippingAddresses = () => {
         setOpenShippingAddress((prev) => !prev)
@@ -210,7 +213,7 @@ export const CustomInvoiceCreate = () => {
         <div className='flex flex-col md:flex-row gap-1 px-4 xl:px-24 pt-16 pb-20 relative'>
             {openshippingAddressForm ? <CustomInvoiceCustomerAddShippingAddressBox setOpenShippingAddressForm={setOpenShippingAddressForm} handleShippingAddressFormCancel={handleShippingAddressFormCancel} /> : null}
             {opensBillingAddressForm ? <CustomInvoiceAddBillingAddressBox setOpenBillingAddressForm={setOpenBillingAddressForm} handleBillingFormCancel={handleBillingFormCancel} /> : null}
-
+            {openCustomProductAddForm ? <CustomInvoiceCustomProductForm /> : null}
             <form onSubmit={handleSubmit(onsubmit)} className='relative w-full flex flex-col p-1 '>
 
                 <div className='flex items-start  gap-10'>
@@ -296,7 +299,7 @@ export const CustomInvoiceCreate = () => {
                 </div>
 
 
-                <div className='flex items-center gap-10 mt-10 '>
+                <div className='flex flex-wrap md:items-center gap-10 mt-10 '>
                     <div className='w-[145px]'>
                         <label htmlFor="expense-account" className='text-black block'>Invoice Date</label>
                     </div>
@@ -319,11 +322,12 @@ export const CustomInvoiceCreate = () => {
                         )} />
                     </div>
 
-                    <div>
-                        <label htmlFor="expense-account" className='text-black block'>Due Date</label>
-                    </div>
 
-                    <div>
+
+                    <div className='flex gap-1 items-center'>
+                        <div>
+                            <label htmlFor="expense-account" className='text-black block'>Due Date</label>
+                        </div>
                         <div className="relative  z-[40] w-fit">
                             <input type="date" {...register("date", { valueAsDate: true })} id='date' className=" z-50 rounded-md input input-sm input-bordered " />
                             <span className='absolute right-1  top-1/2 -translate-y-1/2 pointer-events-none'>
@@ -386,7 +390,7 @@ export const CustomInvoiceCreate = () => {
 
                 {/* product table */}
                 <div className='mt-10'>
-                    <CustomInvoiceProductTable rows={rows} control={control} handleAddNewRow={handleAddNewRow} />
+                    <CustomInvoiceProductTable watch={watch} rows={rows} setRows={setRows} control={control} setValue={setValue} selectedProduct={selectedProduct} />
                 </div>
 
                 <button>submit</button>

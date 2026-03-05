@@ -1,5 +1,5 @@
 
-export const InputComponent = ({ field, regexVal, placeholder = "Eg.", lowerCase = false, classNames }) => {
+export const InputComponent = ({ field, regexVal, placeholder = "Eg.", lowerCase = false, classNames, isValueExist }) => {
     return (
         <>
             <input {...field}
@@ -8,7 +8,7 @@ export const InputComponent = ({ field, regexVal, placeholder = "Eg.", lowerCase
                         lowerCase ? char.toLowerCase() : char.toUpperCase())
                     field.onChange(updated)
                 }}
-                type="text" placeholder={placeholder} className={` input ${classNames ? classNames : "input-md"} input-neutral border border-gray-500 w-full`} />
+                type="text" placeholder={placeholder} defaultValue={isValueExist} className={` input ${classNames ? classNames : "input-md"} input-neutral border border-gray-500 w-full`} />
         </>
     )
 }

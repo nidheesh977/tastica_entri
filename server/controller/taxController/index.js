@@ -3,5 +3,6 @@ export {
     addTaxRatesToAccount,
     getTaxRatesForExpenseForm,
     getTaxRatesForShop,
-    taxRateStatusUpdate
+    taxRateStatusUpdate,
+    getTaxRateForCustomInvoice
 } from "./taxRateController.controller.js"

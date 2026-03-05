@@ -11,7 +11,7 @@ const expenseAccountRouter = express.Router();
 
 expenseAccountRouter.post('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("create_expense_account"), createExpenseAccount)
 expenseAccountRouter.post('/:id', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("create_expense_account"), addNewExpenseInAccount)
-expenseAccountRouter.patch('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("status_expense_accoun"), expenseAccountStatusUpdate)
+expenseAccountRouter.patch('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("status_expense_account"), expenseAccountStatusUpdate)
 expenseAccountRouter.patch('/:expenseId/title', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("status_expense_account"), expenseAccountTitleStatusUpdate)
 expenseAccountRouter.get('/', shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), checkPermission("view_expense_account"), getExpenseAccounts)
 expenseAccountRouter.get("/title", shopVerifyToken, userVerifyToken, checkUserRole('admin', 'staff'), getExpenseAccountTitle)

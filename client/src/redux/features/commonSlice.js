@@ -15,6 +15,7 @@ export const commonSlice = createSlice({
         openTaxRateForm: false,
         openVendorForm: false,
         openVendorStaffForm: false,
+        openCustomProductAddForm: false
     },
     reducers: {
         addBackgroundBlur: (state, action) => {
@@ -61,6 +62,9 @@ export const commonSlice = createSlice({
         },
         setCustomCustomerId: (state, action) => {
             state.customCustomerId = action.payload
+        },
+        setOpenCustomProductAddForm: (state, action) => {
+            state.openCustomProductAddForm = action.payload
         }
     }
 })
@@ -83,7 +87,9 @@ export const {
     setOpenVendorStaffForm,
     setCloseVendorStaffForm,
 
-    setCustomCustomerId
+    setCustomCustomerId,
+
+    setOpenCustomProductAddForm
 } = commonSlice.actions
 
 export default commonSlice.reducer

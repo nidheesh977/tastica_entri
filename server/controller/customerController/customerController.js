@@ -1,9 +1,12 @@
 import customerModel from "../../model/customerModel.js";
 import walletModels from "../../model/walletModel.js";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter.js";
+import { encryptData } from "../../utils/dataEncryptAndDecrypt.js";
 import { generateCustomerId } from "../../utils/generateId.js";
 import { customerUpdateValidation, customerValidation } from "../../utils/joiValidation.js";
 import bwipjs from "bwip-js"
+import crypto from "crypto"
+
 
 const { walletModel } = walletModels;
 
@@ -25,6 +28,7 @@ export const createCustomer = async (req, res) => {
       if (customerExist) {
          return res.status(400).json({ success: false, message: "Customer already exist" })
       }
+      const hashedPhoneNumber = crypto.createHmac("sha256", process.env.PHONE_SECRET).update(phoneNumber).digest("hex")
 
 
       //  generating unique ID for customers 
@@ -32,11 +36,18 @@ export const createCustomer = async (req, res) => {
 
       const lowerCaseCustomerName = capitalizeFirstLetter(customerName)
 
+      const encryptPhoneNumber = encryptData(phoneNumber)
+
       const newCustomer = new customerModel({
          customerId,
          customerName: lowerCaseCustomerName,
          phoneNumber,
-         shopId
+         shopId,
+         phoneHash: hashedPhoneNumber,
+         role: "customer",
+         phone: encryptPhoneNumber,
+         customerType: "pos"
+
       })
 
       await newCustomer.save()
@@ -49,6 +60,7 @@ export const createCustomer = async (req, res) => {
       await newWallet.save()
       res.status(201).json({ success: true, message: "customer created successfully" });
    } catch (error) {
+      console.log(error);
 
       return res.status(500).json({ success: false, message: "Internal Server Error" })
    }

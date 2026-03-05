@@ -34,6 +34,10 @@ const shopSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    isAccountingInitialized: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

@@ -119,7 +119,7 @@ const customerSchema = new mongoose.Schema({
 
     customerType: {
         type: String,
-        enum: ["individual", "business"],
+        enum: ["individual", "business", "pos"],
         default: "individual"
     },
 

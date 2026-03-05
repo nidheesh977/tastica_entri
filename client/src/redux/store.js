@@ -16,7 +16,7 @@ import creditBookReducer from "./features/creditSlice"
 import commonReducer from "./features/commonSlice"
 import expenseReducer from "./features/expenseSlice"
 import vendorReducer from "./features/vendorSlice"
-
+import customInvoiceProductTableReducer from "./features/customInvoiceProductTable"
 
 export const store = configureStore({
   reducer: {
@@ -36,6 +36,7 @@ export const store = configureStore({
     credit: creditBookReducer,
     common: commonReducer,
     expense: expenseReducer,
-    vendor: vendorReducer
+    vendor: vendorReducer,
+    customInvoiceProductTable: customInvoiceProductTableReducer
   },
 });
