@@ -287,7 +287,8 @@ export const ExpenseCreateForm = () => {
             {openVendorStaffForm ? <VendorStaffForm setOpenForm={setOpenForm} /> : null}
             {openVendorForm ? <VendorForm /> : null}
             <form className='relative w-full xl:w-1/2 p-1 flex flex-col gap-5'>
-
+                <h1 className="text-xl font-medium">Expense Form</h1>
+                <hr className="my-5" />
                 {/* Date Input */}
                 <div className='flex flex-col lg:flex-row justify-between items-start lg:items-center '>
                     <label htmlFor="date" className='text-red-500'>Date*</label>

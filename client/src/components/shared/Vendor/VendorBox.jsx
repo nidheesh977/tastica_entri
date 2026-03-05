@@ -12,6 +12,7 @@ export const VendorBox = () => {
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">
             <div className="mx-auto mt-10 max-w-4xl flex justify-center flex-col items-center">
+                <h1 className='text-xl font-medium'>Vendors</h1>
                 {vendorDataLoading ? <p className='text-center w-full'>Loading...</p> : null}
                 {vendorData ? <VendorDataTable vendorData={vendorData} getDecryptPhoneNumber={getDecryptPhoneNumber} visiblePhone={visiblePhone} /> : null}
                 {!vendorDataLoading && vendorData?.length === 0 ? <p>No data found</p> : null}

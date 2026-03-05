@@ -16,7 +16,8 @@ export const ExpenseList = () => {
 
     return (
         <div className='px-28 py-5'>
-            <div className='flex justify-end mb-10'>
+            <div className='flex justify-between items-center text-xl font-medium mb-10'>
+                <h1>Expenses</h1>
                 <Link className={`${!isPermissionApproved ? "cursor-not-allowed pointer-events-none" : ""} `} to={admin ? "/admin/expense/create" : "/staff/expense/create"}>
                     <button disabled={!isPermissionApproved} className="btn btn-sm btn-info text-white text-xs">
                         <FaPlus />
@@ -24,6 +25,8 @@ export const ExpenseList = () => {
                     </button>
                 </Link>
             </div>
+
+            <hr className="my-5" />
             <ExpenseTable />
         </div>
     )

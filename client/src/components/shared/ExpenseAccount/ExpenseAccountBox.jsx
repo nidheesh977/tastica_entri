@@ -10,6 +10,8 @@ export const ExpenseAccountBox = () => {
     return (
         <div className="px-4 xl:px-24 pt-10 pb-32">
             <div className="mx-auto mt-10 max-w-4xl flex justify-center flex-col items-center">
+                <h1 className='text-xl font-medium'>Expense Accounts</h1>
+
                 {expenseAccountLoading ? <p className='text-center w-full'>Loading...</p> : null}
                 {expenseAccount ? <ExpenseAccountTable expenseAccount={expenseAccount} /> : null}
                 {!expenseAccountLoading && expenseAccount?.length === 0 ? <p>No data found</p> : null}

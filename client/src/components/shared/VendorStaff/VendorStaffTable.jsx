@@ -62,7 +62,7 @@ export const VendorStaffTable = ({ vendorStaffData, getDecryptPhoneNumberForVend
                     <thead>
                         <tr>
                             <th></th>
-                            <th>staff Name</th>
+                            <th>Staff Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Reason</th>
